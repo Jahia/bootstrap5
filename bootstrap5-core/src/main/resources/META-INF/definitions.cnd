@@ -1,0 +1,8 @@
+<bootstrap5mix = 'http://www.jahia.org/bootstrap5/mix/1.0'>
+<bootstrap5nt = 'http://www.jahia.org/bootstrap5/nt/1.0'>
+<jnt = 'http://www.jahia.org/jahia/nt/1.0'>
+<jmix = 'http://www.jahia.org/jahia/mix/1.0'>
+
+[bootstrap5mix:component] > jmix:droppableContent, jmix:editorialContent mixin
+[bootstrap5nt:version] > jnt:content, bootstrap5mix:component
+
