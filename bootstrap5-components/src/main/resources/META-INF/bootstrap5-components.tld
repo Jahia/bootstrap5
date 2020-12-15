@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+        version="2.0">
+
+    <description>Bootstrap 5 Functions</description>
+    <display-name>Bootstrap 5 Functions</display-name>
+    <tlib-version>1.0-SNAPSHOT</tlib-version>
+    <short-name>b5</short-name>
+    <uri>http://www.jahia.org/b5</uri>
+
+    <function>
+        <name>replaceAll</name>
+        <function-class>org.jahia.modules.bootstrap5.Functions</function-class>
+        <function-signature>java.lang.String replaceAll(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+    </function>
+
+    <tag>
+        <description>Generates a link to switch to the specified language</description>
+        <name>switchToLanguageLink</name>
+        <tag-class>org.jahia.modules.bootstrap5.taglibs.SwitchToLanguageTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>Indicates which language we want to generate a link to</description>
+            <name>languageCode</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+</taglib>

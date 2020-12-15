@@ -1,0 +1,13 @@
+{
+  "label": {
+    "settings": {
+      "title": "Sample Module setting"
+    },
+    "action": {
+      "title": "Sample Module - How to extend the ui ?"
+    },
+    "appsAccordion": {
+      "title": "Sample Module"
+    }
+  }
+}
