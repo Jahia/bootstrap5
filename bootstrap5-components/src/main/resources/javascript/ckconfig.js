@@ -18,7 +18,6 @@ CKEDITOR.stylesSet.add('text', [
     {name: 'Inline Code', element: 'code'},
     {name: 'Code blocks', element: 'pre'},
     {name: 'Blockquotes', element: 'blockquote', attributes: {class: 'blockquote'}},
-    {name: 'Blockquotes Reverse', element: 'blockquote', attributes: {class: 'blockquote blockquote-reverse'}},
     {name: 'Variables', element: 'var'},
     {name: 'User input', element: 'kbd'},
     {name: 'Sample output', element: 'samp'},
@@ -46,6 +45,8 @@ CKEDITOR.stylesSet.add('text', [
     {name: 'Display 2', element: 'h2', attributes: {class: 'display-2'}},
     {name: 'Display 3', element: 'h3', attributes: {class: 'display-3'}},
     {name: 'Display 4', element: 'h4', attributes: {class: 'display-4'}},
+    {name: 'Display 5', element: 'h4', attributes: {class: 'display-5'}},
+    {name: 'Display 6', element: 'h5', attributes: {class: 'display-6'}},
 
 
     {name: 'Alert Primyay', element: 'div', attributes: {class: 'alert alert-primary', role: 'alert'}},
