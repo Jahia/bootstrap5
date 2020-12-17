@@ -19,6 +19,7 @@
     <c:set var="size" value="${currentNode.properties.size.string}"/>
     <c:set var="state" value="${currentNode.properties.state.string}"/>
     <c:set var="outline" value="${currentNode.properties.outline.boolean ? '-outline' : ''}"/>
+    <c:set var="nowrap" value="${currentNode.properties.disableTextWrapping.boolean ? ' text-nowrap' : ''}"/>
     <c:set var="block" value="${currentNode.properties.block.boolean ? ' btn-block' : ''}"/>
     <c:set var="cssClass" value=" ${currentNode.properties.cssClass.string}"/>
     <c:choose>
@@ -47,7 +48,7 @@
         <c:set var="buttonClass" value="${cssClass}"/>
     </c:when>
     <c:otherwise>
-        <c:set var="buttonClass" value="btn btn${outline}-${style} ${size} ${state} ${block} ${cssClass}"/>
+        <c:set var="buttonClass" value="btn btn${outline}-${style} ${size} ${state} ${block} ${cssClass} ${nowrap}"/>
     </c:otherwise>
 </c:choose>
 
