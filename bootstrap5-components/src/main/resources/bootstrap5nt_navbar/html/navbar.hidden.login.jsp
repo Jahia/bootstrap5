@@ -9,17 +9,17 @@
 <%--@elvariable id="url" type="org.jahia.services.render.URLGenerator"--%>
 <c:set var="loginMenuULClass" value="${currentNode.properties.loginMenuULClass.string}"/>
 <c:if test="${empty loginMenuULClass}">
-    <c:set var="loginMenuULClass" value="navbar-nav flex-row ml-md-auto d-none d-md-flex"/>
+    <c:set var="loginMenuULClass" value="navbar-nav flex-row ms-md-auto d-none d-md-flex"/>
 </c:if>
 <c:choose>
     <c:when test="${renderContext.loggedIn}">
         <ul class="${loginMenuULClass}">
             <li class="nav-item dropdown">
-                <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="${currentNode.identifier}"
+                <a class="nav-item nav-link dropdown-toggle me-md-2" href="#" id="${currentNode.identifier}"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         ${currentUser.username}
                 </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="${currentNode.identifier}">
+                <div class="dropdown-menu dropdown-menu-start" aria-labelledby="${currentNode.identifier}">
                     <c:if test="${!renderContext.settings.distantPublicationServerMode and renderContext.mainResource.node.properties['j:originWS'].string ne 'live' and not jcr:isNodeType(renderContext.mainResource.node.resolveSite, 'jmix:remotelyPublished')}">
                         <c:if test="${! renderContext.liveMode}">
                             <a href="<c:url value='${url.live}'/>" class="dropdown-item">

@@ -57,7 +57,7 @@
 [bootstrap5mix:padding] mixin
  extends = bootstrap5mix:hasPadding
  itemtype = content
- - paddingWhere (string, choicelist[resourceBundle])  = 'all' autocreated indexed=no < 'all', 't', 'b', 'l', 'r', 'x', 'y'
+ - paddingWhere (string, choicelist[resourceBundle])  = 'all' autocreated indexed=no < 'all', 't', 'b', 's', 'e', 'x', 'y'
  - paddingSize (string, choicelist[resourceBundle])  = '3' autocreated indexed=no < '0', '1', '2', '3', '4', '5'
 
 [bootstrap5mix:hasMargin] mixin
@@ -65,7 +65,7 @@
 [bootstrap5mix:margin] mixin
  extends = bootstrap5mix:hasMargin
  itemtype = content
- - marginWhere (string, choicelist[resourceBundle])  = 'all' autocreated indexed=no < 'all', 't', 'b', 'l', 'r', 'x', 'y'
+ - marginWhere (string, choicelist[resourceBundle])  = 'all' autocreated indexed=no < 'all', 't', 'b', 's', 'e', 'x', 'y'
  - marginSize (string, choicelist[resourceBundle])  = '3' autocreated indexed=no < '0', '1', '2', '3', '4', '5'
 
 [bootstrap5mix:imageAdvancedSettings]  mixin
@@ -76,9 +76,9 @@
  - imageID (string) indexed=no
  - responsive (boolean)  = 'true' indexed=no
  - thumbnails (boolean)  = 'false' indexed=no
- - align (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'left', 'right', 'center'
+ - align (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'start', 'end', 'center'
  - alt (string) i18n
- - borderRadius (string, choicelist[resourceBundle])  = 'rounded-0' autocreated indexed=no < 'rounded','rounded-top', 'rounded-right', 'rounded-bottom','rounded-left','rounded-circle','rounded-0'
+ - borderRadius (string, choicelist[resourceBundle])  = 'rounded-0' autocreated indexed=no < 'rounded','rounded-top', 'rounded-end', 'rounded-bottom','rounded-start','rounded-circle','rounded-0'
  - borderRadiusSize (string, choicelist[resourceBundle]) = 'default' < 'default','rounded-lg','rounded-sm'
 
 [bootstrap5mix:imageAdvanced] > bootstrap5mix:image mixin
@@ -90,7 +90,7 @@
  extends = bootstrap5nt:mediaObject
  itemtype = content
  - imageVerticalAlignment (string, choicelist[resourceBundle])  = 'align-self-start' autocreated indexed=no < 'align-self-start', 'align-self-center', 'align-self-end'
- - imageHorizonralAlignment (string, choicelist[resourceBundle])  = 'left' autocreated indexed=no < 'left', 'right'
+ - imageHorizonralAlignment (string, choicelist[resourceBundle])  = 'start' autocreated indexed=no < 'start', 'end'
 
 [bootstrap5mix:mediaObjectAdvancedSettings] mixin
  extends = bootstrap5nt:mediaObject
@@ -105,7 +105,7 @@
 [bootstrap5mix:figureAdvancedSettings] mixin
  extends = bootstrap5nt:figure
  itemtype = content
- - captionAlignment (string, choicelist[resourceBundle])  = 'text-left' autocreated indexed=no < 'text-left', 'text-center', 'text-right'
+ - captionAlignment (string, choicelist[resourceBundle])  = 'text-start' autocreated indexed=no < 'text-start', 'text-center', 'text-end'
 
 [bootstrap5nt:figure] > jnt:content, bootstrap5mix:component, bootstrap5mix:imageAdvanced, mix:title
 
@@ -117,7 +117,7 @@
 [bootstrap5mix:advancedBreadcrumb] mixin
  extends = bootstrap5nt:breadcrumb
  itemtype = content
- - cssClass (string)  = 'float-left' indexed=no
+ - cssClass (string)  = 'float-start' indexed=no
 
 [bootstrap5nt:breadcrumb]> jnt:content, bootstrap5mix:component
 
@@ -168,7 +168,7 @@
 
 [bootstrap5nt:card]> jnt:content, bootstrap5mix:component, mix:title, jmix:list, bootstrap5mix:image, jmix:browsableInEditorialPicker
  - headerSize (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'h1', 'h2', 'h3', 'h4', 'h5'
- - textAlign (string, choicelist[resourceBundle])  = 'text-left' autocreated indexed=no < 'text-left', 'text-right', 'text-center'
+ - textAlign (string, choicelist[resourceBundle])  = 'text-start' autocreated indexed=no < 'text-start', 'text-end', 'text-center'
  - footer (string) i18n
  + * (jmix:droppableContent)  = jmix:droppableContent
 
@@ -226,12 +226,12 @@
  - addContainerWithinTheNavbar (boolean)  = 'false' autocreated indexed=no
  - addLoginButton (boolean)  = 'false' autocreated indexed=no
  - addLanguageButton (boolean)  = 'true' autocreated indexed=no
- - loginMenuULClass (string)  = 'navbar-nav flex-row ml-md-auto d-none d-md-flex'
+ - loginMenuULClass (string)  = 'navbar-nav flex-row ms-md-auto d-none d-md-flex'
 
 [bootstrap5mix:customBaseNavbar] mixin
  extends = bootstrap5nt:navbar
  itemtype = content
- - ulClass (string)  = 'navbar-nav mr-auto' autocreated indexed=no
+ - ulClass (string)  = 'navbar-nav me-auto' autocreated indexed=no
  - recursive (boolean)  = 'true' autocreated indexed=no
 
 [bootstrap5mix:brand] mixin

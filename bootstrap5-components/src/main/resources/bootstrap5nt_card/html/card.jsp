@@ -23,7 +23,7 @@
     <c:set var="headerSize" value="div"/>
 </c:if>
 <c:set var="textAlign" value=" ${currentNode.properties.textAlign.string}"/>
-<c:if test="${textAlign == ' text-left'}">
+<c:if test="${textAlign == ' text-start'}">
     <c:remove var="textAlign"/>
 </c:if>
 <c:set var="imageNode" value="${currentNode.properties.image.node}"/>

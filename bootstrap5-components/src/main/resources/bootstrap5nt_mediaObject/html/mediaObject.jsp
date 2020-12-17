@@ -6,15 +6,15 @@
 <%--@elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper"--%>
 <template:addResources type="css" resources="bootstrap.min.css"/>
 
-<%-- default value for imageMargin is set to mr-3 (or ml-3 if image is set on right). User is allow to update it --%>
-<c:set var="imageMargin" value="mr-3"/>
+<%-- default value for imageMargin is set to me-3 (or ms-3 if image is set on right). User is allow to update it --%>
+<c:set var="imageMargin" value="me-3"/>
 
-<c:set var="imageHorizonralAlignment" value="left"/>
+<c:set var="imageHorizonralAlignment" value="start"/>
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:mediaObjectImageAlignment')}">
     <c:set var="imageVerticalAlignment" value="${currentNode.properties.imageVerticalAlignment.string}"/>
     <c:set var="imageHorizonralAlignment" value="${currentNode.properties.imageHorizonralAlignment.string}"/>
-    <c:if test="${imageHorizonralAlignment eq 'right'}">
-        <c:set var="imageMargin" value="ml-3"/>
+    <c:if test="${imageHorizonralAlignment eq 'end'}">
+        <c:set var="imageMargin" value="ms-3"/>
     </c:if>
 </c:if>
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:margin')}">
@@ -56,7 +56,7 @@
      <c:if test="${! empty style}"><c:out value=" "/>style="${fn:escapeXml(style)}"</c:if>
      <c:if test="${! empty id}"><c:out value=" "/>id="${fn:escapeXml(id)}"</c:if>>
     <c:choose>
-        <c:when test="${imageHorizonralAlignment eq 'right'}">
+        <c:when test="${imageHorizonralAlignment eq 'end'}">
             ${mediaBody}
             ${mediaImage}
         </c:when>

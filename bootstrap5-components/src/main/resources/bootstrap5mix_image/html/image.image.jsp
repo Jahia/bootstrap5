@@ -59,11 +59,11 @@
 
         <c:set var="align" value="${currentNode.properties.align.string}"/>
         <c:choose>
-            <c:when test="${align eq 'left'}">
-                <c:set var="class">${class}${' float-left'}</c:set>
+            <c:when test="${align eq 'start'}">
+                <c:set var="class">${class}${' float-start'}</c:set>
             </c:when>
-            <c:when test="${align eq 'right'}">
-                <c:set var="class">${class}${' float-right'}</c:set>
+            <c:when test="${align eq 'end'}">
+                <c:set var="class">${class}${' float-end'}</c:set>
             </c:when>
             <c:when test="${align eq 'center'}">
                 <c:set var="class">${class}${' mx-auto d-block'}</c:set>

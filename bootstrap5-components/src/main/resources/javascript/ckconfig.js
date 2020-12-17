@@ -115,7 +115,7 @@ CKEDITOR.editorConfig = function (config) {
     config.templates_replaceContent = false;
 
     // [ Left, Center, Right, Justified ]
-    config.justifyClasses = [ 'text-left', 'text-center', 'text-right', 'text-justify' ];
+    config.justifyClasses = [ 'text-start', 'text-center', 'text-end', 'text-justify' ];
 };
 
 CKEDITOR.addCss(

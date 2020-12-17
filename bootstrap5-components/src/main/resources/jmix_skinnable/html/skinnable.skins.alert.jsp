@@ -11,8 +11,6 @@
 <div class="alert alert-${backgroundColor}${extraClasses}" role="alert">
     ${wrappedContent}
     <c:if test="${addDismissButton}">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </c:if>
 </div>
