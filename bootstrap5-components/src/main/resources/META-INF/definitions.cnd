@@ -253,12 +253,17 @@
  - useListNameAsAnchor (boolean)  = 'true' autocreated indexed=no
  + * (jnt:contentList)  = jnt:contentList
 
-// need to keep this mixin for compatibility issue...
-[bootstrap5mix:borderRadius] mixin
-
-
 [bootstrap5mix:alert] > jmix:templateMixin mixin
  extends = jmix:droppableContent
  itemtype = layout
  - backgroundColor (string, choicelist[resourceBundle])  = 'primary' autocreated indexed=no < 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'link','dark','light','custom'
  - addDismissButton (boolean)  = 'false' indexed=no
+
+
+[bootstrap5nt:accordion] > jnt:content, mix:title, bootstrap5mix:text
+ - show (boolean)  = 'false' indexed=no
+ + * (jmix:droppableContent)  = jmix:droppableContent
+
+[bootstrap5nt:accordions] > jnt:content, bootstrap5mix:component, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
+ - flush (boolean)  = 'false' indexed=no
+ + * (bootstrap5nt:accordion)
