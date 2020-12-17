@@ -39,18 +39,7 @@
 <c:if test="${createContainer}">
     <c:set var="containerId" value="${currentNode.properties['containerId'].string}"/>
     <c:set var="containerCssClass" value="${currentNode.properties['containerCssClass'].string} "/>
-    <c:set var="gridLayout" value="${currentNode.properties['gridLayout'].string}"/>
-    <c:choose>
-        <c:when test="${gridLayout eq 'fixed-width'}">
-            <c:set var="containerType" value="container "/>
-        </c:when>
-        <c:when test="${gridLayout eq 'full-width'}">
-            <c:set var="containerType" value="container-fluid "/>
-        </c:when>
-        <c:otherwise>
-            <c:set var="containerType" value="${gridLayout} "/>
-        </c:otherwise>
-    </c:choose>
+    <c:set var="containerType" value="${currentNode.properties['containerType'].string}"/>
     <c:if test="${! empty containerCssClass}">
         <c:set var="containerCssClass" value="${fn:replace(containerCssClass, containerType, '')}"/>
     </c:if>
@@ -73,10 +62,21 @@
     <c:if test="${rowHorizontalAlignment eq 'default'}">
         <c:remove var="rowHorizontalAlignment"/>
     </c:if>
+    <c:set var="horizontalGutters" value="${currentNode.properties['horizontalGutters'].string}"/>
+    <c:if test="${horizontalGutters eq 'default'}">
+        <c:remove var="horizontalGutters"/>
+    </c:if>
+    <c:set var="verticalGutters" value="${currentNode.properties['verticalGutters'].string}"/>
+    <c:if test="${verticalGutters eq 'default'}">
+        <c:remove var="verticalGutters"/>
+    </c:if>
+
     <div<c:if test="${not empty rowId}"> id="${rowId}"</c:if> class="row<c:if test='${not empty rowCssClass}'><c:out
         value=' '/>${rowCssClass}</c:if><c:if test='${not empty rowVerticalAlignment}'><c:out
         value=' '/>${rowVerticalAlignment}</c:if><c:if test='${not empty rowHorizontalAlignment}'><c:out
-        value=' '/>${rowHorizontalAlignment}</c:if>">
+        value=' '/>${rowHorizontalAlignment}</c:if><c:if test='${not empty horizontalGutters}'><c:out
+        value=' '/>${horizontalGutters}</c:if><c:if test='${not empty verticalGutters}'><c:out
+        value=' '/>${verticalGutters}</c:if>">
 </c:if>
 
 <template:include view="hidden.${gridType}"/>

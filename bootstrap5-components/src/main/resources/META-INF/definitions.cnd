@@ -27,7 +27,7 @@
  itemtype = content
  - containerId (string) < '[a-zA-Z0-9-_]+'
  - containerCssClass (string) indexed=no
- - gridLayout (string, choicelist[resourceBundle])  = 'fixed-width' autocreated indexed=no < 'fixed-width', 'full-width', 'container-sm', 'container-md', 'container-lg', 'container-xl'
+ - containerType (string, choicelist[resourceBundle])  = 'container' autocreated indexed=no < 'container', 'container-fluid', 'container-sm', 'container-md', 'container-lg', 'container-xl', 'container-xxl'
 
 [bootstrap5mix:createRow] mixin
  extends = bootstrap5nt:grid
@@ -36,7 +36,10 @@
  - rowId (string) < '[a-zA-Z0-9-_]+'
  - rowCssClass (string) indexed=no
  - rowVerticalAlignment (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'align-items-start', 'align-items-center', 'align-items-end'
- - rowHorizontalAlignment (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'justify-content-start', 'justify-content-center', 'justify-content-end','justify-content-around','justify-content-between'
+ - rowHorizontalAlignment (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'justify-content-start', 'justify-content-center', 'justify-content-end','justify-content-around','justify-content-between','justify-content-evenly'
+ - horizontalGutters (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default','gx-0','gx-1','gx-2','gx-3','gx-4','gx-5'
+ - verticalGutters (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default','gy-0','gy-1','gy-2','gy-3','gy-4','gy-5'
+
 
 [bootstrap5mix:createAbsoluteAreas] mixin
  extends = bootstrap5nt:grid
