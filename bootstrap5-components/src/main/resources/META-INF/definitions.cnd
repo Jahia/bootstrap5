@@ -86,22 +86,6 @@
 [bootstrap5mix:image] mixin
  - image (weakreference, picker[type='image']) < 'jmix:image'
 
-[bootstrap5mix:mediaObjectImageAlignment] mixin
- extends = bootstrap5nt:mediaObject
- itemtype = content
- - imageVerticalAlignment (string, choicelist[resourceBundle])  = 'align-self-start' autocreated indexed=no < 'align-self-start', 'align-self-center', 'align-self-end'
- - imageHorizonralAlignment (string, choicelist[resourceBundle])  = 'start' autocreated indexed=no < 'start', 'end'
-
-[bootstrap5mix:mediaObjectAdvancedSettings] mixin
- extends = bootstrap5nt:mediaObject
- itemtype = content
- - mediaObjectClass (string) indexed=no
- - mediaObjectStyle (string) indexed=no
- - mediaObjectID (string) indexed=no
-
-[bootstrap5nt:mediaObject] > jnt:content, bootstrap5mix:component, jmix:list, bootstrap5mix:imageAdvanced, bootstrap5mix:hasMargin, jmix:browsableInEditorialPicker
- + * (jmix:droppableContent)  = jmix:droppableContent
-
 [bootstrap5mix:figureAdvancedSettings] mixin
  extends = bootstrap5nt:figure
  itemtype = content
