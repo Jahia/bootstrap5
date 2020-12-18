@@ -10,6 +10,9 @@ You can also install the Bootstrap 5 package.
   
 ## List of components : 
 
+### Accordion
+Build vertically collapsing accordions in combination with our Collapse JavaScript plugin.
+
 ### Breadcrumb  
 Indicate the current page’s location within a navigational hierarchy that automatically adds separators via CSS.  
   
