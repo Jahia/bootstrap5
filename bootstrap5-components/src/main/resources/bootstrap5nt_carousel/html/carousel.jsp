@@ -17,7 +17,6 @@
 <template:addResources type="javascript" resources="bootstrap.bundle.min.js"/>
 
 <c:set var="items" value="${jcr:getChildrenOfType(currentNode, 'bootstrap5nt:carouselItem')}"/>
-
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:carouselAdvancedSettings')}">
     <c:set var="interval" value="${currentNode.properties.interval.long}"/>
     <c:set var="keyboard" value="${currentNode.properties.keyboard.boolean}"/>
@@ -28,6 +27,7 @@
     <c:set var="useIndicators" value="${currentNode.properties.useIndicators.boolean}"/>
     <c:set var="useLeftAndRightControls" value="${currentNode.properties.useLeftAndRightControls.boolean}"/>
     <c:set var="carouselClass" value=" ${currentNode.properties.carouselClass.string}"/>
+    <c:set var="variant" value="${currentNode.properties.variant.string eq 'dark' ? ' carousel-dark' : ''}"/>
 </c:if>
 <c:if test="${empty useIndicators}">
     <c:set var="useIndicators" value="true"/>
@@ -56,28 +56,28 @@
 
 <c:set var="options">
     <c:if test="${! empty interval && interval != 5000}">
-        data-interval="${interval}"
+        data-bs-interval="${interval}"
     </c:if>
     <c:if test="${! keyboard}">
-        data-keyboard="false"
+        data-bs-keyboard="false"
     </c:if>
     <c:if test="${pause}">
-        data-pause="hover"
+        data-bs-pause="hover"
     </c:if>
     <c:if test="${ride}">
-        data-ride="carousel"
+        data-bs-ride="carousel"
     </c:if>
     <c:if test="${! wrap}">
-        data-wrap="false"
+        data-bs-wrap="false"
     </c:if>
 </c:set>
 
-<div id="carousel_${currentNode.identifier}" class="carousel${renderContext.editMode?'edit':' '} slide${carouselClass}" ${options} >
+<div id="carousel_${currentNode.identifier}" class="carousel${renderContext.editMode?'edit':' '} slide${carouselClass}${variant}" ${options} >
     <%-- Indicators --%>
     <c:if test="${useIndicators && ! renderContext.editMode}">
         <ol class="carousel-indicators">
             <c:forEach items="${items}" var="item" varStatus="status">
-                <li data-target="#carousel_${currentNode.identifier}" data-slide-to="${status.index}" <c:if test='${status.first}'>class="active"</c:if>></li>
+                <li data-bs-target="#carousel_${currentNode.identifier}" data-bs-slide-to="${status.index}" <c:if test='${status.first}'>class="active"</c:if>></li>
             </c:forEach>
         </ol>
     </c:if>
@@ -95,13 +95,14 @@
 
     <%-- Controls --%>
     <c:if test="${useLeftAndRightControls && ! renderContext.editMode}">
-        <a class="carousel-control-prev" href="#carousel_${currentNode.identifier}" role="button" data-slide="prev">
+
+        <a class="carousel-control-prev" href="#carousel_${currentNode.identifier}" role="button" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only"><fmt:message key="bootstrap5nt_carousel.previous"/></span>
+            <span class="visually-hidden"><fmt:message key="bootstrap5nt_carousel.previous"/></span>
         </a>
-        <a class="carousel-control-next" href="#carousel_${currentNode.identifier}" role="button" data-slide="next">
+        <a class="carousel-control-next" href="#carousel_${currentNode.identifier}" role="button" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only"><fmt:message key="bootstrap5nt_carousel.next"/></span>
+            <span class="visually-hidden"><fmt:message key="bootstrap5nt_carousel.next"/></span>
         </a>
     </c:if>
 </div>

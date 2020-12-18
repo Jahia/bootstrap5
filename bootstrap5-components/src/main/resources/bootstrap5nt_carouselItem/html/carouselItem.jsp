@@ -15,12 +15,13 @@
 <template:addResources type="css" resources="bootstrap.min.css"/>
 
 <c:set var="title" value="${currentNode.properties['jcr:title'].string}"/>
-<c:set var="caption" value="${currentNode.properties['caption'].string}"/>
+<c:set var="caption" value="${currentNode.properties.caption.string}"/>
 <c:set var="imageNode" value="${currentNode.properties.image.node}"/>
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:advancedCarouselItem')}">
-    <c:set var="titleColor" value="text-${currentNode.properties['titleColor'].string}"/>
-    <c:set var="captionColor" value="text-${currentNode.properties['captionColor'].string}"/>
-    <c:set var="carouselItemClass" value=" ${currentNode.properties['carouselItemClass'].string}"/>
+    <c:set var="titleColor" value="text-${currentNode.properties.titleColor.string}"/>
+    <c:set var="captionColor" value="text-${currentNode.properties.captionColor.string}"/>
+    <c:set var="carouselItemClass" value=" ${currentNode.properties.carouselItemClass.string}"/>
+    <c:set var="interval" value=" ${currentNode.properties.interval.long}"/>
     <c:set var="titleClass" value=" class='${titleColor}'"/>
     <c:set var="captionClass" value=" class='${captionColor}'"/>
 </c:if>
@@ -46,7 +47,8 @@
         </div>
     </c:when>
     <c:otherwise>
-        <div class="carousel-item${currentStatus}${carouselItemClass}">
+
+        <div class="carousel-item${currentStatus}${carouselItemClass}" <c:if test="${! empty interval}"><c:out value=" "/>data-bs-interval="${interval}"</c:if>>
             <c:if test="${! empty imageNode}">
                 <c:url var="imageUrl" value="${imageNode.url}" context="/"/>
                 <img src="${imageUrl}" class="d-block w-100"/>

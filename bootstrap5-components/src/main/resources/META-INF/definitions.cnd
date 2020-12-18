@@ -173,6 +173,7 @@
  - titleColor (string, choicelist[resourceBundle])  = 'light' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
  - captionColor (string, choicelist[resourceBundle])  = 'light' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
  - carouselItemClass (string) indexed=no
+ - interval (long) indexed=no
 
 [bootstrap5nt:carouselItem] > jnt:content, mix:title
  - image (weakreference, picker[type='image']) mandatory < 'jmix:image'
@@ -190,6 +191,7 @@
  - wrap (boolean)  = 'true' indexed=no
  - fade (boolean)  = 'true' indexed=no
  - carouselClass (string) indexed=no
+ - variant (string, choicelist[resourceBundle])  = 'white' autocreated indexed=no   < 'white', 'dark'
 
 [bootstrap5nt:carousel] > jnt:content, bootstrap5mix:component, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
  + * (bootstrap5nt:carouselItem)
