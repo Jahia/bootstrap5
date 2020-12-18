@@ -6,16 +6,16 @@
 
 [bootstrap5mix:predefinedGrid] > jmix:templateMixin mixin
  extends = bootstrap5nt:grid
- - grid (string, choicelist[resourceBundle, moduleImage='png'])  = '4_8' autocreated indexed=no < '2_10', '3_9', '4_8', '4_4_4', '3_6_3', '3_3_3_3', '6_6', '8_4', '9_3', '10_2', '12'
+ - grid (string, choicelist[resourceBundle, moduleImage='png']) = '4_8' autocreated indexed=no < '2_10', '3_9', '4_8', '4_4_4', '3_6_3', '3_3_3_3', '6_6', '8_4', '9_3', '10_2', '12'
 
 [bootstrap5mix:customGrid] > jmix:templateMixin mixin
  extends = bootstrap5nt:grid
- - gridClasses (string)  = 'col col-md-8,col-6 col-md-4' indexed=no
+ - gridClasses (string) = 'col col-md-8,col-6 col-md-4' indexed=no
 
 [bootstrap5mix:createSection] mixin
  extends = bootstrap5nt:grid
  itemtype = content
- - sectionElement (string, choicelist[resourceBundle])  = 'div' autocreated indexed=no < 'section', 'article', 'aside', 'hgroup', 'header', 'footer', 'aside', 'nav', 'div', 'figure', 'figcaption', 'main'
+ - sectionElement (string, choicelist[resourceBundle]) = 'div' autocreated indexed=no < 'section', 'article', 'aside', 'hgroup', 'header', 'footer', 'aside', 'nav', 'div', 'figure', 'figcaption', 'main'
  - sectionId (string) indexed=no < '[a-zA-Z0-9-_]+'
  - sectionCssClass (string) indexed=no
  - sectionStyle (string) indexed=no
@@ -27,49 +27,49 @@
  itemtype = content
  - containerId (string) < '[a-zA-Z0-9-_]+'
  - containerCssClass (string) indexed=no
- - containerType (string, choicelist[resourceBundle])  = 'container' autocreated indexed=no < 'container', 'container-fluid', 'container-sm', 'container-md', 'container-lg', 'container-xl', 'container-xxl'
+ - containerType (string, choicelist[resourceBundle]) = 'container' autocreated indexed=no < 'container', 'container-fluid', 'container-sm', 'container-md', 'container-lg', 'container-xl', 'container-xxl'
 
 [bootstrap5mix:createRow] mixin
  extends = bootstrap5nt:grid
  itemtype = content
- - typeOfGrid (string, choicelist[gridTypeInitializer, resourceBundle])  = 'nogrid' autocreated indexed=no < 'nogrid', 'predefinedGrid', 'customGrid'
+ - typeOfGrid (string, choicelist[gridTypeInitializer, resourceBundle]) = 'nogrid' autocreated indexed=no < 'nogrid', 'predefinedGrid', 'customGrid'
  - rowId (string) < '[a-zA-Z0-9-_]+'
  - rowCssClass (string) indexed=no
- - rowVerticalAlignment (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'align-items-start', 'align-items-center', 'align-items-end'
- - rowHorizontalAlignment (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'justify-content-start', 'justify-content-center', 'justify-content-end','justify-content-around','justify-content-between','justify-content-evenly'
- - horizontalGutters (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default','gx-0','gx-1','gx-2','gx-3','gx-4','gx-5'
- - verticalGutters (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default','gy-0','gy-1','gy-2','gy-3','gy-4','gy-5'
+ - rowVerticalAlignment (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'align-items-start', 'align-items-center', 'align-items-end'
+ - rowHorizontalAlignment (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'justify-content-start', 'justify-content-center', 'justify-content-end','justify-content-around','justify-content-between','justify-content-evenly'
+ - horizontalGutters (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','gx-0','gx-1','gx-2','gx-3','gx-4','gx-5'
+ - verticalGutters (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','gy-0','gy-1','gy-2','gy-3','gy-4','gy-5'
 
 
 [bootstrap5mix:createAbsoluteAreas] mixin
  extends = bootstrap5nt:grid
  itemtype = content
- - level (string, choicelist[resourceBundle])  = '0' autocreated indexed=no < '0', '1', '2', '3', '4', '5'
+ - level (string, choicelist[resourceBundle]) = '0' autocreated indexed=no < '0', '1', '2', '3', '4', '5'
 
 [bootstrap5nt:grid] > jnt:content, bootstrap5mix:component, jmix:list, jmix:browsableInEditorialPicker
  - gridType (string) hidden
- + * (jmix:droppableContent)  = jmix:droppableContent
+ + * (jmix:droppableContent) = jmix:droppableContent
 
 [bootstrap5mix:listLimit] mixin
  extends = bootstrap5nt:grid
  itemtype = content
- - listLimit (string, choicelist[resourceBundle])  = '-1' autocreated indexed=no < '-1', '1', '2', '3', '4', '5', '10'
+ - listLimit (string, choicelist[resourceBundle]) = '-1' autocreated indexed=no < '-1', '1', '2', '3', '4', '5', '10'
 
 [bootstrap5mix:hasPadding] mixin
 
 [bootstrap5mix:padding] mixin
  extends = bootstrap5mix:hasPadding
  itemtype = content
- - paddingWhere (string, choicelist[resourceBundle])  = 'all' autocreated indexed=no < 'all', 't', 'b', 's', 'e', 'x', 'y'
- - paddingSize (string, choicelist[resourceBundle])  = '3' autocreated indexed=no < '0', '1', '2', '3', '4', '5'
+ - paddingWhere (string, choicelist[resourceBundle]) = 'all' autocreated indexed=no < 'all', 't', 'b', 's', 'e', 'x', 'y'
+ - paddingSize (string, choicelist[resourceBundle]) = '3' autocreated indexed=no < '0', '1', '2', '3', '4', '5'
 
 [bootstrap5mix:hasMargin] mixin
 
 [bootstrap5mix:margin] mixin
  extends = bootstrap5mix:hasMargin
  itemtype = content
- - marginWhere (string, choicelist[resourceBundle])  = 'all' autocreated indexed=no < 'all', 't', 'b', 's', 'e', 'x', 'y'
- - marginSize (string, choicelist[resourceBundle])  = '3' autocreated indexed=no < '0', '1', '2', '3', '4', '5'
+ - marginWhere (string, choicelist[resourceBundle]) = 'all' autocreated indexed=no < 'all', 't', 'b', 's', 'e', 'x', 'y'
+ - marginSize (string, choicelist[resourceBundle]) = '3' autocreated indexed=no < '0', '1', '2', '3', '4', '5'
 
 [bootstrap5mix:imageAdvancedSettings]  mixin
  extends = bootstrap5mix:imageAdvanced
@@ -77,11 +77,11 @@
  - imageClass (string) indexed=no
  - imageStyle (string) indexed=no
  - imageID (string) indexed=no
- - responsive (boolean)  = 'true' indexed=no
- - thumbnails (boolean)  = 'false' indexed=no
- - align (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'start', 'end', 'center'
+ - responsive (boolean) = 'true' indexed=no
+ - thumbnails (boolean) = 'false' indexed=no
+ - align (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'start', 'end', 'center'
  - alt (string) i18n
- - borderRadius (string, choicelist[resourceBundle])  = 'rounded-0' autocreated indexed=no < 'rounded','rounded-top', 'rounded-end', 'rounded-bottom','rounded-start','rounded-circle','rounded-0'
+ - borderRadius (string, choicelist[resourceBundle]) = 'rounded-0' autocreated indexed=no < 'rounded','rounded-top', 'rounded-end', 'rounded-bottom','rounded-start','rounded-circle','rounded-0'
  - borderRadiusSize (string, choicelist[resourceBundle]) = 'default' < 'default','rounded-lg','rounded-sm'
 
 [bootstrap5mix:imageAdvanced] > bootstrap5mix:image mixin
@@ -92,7 +92,7 @@
 [bootstrap5mix:figureAdvancedSettings] mixin
  extends = bootstrap5nt:figure
  itemtype = content
- - captionAlignment (string, choicelist[resourceBundle])  = 'text-start' autocreated indexed=no < 'text-start', 'text-center', 'text-end'
+ - captionAlignment (string, choicelist[resourceBundle]) = 'text-start' autocreated indexed=no < 'text-start', 'text-center', 'text-end'
 
 [bootstrap5nt:figure] > jnt:content, bootstrap5mix:component, bootstrap5mix:imageAdvanced, mix:title
 
@@ -104,27 +104,28 @@
 [bootstrap5mix:advancedBreadcrumb] mixin
  extends = bootstrap5nt:breadcrumb
  itemtype = content
- - cssClass (string)  = 'float-start' indexed=no
+ - cssClass (string) = 'float-start' indexed=no
 
 [bootstrap5nt:breadcrumb]> jnt:content, bootstrap5mix:component
 
 [bootstrap5nt:button]> jnt:content, bootstrap5mix:component, mix:title
- - buttonType (string, choicelist[buttonTypeInitializer, resourceBundle])  = 'internalLink' autocreated indexed=no < 'internalLink', 'externalLink', 'modal', 'collapse','popover'
+ - buttonType (string, choicelist[buttonTypeInitializer, resourceBundle]) = 'internalLink' autocreated indexed=no < 'internalLink', 'externalLink', 'modal', 'collapse','popover'
 
 [bootstrap5mix:buttonAdvancedSettings] mixin
  extends = bootstrap5nt:button
  itemtype = content
- - style (string, choicelist[resourceBundle])  = 'primary' autocreated indexed=no < 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'link','dark','light','custom'
- - size (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'btn-lg', 'btn-sm'
- - outline (boolean)  = 'false' indexed=no
- - block (boolean)  = 'false' indexed=no
- - state (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'active', 'disabled'
+ - style (string, choicelist[resourceBundle]) = 'primary' autocreated indexed=no < 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'link','dark','light','custom'
+ - size (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'btn-lg', 'btn-sm'
+ - outline (boolean) = 'false' indexed=no
+ - block (boolean) = 'false' indexed=no
+ - state (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'active', 'disabled'
  - cssClass (string) indexed=no
- - disableTextWrapping (boolean)  = 'false' indexed=no
+ - disableTextWrapping (boolean) = 'false' indexed=no
 
 [bootstrap5mix:collapse] > jmix:templateMixin, jmix:browsableInEditorialPicker mixin orderable
  extends = bootstrap5nt:button
- + * (jmix:droppableContent)  = jmix:droppableContent
+ - show (boolean) = 'false' indexed=no
+ + * (jmix:droppableContent) = jmix:droppableContent
 
 [bootstrap5mix:internalLink] > jmix:templateMixin mixin
  extends = bootstrap5nt:button
@@ -132,46 +133,49 @@
 
 [bootstrap5mix:externalLink] > jmix:templateMixin mixin
  extends = bootstrap5nt:button
- - externalLink (string)  = 'http://'
+ - externalLink (string) = 'http://'
 
 [bootstrap5mix:modal] > jmix:templateMixin, jmix:browsableInEditorialPicker mixin orderable
  extends = bootstrap5nt:button
  - modalTitle (string) i18n
- - closeText (string)  = 'Close' i18n
- - modalSize (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'lg', 'sm'
- + * (jmix:droppableContent)  = jmix:droppableContent
+ - closeText (string) = 'Close' i18n
+ - modalSize (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'lg', 'sm', 'xl'
+ - staticBackdrop (boolean) = 'false' indexed=no
+ - verticallyCentered (boolean) = 'false' indexed=no
+ + * (jmix:droppableContent) = jmix:droppableContent
 
 [bootstrap5mix:popover] > jmix:templateMixin mixin
  extends = bootstrap5nt:button
  - popoverTitle (string) i18n
  - popoverContent (string) i18n
- - direction (string, choicelist[resourceBundle])  = 'top' autocreated indexed=no < 'top', 'left', 'right', 'bottom'
+ - direction (string, choicelist[resourceBundle]) = 'top' autocreated indexed=no < 'top', 'left', 'right', 'bottom'
+ - html (boolean) = 'false' indexed=no
 
 [bootstrap5mix:colors] mixin
  extends = bootstrap5nt:card
  itemtype = content
- - backgroundColor (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default','primary','secondary','success','danger','warning','info','light','dark','white','transparent'
- - textColor (string, choicelist[resourceBundle])  = 'dark' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
- - borderColor (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default','primary','secondary','success','danger','warning','info','light','dark','white'
+ - backgroundColor (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','primary','secondary','success','danger','warning','info','light','dark','white','transparent'
+ - textColor (string, choicelist[resourceBundle]) = 'dark' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
+ - borderColor (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','primary','secondary','success','danger','warning','info','light','dark','white'
 
 [bootstrap5nt:card]> jnt:content, bootstrap5mix:component, mix:title, jmix:list, bootstrap5mix:image, jmix:browsableInEditorialPicker
- - headerSize (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no < 'default', 'h1', 'h2', 'h3', 'h4', 'h5'
- - textAlign (string, choicelist[resourceBundle])  = 'text-start' autocreated indexed=no < 'text-start', 'text-end', 'text-center'
+ - headerSize (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'h1', 'h2', 'h3', 'h4', 'h5'
+ - textAlign (string, choicelist[resourceBundle]) = 'text-start' autocreated indexed=no < 'text-start', 'text-end', 'text-center'
  - footer (string) i18n
- + * (jmix:droppableContent)  = jmix:droppableContent
+ + * (jmix:droppableContent) = jmix:droppableContent
 
 [bootstrap5mix:cardAdvancedSettings] mixin
  extends = bootstrap5nt:card
  itemtype = content
- - cssClass (string)  = 'card' indexed=no
+ - cssClass (string) = 'card' indexed=no
  - cardBodyCssClass (string) = 'card-body' indexed=no
- - freeFooter (boolean)  = 'false' indexed=no
+ - freeFooter (boolean) = 'false' indexed=no
 
 [bootstrap5mix:advancedCarouselItem] mixin
  extends = bootstrap5nt:carouselItem
  itemtype = content
- - titleColor (string, choicelist[resourceBundle])  = 'light' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
- - captionColor (string, choicelist[resourceBundle])  = 'light' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
+ - titleColor (string, choicelist[resourceBundle]) = 'light' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
+ - captionColor (string, choicelist[resourceBundle]) = 'light' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
  - carouselItemClass (string) indexed=no
  - interval (long) indexed=no
 
@@ -182,16 +186,16 @@
 [bootstrap5mix:carouselAdvancedSettings] mixin
  extends = bootstrap5nt:carousel
  itemtype = content
- - useIndicators (boolean)  = 'false' indexed=no
- - useLeftAndRightControls (boolean)  = 'true' indexed=no
- - interval (long)  = '5000' indexed=no
- - keyboard (boolean)  = 'true' indexed=no
- - pause (boolean)  = 'true' indexed=no
- - ride (boolean)  = 'true' indexed=no
- - wrap (boolean)  = 'true' indexed=no
- - fade (boolean)  = 'true' indexed=no
+ - useIndicators (boolean) = 'false' indexed=no
+ - useLeftAndRightControls (boolean) = 'true' indexed=no
+ - interval (long) = '5000' indexed=no
+ - keyboard (boolean) = 'true' indexed=no
+ - pause (boolean) = 'true' indexed=no
+ - ride (boolean) = 'true' indexed=no
+ - wrap (boolean) = 'true' indexed=no
+ - fade (boolean) = 'true' indexed=no
  - carouselClass (string) indexed=no
- - variant (string, choicelist[resourceBundle])  = 'white' autocreated indexed=no   < 'white', 'dark'
+ - variant (string, choicelist[resourceBundle]) = 'white' autocreated indexed=no   < 'white', 'dark'
 
 [bootstrap5nt:carousel] > jnt:content, bootstrap5mix:component, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
  + * (bootstrap5nt:carouselItem)
@@ -199,30 +203,30 @@
 [bootstrap5mix:advancedPagination] mixin
  extends = bootstrap5nt:pagination
  itemtype = content
- - pageSize (long)  = '10' autocreated mandatory indexed=no
- - nbOfPages (long)  = '10' autocreated mandatory indexed=no
- - nbOfPagesInEdit (long)  = '100' autocreated mandatory indexed=no
- - align (string, choicelist[resourceBundle])  = 'justify-content-center' autocreated indexed=no  < 'justify-content-center', 'justify-content-start', 'justify-content-end'
- - layout (string, choicelist[resourceBundle])  = 'default' autocreated indexed=no   < 'pagination-lg', 'default', 'pagination-sm'
+ - pageSize (long) = '10' autocreated mandatory indexed=no
+ - nbOfPages (long) = '10' autocreated mandatory indexed=no
+ - nbOfPagesInEdit (long) = '100' autocreated mandatory indexed=no
+ - align (string, choicelist[resourceBundle]) = 'justify-content-center' autocreated indexed=no  < 'justify-content-center', 'justify-content-start', 'justify-content-end'
+ - layout (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no   < 'pagination-lg', 'default', 'pagination-sm'
 
 [bootstrap5nt:pagination] > jnt:content, bootstrap5mix:component, jmix:bindedComponent
- - displayPager (boolean)  = 'true' autocreated indexed=no
+ - displayPager (boolean) = 'true' autocreated indexed=no
 
 [bootstrap5mix:advancedNavbar] mixin
  extends = bootstrap5nt:navbar
  itemtype = content
- - navClass (string)  = 'navbar navbar-expand-lg navbar-light bg-light' autocreated indexed=no
- - divClass (string)  = 'collapse navbar-collapse' autocreated indexed=no
- - addContainerWithinTheNavbar (boolean)  = 'false' autocreated indexed=no
- - addLoginButton (boolean)  = 'false' autocreated indexed=no
- - addLanguageButton (boolean)  = 'true' autocreated indexed=no
- - loginMenuULClass (string)  = 'navbar-nav flex-row ms-md-auto d-none d-md-flex'
+ - navClass (string) = 'navbar navbar-expand-lg navbar-light bg-light' autocreated indexed=no
+ - divClass (string) = 'collapse navbar-collapse' autocreated indexed=no
+ - addContainerWithinTheNavbar (boolean) = 'false' autocreated indexed=no
+ - addLoginButton (boolean) = 'false' autocreated indexed=no
+ - addLanguageButton (boolean) = 'true' autocreated indexed=no
+ - loginMenuULClass (string) = 'navbar-nav flex-row ms-md-auto d-none d-md-flex'
 
 [bootstrap5mix:customBaseNavbar] mixin
  extends = bootstrap5nt:navbar
  itemtype = content
- - ulClass (string)  = 'navbar-nav me-auto' autocreated indexed=no
- - recursive (boolean)  = 'true' autocreated indexed=no
+ - ulClass (string) = 'navbar-nav me-auto' autocreated indexed=no
+ - recursive (boolean) = 'true' autocreated indexed=no
 
 [bootstrap5mix:brand] mixin
  extends = bootstrap5nt:navbar
@@ -240,33 +244,33 @@
 [bootstrap5mix:customButtonNavbar]  mixin
  extends = bootstrap5nt:navbar
  itemtype = content
- - buttonClass (string)  = 'navbar-toggler navbar-toggler-right' indexed=no
+ - buttonClass (string) = 'navbar-toggler navbar-toggler-right' indexed=no
 
 [bootstrap5mix:customRootPage] > jmix:templateMixin mixin
  extends = bootstrap5nt:navbar
  - customRootPage (weakreference, picker[type='page']) < 'jnt:page'
 
 [bootstrap5nt:navbar] > jnt:content, bootstrap5mix:component, jmix:navMenuComponent
- - root (string, choicelist[navbarRootInitializer,resourceBundle])  = 'homePage' autocreated indexed=no   < 'homePage', 'currentPage', 'parentPage','customRootPage'
+ - root (string, choicelist[navbarRootInitializer,resourceBundle]) = 'homePage' autocreated indexed=no   < 'homePage', 'currentPage', 'parentPage','customRootPage'
 
 [bootstrap5nt:tabs] > jnt:content, bootstrap5mix:component, jmix:manuallyOrderable, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
- - type (string, choicelist[resourceBundle, moduleImage='png'])  = 'tab' autocreated indexed=no < 'tab', 'pill','link'
- - fade (boolean)  = 'true' autocreated indexed=no
- - align (string, choicelist[resourceBundle])  = 'justify-content-start' indexed=no < 'justify-content-start', 'justify-content-center', 'justify-content-end', 'nav-fill', 'nav-justified'
- - useListNameAsAnchor (boolean)  = 'true' autocreated indexed=no
- + * (jnt:contentList)  = jnt:contentList
+ - type (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no < 'tab', 'pill','link'
+ - fade (boolean) = 'true' autocreated indexed=no
+ - align (string, choicelist[resourceBundle]) = 'justify-content-start' indexed=no < 'justify-content-start', 'justify-content-center', 'justify-content-end', 'nav-fill', 'nav-justified'
+ - useListNameAsAnchor (boolean) = 'true' autocreated indexed=no
+ + * (jnt:contentList) = jnt:contentList
 
 [bootstrap5mix:alert] > jmix:templateMixin mixin
  extends = jmix:droppableContent
  itemtype = layout
- - backgroundColor (string, choicelist[resourceBundle])  = 'primary' autocreated indexed=no < 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'link','dark','light','custom'
- - addDismissButton (boolean)  = 'false' indexed=no
+ - backgroundColor (string, choicelist[resourceBundle]) = 'primary' autocreated indexed=no < 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'link','dark','light','custom'
+ - addDismissButton (boolean) = 'false' indexed=no
 
 
 [bootstrap5nt:accordion] > jnt:content, mix:title, bootstrap5mix:text
- - show (boolean)  = 'false' indexed=no
- + * (jmix:droppableContent)  = jmix:droppableContent
+ - show (boolean) = 'false' indexed=no
+ + * (jmix:droppableContent) = jmix:droppableContent
 
 [bootstrap5nt:accordions] > jnt:content, bootstrap5mix:component, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
- - flush (boolean)  = 'false' indexed=no
+ - flush (boolean) = 'false' indexed=no
  + * (bootstrap5nt:accordion)

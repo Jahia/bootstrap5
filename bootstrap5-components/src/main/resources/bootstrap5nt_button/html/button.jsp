@@ -88,6 +88,8 @@
         <c:set var="modalSize" value=" modal-${currentNode.properties.modalSize.string}"/>
         <c:set var="modalTitle" value="${currentNode.properties.modalTitle.string}"/>
         <c:set var="closeText" value="${currentNode.properties.closeText.string}"/>
+        <c:set var="staticBackdrop" value="${currentNode.properties.staticBackdrop.boolean}"/>
+        <c:set var="verticallyCentered" value="${currentNode.properties.verticallyCentered.boolean?' modal-dialog-centered':''}"/>
         <c:if test="${modalSize eq ' modal-default'}">
             <c:remove var="modalSize"/>
         </c:if>
@@ -97,11 +99,13 @@
         <c:if test="${empty closeText}">
             <fmt:message key="bootstrap5nt_button.close" var="closeText"/>
         </c:if>
-        <button type="button" class="${buttonClass}" ${aria} data-toggle="modal" data-target="#modal-${currentNode.identifier}" id="button_${currentNode.identifier}">
+        <button type="button" class="${buttonClass}" ${aria} data-bs-toggle="modal" data-bs-target="#modal-${currentNode.identifier}" id="button_${currentNode.identifier}">
             ${title}
         </button>
-        <div class="modal fade" id="modal-${currentNode.identifier}" tabindex="-1" role="dialog" aria-labelledby="modalLabel_${currentNode.identifier}" aria-hidden="${renderContext.editMode ? 'false' : 'true'}">
-            <div class="modal-dialog ${modalSize}"<c:if test='${renderContext.editMode}'> style="margin:5px;"</c:if>>
+
+        <div class="modal fade" id="modal-${currentNode.identifier}" tabindex="-1" role="dialog" aria-labelledby="modalLabel_${currentNode.identifier}" aria-hidden="${renderContext.editMode ? 'false' : 'true'}"<c:if test="${staticBackdrop}"><c:out value=" "
+        />data-bs-backdrop="static" data-bs-keyboard="false"</c:if>>
+            <div class="modal-dialog ${verticallyCentered} modal-dialog-scrollable ${modalSize}"<c:if test='${renderContext.editMode}'> style="margin:5px;"</c:if>>
                 <div class="modal-content">
                     <c:if test="${not empty modalTitle}">
                         <div class="modal-header">
@@ -118,7 +122,7 @@
                         </c:if>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-${style}" data-dismiss="modal">${closeText}</button>
+                        <button type="button" class="btn btn-${style}" data-bs-dismiss="modal">${closeText}</button>
                     </div>
                 </div>
             </div>
@@ -128,7 +132,10 @@
         <c:if test="${empty title}">
             <fmt:message key="bootstrap5nt_button.readMore" var="title"/>
         </c:if>
-        <a href="#collapse-${currentNode.identifier}" class="${buttonClass}" ${aria} data-toggle="collapse" aria-expanded="false" aria-controls="collapse-${currentNode.identifier}" id="button_${currentNode.identifier}">${title}</a>
+        <c:set var="show" value="${currentNode.properties.show.boolean ? ' show' : ''}"/>
+
+        <a href="#collapse-${currentNode.identifier}" class="${buttonClass}${show}" ${aria} role="button"  data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapse-${currentNode.identifier}" id="button_${currentNode.identifier}">${title}</a>
+
         <div class="collapse" id="collapse-${currentNode.identifier}">
             <c:forEach items="${jcr:getChildrenOfType(currentNode, 'jmix:droppableContent')}" var="droppableContent">
                 <template:module node="${droppableContent}" editable="true"/>
@@ -145,17 +152,19 @@
         <c:set var="direction" value="${currentNode.properties.direction.string}"/>
         <c:set var="popoverTitle" value="${currentNode.properties.popoverTitle.string}"/>
         <c:set var="popoverContent" value="${currentNode.properties.popoverContent.string}"/>
+        <c:set var="html" value="${currentNode.properties.html.boolean}"/>
         <c:if test="${! empty popoverTitle}">
             <c:set var="pTitle"> title="${fn:escapeXml(popoverTitle)}"</c:set>
         </c:if>
         <c:if test="${! empty popoverContent}">
-            <c:set var="pContent"> data-content="${fn:escapeXml(popoverContent)}"</c:set>
+            <c:set var="pContent"> data-bs-content="${fn:escapeXml(popoverContent)}"</c:set>
         </c:if>
-        <button type="button" class="${buttonClass}" ${aria} data-toggle="popover" ${pTitle} ${pContent} data-container="body" data-placement="${direction}" data-trigger="focus" id="button_${currentNode.identifier}">${title}</button>
+        <button type="button" class="${buttonClass}" ${aria} data-bs-toggle="popover" ${pTitle} ${pContent} <c:if test="${html}"><c:out
+                value=" "/>data-bs-html="true" </c:if> data-bs-container="body" data-bs-placement="${direction}" data-bs-trigger="focus" id="button_${currentNode.identifier}">${title}</button>
         <template:addResources type="inline">
             <script>
                 $(function () {
-                    $('[data-toggle="popover"]').popover()
+                    $('[data-bs-toggle="popover"]').popover()
                 })
             </script>
         </template:addResources>
