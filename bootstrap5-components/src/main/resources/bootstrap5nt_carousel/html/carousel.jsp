@@ -56,19 +56,19 @@
 
 <c:set var="options">
     <c:if test="${! empty interval && interval != 5000}">
-        data-bs-interval="${interval}"
+      data-bs-interval="${interval}"
     </c:if>
     <c:if test="${! keyboard}">
-        data-bs-keyboard="false"
+      data-bs-keyboard="false"
     </c:if>
     <c:if test="${pause}">
-        data-bs-pause="hover"
+      data-bs-pause="hover"
     </c:if>
     <c:if test="${ride}">
-        data-bs-ride="carousel"
+      data-bs-ride="carousel"
     </c:if>
     <c:if test="${! wrap}">
-        data-bs-wrap="false"
+      data-bs-wrap="false"
     </c:if>
 </c:set>
 

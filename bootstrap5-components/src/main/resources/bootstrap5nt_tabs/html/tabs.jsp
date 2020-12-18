@@ -44,7 +44,7 @@
     <c:set var="navItems">
         ${navItems}
         <li class="nav-item">
-            <a class="nav-link ${status.first?' active':''}" data-toggle="tab" href="#${anchorName}" role="tab" aria-controls="${anchorName}">${droppableContent.displayableName}</a>
+            <a class="nav-link ${status.first?' active':''}" data-bs-toggle="tab" href="#${anchorName}" role="tab" aria-controls="${anchorName}">${droppableContent.displayableName}</a>
         </li>
     </c:set>
     <c:set var="tabPanes">

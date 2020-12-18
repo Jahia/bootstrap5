@@ -16,7 +16,7 @@
         <ul class="${loginMenuULClass}">
             <li class="nav-item dropdown">
                 <a class="nav-item nav-link dropdown-toggle me-md-2" href="#" id="${currentNode.identifier}"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         ${currentUser.username}
                 </a>
                 <div class="dropdown-menu dropdown-menu-start" aria-labelledby="${currentNode.identifier}">

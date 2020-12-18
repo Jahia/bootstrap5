@@ -48,7 +48,7 @@
     </c:when>
     <c:otherwise>
 
-        <div class="carousel-item${currentStatus}${carouselItemClass}" <c:if test="${! empty interval}"><c:out value=" "/>data-bs-interval="${interval}"</c:if>>
+        <div class="carousel-item${currentStatus}${carouselItemClass}" <c:if test="${! empty interval}"><c:out value=" "/> data-bs-interval="${interval}"</c:if>>
             <c:if test="${! empty imageNode}">
                 <c:url var="imageUrl" value="${imageNode.url}" context="/"/>
                 <img src="${imageUrl}" class="d-block w-100"/>

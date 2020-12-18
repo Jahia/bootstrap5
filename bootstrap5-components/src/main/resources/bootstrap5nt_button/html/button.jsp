@@ -104,7 +104,7 @@
         </button>
 
         <div class="modal fade" id="modal-${currentNode.identifier}" tabindex="-1" role="dialog" aria-labelledby="modalLabel_${currentNode.identifier}" aria-hidden="${renderContext.editMode ? 'false' : 'true'}"<c:if test="${staticBackdrop}"><c:out value=" "
-        />data-bs-backdrop="static" data-bs-keyboard="false"</c:if>>
+        /> data-bs-backdrop="static" data-bs-keyboard="false"</c:if>>
             <div class="modal-dialog ${verticallyCentered} modal-dialog-scrollable ${modalSize}"<c:if test='${renderContext.editMode}'> style="margin:5px;"</c:if>>
                 <div class="modal-content">
                     <c:if test="${not empty modalTitle}">
@@ -134,7 +134,7 @@
         </c:if>
         <c:set var="show" value="${currentNode.properties.show.boolean ? ' show' : ''}"/>
 
-        <a href="#collapse-${currentNode.identifier}" class="${buttonClass}${show}" ${aria} role="button"  data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapse-${currentNode.identifier}" id="button_${currentNode.identifier}">${title}</a>
+        <a href="#collapse-${currentNode.identifier}" class="${buttonClass}${show}" ${aria} role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapse-${currentNode.identifier}" id="button_${currentNode.identifier}">${title}</a>
 
         <div class="collapse" id="collapse-${currentNode.identifier}">
             <c:forEach items="${jcr:getChildrenOfType(currentNode, 'jmix:droppableContent')}" var="droppableContent">
@@ -160,11 +160,11 @@
             <c:set var="pContent"> data-bs-content="${fn:escapeXml(popoverContent)}"</c:set>
         </c:if>
         <button type="button" class="${buttonClass}" ${aria} data-bs-toggle="popover" ${pTitle} ${pContent} <c:if test="${html}"><c:out
-                value=" "/>data-bs-html="true" </c:if> data-bs-container="body" data-bs-placement="${direction}" data-bs-trigger="focus" id="button_${currentNode.identifier}">${title}</button>
+                value=" "/> data-bs-html="true" </c:if> data-bs-container="body" data-bs-placement="${direction}" data-bs-trigger="focus" id="button_${currentNode.identifier}">${title}</button>
         <template:addResources type="inline">
             <script>
                 $(function () {
-                    $('[data-bs-toggle="popover"]').popover()
+                    $('[ data-bs-toggle="popover"]').popover()
                 })
             </script>
         </template:addResources>

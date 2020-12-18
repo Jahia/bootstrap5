@@ -17,7 +17,7 @@
     <c:set var="languageCodes" value="${requestScope.languageCodes}"/>
     <c:if test="${fn:length(languageCodes)>1}">
         <div class="dropdown navbar-nav language-nav">
-            <a href="#" class="dropdown-toggle nav-link" id="languageSwitchButton" data-toggle="dropdown" aria-haspopup="true"
+            <a href="#" class="dropdown-toggle nav-link" id="languageSwitchButton" data-bs-toggle="dropdown" aria-haspopup="true"
                aria-expanded="false" aria-label="<fmt:message key='bootstrap5nt_navbarnavbar.label.change'/>" aria-owns="language-menu">
                     ${fn:toUpperCase(renderContext.mainResourceLocale.language)}
             </a>

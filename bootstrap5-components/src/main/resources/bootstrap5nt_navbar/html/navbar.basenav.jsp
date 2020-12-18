@@ -91,7 +91,7 @@
                         <li class="nav-item  ${page1Active? ' active' :''} dropdown">
                             <a class="nav-link dropdown-toggle ${page1Active? ' active' :''}" href="#"
                                id="navbarDropdownMen-${level1Page.identifier}"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     ${page1Title}
                             </a>
                             <div class="dropdown-menu"

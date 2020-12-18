@@ -108,8 +108,8 @@
         ${brandText}
     </a>
 
-    <button class="${buttonClass}" type="button" data-toggle="collapse"
-            data-target="#navbar-${currentNode.identifier}" aria-controls="navbar-${currentNode.identifier}"
+    <button class="${buttonClass}" type="button" data-bs-toggle="collapse"
+          data-bs-target="#navbar-${currentNode.identifier}" aria-controls="navbar-${currentNode.identifier}"
             aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
