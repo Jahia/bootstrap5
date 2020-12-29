@@ -103,7 +103,6 @@
                     <img src="${brandImageUrl}" class="d-inline-block align-top" alt="">
                 </c:otherwise>
             </c:choose>
-
         </c:if>
         ${brandText}
     </a>

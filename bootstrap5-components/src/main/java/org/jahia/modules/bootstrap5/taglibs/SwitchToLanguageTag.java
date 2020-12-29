@@ -32,7 +32,7 @@ public class SwitchToLanguageTag extends AbstractJahiaTag {
             } else {
                 buff.append(" class=\"dropdown-item\"");
             }
-            buff.append(" title=\"").append(displayLanguage).append("\" href=\"").append(link).append("\" role=\"menuitem\" lang=\"").append(languageCode).append("\">").append(languageCode.toUpperCase());
+            buff.append(" title=\"").append(displayLanguage).append("\" href=\"").append(link).append("\" role=\"menuitem\" lang=\"").append(languageCode).append("\">").append(displayLanguage);
             buff.append("</a>");
             pageContext.getOut().print(buff.toString());
         } catch (IOException e) {

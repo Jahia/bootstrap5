@@ -69,6 +69,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     <modules>
         <module>bootstrap5-core</module>
         <module>bootstrap5-components</module>
+        <module>bootstrap5-templates-starter</module>
         <!--<module>bootstrap5-package</module>-->
     </modules>
 </project>

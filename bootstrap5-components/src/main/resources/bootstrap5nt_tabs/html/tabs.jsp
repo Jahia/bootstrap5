@@ -6,7 +6,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="uiComponents" uri="http://www.jahia.org/tags/uiComponentsLib" %>
 <%@ taglib prefix="search" uri="http://www.jahia.org/tags/search" %>
-<%@ taglib prefix="b4" uri="http://www.jahia.org/b4" %>
+<%@ taglib prefix="b5" uri="http://www.jahia.org/b5" %>
 <%--@elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper"--%>
 <%--@elvariable id="out" type="java.io.PrintWriter"--%>
 <%--@elvariable id="script" type="org.jahia.services.render.scripting.Script"--%>
@@ -35,7 +35,7 @@
                 <c:set var="anchorName" value="tab-${anchorName}"/>
             </c:if>
             <%-- cleanup --%>
-            <c:set var="anchorName" value="${b4:replaceAll(anchorName, '[^A-Za-z0-9_]', '-')}"/>
+            <c:set var="anchorName" value="${b5:replaceAll(anchorName, '[^A-Za-z0-9_]', '-')}"/>
         </c:when>
         <c:otherwise>
             <c:set var="anchorName" value="tab-${droppableContent.identifier}"/>

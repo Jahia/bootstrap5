@@ -32,7 +32,7 @@
                 </c:catch>
                 <c:forEach var="languageCode" items="${languageCodes}">
                     <c:if test="${! empty languageCode && ! fn:contains(invalidLanguages, languageCode) && languageCode != renderContext.mainResourceLocale.language}">
-                        <b4:switchToLanguageLink languageCode="${languageCode}"/>
+                        <b5:switchToLanguageLink languageCode="${languageCode}"/>
                     </c:if>
                 </c:forEach>
             </div>

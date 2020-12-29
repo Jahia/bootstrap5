@@ -16,6 +16,11 @@
         <function-class>org.jahia.modules.bootstrap5.Functions</function-class>
         <function-signature>java.lang.String replaceAll(java.lang.String, java.lang.String, java.lang.String)</function-signature>
     </function>
+    <function>
+        <name>isRtlLanguage</name>
+        <function-class>org.jahia.modules.bootstrap5.Functions</function-class>
+        <function-signature>boolean isRtlLanguage(java.lang.String)</function-signature>
+    </function>
 
     <tag>
         <description>Generates a link to switch to the specified language</description>
