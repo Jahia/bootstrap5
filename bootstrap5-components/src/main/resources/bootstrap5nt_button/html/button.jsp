@@ -22,6 +22,7 @@
     <c:set var="nowrap" value="${currentNode.properties.disableTextWrapping.boolean ? ' text-nowrap' : ''}"/>
     <c:set var="block" value="${currentNode.properties.block.boolean ? ' btn-block' : ''}"/>
     <c:set var="cssClass" value=" ${currentNode.properties.cssClass.string}"/>
+    <c:set var="stretchedLink" value="${currentNode.properties.stretchedLink.boolean ? ' stretched-link' : ''}"/>
     <c:choose>
         <c:when test="${state == 'active'}">
             <c:set var="aria">aria-pressed="true"</c:set>
@@ -48,7 +49,7 @@
         <c:set var="buttonClass" value="${cssClass}"/>
     </c:when>
     <c:otherwise>
-        <c:set var="buttonClass" value="btn btn${outline}-${style} ${size} ${state} ${block} ${cssClass} ${nowrap}"/>
+        <c:set var="buttonClass" value="btn btn${outline}-${style} ${size} ${state} ${block} ${cssClass} ${nowrap} ${stretchedLink}"/>
     </c:otherwise>
 </c:choose>
 

@@ -121,6 +121,7 @@
  - state (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'active', 'disabled'
  - cssClass (string) indexed=no
  - disableTextWrapping (boolean) = 'false' indexed=no
+ - stretchedLink (boolean) = 'false' indexed=no
 
 [bootstrap5mix:collapse] > jmix:templateMixin, jmix:browsableInEditorialPicker mixin orderable
  extends = bootstrap5nt:button
