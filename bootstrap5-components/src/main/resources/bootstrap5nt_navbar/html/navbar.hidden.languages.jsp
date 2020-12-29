@@ -3,7 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="jcr" uri="http://www.jahia.org/tags/jcr" %>
 <%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
-<%@ taglib prefix="b4" uri="http://www.jahia.org/b4" %>
+<%@ taglib prefix="b5" uri="http://www.jahia.org/b5" %>
 <%@ taglib prefix="ui" uri="http://www.jahia.org/tags/uiComponentsLib" %>
 
 <%--@elvariable id="currentUser" type="org.jahia.services.usermanager.JahiaUser"--%>
