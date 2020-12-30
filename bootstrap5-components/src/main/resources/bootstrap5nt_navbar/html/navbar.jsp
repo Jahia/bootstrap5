@@ -53,7 +53,7 @@
     <c:set var="addContainerWithinTheNavbar" value="false"/>
 </c:if>
 <c:if test="${empty addLoginButton}">
-    <c:set var="addLoginButton" value="false"/>
+    <c:set var="addLoginButton" value="true"/>
 </c:if>
 <c:if test="${empty addLanguageButton}">
     <c:set var="addLanguageButton" value="true"/>

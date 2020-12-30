@@ -110,14 +110,12 @@
                             <fmt:message key="${loginResult == 'account_locked' ? 'message.accountLocked' : 'message.invalidUsernamePassword'}"/>
                         </div>
                         <c:set var="error" value="true"/>
-                        XXX loginResult is ${loginResult}
                     </ui:isLoginError>
                     <c:if test="${! empty param.loginError}">
                         <div class="alert alert-warning" role="alert">
                             <fmt:message key="${param.loginError == 'account_locked' ? 'message.accountLocked' : 'message.invalidUsernamePassword'}"/>
                         </div>
                         <c:set var="error" value="true"/>
-                        YYY loginError is ${param.loginError}
                     </c:if>
                     <c:if test="${error}">
                         <template:addResources type="inline" targetTag="body">

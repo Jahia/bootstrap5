@@ -219,7 +219,7 @@
  - navClass (string) = 'navbar navbar-expand-lg navbar-light bg-light' autocreated indexed=no
  - divClass (string) = 'collapse navbar-collapse' autocreated indexed=no
  - addContainerWithinTheNavbar (boolean) = 'false' autocreated indexed=no
- - addLoginButton (boolean) = 'false' autocreated indexed=no
+ - addLoginButton (boolean) = 'true' autocreated indexed=no
  - addLanguageButton (boolean) = 'true' autocreated indexed=no
  - loginMenuULClass (string) = 'navbar-nav ms-auto'
 
