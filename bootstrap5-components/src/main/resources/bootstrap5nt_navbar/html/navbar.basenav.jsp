@@ -141,7 +141,7 @@
                                         </c:choose>
                                         <a class="dropdown-item ${page2Active? ' active' :''}"
                                            href="${page2Url}">${page2Title} <c:if test="${page2Active}"><span
-                                                class="sr-only">(current)</span></c:if></a>
+                                                class="visually-hidden">(current)</span></c:if></a>
                                     </c:if>
                                     <c:remove var="page2Active"/>
                                     <c:remove var="page2Url"/>
@@ -153,7 +153,7 @@
                     <c:otherwise>
                         <li class="nav-item ${page1Active? ' active' :''}">
                             <a class="nav-link" href="${page1Url}">${page1Title} <c:if
-                                    test="${page1Active}"><span class="sr-only">(current)</span></c:if></a>
+                                    test="${page1Active}"><span class="visually-hidden">(current)</span></c:if></a>
                         </li>
                     </c:otherwise>
                 </c:choose>

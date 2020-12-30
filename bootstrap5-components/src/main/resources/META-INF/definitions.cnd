@@ -221,7 +221,7 @@
  - addContainerWithinTheNavbar (boolean) = 'false' autocreated indexed=no
  - addLoginButton (boolean) = 'false' autocreated indexed=no
  - addLanguageButton (boolean) = 'true' autocreated indexed=no
- - loginMenuULClass (string) = 'navbar-nav flex-row ms-md-auto d-none d-md-flex'
+ - loginMenuULClass (string) = 'navbar-nav ms-auto'
 
 [bootstrap5mix:customBaseNavbar] mixin
  extends = bootstrap5nt:navbar

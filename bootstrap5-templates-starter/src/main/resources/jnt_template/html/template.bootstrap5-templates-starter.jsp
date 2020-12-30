@@ -10,6 +10,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${renderContext.mainResource.node.displayableName}</title>
     <template:addResources type="css" resources="bootstrap.min.css"/>
+    <c:if test="${renderContext.editMode}">
+        <template:addResources type="css" resources="starter-edit.css"/>
+    </c:if>
     <template:addResources type="javascript" resources="bootstrap.bundle.min.js"/>
 </head>
 <body>

@@ -116,7 +116,8 @@
     <div class="${divClass}" id="navbar-${currentNode.identifier}">
         <template:include view="basenav"/>
         <c:if test="${addLoginButton}">
-            <template:include view="hidden.login"/>
+            <%--<template:include view="hidden.login"/>--%>
+            <template:module node="${currentNode}" view="hidden.login"/>
         </c:if>
         <c:if test="${addLanguageButton}">
             <template:include view="hidden.languages"/>

@@ -106,7 +106,7 @@
                            href="${empty moduleMap.currentPage or moduleMap.currentPage le 1 ? '#' : previousUrl}"
                            aria-label="<fmt:message key='bootstrap5mix_advancedPagination.previous'/>">
                             <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only"><fmt:message key="bootstrap5mix_advancedPagination.previous"/></span>
+                            <span class="visually-hidden"><fmt:message key="bootstrap5mix_advancedPagination.previous"/></span>
                         </a>
                     </li>
                     <c:choose>
@@ -157,7 +157,7 @@
                         <c:if test="${i == moduleMap.currentPage}">
                             <li class="page-item active">
                                 <span class="page-link">${i}
-                                    <span class="sr-only">(current)</span>
+                                    <span class="visually-hidden">(current)</span>
                                 </span>
                             </li>
                         </c:if>
@@ -189,7 +189,7 @@
                         <a class="page-link" href="${moduleMap.currentPage ge moduleMap.nbPages ? '#' : nextUrl}"
                            aria-label="<fmt:message key='bootstrap5mix_advancedPagination.next'/>">
                             <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only"><fmt:message key="bootstrap5mix_advancedPagination.next"/></span>
+                            <span class="visually-hidden"><fmt:message key="bootstrap5mix_advancedPagination.next"/></span>
                         </a>
                     </li>
                 </ul>
