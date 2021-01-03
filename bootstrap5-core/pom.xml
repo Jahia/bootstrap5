@@ -29,6 +29,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
   <packaging>bundle</packaging>
   <name>Bootstrap 5 Core</name>
   <description>This module provide the Bootstrap 5 assets for Jahia</description>
+  <properties>
+    <jahia-static-resources>/css,/icons,/javascript</jahia-static-resources>
+  </properties>
   <build>
     <plugins>
       <plugin>
