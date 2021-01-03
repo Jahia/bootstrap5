@@ -28,7 +28,7 @@
         GNU General Public License for more details.
 
         You should have received a copy of the GNU General Public License
-        along with this program. If not, see <http://www.gnu.org/licenses/>.
+        along with this program. If not, see <http://www.gnu.org/licenses />.
 
 
         2/ JSEL - Commercial and Supported Versions of the program
@@ -44,27 +44,25 @@
         please contact the sales department at sales@jahia.com.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jahiacommunity.modules</groupId>
         <artifactId>bootstrap5-modules</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
     <groupId>org.foo.modules</groupId>
     <artifactId>bootstrap5-templates-starter</artifactId>
     <name>Bootstrap5 Templates Starter</name>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>bundle</packaging>
     <description>This is the custom profile module (bootstrap5-templates-starter) for running on a Jahia server.</description>
 
     <scm>
         <connection>scm:dummy:uri</connection>
         <developerConnection>scm:dummy:uri</developerConnection>
-    </scm>
+      <tag>bootstrap5-modules-0.0.1</tag>
+  </scm>
 
     <repositories>
         <repository>
@@ -84,7 +82,7 @@
         <dependency>
             <groupId>org.jahiacommunity.modules</groupId>
             <artifactId>bootstrap5-components</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
