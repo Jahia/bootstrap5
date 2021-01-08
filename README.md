@@ -1,4 +1,3 @@
-<!-- Copy and paste the converted output. -->
 # Bootstrap 5
 
 > This project is a Bootstrap 5 implementation of http://getbootstrap.com for the Digital Experience Platform.
@@ -51,7 +50,7 @@ The node type Accordions `bootstrap5nt:accordions` is the main component. It wil
 Here is the list of properties for the Accordions component:
 
 -   **Flush** `flush`: This will remove the default background-color, some borders, and some rounded corners to render accordions edge-to-edge with their parent container. The default value is none. \
-    If this property is set, the component will look like this alt_text 
+    If this property is set, the component will look like this
     ![alt_text](images/accordion_flush.png "Flush")
 
 #### Accordions definition
@@ -70,8 +69,8 @@ This component will create a list of nodes of type `bootstrap5nt:accordion`.
 
 On the Accordion `bootstrap5nt:accordion`, you can set the following properties:
 
-*   **Title** `jcr:title`: This property is used as the clickable element to expend the content of the accordion.
-*   **Show content** `show`: if checked, the content of the accordion will be expanded as default (default is none).
+-   **Title** `jcr:title`: This property is used as the clickable element to expend the content of the accordion.
+-   **Show content** `show`: if checked, the content of the accordion will be expanded as default (default is none).
 
 #### Accordions definition (sub-node)
 
@@ -92,7 +91,7 @@ Indicate the current page’s location within a navigational hierarchy that auto
 
 #### Breadcrumb properties
 
-*   **Custom Class(es) to set on this breadcrumb** `cssClass`: this property is available when enabling the Advanced settings (bootstrap5mix:advancedBreadcrumb). It will allow you to add a custom CSS to the main breadcrumb list.
+-   **Custom Class(es) to set on this breadcrumb** `cssClass`: this property is available when enabling the Advanced settings (bootstrap5mix:advancedBreadcrumb). It will allow you to add a custom CSS to the main breadcrumb list.
 
 #### Breadcrumb definition
 
@@ -262,7 +261,6 @@ extends = bootstrap5nt:button
 
 This node will allow you to add any content to the modal body.
 
-
 #### Button: Popover
 
 Choose the action Popover display a popover. This will add the mixin `bootstrap5mix:popover` to the button node.
@@ -405,6 +403,64 @@ Also, you can customize each slide by enabling the advanced properties
 
 Anytime you need to display a piece of content—like an image with an optional caption, consider using a figure.
 
+![alt_text](images/figure.png "Figure" )
+
+#### Figure properties
+A figure is made of an image, a caption. 
+On the advanced properties, you can change the alignment of the caption.
+
+- Caption `jcr:title`:  This optional caption will be display after the image
+- Image `image`: The image to display
+- Caption alignment `captionAlignment`: This advanced properties can change the alignment of the caption. Value can be Start (default), Center or End
+
+#### Figure definition
+Here is the definition of a figure
+```
+[bootstrap5mix:figureAdvancedSettings] mixin
+ extends = bootstrap5nt:figure
+ itemtype = content
+ - captionAlignment (string, choicelist[resourceBundle]) = 'text-start' autocreated indexed=no < 'text-start', 'text-center', 'text-end'
+
+[bootstrap5nt:figure] > jnt:content, bootstrap5mix:component, bootstrap5mix:imageAdvanced, mix:title
+```
+
+#### Image advanced properties
+There are a few advanced settings for the image
+
+- Class(es) to set on this image `imageClass`: A custom CSS class can be set on the IMG tag
+- Style(s) to set on this image `imageStyle`: Custom inline styles can be set on the image, in to the style attribute. For instance, if you set “width:100px” then it will add `style=”width:100px”` in the IMG tag.
+- ID to set on this image `imageID`: Allow to add an id attribute to the IMG tag with this value
+- Responsive image `responsive`: Checked by default, this will add the `img-fluid` class. This applies `max-width: 100%;` and `height: auto;` to the image so that it scales with the parent element
+- Alignment `align`: Choose to align the image on Start (default), Center or End.
+- alternate text `alt`. If not set a default alternate text with the name of the image will be used.
+- Border-radius `borderRadius`: Add classes to an element to easily round its corners. Variants are Circle, No radius, Only on bottom, Only on end, Only on start, Only on top, Pill, Rounded \
+  ![alt_text](images/border-radius.png "Radius" ) 
+- Border-radius size `borderRadiusSize`: Use the scaling classes for larger or smaller rounded corners. Variants are No radius (default) \
+  ![alt_text](images/border-radius-size.png "Size" )
+- Thumbnails `thumbnails`: In addition to the border-radius, you can use img-thumbnail to give an image a rounded 1px border appearance. \
+  ![alt_text](images/image-thumbnail.png "Thumbnails" )
+
+#### Image definition
+Here is the definition of the image
+```
+[bootstrap5mix:imageAdvancedSettings]  mixin
+ extends = bootstrap5mix:imageAdvanced
+ itemtype = content
+ - imageClass (string) indexed=no
+ - imageStyle (string) indexed=no
+ - imageID (string) indexed=no
+ - responsive (boolean) = 'true' indexed=no
+ - thumbnails (boolean) = 'false' indexed=no
+ - align (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'start', 'end', 'center'
+ - alt (string) i18n
+ - borderRadius (string, choicelist[resourceBundle]) = 'rounded-0' autocreated indexed=no < 'rounded','rounded-top', 'rounded-end', 'rounded-bottom','rounded-start','rounded-circle','rounded-pill','rounded-0'
+ - borderRadiusSize (string, choicelist[resourceBundle]) = 'default' < 'default','rounded-0','rounded-1','rounded-2','rounded-3'
+
+[bootstrap5mix:imageAdvanced] > bootstrap5mix:image mixin
+
+[bootstrap5mix:image] mixin
+ - image (weakreference, picker[type='image']) < 'jmix:image'
+```
 
 ### Grid
 

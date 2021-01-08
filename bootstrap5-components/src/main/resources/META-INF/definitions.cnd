@@ -81,8 +81,8 @@
  - thumbnails (boolean) = 'false' indexed=no
  - align (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'start', 'end', 'center'
  - alt (string) i18n
- - borderRadius (string, choicelist[resourceBundle]) = 'rounded-0' autocreated indexed=no < 'rounded','rounded-top', 'rounded-end', 'rounded-bottom','rounded-start','rounded-circle','rounded-0'
- - borderRadiusSize (string, choicelist[resourceBundle]) = 'default' < 'default','rounded-lg','rounded-sm'
+ - borderRadius (string, choicelist[resourceBundle]) = 'rounded-0' autocreated indexed=no < 'rounded','rounded-top', 'rounded-end', 'rounded-bottom','rounded-start','rounded-circle','rounded-pill','rounded-0'
+ - borderRadiusSize (string, choicelist[resourceBundle]) = 'default' < 'default','rounded-0','rounded-1','rounded-2','rounded-3'
 
 [bootstrap5mix:imageAdvanced] > bootstrap5mix:image mixin
 
