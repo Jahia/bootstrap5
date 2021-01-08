@@ -2,7 +2,7 @@
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Osmorc" name="OSGi">
-      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="bootstrap5-templates-starter-5.0.0-SNAPSHOT.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="" bundleSymbolicName="bootstrap5-templates-starter" bundleVersion="5.0.0.SNAPSHOT" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
+      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="bootstrap5-templates-starter-0.0.1-SNAPSHOT.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="" bundleSymbolicName="bootstrap5-templates-starter" bundleVersion="0.0.1.SNAPSHOT" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
         <additionalProperties>
           <property key="Bundle-Description" value="This is the custom profile module (bootstrap5-templates-starter) for running on a Jahia server." />
           <property key="Bundle-Vendor" value="Jahia Solutions Group SA" />
@@ -12,11 +12,11 @@
           <property key="Bundle-Name" value="Bootstrap5 Templates Starter" />
           <property key="Bundle-Category" value="jahia-module" />
           <property key="Implementation-Title" value="Bootstrap5 Templates Starter" />
-          <property key="Implementation-Version" value="5.0.0-SNAPSHOT" />
+          <property key="Implementation-Version" value="0.0.1-SNAPSHOT" />
           <property key="Implementation-Vendor" value="Jahia Solutions Group SA" />
           <property key="Implementation-URL" value="http://www.jahia.com" />
           <property key="Specification-Title" value="Bootstrap5 Templates Starter" />
-          <property key="Specification-Version" value="5.0.0-SNAPSHOT" />
+          <property key="Specification-Version" value="0.0.1-SNAPSHOT" />
           <property key="Specification-Vendor" value="Jahia Solutions Group SA" />
           <property key="Jahia-GroupId" value="org.foo.modules" />
           <property key="Jahia-Source-Folders" value="$MODULE_DIR$" />
@@ -38,7 +38,7 @@
           <property key="Embed-Transitive" value="true" />
           <property key="Dynamic-ImportPackage" value="*" />
           <property key="-removeheaders" value="Include-Resource,Private-Package,Embed-Dependency,Embed-Transitive,Jahia-Depends-Skip-Require-Capability" />
-          <property key="Include-Resource" value="jnt_template/html/template.bootstrap5-templates-starter.jsp=$MODULE_DIR$/src/main/resources/jnt_template/html/template.bootstrap5-templates-starter.jsp" />
+          <property key="Include-Resource" value="css/starter-edit.css=$MODULE_DIR$/src/main/resources/css/starter-edit.css,jnt_template/html/template.bootstrap5-templates-starter.jsp=$MODULE_DIR$/src/main/resources/jnt_template/html/template.bootstrap5-templates-starter.jsp" />
         </additionalProperties>
         <additionalJARContents />
       </configuration>
@@ -47,7 +47,9 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
-        <datasource-mapping />
+        <datasource-mapping>
+          <factory-entry name="bootstrap5-templates-starter" />
+        </datasource-mapping>
         <naming-strategy-map />
       </configuration>
     </facet>
