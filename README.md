@@ -49,15 +49,15 @@ The node type Accordions `bootstrap5nt:accordions` is the main component. It wil
 
 Here is the list of properties for the Accordions component:
 
--   **Flush** `flush`: This will remove the default background-color, some borders, and some rounded corners to render accordions edge-to-edge with their parent container. The default value is none. \
-    If this property is set, the component will look like this
-    ![alt_text](images/accordion_flush.png "Flush")
+| Label | Name | Description | Default value |
+| --- | --- | --- | --- |
+| **Flush** | `flush` | This will remove the default background-color, some borders, and some rounded corners to render accordions edge-to-edge with their parent container. If this property is set, the component will look like this  ![alt_text](images/accordion_flush.png "Flush")| false | 
 
 #### Accordions definition
 
 Here is the definition of the Accordions component
 
-```
+```cnd
 [bootstrap5nt:accordions] > jnt:content, bootstrap5mix:component, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
  - flush (boolean) = 'false' indexed=no
  + * (bootstrap5nt:accordion)
@@ -69,14 +69,16 @@ This component will create a list of nodes of type `bootstrap5nt:accordion`.
 
 On the Accordion `bootstrap5nt:accordion`, you can set the following properties:
 
--   **Title** `jcr:title`: This property is used as the clickable element to expend the content of the accordion.
--   **Show content** `show`: if checked, the content of the accordion will be expanded as default (default is none).
+| Label | Name | Description | Default value |
+| --- | --- | --- | --- |
+| **Title** | `jcr:title` | This property is used as the clickable element to expend the content of the accordion | | 
+| **Show content** | `show` | if checked, the content of the accordion will be expanded as default | false | 
 
 #### Accordions definition (sub-node)
 
 Here is the definition of an accordion:
 
-```
+```cnd
 [bootstrap5nt:accordion] > jnt:content, mix:title, bootstrap5mix:text
  - show (boolean) = 'false' indexed=no
  + * (jmix:droppableContent) = jmix:droppableContent
@@ -96,7 +98,7 @@ Indicate the current page’s location within a navigational hierarchy that auto
 #### Breadcrumb definition
 
 Here is the full definition of the breadcrumb:
-```
+```cnd
 [bootstrap5mix:advancedBreadcrumb] mixin
  extends = bootstrap5nt:breadcrumb
  itemtype = content
@@ -111,38 +113,33 @@ This is a multifunction component that will allow several actions, by creating a
 
 #### Button properties
 
--   **Title** `jcr:title`: the title will be used as the clickable label
--   **Action** `buttonType`: this will provide a choice list of actions:
-    -   An internal link or a URL
-    -   A collapsible content
-    -   A modal (dialog prompts)
-    -   A popover
+| Label | Name | Description | Default value |
+| --- | --- | --- | --- |
+| **Title**  | `jcr:title` |  the title will be used as the clickable label | | 
+| **Action** | `buttonType` | this will provide a choice list of actions (see list below) | |
+
+List of action:
+
+-   An internal link or a URL
+-   A collapsible content
+-   A modal (dialog prompts)
+-   A popover
 
 
 #### Button advanced properties
 
 A few advanced settings are only available when clicking on the Advanced settings `bootstrap5mix:buttonAdvancedSettings` mixin
 
-
--   **Style** `style`: pick a predefined styles: Primary, Secondary, Success, Info, Warning, Danger, No style (link only), Dark, Light or Custom
-    ![alt_text](images/button-style.png "Styles")  \
-    If the style is set to Custom, then only the CSS classes set on the Custom Class(es) to set on this button (cssClass) will be used on the button.
-    
--   **Size** `size`: pick a size. It could be Default, Small or Large. \
-    ![alt_text](images/button-size.png "Size")
-
--   **Outline** `outline`: In need of a button, but not the hefty background colors they bring
-    ![alt_text](images/button-outline.png "Outline")
-
--   **Full width button** `block`: Create responsive stacks of full-width, “block buttons” \
-    ![alt_text](images/button-block.png "Block")
-
--   **State** `state`:  Make buttons look active or disabled \
-    ![alt_text](images/button-state.png "State")
-
--   **Custom Class(es) to set on this button** `cssClass`: This allows you to add any CSS classes on the button.
--   **Disable text wrapping** `disableTextWrapping`: If you don’t want the button text to wrap
--   **Stretched link** `stretchedLink`: Make any HTML element or Bootstrap component clickable by “stretching” a nested link via CSS. As a result the link to make its containing block clickable. This for fine on components such a card or any component with a position relative (or with the class position-relative). Multiple links and tap targets are not recommended
+| Label | Name | Description | Default value |
+| --- | --- | --- | --- |
+| **Style** | `style` | Pick a predefined styles: Primary, Secondary, Success, Info, Warning, Danger, No style (link only), Dark, Light or Custom ![alt_text](images/button-style.png "Styles")  If the style is set to Custom, then only the CSS classes set on the Custom Class(es) to set on this button (cssClass) will be used on the button. | Primary |
+| **Size** | `size` | Pick a size. It could be Default, Small or Large. ![alt_text](images/button-size.png "Size") | Default| 
+| **Outline** | `outline` |  In need of a button, but not the hefty background colors they bring ![alt_text](images/button-outline.png "Outline") | false | 
+| **Full width button** | `block` | Create responsive stacks of full-width, “block buttons” ![alt_text](images/button-block.png "Block") | false | 
+| **State** | `state` | Make buttons look active or disabled ![alt_text](images/button-state.png "State") | Default | 
+| **Custom Class(es) to set on this button** | `cssClass` | This allows you to add any CSS classes on the button. | | 
+| **Disable text wrapping** | `disableTextWrapping` | If you don’t want the button text to wrap | false | 
+| **Stretched link** | `stretchedLink` | Make any HTML element or Bootstrap component clickable by “stretching” a nested link via CSS. As a result the link to make its containing block clickable. This for fine on components such a card or any component with a position relative (or with the class position-relative). Multiple links and tap targets are not recommended | false |
 
 #### Button definition
 
@@ -156,7 +153,7 @@ Depending on the chosen action (buttonType), an initializer will add a mixin on 
 
 Here are the button and the advanced settings definitions
     
-```
+```cnd
 [bootstrap5nt:button]> jnt:content, bootstrap5mix:component, mix:title
 - buttonType (string, choicelist[buttonTypeInitializer, resourceBundle]) = 'internalLink' autocreated indexed=no < 'internalLink', 'externalLink', 'modal', 'collapse','popover'
 
@@ -178,14 +175,15 @@ itemtype = content
 Choose the action internal link to create a link to local content. This will add the mixin `bootstrap5mix:internalLink` to the button node.
 
 #### Internal link Properties
-
--   **link** `internalLink`: This can be any editorial content, or a page, or a file. 
+| Label | Name | Description | Default value |
+| --- | --- | --- | --- |
+| **link** | `internalLink` | This can be any editorial content, or a page, or a file. | | 
 
 #### Internal link definition
 
 Here is the definition of the mixin `bootstrap5mix:internalLink`
 
-```
+```cnd
 [bootstrap5mix:internalLink] > jmix:templateMixin mixin
 extends = bootstrap5nt:button
 - internalLink (weakreference, picker[type='editoriallink']) < jmix:droppableContent, jnt:page, jnt:file
@@ -196,14 +194,15 @@ extends = bootstrap5nt:button
 
 Choose the action URL to create a link to any URL. This will add the mixin `bootstrap5mix:externalLink` to the button node.
 #### URL Properties
-
--   URL `externalLink`: This can be any URL
+| Label | Name | Description | Default value |
+| --- | --- | --- | --- |
+| URL | `externalLink`|  This can be any URL | https:// | 
 
 #### URL definition
 
 Here is the definition of the mixin `bootstrap5mix:externalLink`
 
-```
+```cnd
 [bootstrap5mix:externalLink] > jmix:templateMixin mixin
 extends = bootstrap5nt:button
 - externalLink (string) = 'http://'
@@ -214,14 +213,15 @@ extends = bootstrap5nt:button
 Choose the action Collapse to toggle the visibility of content. The buttons will be used as triggers that are mapped to specific elements you toggle. This will add the mixin `bootstrap5mix:collapse` to the button node. This action is similar to the accordion component
 
 ##### Collapse properties
-
--   Show content `show`: if checked, the content of the collapse will be expanded as default (default is none).
+| Label | Name | Description | Default value |
+| --- | --- | --- | --- |
+|Show content |`show`| if checked, the content of the collapse will be expanded as default (default is none)| false |
 
 ##### Collapse definition
 
 Here is the definition of the mixin `bootstrap5mix:collapse`
 
-```
+```cnd
 [bootstrap5mix:collapse] > jmix:templateMixin, jmix:browsableInEditorialPicker mixin orderable
 extends = bootstrap5nt:button
 - show (boolean) = 'false' indexed=no
@@ -237,18 +237,19 @@ Choose the action modal to prompt for a dialog. This will add the mixin `bootstr
 ![alt_text](images/modal.png "Modal")
 
 ##### Modal properties
-
--   **Title for the modal header** `modalTitle`
--   **Label for the close button** `closeText`
--   **Size of the modal** `modalSize`:  value can be the default one, Large, Small or Extra Large
--   **Static backdrop (the modal will not close when clicking outside it)** `staticBackdrop`: When set, the modal will not close when clicking outside it. Click the button below to try it.
--   **Vertically centered** `verticallyCentered`: When set, vertically center the modal
+| Label | Name | Description | Default value |
+| --- | --- | --- | --- |
+| **Title for the modal  header** |`modalTitle`| Optional title for the modal header | |
+|  **Label for the close button** |`closeText`| Label used for the close button | Close |
+|  **Size of the modal** |`modalSize`|  value can be the default one, Large, Small or Extra Large | Default |
+|  **Static backdrop (the modal will not close when clicking outside it)** |`staticBackdrop`| When set, the modal | false | will not close when clicking outside it. Click the button below to try it.
+|  **Vertically centered** |`verticallyCentered`| When set, vertically center the modal | false |
 
 #### Modal definition
 
 Here is the definition of the mixin `bootstrap5mix:modal`
 
-```
+```cnd
 [bootstrap5mix:modal] > jmix:templateMixin, jmix:browsableInEditorialPicker mixin orderable
 extends = bootstrap5nt:button
 - modalTitle (string) i18n
@@ -269,16 +270,18 @@ Choose the action Popover display a popover. This will add the mixin `bootstrap5
 
 ##### Popover properties
 
--   **Title of the popover** `popoverTitle`: If not set, the title is ignored
--   **Content** `popoverContent`
--   **Direction** `direction`: Four options are available: top, right, bottom, and left-aligned. Directions are mirrored when using Bootstrap in RTL.
--   **Insert HTML into the popover** `html`: If not set, innerText property will be used to insert content into the DOM. Use text if you're worried about XSS attacks.
+| Label | Name | Description | Default value |
+| --- | --- | --- | --- |
+|**Title of the popover** |`popoverTitle`| If not set, the title is ignored || 
+|**Content** |`popoverContent`|Content pf the popover. This can be rich text or text with HTML tags|| 
+|**Direction** |`direction`| Four options are available: top, right, bottom, and left-aligned. Directions are mirrored when using Bootstrap in RTL.|top| 
+|**Insert HTML into the popover** |`html`| If not set, innerText property will be used to insert content into the DOM. Use text if you're worried about XSS attacks.|true|
 
 ##### Popover definition
 
 Here is the definition of the mixin `bootstrap5mix:popover`
 
-```
+```cnd
 [bootstrap5mix:popover] > jmix:templateMixin mixin
 extends = bootstrap5nt:button
 - popoverTitle (string) i18n
@@ -317,7 +320,7 @@ You can also customize the colors of the text, the background and the borders of
 #### Definition
 Here is the definition of the card:
 
-```
+```cnd
 [bootstrap5mix:colors] mixin
 extends = bootstrap5nt:card
 itemtype = content
@@ -365,7 +368,7 @@ You can change the default settings of the carousel by updating the following pr
 
 Here is the definition of a carousel
 
-```
+```cnd
 [bootstrap5mix:carouselAdvancedSettings] mixin
  extends = bootstrap5nt:carousel
  itemtype = content
@@ -415,7 +418,7 @@ On the advanced properties, you can change the alignment of the caption.
 
 #### Figure definition
 Here is the definition of a figure
-```
+```cnd
 [bootstrap5mix:figureAdvancedSettings] mixin
  extends = bootstrap5nt:figure
  itemtype = content
@@ -442,7 +445,7 @@ There are a few advanced settings for the image
 
 #### Image definition
 Here is the definition of the image
-```
+```cnd
 [bootstrap5mix:imageAdvancedSettings]  mixin
  extends = bootstrap5mix:imageAdvanced
  itemtype = content
@@ -462,10 +465,157 @@ Here is the definition of the image
  - image (weakreference, picker[type='image']) < 'jmix:image'
 ```
 
-### Grid
+### Layout and Grid
 
 Bootstrap’s grid system uses a series of containers, rows, and columns to layout and align content. It’s built with flexbox and is fully responsive.
 
+In bootstrap, a standard layout is made of HTML5 Element > Container > Row > Columns and could look like this
+```html
+<section id="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                1 of 2
+            </div>
+            <div class="col">
+                2 of 2
+            </div>
+        </div>
+    </div>
+</main>
+```
+
+This complex component will allow to generate any type of layout, by enabling different mixins. In the content editor, it looks like this:
+
+![alt_text](images/grid-layout.png "Thumbnails" )
+
+Let’ see the different mixin in detail.
+
+#### Layout and Grid: Create HTML5 Semantic Elements
+
+This part will create a HTML5 Semantic.
+
+Here are the properties of the mixin Create HTML5 Semantic Elements `bootstrap5mix:createSection`
+
+- **Html element type** `sectionElement`: Select the HTML element to use: section, article, aside, hgroup, header, footer, aside, nav, div, figure, figcaption, main.
+- **ID set on this HTML element** `sectionId`: This optional property will create an `id` attribute on the HTML Element (ex: `<section id="copyright">`)
+- **Class(es) set on this HTML element** `sectionCssClass`: This optional property will add a `class` attribute on the Html Element with the value (ex: `<div class="doc">`)
+- **Style** `sectionStyle`: This optional property will add a `style` attribute on the Html Element with the value (ex: `<div style="background-color:pink">`)
+- **Aria** `sectionAria`: This optional property will add an `aria-label` attribute on the Html Element with the value (ex: `<div aria-label="projects">`)
+
+Here is the definition of this mixin
+
+```cnd
+[bootstrap5mix:createSection] mixin
+extends = bootstrap5nt:grid
+itemtype = content
+- sectionElement (string, choicelist[resourceBundle]) = 'div' autocreated indexed=no < 'section', 'article', 'aside', 'hgroup', 'header', 'footer', 'aside', 'nav', 'div', 'figure', 'figcaption', 'main'
+- sectionId (string) indexed=no < '[a-zA-Z0-9-_]+'
+- sectionCssClass (string) indexed=no
+- sectionStyle (string) indexed=no
+- sectionRole (string) indexed=no
+- sectionAria (string) indexed=no
+```
+#### Layout and Grid: Create Container
+
+This part will create a bootstrap container. Containers are the most basic layout element in Bootstrap and are required when using the grid system.
+
+Here is the different properties of the mixin Create Container `bootstrap5mix:createContainer`
+Bootstrap comes with three different containers:
+
+- **ID set on this container** `containerId`: This optional property will create an `id` attribute on the container (ex: `<div class=”container” id="copyright">`)
+- **Class(es) set on this container** `containerCssClass`: This optional property will add a `class` attribute on the container with the value (ex: `<div class="container custom-class">`)
+- Container width containerType : Bootstrap comes with three different containers. Fluid container, Fixed container and 100% wide until the breakpoint.
+
+Here is the definition of this mixin
+```cnd
+[bootstrap5mix:createContainer] mixin
+ extends = bootstrap5nt:grid
+ itemtype = content
+ - containerId (string) < '[a-zA-Z0-9-_]+'
+ - containerCssClass (string) indexed=no
+ - containerType (string, choicelist[resourceBundle]) = 'container' autocreated indexed=no < 'container', 'container-fluid', 'container-sm', 'container-md', 'container-lg', 'container-xl', 'container-xxl'
+```
+
+#### Layout and Grid: Create Row and Columns
+
+This part will create a row with several options such as alignment, gutters. You can also choose the type of columns that you want to create. It can be one of predefined columns or custom ones. You can also not create any columns. The initializer will add on the fly the mixin `bootstrap5mix:predefinedGrid` or `bootstrap5mix:customGrid` to the curent node.
+
+Here are the different properties of the mixin Create Row and Columns `bootstrap5mix:createRow`
+
+- **Select the type of grid that you want to create** `typeOfGrid`: You can choose to create an *empty row (no column)*, a *predefined grid* or a *custom grid*. Depending on your choice a mixin will be added (see more details below)
+- **ID set on this row** `rowId`: This optional property will create an `id` attribute on the row (ex: `<div class=”row” id="copyright">`)
+- **Class(es) set on this row** `rowCssClass`: This optional property will add a `class` attribute on the row with the value (ex: `<div class="row custom-class">`)
+- **Vertical alignment** `rowVerticalAlignment`: choose to align the content of the row on Top (default), Middle, or Bottom
+- **Horizontal alignment** `rowHorizontalAlignment`: Choose to align the content on Start, Center, End or Around, Between, Evenly (similar to around with equal space on the edges) 'justify-content-end','justify-content-around','justify-content-between','justify-content-evenly'
+- **Horizontal Gutter (padding between your columns)** `horizontalGutters`: Choose a value between 0 (no gutter) and 5 (large) or use the default one
+- **Vertical Gutter (padding between your rows)** `verticalGutters`: Choose a value between 0 (no gutter) and 5 (large) or use the default one
+
+##### Type of grid: Empty row (no column)
+This will create a row with no columns.
+
+##### Type of grid: The predefined grid
+The predefined grid will propose a few pre mashed grids. As you know, there are 12 template columns available per row, allowing you to create different combinations of elements that span any number of columns.  The predefined columns will propose the following layouts:
+
+- 12 (one single column)
+- 6 / 6 (2 equal columns)
+- 4 / 4 / 4  (3 equal columns)
+- 3 / 3 / 3 / 3  (4 equal columns)
+
+and also a few other ones _
+
+- 10 / 2 and 2 / 10 (a very smal and a extra large)
+- 3 / 9 and 9 / 3 (a smal and a large)
+- 4 / 8 and  8 / 4 (another smal and a large)
+- 3 / 6 / 3 (a large with 2 small)
+
+Each time the breakpoint used is made for the medium breakpoint (≥768px). So for instance, if you choose the layout 4 / 8, then the component will generate the following code:
+```html
+<div class=”row”>
+    <div class="col-md-4">col 1</div>
+    <div class="col-md-8">col 2</div>
+</div>
+```
+Note that if you use an RTL language, then the first column will be in the first position.
+
+##### Type of grid: The custom grid
+For the custom grid, you can use any bootstrap compliant classes and use the `,` as a separator between 2 columns.
+
+So if you use this value `col col-md-8,col-6 col-md-4` then the component will generate the following code:
+
+```html
+<div class=”row”>
+    <div class="col col-md-8">col 1</div>
+    <div class="col-6 col-md-4">col 2</div>
+</div>
+```
+So as you can see there are no limits on it :-)
+
+#### Layout and Grid: Create Row and Columns definition
+
+Here is the definition for this mixin
+
+```cnd
+[bootstrap5mix:predefinedGrid] > jmix:templateMixin mixin
+ extends = bootstrap5nt:grid
+ - grid (string, choicelist[resourceBundle, moduleImage='png']) = '4_8' autocreated indexed=no < '2_10', '3_9', '4_8', '4_4_4', '3_6_3', '3_3_3_3', '6_6', '8_4', '9_3', '10_2', '12'
+
+[bootstrap5mix:customGrid] > jmix:templateMixin mixin
+ extends = bootstrap5nt:grid
+ - gridClasses (string) = 'col col-md-8,col-6 col-md-4' indexed=no
+
+[bootstrap5mix:createRow] mixin
+ extends = bootstrap5nt:grid
+ itemtype = content
+ - typeOfGrid (string, choicelist[gridTypeInitializer, resourceBundle]) = 'nogrid' autocreated indexed=no < 'nogrid', 'predefinedGrid', 'customGrid'
+ - rowId (string) < '[a-zA-Z0-9-_]+'
+ - rowCssClass (string) indexed=no
+ - rowVerticalAlignment (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'align-items-start', 'align-items-center', 'align-items-end'
+ - rowHorizontalAlignment (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'justify-content-start', 'justify-content-center', 'justify-content-end','justify-content-around','justify-content-between','justify-content-evenly'
+ - horizontalGutters (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','gx-0','gx-1','gx-2','gx-3','gx-4','gx-5'
+ - verticalGutters (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','gy-0','gy-1','gy-2','gy-3','gy-4','gy-5'
+
+```
 
 ### Navbar
 
