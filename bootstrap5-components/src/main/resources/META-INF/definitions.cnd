@@ -47,7 +47,6 @@
  - level (string, choicelist[resourceBundle]) = '0' autocreated indexed=no < '0', '1', '2', '3', '4', '5'
 
 [bootstrap5nt:grid] > jnt:content, bootstrap5mix:component, jmix:list, jmix:browsableInEditorialPicker
- - gridType (string) hidden
  + * (jmix:droppableContent) = jmix:droppableContent
 
 [bootstrap5mix:listLimit] mixin
