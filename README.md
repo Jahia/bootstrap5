@@ -33,7 +33,7 @@ If you want to create your own project and use the Bootstrap 5 components, you s
 
 _________________
 
-## List of components
+## List of components and documentation
 
 >The Bootstrap 5 components module provides a list of components that will allow you to use Bootstrap 5 without thinking about it, as all the logic and syntax will be done automatically.
 
@@ -69,7 +69,7 @@ Bootstrap’s grid system uses a series of containers, rows, and columns to layo
 
 ### [Navbar](docs/navbar.md)
 
-The navbar provides simple navigation for your site with login options, language switch, and more. [more >>](docs/navbar.md)
+The navbar provides simple navigation for your site with sign in options, language switch, and more. [more >>](docs/navbar.md)
 
 ### [Pagination](docs/pagination.md)
 
