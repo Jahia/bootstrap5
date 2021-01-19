@@ -41,14 +41,6 @@ CKEDITOR.stylesSet.add('text', [
     {name: 'Background White', element: 'div', attributes: {class: 'p-3 mb-2 bg-white text-gray-dark'}},
     {name: 'Background Dark', element: 'div', attributes: {class: 'p-3 mb-2 bg-dark text-white'}},
 
-    {name: 'Display 1', element: 'h1', attributes: {class: 'display-1'}},
-    {name: 'Display 2', element: 'h2', attributes: {class: 'display-2'}},
-    {name: 'Display 3', element: 'h3', attributes: {class: 'display-3'}},
-    {name: 'Display 4', element: 'h4', attributes: {class: 'display-4'}},
-    {name: 'Display 5', element: 'h4', attributes: {class: 'display-5'}},
-    {name: 'Display 6', element: 'h5', attributes: {class: 'display-6'}},
-
-
     {name: 'Alert Primyay', element: 'div', attributes: {class: 'alert alert-primary', role: 'alert'}},
     {name: 'Alert Secondary', element: 'div', attributes: {class: 'alert alert-secondary', role: 'alert'}},
     {name: 'Alert Success', element: 'div', attributes: {class: 'alert alert-success', role: 'alert'}},
@@ -75,8 +67,6 @@ CKEDITOR.stylesSet.add('text', [
     {name: 'Pill Danger', element: 'span', attributes: {class: 'badge badge-pill badge-danger'}},
     {name: 'Pill Light', element: 'span', attributes: {class: 'badge badge-pill badge-light'}},
     {name: 'Pill Dark', element: 'span', attributes: {class: 'badge badge-pill badge-dark'}},
-
-
 
     {name: 'Pre', element: 'pre', attributes: {class: 'prettyprint linenums'}}
 ]);

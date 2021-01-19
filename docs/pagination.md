@@ -7,7 +7,7 @@
 
 ## Add a pagination above your list
 
-Pagination in Jahia is not something very trivial to use. So here is a quick video to illustrate how to integrate pagination **above** a list.
+Pagination in Jahia is not something very trivial to use. So here is a quick animation to illustrate how to integrate pagination **above** a list.
 
 1. First, you need to add pagination after the Jahia content list you want to paginate,
 1. Then you need to move it above your list, and
@@ -22,6 +22,10 @@ In order to add pagination **afte** your list, you need to
 1. First you need to have a working pagination above your list (see the previous example)
 1. Copy your pagination component and paste it after your list
 1. Remove the Display the pagination of the first pagination (the component before the list)
+
+![alt_text](../images/pagination-init.png "Pagination Init" )
+
+Here is a quick animation to illustrate this process
 
 ![alt_text](../images/pagination-after.gif "Pagination after" )
 
