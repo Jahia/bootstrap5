@@ -69,7 +69,7 @@ The mixin `bootstrap5mix:text` can be used as any mixin in your custom definitio
 To display the value of this property, you simply need to get the string value of the text property
 
 ```jsp
- \${currentNode.properties.text.string}
+ ${currentNode.properties.text.string}
 ```
 
 

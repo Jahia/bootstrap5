@@ -47,9 +47,9 @@ There are a few advanced settings for the image
 | Responsive image | `responsive`|  Checked by default, this will add the `img-fluid` class. This applies `max-width: 100%;` and `height: auto;` to the image so that it scales with the parent element | true |
 | Alignment | `align`|  Choose to align the image on Start (default), Center or End | Default | 
 | alternate text | `alt`|  If not set a default alternate text with the name of the image will be used.| | 
-| Border-radius | `borderRadius`|  Add classes to an element to easily round its corners. Variants are Rounded, Only on top, Only on end, Only on bottom, Only on start, Circle, Pill, No radius <br /> ![alt_text](images/border-radius.png "Radius" ) | No radius | 
-| Border-radius size | `borderRadiusSize`|  Use the scaling classes for larger or smaller rounded corners. Variants are Small, Medium or Large<br /> ![alt_text](images/border-radius-size.png "Size" ) | No radius | 
-| Thumbnails | `thumbnails`|  In addition to the border-radius, you can use img-thumbnail to give an image a rounded 1px border appearance. <br /> ![alt_text](images/image-thumbnail.png "Thumbnails" ) | false | 
+| Border-radius | `borderRadius`|  Add classes to an element to easily round its corners. Variants are Rounded, Only on top, Only on end, Only on bottom, Only on start, Circle, Pill, No radius <br /> ![alt_text](../images/border-radius.png "Radius" ) | No radius | 
+| Border-radius size | `borderRadiusSize`|  Use the scaling classes for larger or smaller rounded corners. Variants are Small, Medium or Large<br /> ![alt_text](../images/border-radius-size.png "Size" ) | No radius | 
+| Thumbnails | `thumbnails`|  In addition to the border-radius, you can use img-thumbnail to give an image a rounded 1px border appearance. <br /> ![alt_text](../images/image-thumbnail.png "Thumbnails" ) | false | 
 
 ## Image definition
 
