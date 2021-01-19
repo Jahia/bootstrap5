@@ -80,3 +80,4 @@ Also, you can customize each slide by enabling the advanced properties
  - image (weakreference, picker[type='image']) mandatory < 'jmix:image'
  - caption (string, textarea) i18n
 ```
+[Back to README](../README.md)

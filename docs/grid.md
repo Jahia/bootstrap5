@@ -20,7 +20,7 @@ In bootstrap, a standard layout is made of HTML5 Element > Container > Row > Col
 
 This complex component will allow to generate any type of layout, by enabling different mixins. In the content editor, it looks like this:
 
-![alt_text](../images/grid-layout.png "Thumbnails" )
+![alt_text](../images/grid-layout.png "Grid" )
 
 Let’s see the different mixin in detail.
 
@@ -248,3 +248,4 @@ Here is the definition of the mixin Create Absolute Areas `bootstrap5mix:createA
  itemtype = content
  - level (string, choicelist[resourceBundle]) = '0' autocreated indexed=no < '0', '1', '2', '3', '4', '5'
 ```
+[Back to README](../README.md)

@@ -21,24 +21,27 @@
     </c:when>
 </c:choose>
 
-<c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:customButtonNavbar')}">
-    <c:set var="buttonClass" value="${currentNode.properties.buttonClass.string}"/>
-</c:if>
 
-<c:if test="${empty buttonClass}">
-    <c:set var="buttonClass" value="navbar-toggler navbar-toggler-right"/>
-</c:if>
-
-<c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:advancedNavbar')}">
-    <c:set var="navClass" value="${currentNode.properties.navClass.string}"/>
-    <c:set var="divClass" value="${currentNode.properties.divClass.string}"/>
+<c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:navbarGlobalSettings')}">
     <c:set var="addContainerWithinTheNavbar" value="${currentNode.properties.addContainerWithinTheNavbar.boolean}"/>
     <c:set var="addLoginButton" value="${currentNode.properties.addLoginButton.boolean}"/>
     <c:set var="addLanguageButton" value="${currentNode.properties.addLanguageButton.boolean}"/>
 </c:if>
+<c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:customizeNavbar')}">
+    <c:set var="navClass" value="${currentNode.properties.navClass.string}"/>
+    <c:set var="divClass" value="${currentNode.properties.divClass.string}"/>
+    <c:set var="togglerClass" value="${currentNode.properties.togglerClass.string}"/>
+</c:if>
 <c:if test="${empty navClass}">
     <c:set var="navClass" value="navbar navbar-expand-lg navbar-light bg-light"/>
 </c:if>
+<c:if test="${empty togglerClass}">
+    <c:set var="togglerClass" value="navbar-toggler navbar-toggler-right"/>
+</c:if>
+<c:if test="${empty divClass}">
+    <c:set var="divClass" value="collapse navbar-collapse"/>
+</c:if>
+
 <%-- try to get the expand size --%>
 <c:set var="expand" value="lg"/>
 <c:forEach items="${fn:split(navClass, ' ')}" var="currentClass">
@@ -46,9 +49,6 @@
         <c:set var="expand" value="${fn:replace(currentClass, 'navbar-expand-', '')}"/>
     </c:if>
 </c:forEach>
-<c:if test="${empty divClass}">
-    <c:set var="divClass" value="collapse navbar-collapse"/>
-</c:if>
 <c:if test="${empty addContainerWithinTheNavbar}">
     <c:set var="addContainerWithinTheNavbar" value="false"/>
 </c:if>
@@ -107,7 +107,7 @@
         ${brandText}
     </a>
 
-    <button class="${buttonClass}" type="button" data-bs-toggle="collapse"
+    <button class="${togglerClass}" type="button" data-bs-toggle="collapse"
           data-bs-target="#navbar-${currentNode.identifier}" aria-controls="navbar-${currentNode.identifier}"
             aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

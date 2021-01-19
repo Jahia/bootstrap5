@@ -67,20 +67,21 @@ Anytime you need to display a piece of content—like an image with an optional 
 
 Bootstrap’s grid system uses a series of containers, rows, and columns to layout and align content. It’s built with flexbox and is fully responsive. [more >>](docs/grid.md)
 
-### Navbar
+### [Navbar](docs/navbar.md)
 
-The navbar provides simple navigation for your site
+The navbar provides simple navigation for your site with login options, language switch, and more. [more >>](docs/navbar.md)
 
+### [Pagination](docs/pagination.md)
 
-### Pagination
+Indicate a series of related content exists across multiple pages. [more >>](docs/pagination.md)
 
-Indicate a series of related content exists across multiple pages.
+### [Text](docs/text.md)
 
-### Text
-
-This component provides bootstrap 4 styles and CK templates
-
+This component provides bootstrap 4 styles and CK templates [more >>](docs/text.md)
 
 ### Version
 
-Adds a div describing the bootstrap version used
+Display an alert in edit mode with the bootstrap version used.
+
+_________________
+## Useful mixin

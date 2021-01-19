@@ -58,3 +58,5 @@ itemtype = content
 - cardBodyCssClass (string) = 'card-body' indexed=no
 - freeFooter (boolean) = 'false' indexed=no
 ```
+
+[Back to README](../README.md)

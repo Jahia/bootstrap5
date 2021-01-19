@@ -212,21 +212,22 @@
 [bootstrap5nt:pagination] > jnt:content, bootstrap5mix:component, jmix:bindedComponent
  - displayPager (boolean) = 'true' autocreated indexed=no
 
-[bootstrap5mix:advancedNavbar] mixin
+[bootstrap5mix:navbarGlobalSettings] mixin
+ extends = bootstrap5nt:navbar
+ itemtype = content
+ - addLoginButton (boolean) = 'true' autocreated indexed=no
+ - addLanguageButton (boolean) = 'true' autocreated indexed=no
+ - recursive (boolean) = 'true' autocreated indexed=no
+ - addContainerWithinTheNavbar (boolean) = 'false' autocreated indexed=no
+
+[bootstrap5mix:customizeNavbar] mixin
  extends = bootstrap5nt:navbar
  itemtype = content
  - navClass (string) = 'navbar navbar-expand-lg navbar-light bg-light' autocreated indexed=no
+ - togglerClass (string) = 'navbar-toggler navbar-toggler-right' indexed=no
  - divClass (string) = 'collapse navbar-collapse' autocreated indexed=no
- - addContainerWithinTheNavbar (boolean) = 'false' autocreated indexed=no
- - addLoginButton (boolean) = 'true' autocreated indexed=no
- - addLanguageButton (boolean) = 'true' autocreated indexed=no
- - loginMenuULClass (string) = 'navbar-nav ms-auto'
-
-[bootstrap5mix:customBaseNavbar] mixin
- extends = bootstrap5nt:navbar
- itemtype = content
  - ulClass (string) = 'navbar-nav me-auto' autocreated indexed=no
- - recursive (boolean) = 'true' autocreated indexed=no
+ - loginMenuULClass (string) = 'navbar-nav ms-auto'
 
 [bootstrap5mix:brand] mixin
  extends = bootstrap5nt:navbar
@@ -240,11 +241,6 @@
  - brandText (string) i18n
  - brandImage (weakreference, picker[type='image']) < 'jmix:image'
  - brandImageMobile (weakreference, picker[type='image']) < 'jmix:image'
-
-[bootstrap5mix:customButtonNavbar]  mixin
- extends = bootstrap5nt:navbar
- itemtype = content
- - buttonClass (string) = 'navbar-toggler navbar-toggler-right' indexed=no
 
 [bootstrap5mix:customRootPage] > jmix:templateMixin mixin
  extends = bootstrap5nt:navbar

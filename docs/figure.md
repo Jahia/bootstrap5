@@ -74,3 +74,4 @@ Here is the definition of the image
 [bootstrap5mix:image] mixin
  - image (weakreference, picker[type='image']) < 'jmix:image'
 ```
+[Back to README](../README.md)

@@ -60,7 +60,7 @@ Depending on the chosen action (buttonType), an initializer will add a mixin on 
 - `bootstrap5mix:modal` for Modal
 - `bootstrap5mix:popover` for Popover
 
-
+---
 ## Internal link
 
 Choose the action internal link to create a link to local content. This will add the mixin `bootstrap5mix:internalLink` to the button node.
@@ -183,3 +183,5 @@ extends = bootstrap5nt:button
 - direction (string, choicelist[resourceBundle]) = 'top' autocreated indexed=no < 'top', 'left', 'right', 'bottom'
 - html (boolean) = 'false' indexed=no
 ```
+
+[Back to README](../README.md)

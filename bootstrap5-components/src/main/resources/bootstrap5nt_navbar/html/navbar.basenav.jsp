@@ -7,9 +7,15 @@
 <%--@elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper"--%>
 <template:addResources type="css" resources="bootstrap.min.css"/>
 <template:addResources type="javascript" resources="bootstrap.bundle.min.js"/>
-<c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:customBaseNavbar')}">
-    <c:set var="ulClass" value="${currentNode.properties.ulClass.string}"/>
+
+<c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:navbarGlobalSettings')}">
     <c:set var="recursive" value="${currentNode.properties.recursive.boolean}"/>
+</c:if>
+
+
+<c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:customizeNavbar')}">
+    <c:set var="ulClass" value="${currentNode.properties.ulClass.string}"/>
+
 </c:if>
 <c:if test="${empty ulClass}">
     <c:set var="ulClass" value="navbar-nav me-auto"/>
