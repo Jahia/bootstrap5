@@ -51,7 +51,7 @@
         <artifactId>bootstrap5-modules</artifactId>
         <version>0.0.3-SNAPSHOT</version>
     </parent>
-    <groupId>org.foo.modules</groupId>
+    <groupId>org.jahiacommunity.modules</groupId>
     <artifactId>bootstrap5-templates-starter</artifactId>
     <name>Bootstrap5 Templates Starter</name>
     <version>0.0.3-SNAPSHOT</version>
