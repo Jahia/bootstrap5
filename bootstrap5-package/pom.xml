@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>jahia-packages-parent</artifactId>
+        <groupId>org.jahia.packages</groupId>
+        <version>8.0.0.0</version>
+    </parent>
+    <artifactId>bootstrap5-package</artifactId>
+    <name>Bootstrap 5 Package</name>
+    <version>0.0.2</version>
+    <packaging>pom</packaging>
+    <description>Parent project to package all Bootstrap 5 related components.</description>
+    <properties>
+        <jahia.package.assembly.file>src/main/assembly/bootstrap5.xml</jahia.package.assembly.file>
+        <jahia.package.sources.assembly.file>src/main/assembly/bootstrap5-sources.xml</jahia.package.sources.assembly.file>
+        <jahia.final.package.name>bootstrap5-package</jahia.final.package.name>
+        <jahia.manifest.package.id>Bootstrap5</jahia.manifest.package.id>
+        <jahia.manifest.description>bootstrap5-core, bootstrap5-components, bootstrap5-templates-starter</jahia.manifest.description>
+        <jahia.manifest.license>org.jahia.core</jahia.manifest.license>
+    </properties>
+    <repositories>
+        <repository>
+            <id>jahia-public</id>
+            <name>Jahia Public Repository</name>
+            <url>https://devtools.jahia.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>org.jahiacommunity.modules</groupId>
+            <artifactId>bootstrap5-core</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jahiacommunity.modules</groupId>
+            <artifactId>bootstrap5-components</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jahiacommunity.modules</groupId>
+            <artifactId>bootstrap5-templates-starter</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${dependency.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>org.jahiacommunity.modules</includeGroupIds>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-dependencies-sources</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>org.jahiacommunity.modules</includeGroupIds>
+                            <outputDirectory>${project.build.directory}/sources</outputDirectory>
+                            <classifier>sources</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
