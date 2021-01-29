@@ -1,22 +1,22 @@
 @media (min-width: 992px) {
     .dropdown-menu {
-        left: auto;
+        left: auto
     }
     .dropdown-menu .dropdown-menu {
         margin-left: 0;
-        margin-right: 0;
+        margin-right: 0
     }
     .nav-item .submenu {
         display: none;
         position: absolute;
         left: 100%;
-        top: -7px;
+        top: -7px
     }
     .dropdown-menu > li:hover > .submenu {
-        display: block;
+        display: block
     }
 }
 .dropdown-item.inpath {
     color: #1e2125;
-    background-color: #f8f9fa;
+    background-color: #f8f9fa
 }
