@@ -8,8 +8,8 @@
     }
     .nav-item .submenu {
         display: none;
-        position: absolute;
         left: 100%;
+        position: absolute;
         top: -7px
     }
     .dropdown-menu > li:hover > .submenu {
@@ -17,6 +17,6 @@
     }
 }
 .dropdown-item.inpath {
-    color: #1e2125;
-    background-color: #f8f9fa
+    background-color: #f8f9fa;
+    color: #1e2125
 }

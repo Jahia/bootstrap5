@@ -16,7 +16,9 @@
     <template:addResources type="javascript" resources="bootstrap.bundle.min.js"/>
 </head>
 <body>
-<template:area path="pagecontent"/>
+<template:area path="header" areaAsSubNode="true" moduleType="absoluteArea" level="0" />
+<template:area path="pagecontent" areaAsSubNode="true"/>
+<template:area path="footer" areaAsSubNode="true" moduleType="absoluteArea" level="0"/>
 </body>
 </html>
 

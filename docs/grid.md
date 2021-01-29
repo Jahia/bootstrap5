@@ -24,7 +24,7 @@ This complex component will allow to generate any type of layout, by enabling di
 
 Let’s see the different mixin in detail.
 
-## Layout and Grid: Create HTML5 Semantic Elements
+## Create HTML5 Semantic Elements
 
 This part will create a HTML5 Semantic.
 
@@ -52,7 +52,7 @@ itemtype = content
 - sectionAria (string) indexed=no
 ```
 
-## Layout and Grid: Create Container
+## Create Container
 
 This part will create a bootstrap container. Containers are the most basic layout element in Bootstrap and are required when using the grid system.
 
@@ -76,7 +76,7 @@ Here is the definition of this mixin
  - containerType (string, choicelist[resourceBundle]) = 'container' autocreated indexed=no < 'container', 'container-fluid', 'container-sm', 'container-md', 'container-lg', 'container-xl', 'container-xxl'
 ```
 
-## Layout and Grid: Create Row and Columns
+## Create Row and Columns
 
 This part will create a row with several options such as alignment, gutters. You can also choose the type of columns that you want to create. It can be one of predefined columns or custom ones. You can also not create any columns. The initializer will add on the fly the mixin `bootstrap5mix:predefinedGrid` or `bootstrap5mix:customGrid` to the curent node.
 
@@ -161,7 +161,7 @@ The name of the different areas is `colx` wher `x` is the index of the column, s
 
 So as you can see there are no limits on it. Also, you may embed a *grid and layout component* in another one to create any type of layout.
 
-### Layout and Grid: Create Row and Columns definition
+### Create Row and Columns definition
 
 Here is the definition for this mixin
 
@@ -186,7 +186,7 @@ Here is the definition for this mixin
  - verticalGutters (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','gy-0','gy-1','gy-2','gy-3','gy-4','gy-5'
 ```
 
-## Layout and Grid: Limit the number of elements
+## Limit the number of elements
 
 You can limit the number of content that you want to create in your element (row, column or section). This option will improve the edit mode for users, as we won’t see all the “Add content” placeholders once the limit is granted.
 
@@ -213,7 +213,7 @@ Here is the definition of the mixin Limit the number of elements `bootstrap5mix:
  itemtype = content
  - listLimit (string, choicelist[resourceBundle]) = '-1' autocreated indexed=no < '-1', '1', '2', '3', '4', '5', '10'
 ```
-## Layout and Grid: Create Absolute Areas
+## Create Absolute Areas
 
 On Jahia you get the content from a parent page node.
 

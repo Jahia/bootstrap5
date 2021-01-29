@@ -1,20 +1,12 @@
 $(document).ready(function () {
-    //////////////////////// Prevent closing from click inside dropdown
-    $(document).on('click', '.dropdown-menu', function (e) {
-        e.stopPropagation();
+    $(document).on("click", ".dropdown-menu", function (e) {
+        e.stopPropagation()
     });
-
-    // make it as accordion for smaller screens
-    if ($(window).width() < 992) {
-        $('.dropdown-menu a').click(function (e) {
-            e.preventDefault();
-            if ($(this).next('.submenu').length) {
-                $(this).next('.submenu').toggle();
-            }
-            $('.dropdown').on('hide.bs.dropdown', function () {
-                $(this).find('.submenu').hide();
-            })
-        });
-    }
-
-}); // jquery end
+    992 > $(window).width() && $(".dropend a").hover(function (a) {
+        a.preventDefault();
+        $(this).next(".submenu").length && $(this).next(".submenu").toggle();
+        $(".dropdown-menu").on("hide.bs.dropdown", function () {
+            $(this).find(".submenu").hide()
+        })
+    })
+});
