@@ -2,6 +2,8 @@
 <%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
 <%@ taglib prefix="b5" uri="http://www.jahia.org/b5" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+
 <c:set var="language" value="${renderContext.mainResourceLocale.language}"/>
 <%--@elvariable id="renderContext" type="org.jahia.services.render.RenderContext"--%>
 <html lang="${language}"<c:if test="${b5:isRtlLanguage(language)}"><c:out value=" "/>dir="rtl"</c:if>>

@@ -2,7 +2,7 @@
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Osmorc" name="OSGi">
-      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="bootstrap5-templates-starter-0.0.2-SNAPSHOT.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="" bundleSymbolicName="bootstrap5-templates-starter" bundleVersion="0.0.2.SNAPSHOT" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
+      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="bootstrap5-templates-starter-0.0.3-SNAPSHOT.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="" bundleSymbolicName="bootstrap5-templates-starter" bundleVersion="0.0.3.SNAPSHOT" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
         <additionalProperties>
           <property key="Bundle-Description" value="This is the custom profile module (bootstrap5-templates-starter) for running on a Jahia server." />
           <property key="Bundle-Vendor" value="Jahia Solutions Group SA" />
@@ -12,13 +12,13 @@
           <property key="Bundle-Name" value="Bootstrap5 Templates Starter" />
           <property key="Bundle-Category" value="jahia-module" />
           <property key="Implementation-Title" value="Bootstrap5 Templates Starter" />
-          <property key="Implementation-Version" value="0.0.2-SNAPSHOT" />
+          <property key="Implementation-Version" value="0.0.3-SNAPSHOT" />
           <property key="Implementation-Vendor" value="Jahia Solutions Group SA" />
           <property key="Implementation-URL" value="http://www.jahia.com" />
           <property key="Specification-Title" value="Bootstrap5 Templates Starter" />
-          <property key="Specification-Version" value="0.0.2-SNAPSHOT" />
+          <property key="Specification-Version" value="0.0.3-SNAPSHOT" />
           <property key="Specification-Vendor" value="Jahia Solutions Group SA" />
-          <property key="Jahia-GroupId" value="org.foo.modules" />
+          <property key="Jahia-GroupId" value="org.jahiacommunity.modules" />
           <property key="Jahia-Source-Folders" value="$MODULE_DIR$" />
           <property key="Jahia-Source-Control-Connection" value="scm:dummy:uri" />
           <property key="Jahia-Source-Control-DeveloperConnection" value="scm:dummy:uri" />

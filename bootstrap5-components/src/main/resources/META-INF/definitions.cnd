@@ -217,7 +217,7 @@
  itemtype = content
  - addLoginButton (boolean) = 'true' autocreated indexed=no
  - addLanguageButton (boolean) = 'true' autocreated indexed=no
- - recursive (boolean) = 'true' autocreated indexed=no
+ - maxlevel (string, choicelist[resourceBundle]) = '2' autocreated indexed=no < '1', '2', '3', '4', '5'
  - addContainerWithinTheNavbar (boolean) = 'false' autocreated indexed=no
 
 [bootstrap5mix:customizeNavbar] mixin

@@ -1,3 +1,8 @@
+.dropdown-item.inpath {
+    background-color: #f8f9fa;
+    color: #1e2125
+}
+
 @media (min-width: 992px) {
     .dropdown-menu {
         left: auto
@@ -15,8 +20,4 @@
     .dropdown-menu > li:hover > .submenu {
         display: block
     }
-}
-.dropdown-item.inpath {
-    background-color: #f8f9fa;
-    color: #1e2125
 }

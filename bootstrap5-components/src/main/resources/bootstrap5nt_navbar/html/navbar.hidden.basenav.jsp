@@ -5,13 +5,16 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%--@elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper"--%>
+
+<%--
+THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the levels > 2
+--%>
 <template:addResources type="css" resources="bootstrap.min.css"/>
 <template:addResources type="javascript" resources="bootstrap.bundle.min.js"/>
 
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:navbarGlobalSettings')}">
-    <c:set var="recursive" value="${currentNode.properties.recursive.boolean}"/>
+    <c:set var="maxlevel" value="${currentNode.properties.maxlevel.string}"/>
 </c:if>
-
 
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:customizeNavbar')}">
     <c:set var="ulClass" value="${currentNode.properties.ulClass.string}"/>
@@ -20,9 +23,11 @@
 <c:if test="${empty ulClass}">
     <c:set var="ulClass" value="navbar-nav me-auto"/>
 </c:if>
-<c:if test="${empty recursive}">
-    <c:set var="recursive" value="true"/>
+<c:if test="${empty maxlevel}">
+    <c:set var="maxlevel" value="2"/>
 </c:if>
+<c:set var="recursive" value="${maxlevel > 1}"/>
+
 <c:set var="root" value="${currentNode.properties.root.string}"/>
 <c:set var="curentPageNode" value="${renderContext.mainResource.node}"/>
 <c:if test="${! jcr:isNodeType(curentPageNode,'jmix:navMenuItem')}">

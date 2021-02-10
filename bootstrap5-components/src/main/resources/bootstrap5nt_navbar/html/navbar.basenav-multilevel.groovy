@@ -11,9 +11,8 @@ logger = LoggerFactory.getLogger(this.class)
 Resource addResources = new Resource(currentNode, "html", "hidden.basenav-multilevel-resources", currentResource.getContextConfiguration())
 print(RenderService.getInstance().render(addResources, renderContext));
 
-def maxDepth = 4;
 def printMenu;
-printMenu = { startNode, level, ulClass ->
+printMenu = { startNode, level, ulClass, maxlevel ->
     if (startNode != null) {
         children = JCRContentUtils.getChildrenOfType(startNode, "jmix:navMenuItem")
         children.eachWithIndex() { menuItem, index ->
@@ -30,7 +29,7 @@ printMenu = { startNode, level, ulClass ->
                 }
                 if (correctType) {
 
-                    boolean hasChildren = level < maxDepth && JCRTagUtils.hasChildrenOfType(menuItem, "jmix:navMenuItem")
+                    boolean hasChildren = level < maxlevel && JCRTagUtils.hasChildrenOfType(menuItem, "jmix:navMenuItem")
                     String menuItemUrl = null;
                     String menuItemTitle = menuItem.displayableName;
                     boolean isActive = renderContext.mainResource.node.path.indexOf(menuItem.path) > -1;
@@ -53,7 +52,7 @@ printMenu = { startNode, level, ulClass ->
                         menuItemUrl = "#";
                     }
 
-                    if (hasChildren && level < maxDepth) {
+                    if (hasChildren && level < maxlevel) {
                         if (level == 1) {
                             print "<li class=\"nav-item\">";
                             print "<a class='nav-link ${isActive ? ' active' : ''} dropdown-toggle' id='navbarDropdownMen-${menuItem.identifier}' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' href='#'>${menuItemTitle}"
@@ -64,7 +63,7 @@ printMenu = { startNode, level, ulClass ->
                             print "<ul class='dropdown-menu' aria-labelledby='navbarDropdownMen-${menuItem.identifier}'>";
                             print "<li><a class='dropdown-item' href='${menuItemUrl}'>${menuItemTitle}</a></li>";
                             print "<li class='dropdown-divider'></li>";
-                            printMenu(menuItem, level + 1, ulClass);
+                            printMenu(menuItem, level + 1, ulClass, maxlevel);
                             print "</ul>";
                             print "</li>";
                         } else {
@@ -77,7 +76,7 @@ printMenu = { startNode, level, ulClass ->
                             print "<ul class='submenu dropdown-menu'>";
                             print "<li><a class='dropdown-item' href='${menuItemUrl}'>${menuItemTitle}</a></li>";
                             print "<li class='dropdown-divider'></li>";
-                            printMenu(menuItem, level + 1, ulClass);
+                            printMenu(menuItem, level + 1, ulClass, maxlevel);
                             print "</ul>";
                             print "</li>";
                         }
@@ -110,6 +109,7 @@ printMenu = { startNode, level, ulClass ->
 JCRNodeWrapper startNode = null;
 JCRNodeWrapper curentPageNode = renderContext.mainResource.node;
 String root = currentNode.properties.root.string;
+long maxlevel = 2;
 switch (root) {
     case "currentPage": startNode = curentPageNode;
     case "parentPage": startNode = curentPageNode.parent;
@@ -120,6 +120,12 @@ if (startNode == null) {
 }
 
 String ulClass = "navbar-nav me-auto";
+if (currentNode.isNodeType("bootstrap5mix:navbarGlobalSettings")) {
+    try {
+        maxlevel = Long.parseLong(currentNode.properties.maxlevel.string);
+    } catch (NumberFormatException e) {
+    }
+}
 if (currentNode.isNodeType("bootstrap5mix:customizeNavbar")) {
     ulClass = currentNode.properties.ulClass.string;
 }
@@ -130,5 +136,5 @@ try {
 } catch (ItemNotFoundException e) {
 }
 print "<ul class='${ulClass}'>";
-printMenu(startNode, 1, ulClass)
+printMenu(startNode, 1, ulClass, maxlevel)
 print "</ul>"

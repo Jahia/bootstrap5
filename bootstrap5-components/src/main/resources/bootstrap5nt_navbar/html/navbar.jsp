@@ -122,7 +122,7 @@
     </button>
 
     <div class="${divClass}" id="navbar-${currentNode.identifier}">
-        <template:include view="basenav"/>
+        <template:include view="basenav-multilevel"/>
         <c:if test="${addLoginButton}">
             <%--<template:include view="hidden.login"/>--%>
             <template:module node="${currentNode}" view="hidden.login"/>

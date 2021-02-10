@@ -119,7 +119,44 @@ Here are the global settings properties `bootstrap5mix:navbarGlobalSettings`. Yo
 | Display the languages | `addLanguageButton` | Display the switch language menu. The current language is display using the 2 chars ISO code, and other languages are displayed using the language name (translated)<br/>![alt_text](../images/navigation-language.png "Languages" ) | true |
 | Wrap the the navbar in a container | `addContainerWithinTheNavbar` | Wrap the content of the navbar in a container to center it on a page. This will add the `<div class="container">` inside the `nav` tag | false | 
 
+### Global setting definition
 
+```cnd
+[bootstrap5mix:navbarGlobalSettings] mixin
+ extends = bootstrap5nt:navbar
+ itemtype = content
+ - addLoginButton (boolean) = 'true' autocreated indexed=no
+ - addLanguageButton (boolean) = 'true' autocreated indexed=no
+ - recursive (boolean) = 'true' autocreated indexed=no
+ - addContainerWithinTheNavbar (boolean) = 'false' autocreated indexed=no
+```
+## Customize brand
+
+Here are the Customize brand properties `bootstrap5mix:brand`.
+
+| Label | Name | Description |
+| --- | --- | --- | 
+| Brand text | `brandText` | Set the text used on the brand section | 
+| Brand image | `brandImage` | Image used on the brand section | 
+| Brand image for small devices | `brandImageMobile` | Image used for small devices |
+
+These 3 properties can be set when you use a navbar. You can also override the settings (typically if the navbar is included in a template set, in the studio) by editing the site node. 
+
+### Customize brand definition
+```cnd
+[bootstrap5mix:brand] mixin
+ extends = bootstrap5nt:navbar
+ - brandText (string) i18n
+ - brandImage (weakreference, picker[type='image']) < 'jmix:image'
+ - brandImageMobile (weakreference, picker[type='image']) < 'jmix:image'
+
+[bootstrap5mix:siteBrand] mixin
+ extends = jnt:virtualsite
+ itemtype = content
+ - brandText (string) i18n
+ - brandImage (weakreference, picker[type='image']) < 'jmix:image'
+ - brandImageMobile (weakreference, picker[type='image']) < 'jmix:image'
+```
 
 ## Customize the navbar
 
@@ -132,6 +169,19 @@ Here are a few properties to fully configure your navigation bar by setting CSS 
 | Class(es) for the toggleable section | `divClass` | CSS classes to set on toggleable section (on the `nav > div` tag) | `collapse navbar-collapse`|
 | Class(es) for the navigation list | `ulClass` | CSS classes to set on navigation list | `navbar-nav me-auto`|
 | Class(es) for the sign in section | `loginMenuULClass` | CSS classes to set on sign in section| `navbar-nav ms-auto`|
+
+### Definition of Customize the navbar
+
+```cnd
+[bootstrap5mix:customizeNavbar] mixin
+ extends = bootstrap5nt:navbar
+ itemtype = content
+ - navClass (string) = 'navbar navbar-expand-lg navbar-light bg-light' autocreated indexed=no
+ - togglerClass (string) = 'navbar-toggler navbar-toggler-right' indexed=no
+ - divClass (string) = 'collapse navbar-collapse' autocreated indexed=no
+ - ulClass (string) = 'navbar-nav me-auto' autocreated indexed=no
+ - loginMenuULClass (string) = 'navbar-nav ms-auto'
+```
 
 ## Usage of the dedicated view
 
