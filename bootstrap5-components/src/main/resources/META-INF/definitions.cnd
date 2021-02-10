@@ -158,18 +158,18 @@
  - textColor (string, choicelist[resourceBundle]) = 'dark' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
  - borderColor (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','primary','secondary','success','danger','warning','info','light','dark','white'
 
-[bootstrap5nt:card]> jnt:content, bootstrap5mix:component, mix:title, jmix:list, bootstrap5mix:image, jmix:browsableInEditorialPicker
- - headerSize (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'h1', 'h2', 'h3', 'h4', 'h5'
- - textAlign (string, choicelist[resourceBundle]) = 'text-start' autocreated indexed=no < 'text-start', 'text-end', 'text-center'
- - footer (string) i18n
- + * (jmix:droppableContent) = jmix:droppableContent
-
 [bootstrap5mix:cardAdvancedSettings] mixin
  extends = bootstrap5nt:card
  itemtype = content
  - cssClass (string) = 'card' indexed=no
  - cardBodyCssClass (string) = 'card-body' indexed=no
  - freeFooter (boolean) = 'false' indexed=no
+
+[bootstrap5nt:card]> jnt:content, bootstrap5mix:component, mix:title, jmix:list, bootstrap5mix:image, jmix:browsableInEditorialPicker
+ - headerSize (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'h1', 'h2', 'h3', 'h4', 'h5'
+ - textAlign (string, choicelist[resourceBundle]) = 'text-start' autocreated indexed=no < 'text-start', 'text-end', 'text-center'
+ - footer (string) i18n
+ + * (jmix:droppableContent) = jmix:droppableContent
 
 [bootstrap5mix:advancedCarouselItem] mixin
  extends = bootstrap5nt:carouselItem
