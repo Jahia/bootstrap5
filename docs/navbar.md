@@ -115,7 +115,7 @@ Here are the global settings properties `bootstrap5mix:navbarGlobalSettings`. Yo
 | Label | Name | Description | Default value |
 | --- | --- | --- | --- |
 | Display the sign in button | `addLoginButton` | Display a sign in button for anonymous users that open a modal with the sign in form <br/> ![alt_text](../images/navigation-signin.png "Sign in" )<br> Once logged, a drop menu allows to switch to edit and preview<br/>  ![alt_text](../images/navigation-edit.png "edit" )| true | 
-| Display sub pages | `recursive` | Display subpages as a dropdown menu <br/> ![alt_text](../images/navigation-recursive.png "Sub pages" ) | true |
+| How many level to display | `maxlevel` | Display subpages as a dropdown menu for level > 1<br/> ![alt_text](../images/navigation-recursive.png "Sub pages" ) | 2 |
 | Display the languages | `addLanguageButton` | Display the switch language menu. The current language is display using the 2 chars ISO code, and other languages are displayed using the language name (translated)<br/>![alt_text](../images/navigation-language.png "Languages" ) | true |
 | Wrap the the navbar in a container | `addContainerWithinTheNavbar` | Wrap the content of the navbar in a container to center it on a page. This will add the `<div class="container">` inside the `nav` tag | false | 
 
@@ -127,7 +127,7 @@ Here are the global settings properties `bootstrap5mix:navbarGlobalSettings`. Yo
  itemtype = content
  - addLoginButton (boolean) = 'true' autocreated indexed=no
  - addLanguageButton (boolean) = 'true' autocreated indexed=no
- - recursive (boolean) = 'true' autocreated indexed=no
+ - maxlevel (string, choicelist[resourceBundle]) = '2' autocreated indexed=no < '1', '2', '3', '4', '5'
  - addContainerWithinTheNavbar (boolean) = 'false' autocreated indexed=no
 ```
 ## Customize brand
