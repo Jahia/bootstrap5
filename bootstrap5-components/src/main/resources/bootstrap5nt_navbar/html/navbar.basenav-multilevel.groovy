@@ -41,7 +41,7 @@ printMenu = { startNode, level, ulClass, maxlevel ->
                     } else if (menuItem.isNodeType('jnt:nodeLink')) {
                         JCRNodeWrapper refNode = menuItem.properties['j:node'].node;
                         if (refNode != null) {
-                            currentResource.dependencies.add(refNode);
+                            currentResource.dependencies.add(refNode.getCanonicalPath());
                             menuItemTitle = refNode.displayableName;
                             menuItemUrl = renderContext.getResponse().encodeURL(refNode.url);
                         }
