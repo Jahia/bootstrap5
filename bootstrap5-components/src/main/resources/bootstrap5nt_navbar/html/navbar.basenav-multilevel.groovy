@@ -42,13 +42,15 @@ printMenu = { startNode, level, ulClass, maxlevel ->
                         JCRNodeWrapper refNode = menuItem.properties['j:node'].node;
                         if (refNode != null) {
                             currentResource.dependencies.add(refNode.getCanonicalPath());
-                            menuItemTitle = refNode.displayableName;
+                            if ("".equals(menuItemTitle)) {
+                                menuItemTitle = refNode.displayableName;
+                            }
                             menuItemUrl = renderContext.getResponse().encodeURL(refNode.url);
                         }
                     } else if (menuItem.isNodeType('jnt:externalLink')) {
                         menuItemUrl = menuItem.properties['j:url'].string;
                     }
-                    if ("".equals(menuItemUrl)) {
+                    if (menuItemUrl == null || "".equals(menuItemUrl)) {
                         menuItemUrl = "#";
                     }
 
