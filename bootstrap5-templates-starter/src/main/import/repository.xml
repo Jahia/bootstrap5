@@ -22,6 +22,8 @@
                   jcr:mixinTypes="jmix:theme"
                   jcr:primaryType="jnt:template">
                <starter jcr:primaryType="jnt:pageTemplate"/>
+               <sticky-footer j:view="bootstrap5-templates-starter.sticky-footer"
+                              jcr:primaryType="jnt:pageTemplate"/>
             </base>
             <content-template j:applyOn="jnt:content"
                               j:hiddenTemplate="true"
