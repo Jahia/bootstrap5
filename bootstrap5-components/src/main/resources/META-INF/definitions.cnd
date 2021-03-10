@@ -35,8 +35,8 @@
  - typeOfGrid (string, choicelist[gridTypeInitializer, resourceBundle]) = 'nogrid' autocreated indexed=no < 'nogrid', 'predefinedGrid', 'customGrid'
  - rowId (string) < '[a-zA-Z0-9-_]+'
  - rowCssClass (string) indexed=no
- - rowVerticalAlignment (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'align-items-start', 'align-items-center', 'align-items-end'
- - rowHorizontalAlignment (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'justify-content-start', 'justify-content-center', 'justify-content-end','justify-content-around','justify-content-between','justify-content-evenly'
+ - rowVerticalAlignment (string, choicelist[resourceBundle,moduleImage='svg']) = 'default' autocreated indexed=no < 'default', 'align-items-start', 'align-items-center', 'align-items-end'
+ - rowHorizontalAlignment (string, choicelist[resourceBundle,moduleImage='svg']) = 'default' autocreated indexed=no < 'default', 'justify-content-start', 'justify-content-center', 'justify-content-end','justify-content-around','justify-content-between','justify-content-evenly'
  - horizontalGutters (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','gx-0','gx-1','gx-2','gx-3','gx-4','gx-5'
  - verticalGutters (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','gy-0','gy-1','gy-2','gy-3','gy-4','gy-5'
 
@@ -78,7 +78,7 @@
  - imageID (string) indexed=no
  - responsive (boolean) = 'true' indexed=no
  - thumbnails (boolean) = 'false' indexed=no
- - align (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'start', 'end', 'center'
+ - align (string, choicelist[resourceBundle,moduleImage='svg']) = 'default' autocreated indexed=no < 'default', 'start', 'end', 'center'
  - alt (string) i18n
  - borderRadius (string, choicelist[resourceBundle]) = 'rounded-0' autocreated indexed=no < 'rounded','rounded-top', 'rounded-end', 'rounded-bottom','rounded-start','rounded-circle','rounded-pill','rounded-0'
  - borderRadiusSize (string, choicelist[resourceBundle]) = 'default' < 'default','rounded-0','rounded-1','rounded-2','rounded-3'
@@ -91,7 +91,7 @@
 [bootstrap5mix:figureAdvancedSettings] mixin
  extends = bootstrap5nt:figure
  itemtype = content
- - captionAlignment (string, choicelist[resourceBundle]) = 'text-start' autocreated indexed=no < 'text-start', 'text-center', 'text-end'
+ - captionAlignment (string, choicelist[resourceBundle,moduleImage='svg']) = 'text-start' autocreated indexed=no < 'text-start', 'text-center', 'text-end'
 
 [bootstrap5nt:figure] > jnt:content, bootstrap5mix:component, bootstrap5mix:imageAdvanced, mix:title
 
@@ -113,7 +113,7 @@
 [bootstrap5mix:buttonAdvancedSettings] mixin
  extends = bootstrap5nt:button
  itemtype = content
- - style (string, choicelist[resourceBundle]) = 'primary' autocreated indexed=no < 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'link','dark','light','custom'
+ - style (string, choicelist[resourceBundle,moduleImage='svg']) = 'primary' autocreated indexed=no < 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'link','dark','light','custom'
  - size (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'btn-lg', 'btn-sm'
  - outline (boolean) = 'false' indexed=no
  - block (boolean) = 'false' indexed=no
@@ -154,9 +154,9 @@
 [bootstrap5mix:colors] mixin
  extends = bootstrap5nt:card
  itemtype = content
- - backgroundColor (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','primary','secondary','success','danger','warning','info','light','dark','white','transparent'
- - textColor (string, choicelist[resourceBundle]) = 'dark' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
- - borderColor (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default','primary','secondary','success','danger','warning','info','light','dark','white'
+ - backgroundColor (string, choicelist[resourceBundle,moduleImage='svg']) = 'default' autocreated indexed=no < 'default','primary','secondary','success','danger','warning','info','light','dark','white','transparent'
+ - textColor (string, choicelist[resourceBundle,moduleImage='svg']) = 'dark' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
+ - borderColor (string, choicelist[resourceBundle,moduleImage='svg']) = 'default' autocreated indexed=no < 'default','primary','secondary','success','danger','warning','info','light','dark','white'
 
 [bootstrap5mix:cardAdvancedSettings] mixin
  extends = bootstrap5nt:card
@@ -167,15 +167,15 @@
 
 [bootstrap5nt:card]> jnt:content, bootstrap5mix:component, mix:title, jmix:list, bootstrap5mix:image, jmix:browsableInEditorialPicker
  - headerSize (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no < 'default', 'h1', 'h2', 'h3', 'h4', 'h5'
- - textAlign (string, choicelist[resourceBundle]) = 'text-start' autocreated indexed=no < 'text-start', 'text-end', 'text-center'
+ - textAlign (string, choicelist[resourceBundle,moduleImage='svg']) = 'text-start' autocreated indexed=no < 'text-start', 'text-end', 'text-center'
  - footer (string) i18n
  + * (jmix:droppableContent) = jmix:droppableContent
 
 [bootstrap5mix:advancedCarouselItem] mixin
  extends = bootstrap5nt:carouselItem
  itemtype = content
- - titleColor (string, choicelist[resourceBundle]) = 'light' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
- - captionColor (string, choicelist[resourceBundle]) = 'light' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
+ - titleColor (string, choicelist[resourceBundle,moduleImage='svg']) = 'light' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
+ - captionColor (string, choicelist[resourceBundle,moduleImage='svg']) = 'light' autocreated indexed=no < 'muted','primary','secondary','success','danger','warning','info','light','dark','white','body','black-50','white-50'
  - carouselItemClass (string) indexed=no
  - interval (long) indexed=no
 
@@ -206,7 +206,7 @@
  - pageSize (long) = '10' autocreated mandatory indexed=no
  - nbOfPages (long) = '10' autocreated mandatory indexed=no
  - nbOfPagesInEdit (long) = '100' autocreated mandatory indexed=no
- - align (string, choicelist[resourceBundle]) = 'justify-content-center' autocreated indexed=no  < 'justify-content-center', 'justify-content-start', 'justify-content-end'
+ - align (string, choicelist[resourceBundle,moduleImage='svg']) = 'justify-content-center' autocreated indexed=no  < 'justify-content-center', 'justify-content-start', 'justify-content-end'
  - layout (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no   < 'pagination-lg', 'default', 'pagination-sm'
 
 [bootstrap5nt:pagination] > jnt:content, bootstrap5mix:component, jmix:bindedComponent
@@ -252,14 +252,14 @@
 [bootstrap5nt:tabs] > jnt:content, bootstrap5mix:component, jmix:manuallyOrderable, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
  - type (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no < 'tab', 'pill','link'
  - fade (boolean) = 'true' autocreated indexed=no
- - align (string, choicelist[resourceBundle]) = 'justify-content-start' indexed=no < 'justify-content-start', 'justify-content-center', 'justify-content-end', 'nav-fill', 'nav-justified'
+ - align (string, choicelist[resourceBundle,moduleImage='svg']) = 'justify-content-start' indexed=no < 'justify-content-start', 'justify-content-center', 'justify-content-end', 'nav-fill', 'nav-justified'
  - useListNameAsAnchor (boolean) = 'true' autocreated indexed=no
  + * (jnt:contentList) = jnt:contentList
 
 [bootstrap5mix:alert] > jmix:templateMixin mixin
  extends = jmix:droppableContent
  itemtype = layout
- - backgroundColor (string, choicelist[resourceBundle]) = 'primary' autocreated indexed=no < 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'link','dark','light','custom'
+ - backgroundColor (string, choicelist[resourceBundle,moduleImage='svg']) = 'primary' autocreated indexed=no < 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'link','dark','light','custom'
  - addDismissButton (boolean) = 'false' indexed=no
 
 
