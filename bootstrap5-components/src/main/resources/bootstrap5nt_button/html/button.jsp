@@ -7,7 +7,7 @@
 <%--@elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper"--%>
 
 <template:addResources type="css" resources="bootstrap.min.css"/>
-<template:addResources type="javascript" resources="bootstrap.bundle.min.js"/>
+<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="body"/>
 <c:set var="title" value="${currentNode.properties['jcr:title'].string}"/>
 <c:set var="buttonType" value="${currentNode.properties.buttonType.string}"/>
 <c:set var="linkUrl" value="#"/>

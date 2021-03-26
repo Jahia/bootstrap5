@@ -18,7 +18,7 @@
 <%--@elvariable id="moduleMap" type="java.util.Map"--%>
 
 <template:addResources type="css" resources="bootstrap.min.css"/>
-<template:addResources type="javascript" resources="bootstrap.bundle.min.js"/>
+<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="body"/>
 <c:set var="subLists" value="${jcr:getChildrenOfType(currentNode, 'jnt:contentList')}"/>
 <c:set var="type" value="nav-${currentNode.properties.type.string}s"/>
 <c:set var="align" value=" ${currentNode.properties.align.string}"/>

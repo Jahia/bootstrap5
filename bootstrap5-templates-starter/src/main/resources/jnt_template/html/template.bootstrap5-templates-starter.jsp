@@ -15,7 +15,7 @@
     <c:if test="${renderContext.editMode}">
         <template:addResources type="css" resources="starter-edit.css"/>
     </c:if>
-    <template:addResources type="javascript" resources="bootstrap.bundle.min.js"/>
+    <template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="body"/>
 </head>
 <body>
 <template:area path="header" areaAsSubNode="true" moduleType="absoluteArea" level="0" />

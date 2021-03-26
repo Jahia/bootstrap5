@@ -10,7 +10,7 @@
 THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the levels > 2
 --%>
 <template:addResources type="css" resources="bootstrap.min.css"/>
-<template:addResources type="javascript" resources="bootstrap.bundle.min.js"/>
+<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="body"/>
 
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:navbarGlobalSettings')}">
     <c:set var="maxlevel" value="${currentNode.properties.maxlevel.string}"/>
