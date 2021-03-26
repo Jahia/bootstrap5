@@ -68,6 +68,11 @@ public class ButtonTypeInitializer extends AbstractChoiceListRenderer implements
         myPropertiesMap.put("addMixin","bootstrap5mix:popover");
         myChoiceList.add(new ChoiceListValue("popover",myPropertiesMap,new ValueImpl("popover", PropertyType.STRING, false)));
 
+        //popover
+        myPropertiesMap = new HashMap<String, Object>();
+        myPropertiesMap.put("addMixin","bootstrap5mix:Offcanvas");
+        myChoiceList.add(new ChoiceListValue("Offcanvas",myPropertiesMap,new ValueImpl("Offcanvas", PropertyType.STRING, false)));
+
         //Return the list
         return myChoiceList;
     }

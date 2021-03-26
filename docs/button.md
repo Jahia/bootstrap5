@@ -184,4 +184,37 @@ extends = bootstrap5nt:button
 - html (boolean) = 'false' indexed=no
 ```
 
+
+## Offcanvas
+
+Offcanvas is a sidebar component that can be toggled via JavaScript to appear from the left, right, or bottom edge of the viewport.
+This will add the mixin `bootstrap5mix:Offcanvas` to the button node.
+
+![alt_text](../images/offcanvas.png "Offcanvas" )
+
+### Offcanvas properties
+
+| Label | Name | Description | Default value |
+| --- | --- | --- | --- |
+|**Title of the Offcanvas** |`OffcanvasTitle`| If not set, the title is ignored || 
+|**Placement** |`placement`| 3 options are available: start, end, bottom|start| 
+|**Apply a backdrop on body** |`enableBackdrop`| When checked, this will apply a backdrop on body|true| 
+|**Allow body scrolling while offcanvas is open** |`enableBodyScrolling`| When checked, you can scrolling the body |false| 
+
+### Offcanvas definition
+
+Here is the definition of the mixin `bootstrap5mix:Offcanvas`
+
+```cnd
+[bootstrap5mix:Offcanvas] > jmix:templateMixin, jmix:browsableInEditorialPicker mixin orderable
+ extends = bootstrap5nt:button
+ - OffcanvasTitle (string) i18n
+ - placement (string, choicelist[resourceBundle]) = 'start' autocreated indexed=no < 'start', 'end', 'bottom'
+ - enableBackdrop (boolean) = 'true' indexed=no
+ - enableBodyScrolling (boolean) = 'false' indexed=no
+ + * (jmix:droppableContent) = jmix:droppableContent
+ ```
+
+
+
 [Back to README](../README.md)

@@ -108,7 +108,7 @@
 [bootstrap5nt:breadcrumb]> jnt:content, bootstrap5mix:component
 
 [bootstrap5nt:button]> jnt:content, bootstrap5mix:component, mix:title
- - buttonType (string, choicelist[buttonTypeInitializer, resourceBundle]) = 'internalLink' autocreated indexed=no < 'internalLink', 'externalLink', 'modal', 'collapse','popover'
+ - buttonType (string, choicelist[buttonTypeInitializer, resourceBundle]) = 'internalLink' autocreated indexed=no < 'internalLink', 'externalLink', 'modal', 'collapse','popover','Offcanvas'
 
 [bootstrap5mix:buttonAdvancedSettings] mixin
  extends = bootstrap5nt:button
@@ -150,6 +150,14 @@
  - popoverContent (string) i18n
  - direction (string, choicelist[resourceBundle]) = 'top' autocreated indexed=no < 'top', 'left', 'right', 'bottom'
  - html (boolean) = 'false' indexed=no
+
+[bootstrap5mix:Offcanvas] > jmix:templateMixin, jmix:browsableInEditorialPicker mixin orderable
+ extends = bootstrap5nt:button
+ - OffcanvasTitle (string) i18n
+ - placement (string, choicelist[resourceBundle]) = 'start' autocreated indexed=no < 'start', 'end', 'bottom'
+ - enableBackdrop (boolean) = 'true' indexed=no
+ - enableBodyScrolling (boolean) = 'false' indexed=no
+ + * (jmix:droppableContent) = jmix:droppableContent
 
 [bootstrap5mix:colors] mixin
  extends = bootstrap5nt:card

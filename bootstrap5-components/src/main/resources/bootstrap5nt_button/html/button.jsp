@@ -170,6 +170,31 @@
             </script>
         </template:addResources>
     </c:when>
+    <c:when test="${buttonType eq 'Offcanvas'}">
+        <c:set var="enableBackdrop" value="${currentNode.properties.enableBackdrop.boolean?'true':'false'}"/>
+        <c:set var="enableBodyScrolling" value="${currentNode.properties.enableBodyScrolling.boolean?'true':'false'}"/>
+        <c:set var="placement" value="${currentNode.properties.placement.string}"/>
+
+        <button class="${buttonClass}"  type="button" ${aria} data-bs-toggle="offcanvas" data-bs-target="#offcanvas_${currentNode.identifier}" aria-controls="offcanvas_${currentNode.identifier}">${title}</button>
+
+        <div class="offcanvas offcanvas-${placement}" data-bs-scroll="${enableBodyScrolling}" data-bs-backdrop="${enableBackdrop}" tabindex="-1" id="offcanvas_${currentNode.identifier}" aria-labelledby="offcanvas_${currentNode.identifier}Label">
+            <c:set var="OffcanvasTitle" value="${currentNode.properties.OffcanvasTitle.string}"/>
+            <c:if test="${! empty OffcanvasTitle}">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvas_${currentNode.identifier}Label">${OffcanvasTitle}</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+            </c:if>
+            <div class="offcanvas-body">
+                <c:forEach items="${jcr:getChildrenOfType(currentNode, 'jmix:droppableContent')}" var="droppableContent">
+                    <template:module node="${droppableContent}" editable="true"/>
+                </c:forEach>
+                <c:if test="${renderContext.editMode}">
+                    <template:module path="*" nodeTypes="jmix:droppableContent"/>
+                </c:if>
+            </div>
+        </div>
+    </c:when>
     <c:otherwise>
         <c:if test="${renderContext.editMode}">
 
