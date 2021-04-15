@@ -31,6 +31,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
   <description>This module provide the Bootstrap 5 assets for Jahia</description>
   <properties>
     <jahia-static-resources>/css,/icons,/javascript</jahia-static-resources>
+    <require-capability>osgi.extender;filter:="(osgi.extender=org.jahia.bundles.blueprint.extender.config)"</require-capability>
   </properties>
   <build>
     <plugins>

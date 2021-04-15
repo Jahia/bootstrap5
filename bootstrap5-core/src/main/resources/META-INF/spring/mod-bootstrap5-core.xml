@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="org.jahia.services.render.StaticAssetMapping">
+        <property name="mapping">
+            <map>
+                <entry key="bootstrap.css" value="bootstrap.min.css"/>
+                <entry key="bootstrap.js" value="bootstrap.bundle.min.js"/>
+                <entry key="bootstrap.min.js" value="bootstrap.bundle.min.js"/>
+                <entry key="popper.js" value="bootstrap.bundle.min.js"/>
+                <entry key="popper.min.js" value="bootstrap.bundle.min.js"/>
+            </map>
+        </property>
+    </bean>
+</beans>
