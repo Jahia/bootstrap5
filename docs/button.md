@@ -8,6 +8,7 @@ The list of action are:
 -   A collapsible content
 -   A modal (dialog prompts)
 -   A popover
+-   A Offcanvas
 
 ## Button properties
 
