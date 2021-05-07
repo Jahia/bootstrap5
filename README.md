@@ -77,7 +77,7 @@ Indicate a series of related content exists across multiple pages. [more >>](doc
 
 ### [Text](docs/text.md)
 
-This component provides bootstrap 4 styles and CK templates [more >>](docs/text.md)
+This component provides Bootstrap styles and CK templates [more >>](docs/text.md)
 
 ### Version
 
