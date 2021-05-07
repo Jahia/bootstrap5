@@ -5,7 +5,7 @@
 
 @media (min-width: 992px) {
     .dropdown-menu {
-        left: auto
+        left: auto !important;
     }
     .dropdown-menu .dropdown-menu {
         margin-left: 0;
@@ -13,7 +13,7 @@
     }
     .nav-item .submenu {
         display: none;
-        left: 100%;
+        left: 100% !important;
         position: absolute;
         top: -7px
     }
