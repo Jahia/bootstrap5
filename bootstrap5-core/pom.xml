@@ -42,6 +42,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         <configuration>
           <instructions>
             <Jahia-Depends>default</Jahia-Depends>
+            <Jahia-Module-Priority>5</Jahia-Module-Priority>
           </instructions>
         </configuration>
       </plugin>

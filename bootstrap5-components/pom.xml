@@ -97,6 +97,7 @@
                         <Jahia-Depends>default,bootstrap5-core,skins</Jahia-Depends>
                         <_dsannotations>org.jahia.modules.bootstrap5.initializers.*</_dsannotations>
                         <Export-Package>org.jahia.modules.bootstrap5</Export-Package>
+                        <Jahia-Module-Priority>5</Jahia-Module-Priority>
                     </instructions>
                 </configuration>
             </plugin>
