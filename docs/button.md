@@ -60,6 +60,7 @@ Depending on the chosen action (buttonType), an initializer will add a mixin on 
 - `bootstrap5mix:collapse` for Collapse
 - `bootstrap5mix:modal` for Modal
 - `bootstrap5mix:popover` for Popover
+- `bootstrap5mix:Offcanvas` for Offcanvas
 
 ---
 ## Internal link
