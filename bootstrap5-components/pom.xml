@@ -49,11 +49,11 @@
     <parent>
         <groupId>org.jahiacommunity.modules</groupId>
         <artifactId>bootstrap5-modules</artifactId>
-        <version>1.0.3-SNAPSHOT</version>
+        <version>1.0.3</version>
     </parent>
     <artifactId>bootstrap5-components</artifactId>
     <name>Bootstrap 5 Components</name>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>bundle</packaging>
     <description>This module provide a Bootstrap 5 implementation of http://getbootstrap.com for Jahia</description>
     <properties>
