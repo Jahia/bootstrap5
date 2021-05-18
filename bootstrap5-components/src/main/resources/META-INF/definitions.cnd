@@ -170,6 +170,7 @@
  extends = bootstrap5nt:card
  itemtype = content
  - cssClass (string) = 'card' indexed=no
+ - cardHeaderCssClass (string) = 'card-header' indexed=no
  - cardBodyCssClass (string) = 'card-body' indexed=no
  - freeFooter (boolean) = 'false' indexed=no
 

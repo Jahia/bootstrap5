@@ -22,6 +22,7 @@ You can also add more advanced properties
 | --- | --- | --- | --- | 
 | **Class(es) to set on this Card** |`cssClass`| Add a custom CSS on the `card`| |
 | **Class(es) to set on the Card Body** |`cardBodyCssClass`| Add a custom CSS on the `card-body` part | | 
+| **Class(es) to set on the Card Header** |`cardHeaderCssClass`| Add a custom CSS on the  `card-header` part | | 
 | **Allow any content on the footer** |`freeFooter`| Add any content on the `card-footer` part | false |
 
 ## Card colors
