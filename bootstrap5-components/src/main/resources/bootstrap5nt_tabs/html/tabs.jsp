@@ -18,7 +18,7 @@
 <%--@elvariable id="moduleMap" type="java.util.Map"--%>
 
 <template:addResources type="css" resources="bootstrap.min.css"/>
-<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="body"/>
+<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="${renderContext.editMode?'head':'body'}"/>
 <c:set var="subLists" value="${jcr:getChildrenOfType(currentNode, 'jnt:contentList')}"/>
 <c:set var="type" value="nav-${currentNode.properties.type.string}s"/>
 <c:set var="align" value=" ${currentNode.properties.align.string}"/>
@@ -66,7 +66,7 @@
 <c:if test="${renderContext.editMode}">
     <template:module path="*" nodeTypes="jnt:contentList"/>
 </c:if>
-<template:addResources targetTag="body" type="inline">
+<template:addResources targetTag="${renderContext.editMode?'head':'body'}" type="inline">
     <script>
         var url = window.location.href;
         if (url.indexOf("#") > 0){

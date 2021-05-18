@@ -6,7 +6,7 @@
 <%--@elvariable id="renderContext" type="org.jahia.services.render.RenderContext"--%>
 
 <template:addResources type="css" resources="bootstrap.min.css"/>
-<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="body"/>
+<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="${renderContext.editMode?'head':'body'}"/>
 <c:set var="siteNode" value="${renderContext.site}"/>
 <c:choose>
     <c:when test="${jcr:isNodeType(siteNode, 'bootstrap5mix:siteBrand')}">

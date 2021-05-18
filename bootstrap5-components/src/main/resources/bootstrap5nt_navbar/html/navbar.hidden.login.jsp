@@ -119,7 +119,7 @@
                         <c:set var="error" value="true"/>
                     </c:if>
                     <c:if test="${error}">
-                        <template:addResources type="inline" targetTag="body">
+                        <template:addResources type="inline" targetTag="${renderContext.editMode?'head':'body'}">
                         <script>
                             var myModal = new bootstrap.Modal(document.getElementById('login-${currentNode.identifier}'), {
                                 keyboard: false

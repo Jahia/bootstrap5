@@ -7,7 +7,7 @@
 <%--@elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper"--%>
 
 <template:addResources type="css" resources="bootstrap.min.css"/>
-<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="body"/>
+<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="${renderContext.editMode?'head':'body'}"/>
 <c:set var="title" value="${currentNode.properties['jcr:title'].string}"/>
 <c:set var="buttonType" value="${currentNode.properties.buttonType.string}"/>
 <c:set var="linkUrl" value="#"/>
@@ -176,8 +176,7 @@
         <c:set var="placement" value="${currentNode.properties.placement.string}"/>
 
         <button class="${buttonClass}"  type="button" ${aria} data-bs-toggle="offcanvas" data-bs-target="#offcanvas_${currentNode.identifier}" aria-controls="offcanvas_${currentNode.identifier}">${title}</button>
-
-        <div class="offcanvas offcanvas-${placement}" data-bs-scroll="${enableBodyScrolling}" data-bs-backdrop="${enableBackdrop}" tabindex="-1" id="offcanvas_${currentNode.identifier}" aria-labelledby="offcanvas_${currentNode.identifier}Label">
+        <div class="offcanvas offcanvas-${placement}" data-bs-scroll="${enableBodyScrolling}" data-bs-backdrop="${enableBackdrop}" tabindex="-1" id="offcanvas_${currentNode.identifier}" aria-labelledby="offcanvas_${currentNode.identifier}Label"${visibility}>
             <c:set var="OffcanvasTitle" value="${currentNode.properties.OffcanvasTitle.string}"/>
             <c:if test="${! empty OffcanvasTitle}">
                 <div class="offcanvas-header">
@@ -199,7 +198,6 @@
         <c:if test="${renderContext.editMode}">
 
         </c:if>
-        <%-- disabled --%>
     </c:otherwise>
 </c:choose>
 

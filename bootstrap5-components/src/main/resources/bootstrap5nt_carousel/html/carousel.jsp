@@ -14,7 +14,7 @@
 <%--@elvariable id="currentResource" type="org.jahia.services.render.Resource"--%>
 <%--@elvariable id="url" type="org.jahia.services.render.URLGenerator"--%>
 <template:addResources type="css" resources="bootstrap.min.css"/>
-<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="body"/>
+<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="${renderContext.editMode?'head':'body'}"/>
 
 <c:set var="items" value="${jcr:getChildrenOfType(currentNode, 'bootstrap5nt:carouselItem')}"/>
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:carouselAdvancedSettings')}">
