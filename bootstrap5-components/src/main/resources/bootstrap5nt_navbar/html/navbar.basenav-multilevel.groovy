@@ -32,7 +32,7 @@ printMenu = { startNode, level, ulClass, maxlevel ->
                     boolean hasChildren = level < maxlevel && JCRTagUtils.hasChildrenOfType(menuItem, "jmix:navMenuItem")
                     String menuItemUrl = null;
                     String menuItemTitle = menuItem.displayableName;
-                    boolean isActive = renderContext.mainResource.node.path.indexOf(menuItem.path) > -1;
+                    boolean isActive = renderContext.mainResource.node.path.indexOf(menuItem.path) > 0;
                     boolean isCurrent = renderContext.mainResource.node.path.equals(menuItem.path);
                     String statusClass = isCurrent ? ' active' : isActive ? ' inpath' : '';
 
@@ -41,6 +41,8 @@ printMenu = { startNode, level, ulClass, maxlevel ->
                     } else if (menuItem.isNodeType('jnt:nodeLink')) {
                         JCRNodeWrapper refNode = menuItem.properties['j:node'].node;
                         if (refNode != null) {
+                            isActive = renderContext.mainResource.node.path.indexOf(refNode.path) > 0;
+                            isCurrent = renderContext.mainResource.node.path.equals(refNode.path);
                             currentResource.dependencies.add(refNode.getCanonicalPath());
                             if ("".equals(menuItemTitle)) {
                                 menuItemTitle = refNode.displayableName;
