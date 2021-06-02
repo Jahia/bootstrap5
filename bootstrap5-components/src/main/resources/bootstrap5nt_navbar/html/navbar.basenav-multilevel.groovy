@@ -32,7 +32,7 @@ printMenu = { startNode, level, ulClass, maxlevel ->
                     boolean hasChildren = level < maxlevel && JCRTagUtils.hasChildrenOfType(menuItem, "jmix:navMenuItem")
                     String menuItemUrl = null;
                     String menuItemTitle = menuItem.displayableName;
-                    boolean isActive = renderContext.mainResource.node.path.indexOf(menuItem.path) > 0;
+                    boolean isActive = renderContext.mainResource.node.path.indexOf(menuItem.path) > -1;
                     boolean isCurrent = renderContext.mainResource.node.path.equals(menuItem.path);
                     String statusClass = isCurrent ? ' active' : isActive ? ' inpath' : '';
 
@@ -41,10 +41,12 @@ printMenu = { startNode, level, ulClass, maxlevel ->
                     } else if (menuItem.isNodeType('jnt:nodeLink')) {
                         JCRNodeWrapper refNode = menuItem.properties['j:node'].node;
                         if (refNode != null) {
-                            isActive = renderContext.mainResource.node.path.indexOf(refNode.path) > 0;
+                            isActive = renderContext.mainResource.node.path.indexOf(refNode.path) > -1;
                             isCurrent = renderContext.mainResource.node.path.equals(refNode.path);
+                            statusClass = isCurrent ? ' active' : isActive ? ' inpath' : '';
                             currentResource.dependencies.add(refNode.getCanonicalPath());
-                            if ("".equals(menuItemTitle)) {
+                            menuItemTitle = menuItem.getPropertyAsString("jcr:title");
+                            if (menuItemTitle == null || "".equals(menuItemTitle)) {
                                 menuItemTitle = refNode.displayableName;
                             }
                             menuItemUrl = renderContext.getResponse().encodeURL(refNode.url);
@@ -59,12 +61,12 @@ printMenu = { startNode, level, ulClass, maxlevel ->
                     if (hasChildren && level < maxlevel) {
                         if (level == 1) {
                             print "<li class=\"nav-item\">";
-                            print "<a class='nav-link ${isActive ? ' active' : ''} dropdown-toggle' id='navbarDropdownMen-${menuItem.identifier}' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' href='#'>${menuItemTitle}"
+                            print "<a class='nav-link ${isActive ? ' active' : ''} dropdown-toggle' id='navbarDropdownMen-${currentNode.identifier}-${menuItem.identifier}' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' href='#'>${menuItemTitle}"
                             if (isCurrent) {
                                 print " <span class='visually-hidden'>(current)</span>";
                             }
                             print "</a>";
-                            print "<ul class='dropdown-menu' aria-labelledby='navbarDropdownMen-${menuItem.identifier}'>";
+                            print "<ul class='dropdown-menu' aria-labelledby='navbarDropdownMen-${currentNode.identifier}-${menuItem.identifier}'>";
                             print "<li><a class='dropdown-item' href='${menuItemUrl}'>${menuItemTitle}</a></li>";
                             print "<li class='dropdown-divider'></li>";
                             printMenu(menuItem, level + 1, ulClass, maxlevel);
