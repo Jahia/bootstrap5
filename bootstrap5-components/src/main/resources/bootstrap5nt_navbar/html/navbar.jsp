@@ -71,12 +71,14 @@
         <c:set var="rootNode" value="${curentPageNode}"/>
     </c:when>
     <c:when test="${root eq 'parentPage'}">
-        <c:set var="rootNode" value="${curentPageNode.parent}"/>
+        <c:catch var="error">
+            <c:set var="rootNode" value="${curentPageNode.parent}"/>
+        </c:catch>
     </c:when>
-    <c:otherwise>
-        <c:set var="rootNode" value="${renderContext.site.home}"/>
-    </c:otherwise>
 </c:choose>
+<c:if test="${empty rootNode}">
+    <c:set var="rootNode" value="${renderContext.site.home}"/>
+</c:if>
 <nav class="${navClass}">
     <c:if test="${addContainerWithinTheNavbar}">
         <div class="container">
