@@ -16,6 +16,7 @@ Bootstrap 5 is made of several modules:
 The easiest way to install Bootstrap 5 on your platform using the package. Please read the dedicated tutorial on [https://academy.jahia.com/training-kb/tutorials/administrators/installing-a-module](https://academy.jahia.com/training-kb/tutorials/administrators/installing-a-module) and select the **Bootstrap 5 package** from the store.
 
 You can also get the latest version of this package directly from the GitHub repository https://github.com/Jahia/bootstrap5/releases/latest
+Note that there are versions 1.0.x for Jahia 8 and version 1.1.x for Jahia 7.3. Sorry for this strange naming, but Bootstrap 5 was initially developed for Jahia 8.
 
 ### Manual installation
 
