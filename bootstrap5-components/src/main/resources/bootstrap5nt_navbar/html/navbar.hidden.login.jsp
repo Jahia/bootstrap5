@@ -36,7 +36,7 @@
                                 </a>
                             </li>
                         </c:if>
-                        <c:if test="${! renderContext.previewMode && jcr:hasPermission(renderContext.mainResource.node, 'jContentAccess')}">
+                        <c:if test="${! renderContext.previewMode && jcr:hasPermission(renderContext.mainResource.node, 'editModeAccess')}">
                             <li>
                                 <a href="<c:url value='${url.preview}'/>" class="dropdown-item text-secondary">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
@@ -47,7 +47,7 @@
                                 </a>
                             </li>
                         </c:if>
-                        <c:if test="${! renderContext.editMode && jcr:hasPermission(renderContext.mainResource.node, 'jContentAccess')}">
+                        <c:if test="${! renderContext.editMode && jcr:hasPermission(renderContext.mainResource.node, 'editModeAccess')}">
                             <li>
                                 <a href="<c:url value='${url.edit}'/>" class="dropdown-item text-success">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -58,7 +58,7 @@
                                 </a>
                             </li>
                         </c:if>
-                        <c:if test="${! renderContext.editMode && !jcr:hasPermission(renderContext.mainResource.node, 'jContentAccess') && jcr:hasPermission(renderContext.mainResource.node, 'contributeModeAccess')}">
+                        <c:if test="${! renderContext.editMode && !jcr:hasPermission(renderContext.mainResource.node, 'editModeAccess') && jcr:hasPermission(renderContext.mainResource.node, 'contributeModeAccess')}">
                             <li>
                                 <a href="<c:url value='${url.contribute}'/>" class="dropdown-item">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
