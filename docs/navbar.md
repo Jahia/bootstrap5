@@ -166,6 +166,7 @@ Here are a few properties to fully configure your navigation bar by setting CSS 
 | --- | --- | --- | --- |
 | Class(es) for the main nav  | `navClass` | CSS classes to set on the main `<nav>` tag | `navbar navbar-expand-lg navbar-light bg-light` |
 | Class(es) for the toggle button | `togglerClass` | CSS classes to set on the `<button>` used as a toggler | `navbar-toggler navbar-toggler-right` | 
+| Class(es) for the brand link | `brandLinkClass` | CSS classes to set on brand link | `navbar-brand`|
 | Class(es) for the toggleable section | `divClass` | CSS classes to set on toggleable section (on the `nav > div` tag) | `collapse navbar-collapse`|
 | Class(es) for the navigation list | `ulClass` | CSS classes to set on navigation list | `navbar-nav me-auto`|
 | Class(es) for the sign in section | `loginMenuULClass` | CSS classes to set on sign in section| `navbar-nav ms-auto`|
@@ -178,6 +179,7 @@ Here are a few properties to fully configure your navigation bar by setting CSS 
  itemtype = content
  - navClass (string) = 'navbar navbar-expand-lg navbar-light bg-light' autocreated indexed=no
  - togglerClass (string) = 'navbar-toggler navbar-toggler-right' indexed=no
+ - divClass (string) = 'collapse navbar-collapse' autocreated indexed=no
  - divClass (string) = 'collapse navbar-collapse' autocreated indexed=no
  - ulClass (string) = 'navbar-nav me-auto' autocreated indexed=no
  - loginMenuULClass (string) = 'navbar-nav ms-auto'
