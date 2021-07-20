@@ -61,6 +61,7 @@
         <jahia-depends>default,bootstrap5-core,skins</jahia-depends>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <require-capability>osgi.extender;filter:="(osgi.extender=org.jahia.bundles.blueprint.extender.config)"</require-capability>
     </properties>
 
     <dependencies>
