@@ -8,7 +8,7 @@
     </parent>
     <artifactId>bootstrap5-package</artifactId>
     <name>Bootstrap 5 Package</name>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
     <packaging>pom</packaging>
     <description>Parent project to package all Bootstrap 5 related components.</description>
     <properties>
@@ -37,17 +37,17 @@
         <dependency>
             <groupId>org.jahiacommunity.modules</groupId>
             <artifactId>bootstrap5-core</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.7</version>
         </dependency>
         <dependency>
             <groupId>org.jahiacommunity.modules</groupId>
             <artifactId>bootstrap5-components</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.7</version>
         </dependency>
         <dependency>
             <groupId>org.jahiacommunity.modules</groupId>
             <artifactId>bootstrap5-templates-starter</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.7</version>
         </dependency>
     </dependencies>
     <build>
