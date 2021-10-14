@@ -31,12 +31,16 @@
     <c:set var="navClass" value="${currentNode.properties.navClass.string}"/>
     <c:set var="divClass" value="${currentNode.properties.divClass.string}"/>
     <c:set var="togglerClass" value="${currentNode.properties.togglerClass.string}"/>
+    <c:set var="brandLinkClass" value="${currentNode.properties.brandLinkClass.string}"/>
 </c:if>
 <c:if test="${empty navClass}">
     <c:set var="navClass" value="navbar navbar-expand-lg navbar-light bg-light"/>
 </c:if>
 <c:if test="${empty togglerClass}">
     <c:set var="togglerClass" value="navbar-toggler navbar-toggler-right"/>
+</c:if>
+<c:if test="${empty brandLinkClass}">
+    <c:set var="brandLinkClass" value="navbar-brand"/>
 </c:if>
 <c:if test="${empty divClass}">
     <c:set var="divClass" value="collapse navbar-collapse"/>
@@ -100,7 +104,7 @@
     </c:choose>
 
 
-    <a class="navbar-brand" href="${rootNodeUrl}">
+    <a class="${brandLinkClass}" href="${rootNodeUrl}">
         <c:if test="${! empty brandImage}">
             <c:url var="brandImageUrl" value="${brandImage.url}" context="/"/>
             <c:choose>
