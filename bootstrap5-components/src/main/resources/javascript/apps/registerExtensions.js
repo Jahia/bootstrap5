@@ -3,14 +3,14 @@ window.jahia.i18n.loadNamespaces('bootstrap5-components');
 window.jahia.uiExtender.registry.add('callback', 'bootstrap5-components', {
     targets: ['jahiaApp-init:60'],
     callback: function () {
-        window.jahia.uiExtender.registry.add('pickerConfiguration', 'pagesandfiles', {
+        window.jahia.uiExtender.registry.add('pickerConfiguration', 'pagesandfiles5', {
             cmp: {
                 picker: window.jahia.uiExtender.registry.get('selectorType', 'ContentPicker'),
                 treeConfigs: [{
                     rootPath: site => `/sites/${site}`,
                     openableTypes: ['jnt:page', 'jnt:navMenuText', 'jnt:virtualsite', 'jnt:contentFolder', 'nt:folder', 'jmix:siteContent', 'jmix:browsableInEditorialPicker'],
                     selectableTypes: ['jnt:page', 'jnt:navMenuText', 'jnt:virtualsite', 'jnt:contentFolder', 'nt:folder', 'jmix:siteContent', 'jmix:browsableInEditorialPicker'],
-                    type: 'pagesandfiles',
+                    type: 'pagesandfiles5',
                 }],
                 searchSelectorType: 'bootstrap5mix:internalLink',
                 listTypesTable: ['jmix:droppableContent', 'jnt:page', 'jnt:file'],
