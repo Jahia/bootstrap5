@@ -51,9 +51,6 @@
 <c:if test="${createRow}">
     <c:set var="rowId" value="${currentNode.properties['rowId'].string}"/>
     <c:set var="rowCssClass" value="${currentNode.properties['rowCssClass'].string}"/>
-    <c:if test="${! empty rowCssClass}">
-        <c:set var="rowCssClass" value="${fn:replace(rowCssClass, 'row', '')}"/>
-    </c:if>
     <c:set var="rowVerticalAlignment" value="${currentNode.properties['rowVerticalAlignment'].string}"/>
     <c:if test="${rowVerticalAlignment eq 'default'}">
         <c:remove var="rowVerticalAlignment"/>
