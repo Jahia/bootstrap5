@@ -43,8 +43,8 @@
     </c:choose>
     <c:set var="navItems">
         ${navItems}
-        <li class="nav-item">
-            <a class="nav-link ${status.first?' active':''}" data-bs-toggle="tab" href="#${anchorName}" role="tab" aria-controls="${anchorName}">${droppableContent.displayableName}</a>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link ${status.first?' active':''}" aria-selected="${status.first?' true':'false'}" data-bs-toggle="tab" data-bs-target="#${anchorName}" role="tab" aria-controls="${anchorName}">${droppableContent.displayableName}</button>
         </li>
     </c:set>
     <c:set var="tabPanes">
@@ -69,7 +69,7 @@
 <template:addResources targetTag="${renderContext.editMode?'head':'body'}" type="inline">
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const trigger = document.querySelector(`ul.nav a[href="\${window.location.hash}"]`)
+            const trigger = document.querySelector(`ul.nav button[data-bs-target="\${window.location.hash}"]`)
             const tab = new bootstrap.Tab(trigger)
             tab.show()
         })
