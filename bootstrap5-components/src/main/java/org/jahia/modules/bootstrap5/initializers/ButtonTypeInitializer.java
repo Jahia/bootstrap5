@@ -20,12 +20,12 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import java.util.*;
 
-@Component(name = "buttonTypeInitializer", service = ModuleChoiceListInitializer.class, immediate = true)
+@Component(name = "buttonTypeInitializer5", service = ModuleChoiceListInitializer.class, immediate = true)
 public class ButtonTypeInitializer extends AbstractChoiceListRenderer implements ModuleChoiceListInitializer, ModuleChoiceListRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(ButtonTypeInitializer.class);
 
-    private String key = "buttonTypeInitializer";
+    private String key = "buttonTypeInitializer5";
 
     /**
      * {@inheritDoc}

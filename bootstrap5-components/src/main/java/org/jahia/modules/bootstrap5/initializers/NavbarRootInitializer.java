@@ -20,12 +20,12 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import java.util.*;
 
-@Component(name = "navbarRootInitializer", service = ModuleChoiceListInitializer.class, immediate = true)
+@Component(name = "navbarRootInitializer5", service = ModuleChoiceListInitializer.class, immediate = true)
 public class NavbarRootInitializer extends AbstractChoiceListRenderer implements ModuleChoiceListInitializer, ModuleChoiceListRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(NavbarRootInitializer.class);
 
-    private String key = "navbarRootInitializer";
+    private String key = "navbarRootInitializer5";
 
     /**
      * {@inheritDoc}

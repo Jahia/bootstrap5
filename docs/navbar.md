@@ -96,7 +96,7 @@ Here is the related property
  - customRootPage (weakreference, picker[type='page']) < 'jnt:page'
 
 [bootstrap5nt:navbar] > jnt:content, bootstrap5mix:component, jmix:navMenuComponent
- - root (string, choicelist[navbarRootInitializer,resourceBundle]) = 'homePage' autocreated indexed=no   < 'homePage', 'currentPage', 'parentPage','customRootPage'
+ - root (string, choicelist[navbarRootInitializer5,resourceBundle]) = 'homePage' autocreated indexed=no   < 'homePage', 'currentPage', 'parentPage','customRootPage'
 ```
 Also, there are a bunch of advanced features to customize your navbar
 
