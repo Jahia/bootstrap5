@@ -69,9 +69,16 @@
 <template:addResources targetTag="${renderContext.editMode?'head':'body'}" type="inline">
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const trigger = document.querySelector(`ul.nav button[data-bs-target="\${window.location.hash}"]`)
-            const tab = new bootstrap.Tab(trigger)
-            tab.show()
+            const trigger = document.querySelector(`ul.nav button[data-bs-target="\${window.location.hash}"]`);
+            if (trigger != undefined) {
+                const tab = new bootstrap.Tab(trigger);
+                tab.show();
+            }
+        })
+        document.querySelectorAll('ul.nav button[data-bs-toggle="tab"]').forEach(function(el){
+            el.addEventListener('shown.bs.tab', function (event) {
+                window.location.hash=event.target.innerText
+            })
         })
     </script>
 </template:addResources>
