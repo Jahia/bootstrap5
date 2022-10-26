@@ -77,7 +77,7 @@
         })
         document.querySelectorAll('ul.nav button[data-bs-toggle="tab"]').forEach(function(el){
             el.addEventListener('shown.bs.tab', function (event) {
-                window.location.hash=event.target.innerText
+                window.location.hash=event.target.dataset.bsTarget;
             })
         })
     </script>
