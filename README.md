@@ -55,7 +55,6 @@ This is a multifunction component that will allow several actions, by creating a
 
 Bootstrap’s cards provide a flexible and extensible content container with multiple variants and options. It includes options for headers and footers, a wide variety of content, contextual background colors, and powerful display options.  [more >>](docs/card.md)
 
-
 ### [Carousel](docs/carousel.md)
 
 A slideshow component for cycling through elements—images or slides of text—like a carousel.  [more >>](docs/carousel.md)
@@ -75,6 +74,10 @@ The navbar provides simple navigation for your site with sign in options, langua
 ### [Pagination](docs/pagination.md)
 
 Indicate a series of related content exists across multiple pages. [more >>](docs/pagination.md)
+
+### [Tabs and pills](docs/tabs.md)
+
+Tabs and pills are quasi-navigation components which can highly improve website clarity and increase user experience.
 
 ### [Text](docs/text.md)
 
