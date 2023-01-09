@@ -6,9 +6,9 @@
     <bean class="org.jahia.services.render.StaticAssetMapping">
         <property name="mapping">
             <map>
-                <entry key="bootstrap.css" value="bootstrap.min.css"/>
-                <entry key="bootstrap.js" value="bootstrap.bundle.min.js"/>
-                <entry key="bootstrap.min.js" value="bootstrap.bundle.min.js"/>
+                <entry key="bootstrap5.css" value="bootstrap5.min.css"/>
+                <entry key="bootstrap5.js" value="bootstrap.bundle.min.js"/>
+                <entry key="bootstrap5.min.js" value="bootstrap.bundle.min.js"/>
                 <entry key="popper.js" value="bootstrap.bundle.min.js"/>
                 <entry key="popper.min.js" value="bootstrap.bundle.min.js"/>
             </map>
