@@ -88,4 +88,31 @@ This component provides Bootstrap styles and CK templates [more >>](docs/text.md
 Display an alert in edit mode with the bootstrap version used.
 
 _________________
+
+## Compliance
+Starting with version 2.2.0, the `bootstrap5-core` bundle no longer provides mappings for assets. This means that you will need to ensure that all of your views use one of the following resources for a Bootstrap 5 project:
+
+- bootstrap.min.css
+- bootstrap.bundle.min.js
+
+If you suspect that your code or some third-party bundles are still using uncompressed resources such as bootstrap.css or bootstrap.js, and even popper.js or popper.min.js, you may need to add the following mappings in a spring file:
+```xml
+<bean class="org.jahia.services.render.StaticAssetMapping">
+    <property name="mapping">
+        <map>
+            <entry key="bootstrap.css" value="bootstrap.min.css"/>
+            <entry key="bootstrap.js" value="bootstrap.bundle.min.js"/>
+            <entry key="bootstrap.min.js" value="bootstrap.bundle.min.js"/>
+            <entry key="popper.js" value="bootstrap.bundle.min.js"/>
+            <entry key="popper.min.js" value="bootstrap.bundle.min.js"/>
+        </map>
+    </property>
+</bean>
+```
+For best practice, it is recommended to use the following code when adding Bootstrap 5 resources to your templates:
+```html
+<template:addResources type="css" resources="bootstrap.min.css"/>
+<template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="${renderContext.editMode?'head':'body'}"/>
+```
+_________________
 ## Useful mixin
