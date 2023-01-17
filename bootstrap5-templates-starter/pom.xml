@@ -49,19 +49,19 @@
     <parent>
         <groupId>org.jahiacommunity.modules</groupId>
         <artifactId>bootstrap5-modules</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
+        <version>1.2.0</version>
     </parent>
     <groupId>org.jahiacommunity.modules</groupId>
     <artifactId>bootstrap5-templates-starter</artifactId>
     <name>Bootstrap 5 Templates Starter</name>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0</version>
     <packaging>bundle</packaging>
     <description>This is the custom profile module (bootstrap5-templates-starter) for running on a Jahia server.</description>
 
     <scm>
         <connection>scm:dummy:uri</connection>
         <developerConnection>scm:dummy:uri</developerConnection>
-      <tag>HEAD</tag>
+      <tag>bootstrap5-modules-1.2.0</tag>
   </scm>
 
     <repositories>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>org.jahiacommunity.modules</groupId>
             <artifactId>bootstrap5-components</artifactId>
-            <version>1.2.0-SNAPSHOT</version>
+            <version>1.2.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
