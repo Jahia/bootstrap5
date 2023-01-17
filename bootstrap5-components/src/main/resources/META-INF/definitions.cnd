@@ -32,7 +32,7 @@
 [bootstrap5mix:createRow] mixin
  extends = bootstrap5nt:grid
  itemtype = content
- - typeOfGrid (string, choicelist[gridTypeInitializer, resourceBundle]) = 'nogrid' autocreated indexed=no < 'nogrid', 'predefinedGrid', 'customGrid'
+     - typeOfGrid (string, choicelist[gridTypeInitializer5, resourceBundle]) = 'nogrid' autocreated indexed=no < 'nogrid', 'predefinedGrid', 'customGrid'
  - rowId (string) < '[a-zA-Z0-9-_]+'
  - rowCssClass (string) indexed=no
  - rowVerticalAlignment (string, choicelist[resourceBundle,moduleImage='svg']) = 'default' autocreated indexed=no < 'default', 'align-items-start', 'align-items-center', 'align-items-end'
@@ -108,7 +108,7 @@
 [bootstrap5nt:breadcrumb]> jnt:content, bootstrap5mix:component
 
 [bootstrap5nt:button]> jnt:content, bootstrap5mix:component, mix:title
- - buttonType (string, choicelist[buttonTypeInitializer, resourceBundle]) = 'internalLink' autocreated indexed=no < 'internalLink', 'externalLink', 'modal', 'collapse','popover','Offcanvas'
+ - buttonType (string, choicelist[buttonTypeInitializer5, resourceBundle]) = 'internalLink' autocreated indexed=no < 'internalLink', 'externalLink', 'modal', 'collapse','popover','Offcanvas'
 
 [bootstrap5mix:buttonAdvancedSettings] mixin
  extends = bootstrap5nt:button
@@ -257,7 +257,7 @@
  - customRootPage (weakreference, picker[type='page']) < 'jnt:page'
 
 [bootstrap5nt:navbar] > jnt:content, bootstrap5mix:component, jmix:navMenuComponent
- - root (string, choicelist[navbarRootInitializer,resourceBundle]) = 'homePage' autocreated indexed=no   < 'homePage', 'currentPage', 'parentPage','customRootPage'
+ - root (string, choicelist[navbarRootInitializer5,resourceBundle]) = 'homePage' autocreated indexed=no   < 'homePage', 'currentPage', 'parentPage','customRootPage'
 
 [bootstrap5nt:tabs] > jnt:content, bootstrap5mix:component, jmix:manuallyOrderable, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
  - type (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no < 'tab', 'pill','link'

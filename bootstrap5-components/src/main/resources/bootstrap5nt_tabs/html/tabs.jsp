@@ -43,8 +43,8 @@
     </c:choose>
     <c:set var="navItems">
         ${navItems}
-        <li class="nav-item">
-            <a class="nav-link ${status.first?' active':''}" data-bs-toggle="tab" href="#${anchorName}" role="tab" aria-controls="${anchorName}">${droppableContent.displayableName}</a>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link ${status.first?' active':''}" aria-selected="${status.first?' true':'false'}" data-bs-toggle="tab" data-bs-target="#${anchorName}" role="tab" aria-controls="${anchorName}">${droppableContent.displayableName}</button>
         </li>
     </c:set>
     <c:set var="tabPanes">
@@ -68,10 +68,17 @@
 </c:if>
 <template:addResources targetTag="${renderContext.editMode?'head':'body'}" type="inline">
     <script>
-        var url = window.location.href;
-        if (url.indexOf("#") > 0){
-            var activeTab = url.substring(url.indexOf("#") + 1);
-            $('.nav[role="tablist"] a[href="#'+activeTab+'"]').tab('show');
+        document.addEventListener("DOMContentLoaded", () => {
+            const trigger = document.querySelector(`ul.nav button[data-bs-target="\${window.location.hash}"]`);
+            if (trigger != undefined) {
+                const tab = new bootstrap.Tab(trigger);
+                tab.show();
         }
+        })
+        document.querySelectorAll('ul.nav button[data-bs-toggle="tab"]').forEach(function(el){
+            el.addEventListener('shown.bs.tab', function (event) {
+                window.location.hash=event.target.dataset.bsTarget;
+            })
+        })
     </script>
 </template:addResources>

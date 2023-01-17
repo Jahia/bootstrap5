@@ -20,12 +20,12 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import java.util.*;
 
-@Component(name = "gridTypeInitializer", service = ModuleChoiceListInitializer.class, immediate = true)
+@Component(name = "gridTypeInitializer5", service = ModuleChoiceListInitializer.class, immediate = true)
 public class GridTypeInitializer extends AbstractChoiceListRenderer implements ModuleChoiceListInitializer, ModuleChoiceListRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(GridTypeInitializer.class);
 
-    private String key = "gridTypeInitializer";
+    private String key = "gridTypeInitializer5";
 
     /**
      * {@inheritDoc}
