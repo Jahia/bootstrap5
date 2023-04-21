@@ -164,7 +164,7 @@
                         </div>
                         --%>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="useCookie" name="useCookie">
+                            <input class="form-check-input" type="checkbox" id="useCookie" name="useCookie">
                             <label class="form-check-label" for="useCookie">
                                 <fmt:message key="loginForm.rememberMe.label"/>
                             </label>
