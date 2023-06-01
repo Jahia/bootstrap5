@@ -1,18 +1,18 @@
 # Text
 
->This component provides bootstrap 5 styles and CK templates
+The Text component provides Bootstrap 5 styles and CK templates to enhance the text formatting capabilities.
 
-The Bootstrap 5 components came with a custom configuration for the CK Editor. This configuration provides a list of the main Bootstrap typography styles, a custom light toolbar, and some useful CK templates.
+The Bootstrap 5 components include a custom configuration for the CK Editor. This configuration offers a selection of main Bootstrap typography styles, a custom light toolbar, and some useful CK templates.
 
 ## Toolbar
 
-Here is the custom toolbar used for the mixin `bootstrap5mix:text`
+The following image shows the custom toolbar used for the `bootstrap5mix:text` mixin:
 
-![alt_text](../images/text.png "Toolbar" )
+![Toolbar](../images/text.png "Toolbar")
 
-## CK templates
+## CK Templates
 
-A list of CK template is available directly from the template button. It will paste some pre mashed code directly into the text area, on your cursor:
+The Text component provides a set of CK templates that can be accessed directly from the template button. These templates allow you to quickly insert pre-formatted code into the text area at the cursor position. The available CK templates include:
 
 - Code blocks
 - Alerts (in different colors)
@@ -21,40 +21,44 @@ A list of CK template is available directly from the template button. It will pa
 - Blockquote
 - Jumbotron
 
-## CK styles
+## CK Styles
 
-A list of common styles is available in the style dropdown.
+The Text component also offers a range of common styles that can be applied using the style dropdown. These styles include:
 
 - Heading H1 to H6
 - Lead Text
-- Highlight text
-- Deleted text
-- No longer accurate
-- Addition to the document
+- Highlight Text
+- Deleted Text
+- No Longer Accurate
+- Addition to the Document
 - Underlined
-- Fine print
-- Bold text
-- Italicized text
+- Fine Print
+- Bold Text
+- Italicized Text
 - Inline Code
-- Code blocks
+- Code Blocks
 - Blockquotes
 - Variables
-- User input
-- Sample output
-- Colored text
-- Colored background
+- User Input
+- Sample Output
+- Colored Text
+- Colored Background
 - Alerts
 - Badges
 - Pill
 - Pre
 
-## Proprerty
+## Property
+
+The Text component has the following property:
 
 | Label | Name | Description |
-| --- | --- | --- | 
-| Text | `text` | Rich text internationalized | 
+| --- | --- | --- |
+| Text | `text` | Rich text with internationalization support |
 
 ## Definition
+
+Here is the definition of the Text component:
 
 ```cnd
 [bootstrap5mix:text] mixin
@@ -63,15 +67,13 @@ A list of common styles is available in the style dropdown.
 [bootstrap5nt:text]> jnt:content, bootstrap5mix:component, bootstrap5mix:text
 ```
 
-## Usage of the mixin
+## Usage of the Mixin
 
-The mixin `bootstrap5mix:text` can be used as any mixin in your custom definition. It will provide you the custom toolbar.
-To display the value of this property, you simply need to get the string value of the text property
+The mixin `bootstrap5mix:text` can be used like any other mixin in your custom definition. It provides you with the custom toolbar. To display the value of the `text` property, you can retrieve the string value as follows:
 
 ```jsp
- ${currentNode.properties.text.string}
+${currentNode.properties.text.string}
 ```
 
-
-
 [Back to README](../README.md)
+

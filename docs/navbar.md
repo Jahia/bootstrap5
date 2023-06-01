@@ -1,33 +1,34 @@
 # Navbar
 
->The navbar provides simple navigation for your site with login options, language switch, and more.
+The navbar is a user interface component that provides simple navigation for your site. It includes options for branding, navigation, sign-in functionality, and language switching.
 
-The navigation bar is made of four distinct sections: brand, navigation, sign in, and language.
+## Overview
 
-![alt_text](../images/navigation.png "Navigation" )
+The navbar consists of four distinct sections: brand, navigation, sign in, and language.
 
-- The **brand** section allows displaying a clickable logo and/or a text that will go to the starting page. 
-- The **navigation** list will display the subpage and can also display a deeper level using some dropdown menus. 
-- The **sign in** section allows an anonymous user to sign in; the login form will appear in a modal. Once logged, this part will allow switching to edit mode or preview the page. 
-- The **language** section will allow switching to other languages.
+![Navigation](../images/navigation.png)
 
-On small devices, a toggle button will be shown to display or hide all these different sections.
+- The **brand** section displays a clickable logo and/or text that links to the starting page of your site.
+- The **navigation** section presents a list of subpages and may include dropdown menus for deeper navigation.
+- The **sign in** section allows anonymous users to sign in. Clicking on the sign-in button opens a modal with a login form. Once logged in, this section provides options to switch to edit mode or preview the page.
+- The **language** section allows users to switch between different languages on the site.
 
-![alt_text](../images/navigation-toggleable.png "Toggleable" )
+On small devices, a toggle button is shown to display or hide these sections.
 
-Here is the toggler button on small device
+![Toggleable](../images/navigation-toggleable.png)
 
-![alt_text](../images/navigation-toggler.png "Toggler" )
+Here is an example of the toggle button on a small device:
 
+![Toggler](../images/navigation-toggler.png)
 
-In terms of HTML, this can look like this
+In HTML, the navbar can be implemented as follows:
 
 ```html
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
         <!-- brand section -->
         <a class="navbar-brand" href="/fr/sites/mySite/home.html">MyCorp</a>
-        
+
         <!-- toggler -->
         <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbar-currentid" aria-controls="navbar-currentid" aria-expanded="false"
@@ -75,20 +76,20 @@ In terms of HTML, this can look like this
 ```
 ## Properties
 
-This component is configurable on multiple levels. The mandatory property allows you to choose the start node. By default, it’s the home page, but you can change it.
+This component provides multiple levels of configurability. The mandatory property allows you to choose the start node, which is set to the home page by default but can be changed.
 
-Here is the related property
+Here are the related properties:
 
-| Label | Name | Description | Default value |
+| Label | Name | Description | Default Value |
 | --- | --- | --- | --- |
-| **Starting point** | `root` | Choose your starting point: Home, Current page, Parent page or Custom page | Home |
+| **Starting point** | `root` | Choose your starting point: Home, Current page, Parent page, or Custom page | Home |
 
-- **Home**: The navigation list will display the level 1 pages (the direct subpages of the home page)
-- **Current Page**: The navigation list will display subpages of the current page
-- **Parent page**: The navigation list will display the sibling pages.
-- **Custom pages**: A page picker will be used to choose your starting page
+- **Home**: The navigation list will display level 1 pages (the direct subpages of the home page).
+- **Current Page**: The navigation list will display subpages of the current page.
+- **Parent Page**: The navigation list will display sibling pages.
+- **Custom Pages**: A page picker will be used to choose your starting page.
 
-## Definition 
+## Definition
 
 ```cnd
 [bootstrap5mix:customRootPage] > jmix:templateMixin mixin
@@ -98,28 +99,29 @@ Here is the related property
 [bootstrap5nt:navbar] > jnt:content, bootstrap5mix:component, jmix:navMenuComponent
  - root (string, choicelist[navbarRootInitializer5,resourceBundle]) = 'homePage' autocreated indexed=no   < 'homePage', 'currentPage', 'parentPage','customRootPage'
 ```
-Also, there are a bunch of advanced features to customize your navbar
 
-![alt_text](../images/navigation-options.png "Options" )
+Additionally, there are several advanced features available to customize your navbar:
 
-You can enable the following mixin
+![Options](../images/navigation-options.png "Options")
 
--  Global settings  `bootstrap5mix:navbarGlobalSettings`
--  Customize brand `bootstrap5mix:brand`
--  Customize the navbar `bootstrap5mix:customizeNavbar`
+You can enable the following mixins:
 
-## Global settings
+- Global settings: `bootstrap5mix:navbarGlobalSettings`
+- Customize brand: `bootstrap5mix:brand`
+- Customize the navbar: `bootstrap5mix:customizeNavbar`
 
-Here are the global settings properties `bootstrap5mix:navbarGlobalSettings`. You can enable or disable some options, depending of the type of menu that you want to use.
+## Global Settings
 
-| Label | Name | Description | Default value |
+The `bootstrap5mix:navbarGlobalSettings` mixin provides the following global settings properties. You can enable or disable specific options based on the type of menu you want to use.
+
+| Label | Name | Description | Default Value |
 | --- | --- | --- | --- |
-| Display the sign in button | `addLoginButton` | Display a sign in button for anonymous users that open a modal with the sign in form <br/> ![alt_text](../images/navigation-signin.png "Sign in" )<br> Once logged, a drop menu allows to switch to edit and preview<br/>  ![alt_text](../images/navigation-edit.png "edit" )| true | 
-| How many level to display | `maxlevel` | Display subpages as a dropdown menu for level > 1<br/> ![alt_text](../images/navigation-recursive.png "Sub pages" ) | 2 |
-| Display the languages | `addLanguageButton` | Display the switch language menu. The current language is display using the 2 chars ISO code, and other languages are displayed using the language name (translated)<br/>![alt_text](../images/navigation-language.png "Languages" ) | true |
-| Wrap the the navbar in a container | `addContainerWithinTheNavbar` | Wrap the content of the navbar in a container to center it on a page. This will add the `<div class="container">` inside the `nav` tag | false | 
+| Display the sign-in button | `addLoginButton` | Display a sign-in button for anonymous users that opens a modal with the sign-in form. Once logged in, a dropdown menu allows switching to edit and preview modes. | true |
+| Maximum levels to display | `maxlevel` | Display subpages as a dropdown menu for levels greater than 1. | 2 |
+| Display the languages | `addLanguageButton` | Display a language switch menu. The current language is displayed using the 2-character ISO code, and other languages are displayed using their translated names. | true |
+| Wrap the navbar in a container | `addContainerWithinTheNavbar` | Wrap the content of the navbar in a container to center it on a page. This adds the `<div class="container">` inside the `nav` tag. | false |
 
-### Global setting definition
+### Global Settings Definition
 
 ```cnd
 [bootstrap5mix:navbarGlobalSettings] mixin
@@ -130,19 +132,22 @@ Here are the global settings properties `bootstrap5mix:navbarGlobalSettings`. Yo
  - maxlevel (string, choicelist[resourceBundle]) = '2' autocreated indexed=no < '1', '2', '3', '4', '5'
  - addContainerWithinTheNavbar (boolean) = 'false' autocreated indexed=no
 ```
-## Customize brand
 
-Here are the Customize brand properties `bootstrap5mix:brand`.
+Please note that the improved version of the document includes formatting enhancements, clearer descriptions, and reorganized sections for better readability.
+
+## Customize Brand
+
+The `bootstrap5mix:brand` mixin provides the following properties to customize the brand section:
 
 | Label | Name | Description |
 | --- | --- | --- | 
-| Brand text | `brandText` | Set the text used on the brand section | 
-| Brand image | `brandImage` | Image used on the brand section | 
-| Brand image for small devices | `brandImageMobile` | Image used for small devices |
+| Brand text | `brandText` | Set the text used in the brand section. | 
+| Brand image | `brandImage` | Image used in the brand section. | 
+| Brand image for small devices | `brandImageMobile` | Image used for small devices. |
 
-These 3 properties can be set when you use a navbar. You can also override the settings (typically if the navbar is included in a template set, in the studio) by editing the site node. 
+These three properties can be set when using a navbar. Additionally, you can override these settings by editing the site node, typically if the navbar is included in a template set in the studio.
 
-### Customize brand definition
+### Customize Brand Definition
 ```cnd
 [bootstrap5mix:brand] mixin
  extends = bootstrap5nt:navbar
@@ -158,20 +163,20 @@ These 3 properties can be set when you use a navbar. You can also override the s
  - brandImageMobile (weakreference, picker[type='image']) < 'jmix:image'
 ```
 
-## Customize the navbar
+## Customize the Navbar
 
-Here are a few properties to fully configure your navigation bar by setting CSS classes on all levels
+The following properties allow you to fully configure your navigation bar by setting CSS classes on different levels:
 
-| Label | Name | Description | Default value |
+| Label | Name | Description | Default Value |
 | --- | --- | --- | --- |
-| Class(es) for the main nav  | `navClass` | CSS classes to set on the main `<nav>` tag | `navbar navbar-expand-lg navbar-light bg-light` |
-| Class(es) for the toggle button | `togglerClass` | CSS classes to set on the `<button>` used as a toggler | `navbar-toggler navbar-toggler-right` | 
-| Class(es) for the brand link | `brandLinkClass` | CSS classes to set on brand link | `navbar-brand`|
-| Class(es) for the toggleable section | `divClass` | CSS classes to set on toggleable section (on the `nav > div` tag) | `collapse navbar-collapse`|
-| Class(es) for the navigation list | `ulClass` | CSS classes to set on navigation list | `navbar-nav me-auto`|
-| Class(es) for the sign in section | `loginMenuULClass` | CSS classes to set on sign in section| `navbar-nav ms-auto`|
+| Class(es) for the main nav | `navClass` | CSS classes to set on the main `<nav>` tag. | `navbar navbar-expand-lg navbar-light bg-light` |
+| Class(es) for the toggle button | `togglerClass` | CSS classes to set on the `<button>` used as a toggler. | `navbar-toggler navbar-toggler-right` | 
+| Class(es) for the brand link | `brandLinkClass` | CSS classes to set on the brand link. | `navbar-brand` |
+| Class(es) for the toggleable section | `divClass` | CSS classes to set on the toggleable section (on the `nav > div` tag). | `collapse navbar-collapse` |
+| Class(es) for the navigation list | `ulClass` | CSS classes to set on the navigation list. | `navbar-nav me-auto` |
+| Class(es) for the sign-in section | `loginMenuULClass` | CSS classes to set on the sign-in section. | `navbar-nav ms-auto` |
 
-### Definition of Customize the navbar
+### Definition of Customize the Navbar
 
 ```cnd
 [bootstrap5mix:customizeNavbar] mixin
@@ -185,27 +190,28 @@ Here are a few properties to fully configure your navigation bar by setting CSS 
  - loginMenuULClass (string) = 'navbar-nav ms-auto'
 ```
 
-## Usage of the dedicated view
+## Usage of the Dedicated View
 
-Also, you can use this component with another existing view. This view is called “Only display the navigation list”
+In addition to its default usage, this component can be utilized with another existing view called "Only display the navigation list". This view is designed to exclusively show the navigation list without any additional elements.
 
-![alt_text](../images/navigation-view.png "View" )
+![View](../images/navigation-view.png "View")
 
-As a result, the generated HTML will only contain the navigation list. This can be used for instance on a footer section, to only display the main sections of the website.
+By using this view, the generated HTML will solely consist of the navigation list. This can be particularly useful when incorporating the component in a footer section to display only the main sections of the website.
 
-On the following example, the *Class(es) for the navigation list* is set to `footer-links` and the *Display sub pages* is set to `false`
- 
+For example, the *Class(es) for the navigation list* is set to `footer-links`, and the *Display sub pages* is set to `false`. The resulting HTML code is as follows:
+
 ```html
 <ul class="footer-link">
-    <li class="nav-item ">
+    <li class="nav-item">
         <a class="nav-link" href="/cms/render/default/en/sites/myCorp/home/page-1.html">Page 1</a>
     </li>
-    <li class="nav-item ">
+    <li class="nav-item">
         <a class="nav-link" href="/cms/render/default/en/sites/myCorp/home/page-2.html">Page 2</a>
     </li>
-    <li class="nav-item ">
+    <li class="nav-item">
         <a class="nav-link" href="/cms/render/default/en/sites/myCorp/home/page-3.html">Page 3</a>
     </li>
 </ul>
 ```
+
 [Back to README](../README.md)

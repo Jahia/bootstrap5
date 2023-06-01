@@ -1,55 +1,59 @@
-# Tabs and pills
+# Tabs and Pills
 
-> Bootstrap’s tabs and pills are quasi-navigation components which can highly improve website clarity and increase user experience.
+Bootstrap's tabs and pills are powerful navigation components that greatly improve website clarity and enhance the user experience.
 
+![Tabs](../images/tabs.png "Tabs")
 
-![alt_text](../images/tabs.png "tabs" )
+## Tabs Properties
 
-## Tabs properties
+| Label | Name | Description | Default Value |
+| --- | --- | --- | --- |
+| Type | `type` | Determines the layout of the tabs. It can be "Tab" or "Pill". | Tab |
+| Fade Effect | `fade` | Enables the fade-in effect for tabs. | true |
+| Horizontal Alignment | `align` | Changes the horizontal alignment of the navigation. Options are Start, Center, End, Fill, and Justified. | Start |
+| Use List Name as Anchor | `useListNameAsAnchor` | If enabled, the list name is used as the anchor. Otherwise, the UUID is used. | true |
 
-| Label                     | Name         | Description                                                                             | Default value |
-|---------------------------|--------------|-----------------------------------------------------------------------------------------|---------------|
-| **Type**                  | `type`       | Layout. This can be "Tab" or "Pill"                                                     | Tab           |
-| **Fade effect**                 | `fade`       | To make tabs fade in                                                                    | true          | 
-| **Horizontal alignment**             | `align`      | Change the horizontal alignment of your nav. Can be Start, Center, End, Fill, Justified | Start         |
-| **Use list name as anchor**                | `useListNameAsAnchor`     | If set, uses the list name as the anchor (else, it uses the UUID)                       | true          | 
+## Adding a List of Tabs to Your Page
 
-## Add a list of tabs on your page
+To add tabs or pills to your page, follow these steps:
 
-In order to add tabs or pills on your page, you need to
+1. Add the main tabs component.
+2. Add as many content lists as you need. The title of each content list will be used as the tab label.
+3. To add content to a specific tab, click on the tab and then add your content to the selected list.
 
-1. Add the main tabs component
-1. Then add as many content list as you need. The title of the contentent lists will be used as tab label
-1. To add content to your tab, first click on the tab then add your content on the selected list
-
-![alt_text](../images/tabs-add.gif "Edit tabs" )
+![Edit Tabs](../images/tabs-add.gif "Edit Tabs")
 
 ## FAQ
 
-### How to change the alignment or the type once the main tab componement has been created?
+### How to Change the Alignment or Type of Tabs After Creation?
 
-You simply need to right click / edit on the "Content list" button that you use create a new tab entry
+To change the alignment or type of tabs after creating the main tabs component, follow these steps:
 
-![alt_text](../images/edit-tabs.png "Edit tabs" )
+1. Right-click on the "Content List" button used to create a new tab entry.
+2. Select "Edit" from the context menu.
 
-### How to changfe the label of a tab?
+![Edit Tabs](../images/edit-tabs.png "Edit Tabs")
 
-You simply need to right click / edit on the "+ Any content" button of your list
+### How to Change the Label of a Tab?
 
-![alt_text](../images/edit-tab.png "Edit tab" )
+To change the label of a tab, follow these steps:
+
+1. Right-click on the "+ Any Content" button of the respective list.
+2. Select "Edit" from the context menu.
+
+![Edit Tab](../images/edit-tab.png "Edit Tab")
 
 ## Tabs Definition
 
-Here is the definition of the card:
+Here is the definition of the tabs component:
 
 ```cnd
 [bootstrap5nt:tabs] > jnt:content, bootstrap5mix:component, jmix:manuallyOrderable, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
-- type (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no < 'tab', 'pill','link'
+- type (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no < 'tab', 'pill', 'link'
 - fade (boolean) = 'true' autocreated indexed=no
 - align (string, choicelist[resourceBundle,moduleImage='svg']) = 'justify-content-start' indexed=no < 'justify-content-start', 'justify-content-center', 'justify-content-end', 'nav-fill', 'nav-justified'
 - useListNameAsAnchor (boolean) = 'true' autocreated indexed=no
 + * (jnt:contentList) = jnt:contentList
 ```
-
 
 [Back to README](../README.md)
