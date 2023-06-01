@@ -1,86 +1,88 @@
-CKEDITOR.addTemplates('default',
-    {
-        // The name of the subfolder that contains the preview images of the templates.
-        imagesPath:((typeof contextJsParameters != 'undefined') ? contextJsParameters.contextPath : '') + '/modules/bootstrap5-components/img/',
-        // Template definitions.
-        templates:[
-            {
-                title:'Code blocks',
-                image:'code-blocks.png',
-                description:'',
-                html:'<pre><code>&lt;p&gt;Sample text here...&lt;/p&gt;\n&lt;p&gt;And another line of sample text here...&lt;/p&gt;</code></pre>'
-            },
-            {
-                title:'alert-primary',
-                image:'alert-primary.png',
-                description:'',
-                html:'<div class="alert alert-primary" role="alert">\n' +
+CKEDITOR.addTemplates('default', {
+    // The name of the subfolder that contains the preview images of the templates.
+    imagesPath: ((typeof contextJsParameters != 'undefined') ? contextJsParameters.contextPath : '') + '/modules/bootstrap5-components/img/',
+    // Template definitions.
+    templates: [
+        {
+            title: 'Code blocks',
+            image: 'code-blocks.png',
+            description: 'Sample code blocks for displaying preformatted text',
+            html: '<pre><code>&lt;p&gt;Sample text here...&lt;/p&gt;\n&lt;p&gt;And another line of sample text here...&lt;/p&gt;</code></pre>'
+        },
+        {
+            title: 'Alert Primary',
+            image: 'alert-primary.png',
+            description: 'A primary-colored alert for important messages',
+            html: '<div class="alert alert-primary" role="alert">\n' +
                 '  This is a primary alert—check it out!\n' +
                 '</div>'
-            },
-            {
-                title:'alert-secondary',
-                image:'alert-secondary.png',
-                description:'',
-                html:'<div class="alert alert-secondary" role="alert">\n' +
+        },
+        {
+            title: 'Alert Secondary',
+            image: 'alert-secondary.png',
+            description: 'A secondary-colored alert for less prominent messages',
+            html: '<div class="alert alert-secondary" role="alert">\n' +
                 '  This is a secondary alert—check it out!\n' +
                 '</div>'
-            },
-            {
-                title:'alert-success',
-                image:'alert_success.png',
-                description:'',
-                html:'<div class="alert alert-success" role="alert">\n' +
+        },
+        {
+            title: 'Alert Success',
+            image: 'alert_success.png',
+            description: 'A success alert to indicate successful operations or actions',
+            html: '<div class="alert alert-success" role="alert">\n' +
                 '  This is a success alert—check it out!\n' +
                 '</div>'
-            },
-            {
-                title:'alert-danger',
-                image:'alert-danger.png',
-                description:'',
-                html:'<div class="alert alert-danger" role="alert">\n' +
+        },
+        {
+            title: 'Alert Danger',
+            image: 'alert-danger.png',
+            description: 'A danger alert for highlighting critical or error messages',
+            html: '<div class="alert alert-danger" role="alert">\n' +
                 '  This is a danger alert—check it out!\n' +
                 '</div>\n'
-            },
-            {
-                title:'alert-warning',
-                image:'alert-warning.png',
-                description:'',
-                html:'<div class="alert alert-warning" role="alert">\n' +
+        },
+        {
+            title: 'Alert Warning',
+            image: 'alert-warning.png',
+            description: 'A warning alert for indicating potential issues or warnings',
+            html: '<div class="alert alert-warning" role="alert">\n' +
                 '  This is a warning alert—check it out!\n' +
                 '</div>\n'
-            },            {
-                title:'alert-info',
-                image:'alert-info.png',
-                description:'',
-                html:'<div class="alert alert-info" role="alert">\n' +
-                '  This is a info alert—check it out!\n' +
+        },
+        {
+            title: 'Alert Info',
+            image: 'alert-info.png',
+            description: 'An info alert for providing informational messages',
+            html: '<div class="alert alert-info" role="alert">\n' +
+                '  This is an info alert—check it out!\n' +
                 '</div>\n'
-            },            {
-                title:'alert-light',
-                image:'alert-light.png',
-                description:'',
-                html:'<div class="alert  " role="alert">\n' +
+        },
+        {
+            title: 'Alert Light',
+            image: 'alert-light.png',
+            description: 'A light alert for subtle notifications or messages',
+            html: '<div class="alert" role="alert">\n' +
                 '  This is a light alert—check it out!\n' +
                 '</div>\n'
-            },            {
-                title:'alert-dark',
-                image:'alert-dark.png',
-                description:'',
-                html:'<div class="alert alert-dark" role="alert">\n' +
+        },
+        {
+            title: 'Alert Dark',
+            image: 'alert-dark.png',
+            description: 'A dark alert for displaying notifications or messages with a dark background',
+            html: '<div class="alert alert-dark" role="alert">\n' +
                 '  This is a dark alert—check it out!\n' +
                 '</div>\n'
-            },
-            {
-                title:'table',
-                image:'table.png',
-                description:'',
-                html:'<table class="table">\n' +
+        },
+        {
+            title: 'Table',
+            image: 'table.png',
+            description: 'A basic table structure with sample data for tabular representation',
+            html: '<table class="table">\n' +
                 '  <thead>\n' +
                 '    <tr>\n' +
                 '      <th scope="col">#</th>\n' +
                 '      <th scope="col">First Name</th>\n' +
-                '      <th scope="col"Last Name</th>\n' +
+                '      <th scope="col">Last Name</th>\n' +
                 '      <th scope="col">Username</th>\n' +
                 '    </tr>\n' +
                 '  </thead>\n' +
@@ -105,12 +107,12 @@ CKEDITOR.addTemplates('default',
                 '    </tr>\n' +
                 '  </tbody>\n' +
                 '</table>'
-            },
-            {
-                title:'Description list',
-                image:'description-list.png',
-                description:'',
-                html:'<dl class="row">\n' +
+        },
+        {
+            title: 'Description List',
+            image: 'description-list.png',
+            description: 'A list for defining terms and their descriptions',
+            html: '<dl class="row">\n' +
                 '  <dt class="col-sm-3">Description lists</dt>\n' +
                 '  <dd class="col-sm-9">A description list is perfect for defining terms.</dd>\n' +
                 '  <dt class="col-sm-3">Euismod</dt>\n' +
@@ -118,31 +120,30 @@ CKEDITOR.addTemplates('default',
                 '  <dt class="col-sm-3">Malesuada porta</dt>\n' +
                 '  <dd class="col-sm-9">Etiam porta sem malesuada magna mollis euismod.</dd>\n' +
                 '</dl>'
-            },
-            {
-                title:'blockquote',
-                image:'blockquote.png',
-                description:'',
-                html:'<blockquote class="blockquote">\n' +
+        },
+        {
+            title: 'Blockquote',
+            image: 'blockquote.png',
+            description: 'A blockquote with a citation and a source title',
+            html: '<blockquote class="blockquote">\n' +
                 '  <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>\n' +
                 '  <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>\n' +
                 '</blockquote>'
-            },
-            {
-                title:'blockquote-right',
-                image:'blockquote-right.png',
-                description:'',
-                html:'<blockquote class="blockquote text-right">\n' +
+        },
+        {
+            title: 'Blockquote Right',
+            image: 'blockquote-right.png',
+            description: 'A right-aligned blockquote with a citation and a source title',
+            html: '<blockquote class="blockquote text-right">\n' +
                 '  <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>\n' +
                 '  <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>\n' +
                 '</blockquote>'
-
-            },
-            {
-                title:'jumbotron',
-                image:'jumbotron.png',
-                description:'',
-                html:'<div class="jumbotron">\n' +
+        },
+        {
+            title: 'Jumbotron',
+            image: 'jumbotron.png',
+            description: 'A large container for showcasing hero content or information',
+            html: '<div class="jumbotron">\n' +
                 '  <h1 class="display-3">Hello, world!</h1>\n' +
                 '  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>\n' +
                 '  <hr class="my-4">\n' +
@@ -151,7 +152,20 @@ CKEDITOR.addTemplates('default',
                 '    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>\n' +
                 '  </p>\n' +
                 '</div>'
+        },
+        {
+            title: 'Card',
+            image: 'card.png',
+            description: 'A card component with an image, title, and description',
+            html: '<div class="card" style="width: 18rem;">\n' +
+                '  <img src="/modules/bootstrap5-components/img/cap.svg" class="card-img-top" alt="...">\n' +
+                '  <div class="card-body">\n' +
+                '    <h5 class="card-title">Card title</h5>\n' +
+                '    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card\'s content.</p>\n' +
+                '    <a href="#" class="btn btn-primary">Go somewhere</a>\n' +
+                '  </div>\n' +
+                '</div>'
+        },
 
-            }
-        ]
-    });
+    ]
+});
