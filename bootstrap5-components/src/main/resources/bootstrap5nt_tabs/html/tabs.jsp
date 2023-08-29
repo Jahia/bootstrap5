@@ -20,7 +20,8 @@
 <template:addResources type="css" resources="bootstrap.min.css"/>
 <template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="${renderContext.editMode?'head':'body'}"/>
 <c:set var="subLists" value="${jcr:getChildrenOfType(currentNode, 'jnt:contentList')}"/>
-<c:set var="type" value="nav-${currentNode.properties.type.string}s"/>
+<c:set var="typeValue" value="${currentNode.properties.type.string}"/>
+<c:set var="type" value="nav-${typeValue}${typeValue eq 'underline' ? '':'s'}"/>
 <c:set var="align" value=" ${currentNode.properties.align.string}"/>
 <c:set var="fade" value="${currentNode.properties.fade.boolean}"/>
 <c:set var="useListNameAsAnchor" value="${currentNode.properties.useListNameAsAnchor.boolean}"/>

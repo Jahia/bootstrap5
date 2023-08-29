@@ -261,7 +261,7 @@
  - root (string, choicelist[navbarRootInitializer5,resourceBundle]) = 'homePage' autocreated indexed=no   < 'homePage', 'currentPage', 'parentPage','customRootPage'
 
 [bootstrap5nt:tabs] > jnt:content, bootstrap5mix:component, jmix:manuallyOrderable, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
- - type (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no < 'tab', 'pill','link'
+ - type (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no < 'tab', 'pill','link','underline'
  - fade (boolean) = 'true' autocreated indexed=no
  - align (string, choicelist[resourceBundle,moduleImage='svg']) = 'justify-content-start' indexed=no < 'justify-content-start', 'justify-content-center', 'justify-content-end', 'nav-fill', 'nav-justified'
  - useListNameAsAnchor (boolean) = 'true' autocreated indexed=no

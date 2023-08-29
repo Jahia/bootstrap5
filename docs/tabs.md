@@ -6,12 +6,12 @@ Bootstrap's tabs and pills are powerful navigation components that greatly impro
 
 ## Tabs Properties
 
-| Label | Name | Description | Default Value |
-| --- | --- | --- | --- |
-| Type | `type` | Determines the layout of the tabs. It can be "Tab" or "Pill". | Tab |
-| Fade Effect | `fade` | Enables the fade-in effect for tabs. | true |
+| Label | Name | Description                                                                                              | Default Value |
+| --- | --- |----------------------------------------------------------------------------------------------------------| --- |
+| Type | `type` | Determines the layout of the tabs. It can be "Tab", "Underline" or "Pill".                                | Tab |
+| Fade Effect | `fade` | Enables the fade-in effect for tabs.                                                                     | true |
 | Horizontal Alignment | `align` | Changes the horizontal alignment of the navigation. Options are Start, Center, End, Fill, and Justified. | Start |
-| Use List Name as Anchor | `useListNameAsAnchor` | If enabled, the list name is used as the anchor. Otherwise, the UUID is used. | true |
+| Use List Name as Anchor | `useListNameAsAnchor` | If enabled, the list name is used as the anchor. Otherwise, the UUID is used.                            | true |
 
 ## Adding a List of Tabs to Your Page
 
@@ -49,7 +49,7 @@ Here is the definition of the tabs component:
 
 ```cnd
 [bootstrap5nt:tabs] > jnt:content, bootstrap5mix:component, jmix:manuallyOrderable, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
-- type (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no < 'tab', 'pill', 'link'
+- type (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no < 'tab', 'pill', 'link','underline'
 - fade (boolean) = 'true' autocreated indexed=no
 - align (string, choicelist[resourceBundle,moduleImage='svg']) = 'justify-content-start' indexed=no < 'justify-content-start', 'justify-content-center', 'justify-content-end', 'nav-fill', 'nav-justified'
 - useListNameAsAnchor (boolean) = 'true' autocreated indexed=no
