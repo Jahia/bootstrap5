@@ -12,7 +12,7 @@ Resource addResources = new Resource(currentNode, "html", "hidden.basenav-multil
 print(RenderService.getInstance().render(addResources, renderContext));
 
 def printMenu;
-printMenu = { startNode, level, ulClass, maxlevel ->
+printMenu = { startNode, level, ulClass, liClass, navLinkClass, maxlevel ->
     if (startNode != null) {
         children = JCRContentUtils.getChildrenOfType(startNode, "jmix:navMenuItem")
         children.eachWithIndex() { menuItem, index ->
@@ -60,7 +60,7 @@ printMenu = { startNode, level, ulClass, maxlevel ->
 
                     if (hasChildren && level < maxlevel) {
                         if (level == 1) {
-                            print "<li class=\"nav-item\">";
+                            print "<li class='${liClass}'>";
                             print "<a class='nav-link ${isActive ? ' active' : ''} dropdown-toggle' id='navbarDropdownMen-${currentNode.identifier}-${menuItem.identifier}' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' href='#'>${menuItemTitle}"
                             if (isCurrent) {
                                 print " <span class='visually-hidden'>(current)</span>";
@@ -82,14 +82,14 @@ printMenu = { startNode, level, ulClass, maxlevel ->
                             print "<ul class='submenu dropdown-menu'>";
                             print "<li><a class='dropdown-item' href='${menuItemUrl}'>${menuItemTitle}</a></li>";
                             print "<li class='dropdown-divider'></li>";
-                            printMenu(menuItem, level + 1, ulClass, maxlevel);
+                            printMenu(menuItem, level + 1, ulClass, liClass, navLinkClass, maxlevel);
                             print "</ul>";
                             print "</li>";
                         }
                     } else {
                         if (level == 1) {
-                            print "<li class='nav-item'>";
-                            print "<a class=\"nav-link ${statusClass}\" href=\"${menuItemUrl}\">${menuItemTitle}";
+                            print "<li class='${liClass}'>";
+                            print "<a class=\"${navLinkClass} ${statusClass}\" href=\"${menuItemUrl}\">${menuItemTitle}";
                             if (isCurrent) {
                                 print " <span class=\"visually-hidden\">(current)</span>";
                             }
@@ -125,22 +125,31 @@ if (startNode == null) {
     startNode = renderContext.site.home;
 }
 
-String ulClass = "navbar-nav me-auto";
+def getOrDefault(node, propertyName, defaultValue) {
+    return node.hasProperty(propertyName) ? node.getProperty(propertyName).string?.trim() ?: defaultValue : defaultValue
+}
+
+String ulClass = "navbar-nav me-auto"
+String liClass = "nav-item"
+String navLinkClass = "nav-link"
+
+if (currentNode.isNodeType("bootstrap5mix:customizeNavbar")) {
+    ulClass = getOrDefault(currentNode, "ulClass", ulClass)
+    liClass = getOrDefault(currentNode, "liClass", liClass)
+    navLinkClass = getOrDefault(currentNode, "navLinkClass", navLinkClass)
+}
+
 if (currentNode.isNodeType("bootstrap5mix:navbarGlobalSettings")) {
     try {
         maxlevel = Long.parseLong(currentNode.properties.maxlevel.string);
     } catch (NumberFormatException e) {
     }
 }
-if (currentNode.isNodeType("bootstrap5mix:customizeNavbar")) {
-    ulClass = currentNode.properties.ulClass.string;
-}
-
 // Add dependencies to parent of main resource so that we are aware of new pages at sibling level
 try {
     currentResource.dependencies.add(renderContext.mainResource.node.getParent().getCanonicalPath());
 } catch (ItemNotFoundException e) {
 }
 print "<ul class='${ulClass}'>";
-printMenu(startNode, 1, ulClass, maxlevel)
+printMenu(startNode, 1, ulClass, liClass, navLinkClass, maxlevel)
 print "</ul>"

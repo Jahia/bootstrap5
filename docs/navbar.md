@@ -167,14 +167,16 @@ These three properties can be set when using a navbar. Additionally, you can ove
 
 The following properties allow you to fully configure your navigation bar by setting CSS classes on different levels:
 
-| Label | Name | Description | Default Value |
-| --- | --- | --- | --- |
-| Class(es) for the main nav | `navClass` | CSS classes to set on the main `<nav>` tag. | `navbar navbar-expand-lg navbar-light bg-light` |
-| Class(es) for the toggle button | `togglerClass` | CSS classes to set on the `<button>` used as a toggler. | `navbar-toggler navbar-toggler-right` | 
-| Class(es) for the brand link | `brandLinkClass` | CSS classes to set on the brand link. | `navbar-brand` |
-| Class(es) for the toggleable section | `divClass` | CSS classes to set on the toggleable section (on the `nav > div` tag). | `collapse navbar-collapse` |
-| Class(es) for the navigation list | `ulClass` | CSS classes to set on the navigation list. | `navbar-nav me-auto` |
-| Class(es) for the sign-in section | `loginMenuULClass` | CSS classes to set on the sign-in section. | `navbar-nav ms-auto` |
+| Label                                   | Name | Description                                                            | Default Value |
+|-----------------------------------------| --- |------------------------------------------------------------------------| --- |
+| Class(es) for the main nav              | `navClass` | CSS classes to set on the main `<nav>` tag.                            | `navbar navbar-expand-lg navbar-light bg-light` |
+| Class(es) for the toggle button         | `togglerClass` | CSS classes to set on the `<button>` used as a toggler.                | `navbar-toggler navbar-toggler-right` | 
+| Class(es) for the brand link            | `brandLinkClass` | CSS classes to set on the brand link.                                  | `navbar-brand` |
+| Class(es) for the toggleable section    | `divClass` | CSS classes to set on the toggleable section (on the `nav > div` tag). | `collapse navbar-collapse` |
+| Class(es) for the navigation list       | `ulClass` | CSS classes to set on the navigation list `<ul>`.                      | `navbar-nav me-auto` |
+| Class(es) for the navigation list items | `liClass` | CSS classes to set on the navigation list items `<li>`.                | `nav-item` |
+| Class(es) for the navigation links      | `navLinkClass` | CSS classes to set on the navigation links `<a>`.                      | `nav-link` |
+| Class(es) for the sign-in section       | `loginMenuULClass` | CSS classes to set on the sign-in section.                             | `navbar-nav ms-auto` |
 
 ### Definition of Customize the Navbar
 
@@ -187,6 +189,8 @@ The following properties allow you to fully configure your navigation bar by set
  - divClass (string) = 'collapse navbar-collapse' autocreated indexed=no
  - divClass (string) = 'collapse navbar-collapse' autocreated indexed=no
  - ulClass (string) = 'navbar-nav me-auto' autocreated indexed=no
+ - liClass (string) = 'nav-item' autocreated indexed=no
+ - navLinkClass (string) = 'nav-link' autocreated indexed=no
  - loginMenuULClass (string) = 'navbar-nav ms-auto'
 ```
 

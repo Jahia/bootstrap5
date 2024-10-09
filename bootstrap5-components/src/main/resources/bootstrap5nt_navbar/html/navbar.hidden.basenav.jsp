@@ -18,10 +18,18 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
 
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:customizeNavbar')}">
     <c:set var="ulClass" value="${currentNode.properties.ulClass.string}"/>
+    <c:set var="liClass" value="${currentNode.properties.liClass.string}"/>
+    <c:set var="navLinkClass" value="${currentNode.properties.navLinkClass.string}"/>
 
 </c:if>
 <c:if test="${empty ulClass}">
     <c:set var="ulClass" value="navbar-nav me-auto"/>
+</c:if>
+<c:if test="${empty liClass}">
+    <c:set var="liClass" value="nav-item"/>
+</c:if>
+<c:if test="${empty navLinkClass}">
+    <c:set var="navLinkClass" value="nav-link"/>
 </c:if>
 <c:if test="${empty maxlevel}">
     <c:set var="maxlevel" value="2"/>
@@ -101,8 +109,8 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                 <c:set var="hasLevel2Pages" value="${fn:length(level2Pages) > 0}"/>
                 <c:choose>
                     <c:when test="${hasLevel2Pages && recursive}">
-                        <li class="nav-item  ${page1Active? ' active' :''} dropdown">
-                            <a class="nav-link dropdown-toggle ${page1Active? ' active' :''}" href="#"
+                        <li class="${liClass} ${page1Active? ' active' :''} dropdown">
+                            <a class="${navLinkClass}${' '}dropdown-toggle ${page1Active? ' active' :''}" href="#"
                                id="navbarDropdownMen-${currentNode.identifier}-${level1Page.identifier}"
                              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     ${page1Title}
@@ -164,8 +172,8 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li class="nav-item ${page1Active? ' active' :''}">
-                            <a class="nav-link" href="${page1Url}">${page1Title} <c:if
+                        <li class="${liClass}${page1Active? ' active' :''}">
+                            <a class="${navLinkClass}" href="${page1Url}">${page1Title} <c:if
                                     test="${page1Active}"><span class="visually-hidden">(current)</span></c:if></a>
                         </li>
                     </c:otherwise>

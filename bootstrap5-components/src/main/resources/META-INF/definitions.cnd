@@ -238,6 +238,8 @@
  - brandImageClass (string) = 'navbar-brand' autocreated indexed=no
  - divClass (string) = 'collapse navbar-collapse' autocreated indexed=no
  - ulClass (string) = 'navbar-nav me-auto' autocreated indexed=no
+ - liClass (string) = 'nav-item' autocreated indexed=no
+ - navLinkClass (string) = 'nav-link' autocreated indexed=no
  - loginMenuULClass (string) = 'navbar-nav ms-auto'
 
 [bootstrap5mix:brand] mixin
