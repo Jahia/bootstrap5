@@ -96,7 +96,11 @@ CKEDITOR.editorConfig = (config) => {
 
     CKEDITOR.on('instanceReady', (event) => {
         const editor = event.editor;
-        editor.ui.get('combo_inlinestyles').setLabel('Inline styles');
+        const combo = editor.ui.get('combo_inlinestyles');
+
+        if (combo) {
+            combo.setLabel('Inline styles');
+        }
     });
 
     CKEDITOR.addCss('.cke_combopanel { width:300px !important; }');
