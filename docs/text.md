@@ -82,3 +82,14 @@ Here is the CND definition of the Text component:
  - text (string, richtext[ckeditor.toolbar='Tinny',ckeditor.customConfig='$context/modules/bootstrap5-components/javascript/ckconfig.js']) i18n
 
 [bootstrap5nt:text]> jnt:content, bootstrap5mix:component, bootstrap5mix:text
+ ```
+ 
+ ## Usage of the Mixin
+ 
+ The mixin `bootstrap5mix:text` can be used like any other mixin in your custom definition. It provides you with the custom toolbar. To display the value of the `text` property, you can retrieve the string value as follows:
+ 
+ ```jsp
+ ${currentNode.properties.text.string}
+ ```
+
+[Back to README](../README.md)
