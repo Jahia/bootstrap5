@@ -3,6 +3,7 @@ window.jahia.i18n.loadNamespaces('bootstrap5-components');
 window.jahia.uiExtender.registry.add('callback', 'bootstrap5-components', {
     targets: ['jahiaApp-init:60'],
     callback: function () {
+        /*
         window.jahia.uiExtender.registry.add('pickerConfiguration', 'pagesandfiles5', {
             cmp: {
                 picker: window.jahia.uiExtender.registry.get('selectorType', 'ContentPicker'),
@@ -13,11 +14,10 @@ window.jahia.uiExtender.registry.add('callback', 'bootstrap5-components', {
                     type: 'pagesandfiles5',
                 }],
                 searchSelectorType: 'bootstrap5mix:internalLink',
-                listTypesTable: ['jmix:droppableContent', 'jnt:page', 'jnt:file'],
-                selectableTypesTable: ['jmix:droppableContent', 'jnt:page', 'jnt:file']
+                listTypesTable: ['jmix:mainResource', 'jnt:page', 'jnt:file'],
+                selectableTypesTable: ['jmix:mainResource', 'jnt:page', 'jnt:file']
             }
         });
-        /*
         window.jahia.uiExtender.registry.add('adminRoute', 'bootstrap5-componentsExample', {
             targets: ['administration-sites:999', 'bootstrap5-componentsaccordion'],
             label: 'bootstrap5-components:label.settings.title',

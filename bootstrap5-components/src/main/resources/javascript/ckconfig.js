@@ -109,18 +109,18 @@ CKEDITOR.editorConfig = (config) => {
 };
 
 function loadScript(url, callback) {
-    console.log(`🔄 Tentative de chargement du script : ${url}`);
+    // console.log(`🔄 TRying to get script : ${url}`);
 
     var script = document.createElement("script");
     script.type = "text/javascript";
     script.src = url;
 
     script.onload = function () {
-        setTimeout(callback, 200); // ⏳ Ajout d'un délai pour l'exécution
+        setTimeout(callback, 200); // Add some delay
     };
 
     script.onerror = function () {
-        console.error(`❌ Erreur de chargement du script : ${url}`);
+        console.error(`❌ Error loading script  : ${url}`);
     };
 
     document.getElementsByTagName("head")[0].appendChild(script);
