@@ -81,16 +81,18 @@ CKEDITOR.editorConfig = (config) => {
 
     config.toolbar = 'Tinny';
     config.toolbar_Tinny = [
-        { name: 'misc', items: ['Source', '-', 'Templates', 'PasteText', 'wsc', 'Scayt', 'ACheck', 'SpellChecker', 'Styles'] },
-        { name: 'basicstyles', items: ['Bold', 'Italic','RemoveFormat'] },
+        { name: 'misc', items: ['Source', '-', 'Templates', 'PasteText', 'wsc', 'Scayt', 'ACheck', 'Styles'] },
+        { name: 'basicstyles', items: ['Bold', 'Italic'] },
         { name: 'paragraph', items: ['NumberedList', 'BulletedList','Outdent', 'Indent'] },
+        { name: 'alignment', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
         { name: 'inserts', items: ['Link', 'Unlink','Anchor', 'Image','HorizontalRule'] },
-        { name: 'tools', items: ['Maximize'] },
+        { name: 'tools', items: ['Maximize','RemoveFormat','Wash'] },
     ];
 
-    config.extraPlugins = 'justify';
+    config.extraPlugins = 'justify,pastefromgdocs,pastetools,clipboard,tidy,pastefromgdocs,scayt';
     config.allowedContent = true;
     config.autoParagraph = false;
+    config.scayt_autoStartup = true;
     config.contentsCss = [`${contextPath}/modules/bootstrap5-core/css/bootstrap.min.css`];
     config.templates_files = [`${contextPath}/modules/bootstrap5-components/javascript/cktemplates.js`];
 
@@ -106,3 +108,89 @@ CKEDITOR.editorConfig = (config) => {
     CKEDITOR.addCss('.cke_combopanel { width:300px !important; }');
 };
 
+function loadScript(url, callback) {
+    console.log(`🔄 Tentative de chargement du script : ${url}`);
+
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = url;
+
+    script.onload = function () {
+        setTimeout(callback, 200); // ⏳ Ajout d'un délai pour l'exécution
+    };
+
+    script.onerror = function () {
+        console.error(`❌ Erreur de chargement du script : ${url}`);
+    };
+
+    document.getElementsByTagName("head")[0].appendChild(script);
+}
+
+function loadDependencies(callback) {
+    const basePath = contextParams.contextPath || '';
+    loadScript(`${basePath}/modules/bootstrap5-components/javascript/beautify-html.min.js`, function () {
+        loadScript(`${basePath}/modules/bootstrap5-components/javascript/purify.min.js`, function () {
+            setTimeout(function () {
+                if (typeof window.html_beautify === 'function' && typeof window.DOMPurify === 'function') {
+                    callback();
+                } else {
+                    console.error("❌ Could not get lib");
+                }
+            }, 500);
+        });
+    });
+}
+
+CKEDITOR.plugins.add('tidy', {
+    icons: 'tidy',
+    init: function (editor) {
+        editor.ui.addButton('Wash', {
+            label: 'Wash HTML',
+            command: 'cleanHTML',
+            toolbar: 'cleanup',
+            icon: `${contextParams.contextPath}/modules/bootstrap5-components/img/wash.png`
+        });
+        editor.addCommand('cleanHTML', {
+            exec: function (editor) {
+                const userConfirmed = window.confirm("Do you want to clean up the current HTML content?");
+                if (!userConfirmed) {
+                    return;
+                }
+                const runCleanup = () => executeCleanup(editor);
+
+                if (typeof window.html_beautify !== 'function' || typeof window.DOMPurify !== 'function') {
+                    loadDependencies(runCleanup);
+                } else {
+                    runCleanup();
+                }
+            }
+        });
+    }
+});
+
+function executeCleanup(editor) {
+    var dirtyHtml = editor.getData();
+    var cleanHtml = tidyHTML(dirtyHtml);
+    editor.setData(cleanHtml);
+}
+
+function tidyHTML(html) {
+    let cleanHtml = window.DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: ['a', 'b', 'i', 'strong', 'em', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'br', 'div', 'span', 'img', 'blockquote','table'],
+        ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'width', 'height'],
+        FORBID_ATTR: ['style','class','lang','dir','id','name'],
+        USE_PROFILES: { html: true }
+    });
+
+    // remove <span> w/o attribut
+    while (/(\s*)<span>([\s\S]*?)<\/span>(\s*)/.test(cleanHtml)) {
+        cleanHtml = cleanHtml.replace(/<span>([\s\S]*?)<\/span>/g, '$1');
+    }
+
+    cleanHtml = html_beautify(cleanHtml, {
+        indent_size: 2,
+        wrap_line_length: 80,
+        preserve_newlines: true
+    });
+    return cleanHtml;
+}

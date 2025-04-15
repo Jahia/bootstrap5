@@ -1,8 +1,17 @@
 # Text
 
-The Text component provides Bootstrap 5 styles and CK templates to enhance the text formatting capabilities.
+The **Text** component provides Bootstrap 5 styles and CKEditor templates to enhance the text formatting capabilities within Jahia.
 
-The Bootstrap 5 components include a custom configuration for the CK Editor. This configuration offers a selection of main Bootstrap typography styles, a custom light toolbar, and some useful CK templates.
+It includes a custom configuration of CKEditor tailored for Bootstrap 5, featuring:
+
+- A curated set of **Bootstrap typography styles**
+- A **lightweight custom toolbar**
+- Useful **CK templates** for quick layout insertion
+- **Standard formatting tools**
+- A **format remover** button
+- A **"Wash" button** to clean up pasted content and keep only pure HTML
+
+---
 
 ## Toolbar
 
@@ -10,70 +19,66 @@ The following image shows the custom toolbar used for the `bootstrap5mix:text` m
 
 ![Toolbar](../images/text.png "Toolbar")
 
+The toolbar includes:
+
+- **Standard formatting tools** (bold, italic, lists, links, alignment, etc.)
+- A **“Remove Format”** button to strip all visual formatting from selected text
+- A **“Wash” button** that cleans the HTML code by removing unnecessary styles and tags, especially useful when pasting content from Microsoft Word or similar editors
+
+---
+
 ## CK Templates
 
-The Text component provides a set of CK templates that can be accessed directly from the template button. These templates allow you to quickly insert pre-formatted code into the text area at the cursor position. The available CK templates include:
+The Text component provides a set of CKEditor templates accessible via the **Template** button. These templates insert pre-formatted content at the cursor position.
+
+Available templates include:
 
 - Code blocks
-- Alerts (in different colors)
-- Table
-- Description list
-- Blockquote
-- Jumbotron
+- Alerts (various Bootstrap alert colors)
+- Tables
+- Description lists
+- Blockquotes
+- Jumbotron sections
+
+---
 
 ## CK Styles
 
-The Text component also offers a range of common styles that can be applied using the style dropdown. These styles include:
+The **Styles** dropdown offers a wide range of predefined Bootstrap-based formats you can apply to selected text:
 
-- Heading H1 to H6
-- Lead Text
-- Highlight Text
-- Deleted Text
-- No Longer Accurate
-- Addition to the Document
-- Underlined
-- Fine Print
-- Bold Text
-- Italicized Text
-- Inline Code
-- Code Blocks
-- Blockquotes
-- Variables
-- User Input
-- Sample Output
-- Colored Text
-- Colored Background
-- Alerts
-- Badges
-- Pill
-- Pre
+- **Headings** (H1 to H6)
+- **Lead text**
+- **Highlighted / Colored text**
+- **Deleted / Inserted / Fine print**
+- **Underlined / Bold / Italic**
+- **Blockquotes**
+- **Inline and block code**
+- **Variables / User input / Sample output**
+- **Text colors**
+- **Background colors**
+- **Alerts and Badges**
+- **Pill and Preformatted text**
+
+These styles help maintain consistency with Bootstrap 5 theming.
+
+---
 
 ## Property
 
-The Text component has the following property:
+The Text component exposes the following property:
 
-| Label | Name | Description |
-| --- | --- | --- |
-| Text | `text` | Rich text with internationalization support |
+| Label | Name  | Description                            |
+|-------|-------|----------------------------------------|
+| Text  | `text` | Rich text field with i18n support      |
+
+---
 
 ## Definition
 
-Here is the definition of the Text component:
+Here is the CND definition of the Text component:
 
 ```cnd
 [bootstrap5mix:text] mixin
  - text (string, richtext[ckeditor.toolbar='Tinny',ckeditor.customConfig='$context/modules/bootstrap5-components/javascript/ckconfig.js']) i18n
 
 [bootstrap5nt:text]> jnt:content, bootstrap5mix:component, bootstrap5mix:text
-```
-
-## Usage of the Mixin
-
-The mixin `bootstrap5mix:text` can be used like any other mixin in your custom definition. It provides you with the custom toolbar. To display the value of the `text` property, you can retrieve the string value as follows:
-
-```jsp
-${currentNode.properties.text.string}
-```
-
-[Back to README](../README.md)
-

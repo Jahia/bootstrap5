@@ -8,89 +8,82 @@ import org.slf4j.LoggerFactory
 def logger = LoggerFactory.getLogger(this.class)
 
 // Render additional resources if needed
-def addResources = new Resource(currentNode, "html", "hidden.basenav-multilevel-resources", currentResource.getContextConfiguration())
-println RenderService.getInstance().render(addResources, renderContext)
+def additionalResources = new Resource(currentNode, "html", "hidden.basenav-multilevel-resources", currentResource.getContextConfiguration())
+println RenderService.getInstance().render(additionalResources, renderContext)
 
 // Initialize StringBuilder for HTML output
-def htmlOutput = new StringBuilder()
+def htmlBuilder = new StringBuilder()
 
 /**
- * Renders the menu recursively starting from the given node.
+ * Recursively renders the menu starting from the given node.
  */
-def renderMenu(startNode, level, ulClass, liClass, navLinkClass, maxLevel, htmlOutput) {
-    if (startNode) {
-        def children = JCRContentUtils.getChildrenOfType(startNode, "jmix:navMenuItem")
-        children.each { menuItem ->
-            if (menuItem && shouldDisplay(menuItem)) {
-                def details = getMenuItemDetails(menuItem)
-                if (hasChildren(menuItem, level, maxLevel)) {
-                    renderDropdownMenuItem(menuItem, level, ulClass, liClass, navLinkClass, maxLevel, details, htmlOutput)
-                } else {
-                    renderSimpleMenuItem(menuItem, level, liClass, navLinkClass, details, htmlOutput)
-                }
+def renderMenu(menuNode, currentLevel, ulCssClass, liCssClass, navLinkCssClass, maxDepth, htmlBuilder) {
+    if (!menuNode) return
+    def menuItems = JCRContentUtils.getChildrenOfType(menuNode, "jmix:navMenuItem")
+    menuItems.each { menuItem ->
+        if (menuItem && shouldDisplayMenuItem(menuItem)) {
+            def menuItemDetails = getMenuItemDetails(menuItem)
+            if (hasChildMenuItems(menuItem, currentLevel, maxDepth)) {
+                renderDropdownMenuItem(menuItem, currentLevel, ulCssClass, liCssClass, navLinkCssClass, maxDepth, menuItemDetails, htmlBuilder)
+            } else {
+                renderSimpleMenuItem(menuItem, currentLevel, liCssClass, navLinkCssClass, menuItemDetails, htmlBuilder)
             }
         }
     }
 }
 
 /**
- * Renders a dropdown menu item with submenus.
+ * Renders a dropdown menu item that contains submenus.
  */
-def renderDropdownMenuItem(menuItem, level, ulClass, liClass, navLinkClass, maxLevel, details, htmlOutput) {
-    def currentIndicator = details.isCurrent ? " <span class='visually-hidden'>(current)</span>" : ""
+def renderDropdownMenuItem(menuItem, currentLevel, ulCssClass, liCssClass, navLinkCssClass, maxDepth, menuItemDetails, htmlBuilder) {
+    def currentIndicator = menuItemDetails.isCurrent ? " <span class='visually-hidden'>(current)</span>" : ""
 
-    if (level == 1) {
-        // Configuration for level 1
-        htmlOutput << """
-            <li class='${liClass} dropdown'>
-                <a class='${navLinkClass} dropdown-toggle${details.activeClass}'
+    if (currentLevel == 1) {
+        htmlBuilder << """
+            <li class='${liCssClass} dropdown'>
+                <a class='${navLinkCssClass} dropdown-toggle${menuItemDetails.activeClass}'
                    id='dropdown-${menuItem.identifier}' data-bs-toggle='dropdown' href='#'>
-                    ${details.menuItemTitle}${currentIndicator}
+                    ${menuItemDetails.menuItemTitle}${currentIndicator}
                 </a>
                 <ul class='dropdown-menu' aria-labelledby='dropdown-${menuItem.identifier}'>
         """
     } else {
-        // Configuration for other levels
-        htmlOutput << """
+        htmlBuilder << """
             <li class='dropend'>
                 <a class='dropdown-item dropdown-toggle' href='#'>
-                    ${details.menuItemTitle}${currentIndicator}
+                    ${menuItemDetails.menuItemTitle}${currentIndicator}
                 </a>
                 <ul class='submenu dropdown-menu'>
         """
     }
 
-    // Render the simple menu item and divider if applicable
     if (!menuItem.isNodeType("jnt:navMenuText")) {
-        renderSimpleMenuItem(menuItem, level, liClass, navLinkClass, details, htmlOutput)
-        htmlOutput << "<li class='dropdown-divider'></li>"
+        renderSimpleMenuItem(menuItem, currentLevel, liCssClass, navLinkCssClass, menuItemDetails, htmlBuilder)
+        htmlBuilder << "<li class='dropdown-divider'></li>"
     }
 
-    // Recursively render the submenu
-    renderMenu(menuItem, level + 1, ulClass, liClass, navLinkClass, maxLevel, htmlOutput)
-
-    // Close the tags
-    htmlOutput << "</ul></li>"
+    renderMenu(menuItem, currentLevel + 1, ulCssClass, liCssClass, navLinkCssClass, maxDepth, htmlBuilder)
+    htmlBuilder << "</ul></li>"
 }
 
 /**
  * Renders a simple menu item without submenus.
  */
-def renderSimpleMenuItem(menuItem, level, liClass, navLinkClass, details, htmlOutput) {
-    def currentIndicator = details.isCurrent ? " <span class='visually-hidden'>(current)</span>" : ""
-    if (level == 1) {
-        htmlOutput << """
-            <li class='${liClass}'>
-                <a class='${navLinkClass}${details.activeClass}' href='${details.menuItemUrl}'>
-                    ${details.menuItemTitle}${currentIndicator}
+def renderSimpleMenuItem(menuItem, currentLevel, liCssClass, navLinkCssClass, menuItemDetails, htmlBuilder) {
+    def currentIndicator = menuItemDetails.isCurrent ? " <span class='visually-hidden'>(current)</span>" : ""
+    if (currentLevel == 1) {
+        htmlBuilder << """
+            <li class='${liCssClass}'>
+                <a class='${navLinkCssClass}${menuItemDetails.activeClass}' href='${menuItemDetails.menuItemUrl}'>
+                    ${menuItemDetails.menuItemTitle}${currentIndicator}
                 </a>
             </li>
         """
     } else {
-        htmlOutput << """
+        htmlBuilder << """
             <li>
-                <a class='dropdown-item${details.activeClass}' href='${details.menuItemUrl}'>
-                    ${details.menuItemTitle}${currentIndicator}
+                <a class='dropdown-item${menuItemDetails.activeClass}' href='${menuItemDetails.menuItemUrl}'>
+                    ${menuItemDetails.menuItemTitle}${currentIndicator}
                 </a>
             </li>
         """
@@ -98,43 +91,40 @@ def renderSimpleMenuItem(menuItem, level, liClass, navLinkClass, details, htmlOu
 }
 
 /**
- * Determines if a menu item should be displayed.
+ * Determines whether a menu item should be displayed.
  */
-def shouldDisplay(menuItem) {
-    if (menuItem.isNodeType("jmix:navMenu")) {
-        return false
-    }
+def shouldDisplayMenuItem(menuItem) {
+    if (menuItem.isNodeType("jmix:navMenu")) return false
     def displayInMenuNames = menuItem.hasProperty("j:displayInMenuName") ? menuItem.getProperty("j:displayInMenuName").values*.string : null
     return !displayInMenuNames || displayInMenuNames.contains(currentNode.name)
 }
 
 /**
- * Checks if a menu item has children and if the maximum level is not exceeded.
+ * Checks if a menu item has child items and if the maximum depth has not been exceeded.
  */
-def hasChildren(menuItem, level, maxLevel) {
-    return level < maxLevel && JCRTagUtils.hasChildrenOfType(menuItem, "jmix:navMenuItem")
+def hasChildMenuItems(menuItem, currentLevel, maxDepth) {
+    return currentLevel < maxDepth && JCRTagUtils.hasChildrenOfType(menuItem, "jmix:navMenuItem")
 }
 
 /**
- * Retrieves details of a menu item.
+ * Retrieves the details of a menu item.
  */
 def getMenuItemDetails(menuItem) {
-    def isActive = renderContext.mainResource.node.path.contains(menuItem.path)
-    def isCurrent = renderContext.mainResource.node.path.equals(menuItem.path)
+    def mainResourceNode = renderContext.mainResource.node
+    def isActive = mainResourceNode.path.contains(menuItem.path)
+    def isCurrent = mainResourceNode.path == menuItem.path
     def activeClass = isCurrent ? ' active' : isActive ? ' inpath' : ''
-    def menuItemUrl = getMenuItemUrl(menuItem)
-    def menuItemTitle = menuItem.displayableName ?: "Untitled"
     return [
             isActive     : isActive,
             isCurrent    : isCurrent,
             activeClass  : activeClass,
-            menuItemUrl  : menuItemUrl,
-            menuItemTitle: menuItemTitle
+            menuItemUrl  : getMenuItemUrl(menuItem),
+            menuItemTitle: menuItem.displayableName ?: "Untitled"
     ]
 }
 
 /**
- * Gets the URL of a menu item.
+ * Retrieves the URL for a menu item.
  */
 def getMenuItemUrl(menuItem) {
     try {
@@ -152,13 +142,13 @@ def getMenuItemUrl(menuItem) {
 }
 
 /**
- * Gets the URL from a node link.
+ * Retrieves the URL from a node link.
  */
 def getNodeLinkUrl(menuItem) {
-    def refNode = menuItem.hasProperty('j:node') ? menuItem.getProperty('j:node').node : null
-    if (refNode) {
-        currentResource.dependencies.add(refNode.canonicalPath)
-        return renderContext.response.encodeURL(refNode.url)
+    def referenceNode = menuItem.hasProperty('j:node') ? menuItem.getProperty('j:node').node : null
+    if (referenceNode) {
+        currentResource.dependencies.add(referenceNode.canonicalPath)
+        return renderContext.response.encodeURL(referenceNode.url)
     }
     return "#"
 }
@@ -167,7 +157,8 @@ def getNodeLinkUrl(menuItem) {
  * Retrieves the starting node for the menu based on configuration.
  */
 def getStartNode() {
-    switch (currentNode.hasProperty('root') ? currentNode.getProperty('root').string : null) {
+    def rootProperty = currentNode.hasProperty('root') ? currentNode.getProperty('root').string : null
+    switch (rootProperty) {
         case "currentPage":
             return renderContext.mainResource.node
         case "parentPage":
@@ -179,28 +170,27 @@ def getStartNode() {
     }
 }
 
-// Get the starting node
-def startNode = getStartNode()
-
-def getStringProperty(node, propName, defaultValue) {
-    return node.hasProperty(propName) ? node.getProperty(propName)?.string?.trim() ?: defaultValue : defaultValue
+def getStringProperty(node, propertyName, defaultValue) {
+    return node.hasProperty(propertyName) ? (node.getProperty(propertyName)?.string?.trim() ?: defaultValue) : defaultValue
 }
 
-def getIntegerProperty(node, propName, defaultValue) {
-    return node.hasProperty(propName) ? node.getProperty(propName)?.string?.toInteger() ?: defaultValue : defaultValue
+def getIntegerProperty(node, propertyName, defaultValue) {
+    return node.hasProperty(propertyName) ? (node.getProperty(propertyName)?.string?.toInteger() ?: defaultValue) : defaultValue
 }
 
 // Retrieve CSS classes with default values
-String ulClass = getStringProperty(currentNode, "ulClass", "navbar-nav me-auto")
-String liClass = getStringProperty(currentNode, "liClass", "nav-item")
-String navLinkClass = getStringProperty(currentNode, "navLinkClass", "nav-link")
-def maxLevel = getIntegerProperty(currentNode, 'maxlevel', 2)
+String ulCssClass = getStringProperty(currentNode, "ulClass", "navbar-nav me-auto")
+String liCssClass = getStringProperty(currentNode, "liClass", "nav-item")
+String navLinkCssClass = getStringProperty(currentNode, "navLinkClass", "nav-link")
+def maxDepth = getIntegerProperty(currentNode, 'maxlevel', 2)
 
+// Determine the starting node for the menu
+def menuStartNode = getStartNode()
 
 // Start rendering the menu
-htmlOutput << "<ul class='${ulClass}'>"
-renderMenu(startNode, 1, ulClass, liClass, navLinkClass, maxLevel, htmlOutput)
-htmlOutput << "</ul>"
+htmlBuilder << "<ul class='${ulCssClass}'>"
+renderMenu(menuStartNode, 1, ulCssClass, liCssClass, navLinkCssClass, maxDepth, htmlBuilder)
+htmlBuilder << "</ul>"
 
 // Output the final HTML
-println htmlOutput.toString()
+println htmlBuilder.toString()
