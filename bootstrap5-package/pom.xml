@@ -18,6 +18,7 @@
         <jahia.manifest.package.id>Bootstrap5</jahia.manifest.package.id>
         <jahia.manifest.description>bootstrap5-core, bootstrap5-components, bootstrap5-templates-starter</jahia.manifest.description>
         <jahia.manifest.license>org.jahia.core</jahia.manifest.license>
+        <jahia.required.version>8.2.0.0</jahia.required.version>
     </properties>
     <repositories>
         <repository>
@@ -49,13 +50,50 @@
             <artifactId>bootstrap5-templates-starter</artifactId>
             <version>2.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.jahia.modules</groupId>
+            <artifactId>skins</artifactId>
+            <version>8.2.0</version>
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.4.2</version>
+                <executions>
+                    <execution>
+                        <id>packaging-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>${jahia.package.assembly.file}</descriptor>
+                            </descriptors>
+                            <attach>true</attach>
+                            <finalName>${jahia.final.package.name}-${project.version}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <archive>
+                                <manifestEntries>
+                                    <Jahia-Package-ID>${jahia.manifest.package.id}</Jahia-Package-ID>
+                                    <Jahia-Package-Name>${project.name}</Jahia-Package-Name>
+                                    <Jahia-Package-Version>${project.version}</Jahia-Package-Version>
+                                    <Jahia-Required-Version>${jahia.required.version}</Jahia-Required-Version>
+                                    <Jahia-Package-License>${jahia.manifest.license}</Jahia-Package-License>
+                                    <Jahia-Package-Description>${jahia.manifest.description}</Jahia-Package-Description>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>${dependency.plugin.version}</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <id>copy</id>
@@ -64,7 +102,9 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>org.jahiacommunity.modules</includeGroupIds>
+                            <includeGroupIds>org.jahiacommunity.modules,org.jahia.modules</includeGroupIds>
+                            <outputDirectory>${project.build.directory}/dependency</outputDirectory>
+                            <excludeTransitive>true</excludeTransitive>
                         </configuration>
                     </execution>
                     <execution>
@@ -74,17 +114,13 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>org.jahiacommunity.modules</includeGroupIds>
+                            <includeGroupIds>org.jahiacommunity.modules,org.jahia.modules</includeGroupIds>
                             <outputDirectory>${project.build.directory}/sources</outputDirectory>
                             <classifier>sources</classifier>
+                            <excludeTransitive>true</excludeTransitive>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
