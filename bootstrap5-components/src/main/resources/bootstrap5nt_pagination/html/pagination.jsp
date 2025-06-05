@@ -15,7 +15,7 @@
 <%--@elvariable id="currentResource" type="org.jahia.services.render.Resource"--%>
 <%--@elvariable id="url" type="org.jahia.services.render.URLGenerator"--%>
 <%--@elvariable id="moduleMap" type="java.util.Map"--%>
-
+<c:set var="emptyContent" value="true"/>
 <template:addResources type="css" resources="bootstrap.min.css"/>
 <c:set var="boundComponent"
        value="${uiComponents:getBindedComponent(currentNode, renderContext, 'j:bindedComponent')}"/>
@@ -85,6 +85,7 @@
                         <c:param name="${endid}" value="${ (moduleMap.currentPage-1)*moduleMap.pageSize-1}"/>
                         <c:param name="${pagesizeid}" value="${moduleMap.pageSize}"/>
                         <c:if test="${not empty param}">
+                            <c:set var="emptyContent" value="false"/>
                             <c:forEach items="${param}" var="extraParam">
                                 <c:choose>
                                     <c:when test="${not empty moduleMap.displaySearchParams}">
@@ -198,3 +199,7 @@
         </c:if>
     </c:if>
 </c:if>
+<c:if test="${renderContext.editMode && emptyContent}">
+    <small><strong>${currentNode.name}</strong> (<fmt:message key="bootstrap5nt_pagination.label.empty"/>)</small>
+</c:if>
+<c:remove var="emptyPagination"/>
