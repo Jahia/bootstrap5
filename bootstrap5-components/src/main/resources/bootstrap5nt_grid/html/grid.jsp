@@ -3,77 +3,85 @@
 <%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<%--@elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper"--%>
+<%-- @elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper" --%>
 <template:addResources type="css" resources="bootstrap.min.css"/>
 
-<c:set var="createSection" value="${jcr:isNodeType(currentNode,'bootstrap5mix:createSection')}"/>
+<%-- Mixins presence --%>
+<c:set var="createSection"   value="${jcr:isNodeType(currentNode,'bootstrap5mix:createSection')}"/>
 <c:set var="createContainer" value="${jcr:isNodeType(currentNode,'bootstrap5mix:createContainer')}"/>
-<c:set var="createRow" value="${jcr:isNodeType(currentNode,'bootstrap5mix:createRow')}"/>
-<c:choose>
-    <c:when test="${jcr:isNodeType(currentNode, 'bootstrap5mix:predefinedGrid')}">
-        <c:set var="gridType" value="predefinedGrid"/>
-    </c:when>
-    <c:when test="${jcr:isNodeType(currentNode, 'bootstrap5mix:customGrid')}">
-        <c:set var="gridType" value="customGrid"/>
-    </c:when>
-    <c:otherwise>
-        <c:set var="gridType" value="nogrid"/>
-    </c:otherwise>
-</c:choose>
+<c:set var="createRow"       value="${jcr:isNodeType(currentNode,'bootstrap5mix:createRow')}"/>
 
+<%-- Grid type in one expression --%>
+<c:set var="gridType"
+       value="${jcr:isNodeType(currentNode,'bootstrap5mix:predefinedGrid') ? 'predefinedGrid'
+                : (jcr:isNodeType(currentNode,'bootstrap5mix:customGrid') ? 'customGrid' : 'nogrid')}"/>
+
+<%-- SECTION attributes --%>
 <c:if test="${createSection}">
-    <c:set var="sectionType" value="${currentNode.properties['sectionElement'].string}"/>
-    <c:set var="sectionCssClass" value="${currentNode.properties['sectionCssClass'].string}"/>
-    <c:set var="sectionId" value="${currentNode.properties['sectionId'].string}"/>
-    <c:set var="sectionStyle" value="${currentNode.properties['sectionStyle'].string}"/>
-    <c:set var="sectionRole" value="${currentNode.properties['sectionRole'].string}"/>
-    <c:set var="sectionAria" value="${currentNode.properties['sectionAria'].string}"/>
+    <c:set var="sectionType"  value="${currentNode.properties.sectionElement.string}"/>
+    <c:set var="sectionId"    value="${currentNode.properties.sectionId.string}"/>
+    <c:set var="sectionClass" value="${currentNode.properties.sectionCssClass.string}"/>
+    <c:set var="sectionStyle" value="${currentNode.properties.sectionStyle.string}"/>
+    <c:set var="sectionRole"  value="${currentNode.properties.sectionRole.string}"/>
+    <c:set var="sectionAria"  value="${currentNode.properties.sectionAria.string}"/>
 
-    <${sectionType}<c:if test="${not empty sectionId}"> id="${sectionId}"</c:if><c:if
-        test="${not empty sectionCssClass}"><c:out value=" "/>class="${fn:escapeXml(sectionCssClass)}"</c:if><c:if
-        test="${not empty sectionRole}"><c:out value=" "/>role="${fn:escapeXml(sectionRole)}"</c:if><c:if
-        test="${not empty sectionStyle}"><c:out value=" "/>style="${sectionStyle}"</c:if><c:if
-        test="${not empty sectionAria}"><c:out value=" "/>aria-label="${fn:escapeXml(sectionAria)}"</c:if>>
+    <${sectionType}
+    <c:if test="${not empty sectionId}"> id="${fn:escapeXml(sectionId)}"</c:if>
+    <c:if test="${not empty sectionClass}"> class="${fn:escapeXml(fn:trim(sectionClass))}"</c:if>
+    <c:if test="${not empty sectionRole}"> role="${fn:escapeXml(sectionRole)}"</c:if>
+    <c:if test="${not empty sectionStyle}"> style="${sectionStyle}"</c:if>
+    <c:if test="${not empty sectionAria}"> aria-label="${fn:escapeXml(sectionAria)}"</c:if>
+    >
 </c:if>
 
+<%-- CONTAINER attributes & class building --%>
 <c:if test="${createContainer}">
-    <c:set var="containerId" value="${currentNode.properties['containerId'].string}"/>
-    <c:set var="containerCssClass" value="${currentNode.properties['containerCssClass'].string} "/>
-    <c:set var="containerType" value="${currentNode.properties['containerType'].string}"/>
-    <c:if test="${! empty containerCssClass}">
-        <c:set var="containerCssClass" value="${fn:replace(containerCssClass, containerType, '')}"/>
+    <c:set var="containerId"    value="${currentNode.properties.containerId.string}"/>
+    <c:set var="containerType"  value="${currentNode.properties.containerType.string}"/>
+    <c:set var="containerExtra" value="${currentNode.properties.containerCssClass.string}"/>
+
+    <%-- remove duplicated containerType from extra classes, then trim --%>
+    <c:if test="${not empty containerExtra}">
+        <c:set var="containerExtra" value="${fn:trim(fn:replace(containerExtra, containerType, ''))}"/>
     </c:if>
 
-    <div<c:if test="${not empty containerId}"> id="${containerId}"</c:if> class="${containerType}<c:if
-        test="${not empty containerCssClass}"><c:out value=" "/>${containerCssClass}</c:if>">
+    <c:set var="containerClass"
+           value="${empty containerExtra ? containerType : containerType.concat(' ').concat(containerExtra)}"/>
+
+    <div
+    <c:if test="${not empty containerId}"> id="${fn:escapeXml(containerId)}"</c:if>
+    class="${fn:escapeXml(containerClass)}"
+    >
 </c:if>
 
+<%-- ROW attributes & class building --%>
 <c:if test="${createRow}">
-    <c:set var="rowId" value="${currentNode.properties['rowId'].string}"/>
-    <c:set var="rowCssClass" value="${currentNode.properties['rowCssClass'].string}"/>
-    <c:set var="rowVerticalAlignment" value="${currentNode.properties['rowVerticalAlignment'].string}"/>
-    <c:if test="${rowVerticalAlignment eq 'default'}">
-        <c:remove var="rowVerticalAlignment"/>
-    </c:if>
-    <c:set var="rowHorizontalAlignment" value="${currentNode.properties['rowHorizontalAlignment'].string}"/>
-    <c:if test="${rowHorizontalAlignment eq 'default'}">
-        <c:remove var="rowHorizontalAlignment"/>
-    </c:if>
-    <c:set var="horizontalGutters" value="${currentNode.properties['horizontalGutters'].string}"/>
-    <c:if test="${horizontalGutters eq 'default'}">
-        <c:remove var="horizontalGutters"/>
-    </c:if>
-    <c:set var="verticalGutters" value="${currentNode.properties['verticalGutters'].string}"/>
-    <c:if test="${verticalGutters eq 'default'}">
-        <c:remove var="verticalGutters"/>
-    </c:if>
+    <c:set var="rowId"    value="${currentNode.properties.rowId.string}"/>
+    <c:set var="rowClass" value="${currentNode.properties.rowCssClass.string}"/>
+    <c:set var="vAlign"   value="${currentNode.properties.rowVerticalAlignment.string}"/>
+    <c:set var="hAlign"   value="${currentNode.properties.rowHorizontalAlignment.string}"/>
+    <c:set var="gX"       value="${currentNode.properties.horizontalGutters.string}"/>
+    <c:set var="gY"       value="${currentNode.properties.verticalGutters.string}"/>
 
-    <div<c:if test="${not empty rowId}"> id="${rowId}"</c:if> class="row<c:if test='${not empty rowCssClass}'><c:out
-        value=' '/>${rowCssClass}</c:if><c:if test='${not empty rowVerticalAlignment}'><c:out
-        value=' '/>${rowVerticalAlignment}</c:if><c:if test='${not empty rowHorizontalAlignment}'><c:out
-        value=' '/>${rowHorizontalAlignment}</c:if><c:if test='${not empty horizontalGutters}'><c:out
-        value=' '/>${horizontalGutters}</c:if><c:if test='${not empty verticalGutters}'><c:out
-        value=' '/>${verticalGutters}</c:if>">
+    <%-- normalize "default" to empty --%>
+    <c:if test="${vAlign eq 'default'}"><c:set var="vAlign" value=""/></c:if>
+    <c:if test="${hAlign eq 'default'}"><c:set var="hAlign" value=""/></c:if>
+    <c:if test="${gX eq 'default'}"><c:set var="gX" value=""/></c:if>
+    <c:if test="${gY eq 'default'}"><c:set var="gY" value=""/></c:if>
+
+    <%-- compose row class --%>
+    <c:set var="rowFullClass" value="row"/>
+    <c:if test="${not empty rowClass}"><c:set var="rowFullClass" value="${rowFullClass} ${rowClass}"/></c:if>
+    <c:if test="${not empty vAlign}"><c:set var="rowFullClass" value="${rowFullClass} ${vAlign}"/></c:if>
+    <c:if test="${not empty hAlign}"><c:set var="rowFullClass" value="${rowFullClass} ${hAlign}"/></c:if>
+    <c:if test="${not empty gX}"><c:set var="rowFullClass" value="${rowFullClass} ${gX}"/></c:if>
+    <c:if test="${not empty gY}"><c:set var="rowFullClass" value="${rowFullClass} ${gY}"/></c:if>
+    <c:set var="rowFullClass" value="${fn:trim(rowFullClass)}"/>
+
+    <div
+    <c:if test="${not empty rowId}"> id="${fn:escapeXml(rowId)}"</c:if>
+    class="${fn:escapeXml(rowFullClass)}"
+    >
 </c:if>
 
 <template:include view="hidden.${gridType}"/>
@@ -81,11 +89,9 @@
 <c:if test="${createRow}">
     </div>
 </c:if>
-
 <c:if test="${createContainer}">
     </div>
 </c:if>
-
 <c:if test="${createSection}">
     </${sectionType}>
 </c:if>
