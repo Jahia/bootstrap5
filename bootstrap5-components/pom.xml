@@ -70,6 +70,12 @@
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>74.2</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <repositories>
