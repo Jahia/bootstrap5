@@ -94,11 +94,15 @@ def renderSimpleMenuItem(menuItem, currentLevel, liCssClass, navLinkCssClass, me
  * Determines whether a menu item should be displayed.
  */
 def shouldDisplayMenuItem(menuItem) {
-    if (menuItem.isNodeType("jmix:navMenu")) return false
-    def displayInMenuNames = menuItem.hasProperty("j:displayInMenuName") ? menuItem.getProperty("j:displayInMenuName").values*.string : null
-    return !displayInMenuNames || displayInMenuNames.contains(currentNode.name)
+    if (!menuItem.hasProperty("j:displayInMenuName")) {
+        return true
+    }
+    def menus = menuItem.getProperty("j:displayInMenuName")
+            .values
+            .collect { it.string?.trim() }
+            .findAll { it }
+    return menus.contains(currentNode.name)
 }
-
 /**
  * Checks if a menu item has child items and if the maximum depth has not been exceeded.
  */
