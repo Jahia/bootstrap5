@@ -22,3 +22,4 @@ bootstrap5-core/node_modules/
 bootstrap5-core/node/
 bootstrap5-core/src/main/resources/css/
 bootstrap5-core/src/main/resources/javascript/
+bootstrap5-core/src/main/resources/bootstrap5nt_version/html/_bootstrap-version.jspf
