@@ -109,9 +109,9 @@
             <c:url var="brandImageUrl" value="${brandImage.url}" context="/"/>
             <c:choose>
                 <c:when test="${! empty brandImageMobile}">
-                    <c:url var="brandImageMobileeUrl" value="${brandImageMobile.url}" context="/"/>
+                    <c:url var="brandImageMobileUrl" value="${brandImageMobile.url}" context="/"/>
                     <img src="${brandImageUrl}" class="align-top d-none d-${expand}-inline-block" alt="">
-                    <img src="${brandImageMobileeUrl}" class="align-top d-inline-block d-${expand}-none" alt="">
+                    <img src="${brandImageMobileUrl}" class="align-top d-inline-block d-${expand}-none" alt="">
                 </c:when>
                 <c:otherwise>
                     <img src="${brandImageUrl}" class="d-inline-block align-top" alt="">

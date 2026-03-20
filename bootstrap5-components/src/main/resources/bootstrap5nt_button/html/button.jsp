@@ -176,7 +176,7 @@
         <c:set var="placement" value="${currentNode.properties.placement.string}"/>
 
         <button class="${buttonClass}"  type="button" ${aria} data-bs-toggle="offcanvas" data-bs-target="#offcanvas_${currentNode.identifier}" aria-controls="offcanvas_${currentNode.identifier}">${title}</button>
-        <div class="offcanvas offcanvas-${placement}" data-bs-scroll="${enableBodyScrolling}" data-bs-backdrop="${enableBackdrop}" tabindex="-1" id="offcanvas_${currentNode.identifier}" aria-labelledby="offcanvas_${currentNode.identifier}Label"${visibility}>
+        <div class="offcanvas offcanvas-${placement}" data-bs-scroll="${enableBodyScrolling}" data-bs-backdrop="${enableBackdrop}" tabindex="-1" id="offcanvas_${currentNode.identifier}" aria-labelledby="offcanvas_${currentNode.identifier}Label">
             <c:set var="OffcanvasTitle" value="${currentNode.properties.OffcanvasTitle.string}"/>
             <c:if test="${! empty OffcanvasTitle}">
                 <div class="offcanvas-header">

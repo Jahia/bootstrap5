@@ -29,16 +29,14 @@
 
 <c:choose>
     <c:when test="${renderContext.editMode}">
-        <div class="media">
-            <a class="media-left" href="#">
-                <c:if test="${! empty imageNode}">
-                    <c:url var="imageUrl" value="${imageNode.url}" context="/"/>
-                    <img src="${imageUrl}" style="width: 64px"/>
-                </c:if>
-            </a>
-            <div class="media-body">
+        <div class="d-flex gap-3 align-items-start">
+            <c:if test="${! empty imageNode}">
+                <c:url var="imageUrl" value="${imageNode.url}" context="/"/>
+                <img src="${imageUrl}" style="width: 64px; flex-shrink: 0;" alt=""/>
+            </c:if>
+            <div>
                 <c:if test="${not empty title}">
-                    <h4 class="media-heading${' '}${titleColor}">${title}</h4>
+                    <h4 class="${titleColor}">${title}</h4>
                 </c:if>
                 <c:if test="${not empty caption}">
                     <p class="${captionColor}">${caption}</p>
@@ -54,7 +52,7 @@
                 <img src="${imageUrl}" class="d-block w-100"/>
             </c:if>
             <c:if test="${! empty title || ! empty caption}">
-                <div class="carousel-caption d-none d-md-block${carouselCaptionClass}">
+                <div class="carousel-caption d-none d-md-block">
                     <c:if test="${not empty title}">
                         <h3${titleClass}>${title}</h3>
                     </c:if>
