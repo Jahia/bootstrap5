@@ -114,6 +114,23 @@ For best practices, it is recommended to use the following code when adding Boot
 <template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="${renderContext.editMode?'head':'body'}"/>
 ```
 
-## Useful Mixin
+## Useful Mixins
 
-TODO...
+The `bootstrap5mix:component` mixin is the base mixin for all Bootstrap 5 components. It inherits from `jmix:droppableContent`, `jmix:accessControllableContent`, and `jmix:editorialContent`, making components available in the content editor and controllable through access rules.
+
+### Spacing
+
+Two mixins are available to add margin or padding to any Bootstrap component:
+
+- `bootstrap5mix:padding` — adds a padding to the component. Available directions: `all`, `t` (top), `b` (bottom), `s` (start), `e` (end), `x` (horizontal), `y` (vertical). Sizes range from `0` to `5`.
+- `bootstrap5mix:margin` — adds a margin to the component. Same directions and sizes as padding.
+
+These mixins can be combined with any component that extends `bootstrap5mix:component`.
+
+### Image Advanced Settings
+
+The `bootstrap5mix:imageAdvancedSettings` mixin provides additional properties to fine-tune image rendering: custom CSS class, inline style, HTML `id`, responsive flag, thumbnail border, alignment, alt text, and border radius. It is available on the Figure component.
+
+### Site-level Branding
+
+The `bootstrap5mix:siteBrand` mixin extends `jnt:virtualsite` and allows you to define a default brand text and images (desktop and mobile) at the site level. These settings are used by the Navbar component when no brand is configured directly on the navbar node, which is useful when the navbar is part of a shared template.

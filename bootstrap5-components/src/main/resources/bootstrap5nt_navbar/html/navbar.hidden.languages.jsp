@@ -20,7 +20,7 @@
             <li class="nav-item dropdown">
                 <a href="#" class="dropdown-toggle nav-link" id="languageSwitchButton" data-bs-toggle="dropdown"
                    aria-haspopup="true"
-                   aria-expanded="false" aria-label="<fmt:message key='bootstrap5nt_navbarnavbar.label.change'/>"
+                   aria-expanded="false" aria-label="<fmt:message key='bootstrap5nt_navbar.label.change'/>"
                    aria-owns="language-menu">
                         ${fn:toUpperCase(renderContext.mainResourceLocale.language)}
                 </a>

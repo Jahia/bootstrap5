@@ -66,7 +66,7 @@ In HTML, the navbar can be implemented as follows:
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="languageSwitchButton" role="menu" id="language-menu">
                         <li><a class="dropdown-item" title="English" href="[link-to-en]" role="menuitem" lang="en">English</a></li>
-                        <li><a class="dropdown-item" title="Deutsch" href="[link-to-de]" role="menuitem" lang="en">Deutsch</a></li>
+                        <li><a class="dropdown-item" title="Deutsch" href="[link-to-de]" role="menuitem" lang="de">Deutsch</a></li>
                     </ul>
                 </li>
             </ul>
@@ -133,8 +133,6 @@ The `bootstrap5mix:navbarGlobalSettings` mixin provides the following global set
  - addContainerWithinTheNavbar (boolean) = 'false' autocreated indexed=no
 ```
 
-Please note that the improved version of the document includes formatting enhancements, clearer descriptions, and reorganized sections for better readability.
-
 ## Customize Brand
 
 The `bootstrap5mix:brand` mixin provides the following properties to customize the brand section:
@@ -170,8 +168,9 @@ The following properties allow you to fully configure your navigation bar by set
 | Label                                   | Name | Description                                                            | Default Value |
 |-----------------------------------------| --- |------------------------------------------------------------------------| --- |
 | Class(es) for the main nav              | `navClass` | CSS classes to set on the main `<nav>` tag.                            | `navbar navbar-expand-lg navbar-light bg-light` |
-| Class(es) for the toggle button         | `togglerClass` | CSS classes to set on the `<button>` used as a toggler.                | `navbar-toggler navbar-toggler-right` | 
-| Class(es) for the brand link            | `brandLinkClass` | CSS classes to set on the brand link.                                  | `navbar-brand` |
+| Class(es) for the toggle button         | `togglerClass` | CSS classes to set on the `<button>` used as a toggler.                | `navbar-toggler navbar-toggler-right` |
+| Class(es) for the brand link            | `brandLinkClass` | CSS classes to set on the brand text link.                             | `navbar-brand` |
+| Class(es) for the brand image           | `brandImageClass` | CSS classes to set on the brand image link.                            | `navbar-brand` |
 | Class(es) for the toggleable section    | `divClass` | CSS classes to set on the toggleable section (on the `nav > div` tag). | `collapse navbar-collapse` |
 | Class(es) for the navigation list       | `ulClass` | CSS classes to set on the navigation list `<ul>`.                      | `navbar-nav me-auto` |
 | Class(es) for the navigation list items | `liClass` | CSS classes to set on the navigation list items `<li>`.                | `nav-item` |
@@ -186,7 +185,8 @@ The following properties allow you to fully configure your navigation bar by set
  itemtype = content
  - navClass (string) = 'navbar navbar-expand-lg navbar-light bg-light' autocreated indexed=no
  - togglerClass (string) = 'navbar-toggler navbar-toggler-right' indexed=no
- - divClass (string) = 'collapse navbar-collapse' autocreated indexed=no
+ - brandLinkClass (string) = 'navbar-brand' autocreated indexed=no
+ - brandImageClass (string) = 'navbar-brand' autocreated indexed=no
  - divClass (string) = 'collapse navbar-collapse' autocreated indexed=no
  - ulClass (string) = 'navbar-nav me-auto' autocreated indexed=no
  - liClass (string) = 'nav-item' autocreated indexed=no

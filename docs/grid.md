@@ -35,6 +35,7 @@ The "Create HTML5 Semantic Elements" mixin is used to create HTML5 semantic elem
 | **ID set on this HTML element** | `sectionId` | An optional property to create an `id` attribute on the HTML element. Example: `<section id="copyright">` |
 | **Class(es) set on this HTML element** | `sectionCssClass` | An optional property to add a `class` attribute on the HTML element with a specific value. Example: `<div class="doc">` |
 | **Style** | `sectionStyle` | An optional property to add a `style` attribute on the HTML element with a specific value. Example: `<div style="background-color:pink">` |
+| **Role** | `sectionRole` | An optional property to add a `role` attribute on the HTML element. Example: `<div role="banner">` |
 | **Aria** | `sectionAria` | An optional property to add an `aria-label` attribute on the HTML element with a specific value. Example: `<div aria-label="projects">` |
 
 The definition of this mixin is as follows:
@@ -154,10 +155,7 @@ For example, if you use the value `col col-md-8,col-6 col-md-4`, the component w
         [col1 area here]
     </div>
     <div class="col-6 col-md-4">
-        [col3 area here]
-    </div>
-    <div class="col-6 col-md-4">
-        [col3 area here]
+        [col2 area here]
     </div>
 </div>
 ```
