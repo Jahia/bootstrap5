@@ -1,0 +1,12 @@
+{
+  "name": "bootstrap5-core",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Fetches Bootstrap 5 dist assets for packaging into the Jahia OSGi bundle.",
+  "dependencies": {
+    "bootstrap": "5.3.8"
+  },
+  "scripts": {
+    "postinstall": "node copy-bootstrap.js"
+  }
+}
