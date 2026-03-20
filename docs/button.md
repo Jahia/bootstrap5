@@ -4,7 +4,8 @@ The Button component is a multifunction component that allows for various action
 
 The supported actions for the button are:
 
-- Internal link or URL
+- Internal link (link to any page or content within the site)
+- External link (link to any URL)
 - Collapsible content
 - Modal (dialog prompts)
 - Popover
@@ -38,7 +39,7 @@ Below are the definitions for the Button and Advanced Settings:
 
 ```cnd
 [bootstrap5nt:button] > jnt:content, bootstrap5mix:component, mix:title
-- buttonType (string, choicelist[buttonTypeInitializer, resourceBundle]) = 'internalLink' autocreated indexed=no < 'internalLink', 'externalLink', 'modal', 'collapse', 'popover'
+- buttonType (string, choicelist[buttonTypeInitializer5, resourceBundle]) = 'internalLink' autocreated indexed=no < 'internalLink', 'externalLink', 'modal', 'collapse', 'popover', 'Offcanvas'
 
 [bootstrap5mix:buttonAdvancedSettings] mixin
 extends = bootstrap5nt:button
@@ -80,8 +81,8 @@ The following is the definition of the `bootstrap5mix:internalLink` mixin:
 
 ```cnd
 [bootstrap5mix:internalLink] > jmix:templateMixin mixin
-extends = bootstrap5nt:button
-- internalLink (weakreference, picker[type='editoriallink']) < jmix:droppableContent, jnt:page, jnt:file
+ extends = bootstrap5nt:button
+ - internalLink (weakreference) < jmix:mainResource, jnt:page, jnt:file
 ```
 
 The `bootstrap5mix:internalLink` mixin inherits from `bootstrap5nt:button` and adds the `internalLink` property, which allows for a reference to be set to any editorial content, page, or file.
@@ -94,7 +95,7 @@ Selecting the "URL" action allows you to create a link to any URL. This action a
 
 | Label | Name           | Description     | Default value |
 | ----- | -------------- | --------------- | ------------- |
-| URL   | `externalLink` | The target URL   | https://       |
+| URL   | `externalLink` | The target URL   | http://        |
 
 ### URL Definition
 
@@ -102,8 +103,8 @@ Here is the definition of the `bootstrap5mix:externalLink` mixin:
 
 ```cnd
 [bootstrap5mix:externalLink] > jmix:templateMixin mixin
-extends = bootstrap5nt:button
-- externalLink (string) = 'http://'
+ extends = bootstrap5nt:button
+ - externalLink (string) = 'http://'
 ```
 
 The `bootstrap5mix:externalLink` mixin extends `bootstrap5nt:button` and introduces the `externalLink` property, allowing you to specify any URL as the target for the button's link.
@@ -177,7 +178,7 @@ Selecting the "Popover" action displays a popover. This action adds the `bootstr
 | **Title of the popover**         | `popoverTitle`    | The title of the popover. If not set, the title is ignored.                                       |               |
 | **Content**                      | `popoverContent`  | The content of the popover. This can be rich text or text with HTML tags.                        |               |
 | **Direction**                    | `direction`       | The direction in which the popover should be displayed: top, right, bottom, or left-aligned.     | top           |
-| **Insert HTML into the popover** | `html`            | When enabled, allows inserting HTML content into the popover. Use text if concerned about XSS.   | true          |
+| **Insert HTML into the popover** | `html`            | When enabled, allows inserting HTML content into the popover. Use text if concerned about XSS.   | false         |
 
 ### Popover Definition
 
