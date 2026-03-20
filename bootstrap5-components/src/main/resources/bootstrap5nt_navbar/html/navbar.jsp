@@ -8,16 +8,30 @@
 <template:addResources type="css" resources="bootstrap.min.css"/>
 <template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="${renderContext.editMode?'head':'body'}"/>
 <c:set var="siteNode" value="${renderContext.site}"/>
+<%--
+    Brand resolution — two mutually exclusive sources, site takes priority:
+
+    1. bootstrap5mix:siteBrand on the site node (jnt:virtualsite)
+       → Global branding shared across all navbar instances on the site.
+       → When this mixin is present, it is ALWAYS used regardless of any
+         local settings on the navbar component.
+       → To use per-navbar branding instead, remove the bootstrap5mix:siteBrand
+         mixin from the site home node (site settings → mixins).
+
+    2. bootstrap5mix:brand on the navbar component node
+       → Per-component branding, only active when bootstrap5mix:siteBrand
+         is NOT present on the site node.
+--%>
 <c:choose>
     <c:when test="${jcr:isNodeType(siteNode, 'bootstrap5mix:siteBrand')}">
-        <c:set var="brandImage" value="${siteNode.properties.brandImage.node}"/>
+        <c:set var="brandImage"       value="${siteNode.properties.brandImage.node}"/>
         <c:set var="brandImageMobile" value="${siteNode.properties.brandImageMobile.node}"/>
-        <c:set var="brandText" value="${siteNode.properties.brandText.string}"/>
+        <c:set var="brandText"        value="${siteNode.properties.brandText.string}"/>
     </c:when>
     <c:when test="${jcr:isNodeType(currentNode, 'bootstrap5mix:brand')}">
-        <c:set var="brandImage" value="${currentNode.properties.brandImage.node}"/>
+        <c:set var="brandImage"       value="${currentNode.properties.brandImage.node}"/>
         <c:set var="brandImageMobile" value="${currentNode.properties.brandImageMobile.node}"/>
-        <c:set var="brandText" value="${currentNode.properties.brandText.string}"/>
+        <c:set var="brandText"        value="${currentNode.properties.brandText.string}"/>
     </c:when>
 </c:choose>
 
