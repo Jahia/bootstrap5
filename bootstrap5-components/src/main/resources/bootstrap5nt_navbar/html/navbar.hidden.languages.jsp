@@ -23,7 +23,7 @@
                    aria-expanded="false" aria-label="<fmt:message key='bootstrap5nt_navbar.label.change'/>"
                         ${fn:toUpperCase(renderContext.mainResourceLocale.language)}
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="languageSwitchButton" role="menu" id="language-menu">
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageSwitchButton" role="menu" id="language-menu">
                     <c:set var="invalidLanguages" value=""/>
                     <c:catch var="e">
                         <c:if test="${! empty mainResourceNode.properties['j:invalidLanguages']}">

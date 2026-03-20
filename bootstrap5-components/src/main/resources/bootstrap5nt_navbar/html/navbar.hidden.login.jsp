@@ -23,7 +23,7 @@
                  data-bs-toggle="dropdown" aria-expanded="false" role="button">
                         ${currentUser.username}
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="list-${currentNode.identifier}">
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="list-${currentNode.identifier}">
                     <c:if test="${!renderContext.settings.distantPublicationServerMode and renderContext.mainResource.node.properties['j:originWS'].string ne 'live' and not jcr:isNodeType(renderContext.mainResource.node.resolveSite, 'jmix:remotelyPublished')}">
                         <c:if test="${! renderContext.liveMode}">
                             <li>

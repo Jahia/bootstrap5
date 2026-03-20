@@ -4,9 +4,7 @@
 }
 
 @media (min-width: 992px) {
-    .dropdown-menu {
-        left: auto !important;
-    }
+    /* Sub-menus (level 3+) open to the right of their parent item */
     .dropdown-menu .dropdown-menu {
         margin-left: 0;
         margin-right: 0
