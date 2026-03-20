@@ -143,7 +143,20 @@ The `bootstrap5mix:brand` mixin provides the following properties to customize t
 | Brand image | `brandImage` | Image used in the brand section. | 
 | Brand image for small devices | `brandImageMobile` | Image used for small devices. |
 
-These three properties can be set when using a navbar. Additionally, you can override these settings by editing the site node, typically if the navbar is included in a template set in the studio.
+These three properties can be set directly on the navbar component (`bootstrap5mix:brand`), or at the site level via `bootstrap5mix:siteBrand`.
+
+> **Important — brand resolution order (mutually exclusive):**
+>
+> The **site-level mixin takes priority**. If `bootstrap5mix:siteBrand` is present on the site node, the component-level `bootstrap5mix:brand` settings are **entirely ignored**, even if they are set.
+>
+> | Scenario | Settings used |
+> |---|---|
+> | `bootstrap5mix:siteBrand` is present on the site node | Site-level settings (component settings ignored) |
+> | `bootstrap5mix:siteBrand` is absent | Component-level `bootstrap5mix:brand` settings |
+>
+> **When to use which:**
+> - **`bootstrap5mix:siteBrand`** — when the navbar is part of a shared template (Studio) and you want one global brand definition for the whole site.
+> - **`bootstrap5mix:brand`** — for per-navbar branding (e.g. a secondary navbar with a different logo). To activate it, make sure `bootstrap5mix:siteBrand` is **not** added to the site node (Administration → Site settings → Mixins).
 
 ### Customize Brand Definition
 ```cnd
