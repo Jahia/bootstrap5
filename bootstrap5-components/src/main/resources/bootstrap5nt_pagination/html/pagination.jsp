@@ -23,6 +23,8 @@
     <template:addCacheDependency node="${boundComponent}"/>
     <c:set var="pagesizeid" value="pagesize${boundComponent.identifier}"/>
     <c:set var="beginid" value="begin${boundComponent.identifier}"/>
+    <%-- 3-tier pageSize fallback: (1) component-specific URL param, (2) search URL param src_itemsPerPage,
+         (3) configured property value — or 100 in edit mode (to show all items) / 10 as the final default --%>
     <c:choose>
         <c:when test="${not empty param[pagesizeid]}">
             <c:set var="pageSize" value="${param[pagesizeid]}"/>
@@ -37,14 +39,17 @@
                 <c:set var="pageSizeValue" value="${currentNode.properties.pageSize.long}"/>
                 <c:set var="nbOfPagesInEdit" value="${currentNode.properties.nbOfPagesInEdit.long}"/>
             </c:if>
+            <%-- Edit mode uses a large page size so editors see all content without pagination --%>
             <c:set var="pageSize" value="${renderContext.editMode ? nbOfPagesInEdit : pageSizeValue}"/>
         </c:otherwise>
     </c:choose>
     <c:set target="${moduleMap}" property="pageSize" value="${pageSize}"/>
     <c:set target="${moduleMap}" property="pageStart" value="${param[beginid]}"/>
     <template:option node="${boundComponent}" nodetype="${boundComponent.primaryNodeTypeName},jmix:list" view="hidden.header"/>
+    <%-- sizeNotExact: true when the result set size is approximate (e.g. Solr estimate); causes "~N" display in pager --%>
     <c:set var="sizeNotExact"
            value="${moduleMap.listApproxSize > 0 && moduleMap.listApproxSize != moduleMap.listTotalSize}"/>
+    <%-- template:initPager must be called before any pager variables (currentPage, nbPages, etc.) are accessed --%>
     <template:initPager totalSize="${sizeNotExact ? moduleMap.listApproxSize : moduleMap.listTotalSize}"
                         sizeNotExact="${sizeNotExact}" pageSize="${pageSize}"
                         id="${boundComponent.identifier}"/>
@@ -80,6 +85,8 @@
             </c:choose>
 
                 <ul class="pagination ${layout} ${align}">
+                    <%-- All current URL params are forwarded to keep search/filter state; only pagination-specific
+                         params (beginid, endid, pagesizeid, and src_* for search mode) are excluded and rebuilt --%>
                     <c:url value="${searchUrl}" var="previousUrl" context="/">
                         <c:param name="${beginid}" value="${(moduleMap.currentPage-2) * moduleMap.pageSize }"/>
                         <c:param name="${endid}" value="${ (moduleMap.currentPage-1)*moduleMap.pageSize-1}"/>

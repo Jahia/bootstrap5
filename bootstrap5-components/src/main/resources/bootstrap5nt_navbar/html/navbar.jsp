@@ -60,7 +60,8 @@
     <c:set var="divClass" value="collapse navbar-collapse"/>
 </c:if>
 
-<%-- try to get the expand size --%>
+<%-- Extract the breakpoint suffix (e.g. "lg") from the navbar-expand-* token in navClass;
+     used below to build responsive visibility classes for desktop vs. mobile brand images. --%>
 <c:set var="expand" value="lg"/>
 <c:forEach items="${fn:split(navClass, ' ')}" var="currentClass">
     <c:if test="${fn:startsWith(currentClass, 'navbar-expand-')}">
@@ -98,6 +99,7 @@
     <c:set var="rootNode" value="${renderContext.site.home}"/>
 </c:if>
 <nav class="${navClass}">
+    <%-- Optional inner .container constrains navbar width and prevents dropdowns from overflowing the viewport. --%>
     <c:if test="${addContainerWithinTheNavbar}">
         <div class="container">
     </c:if>
@@ -124,6 +126,7 @@
             <c:choose>
                 <c:when test="${! empty brandImageMobile}">
                     <c:url var="brandImageMobileUrl" value="${brandImageMobile.url}" context="/"/>
+                    <%-- Desktop image: hidden below the expand breakpoint; mobile image: hidden at or above it. --%>
                     <img src="${brandImageUrl}" class="align-top d-none d-${expand}-inline-block" alt="">
                     <img src="${brandImageMobileUrl}" class="align-top d-inline-block d-${expand}-none" alt="">
                 </c:when>
@@ -145,6 +148,7 @@
         <template:include view="basenav-multilevel"/>
         <c:if test="${addLoginButton}">
             <%--<template:include view="hidden.login"/>--%>
+            <%-- template:module (not template:include) gives the login fragment its own render context and independent cache entry. --%>
             <template:module node="${currentNode}" view="hidden.login"/>
         </c:if>
         <c:if test="${addLanguageButton}">

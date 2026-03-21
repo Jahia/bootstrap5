@@ -22,12 +22,14 @@
     <c:set var="nowrap" value="${currentNode.properties.disableTextWrapping.boolean ? ' text-nowrap' : ''}"/>
     <c:set var="block" value="${currentNode.properties.block.boolean ? ' btn-block' : ''}"/>
     <c:set var="cssClass" value=" ${currentNode.properties.cssClass.string}"/>
+    <%-- stretched-link uses CSS ::after to make the entire parent container clickable --%>
     <c:set var="stretchedLink" value="${currentNode.properties.stretchedLink.boolean ? ' stretched-link' : ''}"/>
     <c:choose>
         <c:when test="${state == 'active'}">
             <c:set var="aria">aria-pressed="true"</c:set>
         </c:when>
         <c:when test="${state == 'disabled'}">
+            <%-- <a> tags don't support the disabled attribute; aria-disabled + tabindex=-1 are used instead --%>
             <c:set var="aria">aria-disabled="true"</c:set>
         </c:when>
         <c:otherwise>
@@ -44,6 +46,7 @@
         <c:set var="state" value=" ${state}"/>
     </c:if>
 </c:if>
+<%-- "custom" style: cssClass is used verbatim as the full btn class; all other styles build "btn btn[-outline]-{style}" --%>
 <c:choose>
     <c:when test="${style eq 'custom'}">
         <c:set var="buttonClass" value="${cssClass}"/>
@@ -53,6 +56,8 @@
     </c:otherwise>
 </c:choose>
 
+<%-- Each buttonType produces a distinct HTML structure: internalLink/externalLink → <a>, modal → button + hidden div,
+     collapse → button + collapsible div, popover → button + inline script, Offcanvas → button + offcanvas panel --%>
 <c:choose>
     <c:when test="${buttonType eq 'internalLink'}">
         <c:set var="internalLinkNode" value="${currentNode.properties.internalLink.node}"/>
@@ -104,6 +109,7 @@
             ${title}
         </button>
 
+        <%-- Modal id is derived from the node identifier to guarantee uniqueness when multiple buttons exist on the page --%>
         <div class="modal fade" id="modal-${currentNode.identifier}" tabindex="-1" role="dialog" aria-labelledby="modalLabel_${currentNode.identifier}" aria-hidden="${renderContext.editMode ? 'false' : 'true'}"<c:if test="${staticBackdrop}"><c:out value=" "
         /> data-bs-backdrop="static" data-bs-keyboard="false"</c:if>>
             <div class="modal-dialog ${verticallyCentered} modal-dialog-scrollable ${modalSize}"<c:if test='${renderContext.editMode}'> style="margin:5px;"</c:if>>
@@ -162,6 +168,8 @@
         </c:if>
         <button type="button" class="${buttonClass}" ${aria} data-bs-toggle="popover" ${pTitle} ${pContent} <c:if test="${html}"><c:out
                 value=" "/> data-bs-html="true" </c:if> data-bs-container="body" data-bs-placement="${direction}" data-bs-trigger="focus" id="button_${currentNode.identifier}">${title}</button>
+        <%-- Popovers are not auto-initialised by Bootstrap; this inline jQuery snippet activates all popover elements.
+             Requires Bootstrap JS and jQuery to be loaded on the page. --%>
         <template:addResources type="inline">
             <script>
                 $(function () {

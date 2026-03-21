@@ -14,11 +14,14 @@
                ? currentNode.properties.captionAlignment.string : ''}"/>
 
 <figure class="figure">
+    <%-- Delegates <img> rendering to the image mixin view; the image tag is NOT produced here.
+         "figure-img" is passed as the base class and merged with img-fluid + any advanced-settings class. --%>
     <template:include view="image">
         <template:param name="class" value="figure-img img-fluid"/>
     </template:include>
 
     <c:if test="${not empty caption}">
+        <%-- Trailing space added only when an alignment class is present --%>
         <figcaption class="figure-caption${empty captionAlignment ? '' : ' '}${captionAlignment}">
                 ${fn:escapeXml(caption)}
         </figcaption>

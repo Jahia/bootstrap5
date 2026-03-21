@@ -29,13 +29,14 @@
 <c:forEach items="${subLists}" var="droppableContent" varStatus="status">
     <c:choose>
         <c:when test="${useListNameAsAnchor}">
+            <%-- Use the sanitized list name as the anchor; fall back to node identifier when useListNameAsAnchor is false --%>
             <c:set var="anchorName" value="${fn:trim(droppableContent.name)}"/>
-            <%-- check if anchor start using a char, else prefix with tab --%>
+            <%-- HTML id must start with a letter; prefix with "tab-" if the first character is not a-z --%>
             <c:set var="firstChar" value = "${fn:substring(fn:toLowerCase(anchorName), 0, 1)}" />
             <c:if test="${! fn:contains(alphabet, firstChar)}">
                 <c:set var="anchorName" value="tab-${anchorName}"/>
             </c:if>
-            <%-- cleanup --%>
+            <%-- Strip characters not safe in HTML id / URL fragments (anything outside A-Za-z0-9_) --%>
             <c:set var="anchorName" value="${b5:replaceAll(anchorName, '[^A-Za-z0-9_]', '-')}"/>
         </c:when>
         <c:otherwise>
@@ -70,12 +71,14 @@
 <template:addResources targetTag="${renderContext.editMode?'head':'body'}" type="inline">
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            <%-- On page load, activate the tab whose id matches the URL hash to support deep-linking --%>
             const trigger = document.querySelector(`ul.nav button[data-bs-target="\${window.location.hash}"]`);
             if (trigger != undefined) {
                 const tab = new bootstrap.Tab(trigger);
                 tab.show();
             }
         })
+        <%-- On tab change, push the new tab's anchor to the URL hash so the active tab survives navigation/sharing --%>
         document.querySelectorAll('ul.nav button[data-bs-toggle="tab"]').forEach(function(el){
             el.addEventListener('shown.bs.tab', function (event) {
                 window.location.hash=event.target.dataset.bsTarget;

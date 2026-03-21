@@ -24,6 +24,7 @@
                         ${currentUser.username}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="list-${currentNode.identifier}">
+                                    <%-- Workspace-switching links are suppressed on remote publication servers and on live-originated nodes. --%>
                     <c:if test="${!renderContext.settings.distantPublicationServerMode and renderContext.mainResource.node.properties['j:originWS'].string ne 'live' and not jcr:isNodeType(renderContext.mainResource.node.resolveSite, 'jmix:remotelyPublished')}">
                         <c:if test="${! renderContext.liveMode}">
                             <li>
@@ -36,6 +37,7 @@
                                 </a>
                             </li>
                         </c:if>
+                        <%-- Preview/Edit/Contribute links require jContentAccess or contributeModeAccess; absent that permission the link is omitted entirely. --%>
                         <c:if test="${! renderContext.previewMode && jcr:hasPermission(renderContext.mainResource.node, 'jContentAccess')}">
                             <li>
                                 <a href="<c:url value='${url.preview}'/>" class="dropdown-item text-secondary">
@@ -96,6 +98,7 @@
     </c:otherwise>
 </c:choose>
 
+<%-- Render the login modal for anonymous users; also for alias "guest" (impersonation fallback where loggedIn may still be true). --%>
 <c:if test="${!renderContext.loggedIn || currentAliasUser.username eq 'guest'}">
     <div class="modal fade" id="login-${currentNode.identifier}" tabindex="-1" aria-labelledby="login-${currentNode.identifier}-label" aria-hidden="true">
         <ui:loginArea onsubmit="loginButton.disabled = true; return true;">
@@ -118,6 +121,7 @@
                         </div>
                         <c:set var="error" value="true"/>
                     </c:if>
+                    <%-- On a failed login, auto-open the modal immediately so the user sees the error without re-clicking Login. --%>
                     <c:if test="${error}">
                         <template:addResources type="inline" targetTag="${renderContext.editMode?'head':'body'}">
                         <script>

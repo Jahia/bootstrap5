@@ -6,7 +6,8 @@
 <%--@elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper"--%>
 <%--@elvariable id="renderContext" type="org.jahia.services.render.RenderContext"--%>
 
-<%-- Prefix for area names in /modules or Studio --%>
+<%-- Prefix for area names in /modules or Studio: avoids area-name collisions when the same
+     grid component type is used more than once on a page --%>
 <c:set var="colNamePrefix"
        value="${(fn:startsWith(currentNode.path,'/modules') or renderContext.editModeConfigName eq 'studiomode')
                 ? currentNode.name.concat('-') : ''}"/>
@@ -16,7 +17,8 @@
 <c:set var="parts" value="${fn:split(grid,'_')}"/>
 <c:set var="count" value="${fn:length(parts)}"/>
 
-<%-- Absolute areas / moduleType / level --%>
+<%-- Absolute areas / moduleType / level: when absolute areas are enabled the area tag uses
+     moduleType="absoluteArea" so child pages inherit content from this level instead of defining their own --%>
 <c:set var="createAbsoluteAreas" value="${jcr:isNodeType(currentNode, 'bootstrap5mix:createAbsoluteAreas')}"/>
 <c:set var="moduleType" value="${createAbsoluteAreas ? 'absoluteArea' : 'area'}"/>
 <c:set var="level" value="${createAbsoluteAreas ? currentNode.properties.level.string : '0'}"/>
@@ -26,7 +28,8 @@
 <c:set var="listLimit" value="${hasListLimit and not empty currentNode.properties.listLimit.string
                                 ? currentNode.properties.listLimit.string : '-1'}"/>
 
-<%-- Optional Studio helper card for absolute areas --%>
+<%-- Build a helper card once and store in a variable; it is injected inside every column div below
+     so Studio users can see which inheritance level each absolute area targets --%>
 <c:if test="${createAbsoluteAreas and renderContext.editModeConfigName eq 'studiomode'}">
     <c:set var="displayAbsoluteArea">
         <div class="card text-white bg-danger mb-3">
@@ -38,7 +41,8 @@
     </c:set>
 </c:if>
 
-<%-- Compute area names order based on columns pattern --%>
+<%-- Area names are inferred from column proportions, not authored by the user.
+     These names are relied upon by child JSPs and absolute area inheritance — do not change them. --%>
 <c:choose>
     <c:when test="${count == 1}">
         <c:set var="areasCsv" value="main"/>
@@ -53,6 +57,7 @@
                value="${(parts[1] gt parts[0] and parts[1] gt parts[2]) ? 'side,main,extra' : 'main,side,extra'}"/>
     </c:when>
     <c:otherwise>
+        <%-- 4+ columns always get fixed names regardless of span values --%>
         <c:set var="areasCsv" value="main,side,extra,extra2"/>
     </c:otherwise>
 </c:choose>
@@ -77,6 +82,7 @@
 <c:if test="${count >= 1 and count <= 4}">
     <c:forEach var="i" begin="0" end="${count - 1}" varStatus="st">
         <c:set var="span" value="${parts[i]}"/>
+        <%-- span=12 means full-width: use plain "col" so it fills the row without a breakpoint qualifier --%>
         <c:set var="colClass" value="${span eq '12' ? 'col' : 'col-md-'.concat(span)}"/>
         <c:set var="areaPath" value="${colNamePrefix}${areaNames[i]}"/>
 

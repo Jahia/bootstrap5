@@ -6,12 +6,13 @@
 <%-- @elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper" --%>
 <template:addResources type="css" resources="bootstrap.min.css"/>
 
-<%-- Mixins presence --%>
+<%-- Mixins presence: each flag independently gates its wrapper element (section → container → row) --%>
 <c:set var="createSection"   value="${jcr:isNodeType(currentNode,'bootstrap5mix:createSection')}"/>
 <c:set var="createContainer" value="${jcr:isNodeType(currentNode,'bootstrap5mix:createContainer')}"/>
 <c:set var="createRow"       value="${jcr:isNodeType(currentNode,'bootstrap5mix:createRow')}"/>
 
-<%-- Grid type in one expression --%>
+<%-- Grid type in one expression: resolves to predefinedGrid, customGrid, or nogrid —
+     the value is passed directly to template:include as the view suffix (hidden.${gridType}) --%>
 <c:set var="gridType"
        value="${jcr:isNodeType(currentNode,'bootstrap5mix:predefinedGrid') ? 'predefinedGrid'
                 : (jcr:isNodeType(currentNode,'bootstrap5mix:customGrid') ? 'customGrid' : 'nogrid')}"/>
@@ -40,11 +41,13 @@
     <c:set var="containerType"  value="${currentNode.properties.containerType.string}"/>
     <c:set var="containerExtra" value="${currentNode.properties.containerCssClass.string}"/>
 
-    <%-- remove duplicated containerType from extra classes, then trim --%>
+    <%-- Strip containerType (e.g. "container-fluid") from extra classes to avoid emitting it twice
+         when the author also typed it manually into the CSS class field --%>
     <c:if test="${not empty containerExtra}">
         <c:set var="containerExtra" value="${fn:trim(fn:replace(containerExtra, containerType, ''))}"/>
     </c:if>
 
+    <%-- containerType is always the first class; extra classes follow only when non-empty --%>
     <c:set var="containerClass"
            value="${empty containerExtra ? containerType : containerType.concat(' ').concat(containerExtra)}"/>
 
@@ -63,7 +66,8 @@
     <c:set var="gX"       value="${currentNode.properties.horizontalGutters.string}"/>
     <c:set var="gY"       value="${currentNode.properties.verticalGutters.string}"/>
 
-    <%-- normalize "default" to empty --%>
+    <%-- "default" is the sentinel stored in the JCR property when no override is chosen;
+         normalising to empty string means no CSS class is appended for that axis --%>
     <c:if test="${vAlign eq 'default'}"><c:set var="vAlign" value=""/></c:if>
     <c:if test="${hAlign eq 'default'}"><c:set var="hAlign" value=""/></c:if>
     <c:if test="${gX eq 'default'}"><c:set var="gX" value=""/></c:if>
@@ -86,6 +90,7 @@
 
 <template:include view="hidden.${gridType}"/>
 
+<%-- Closing tags emitted in reverse wrapping order (row → container → section) to mirror the opening tags above --%>
 <c:if test="${createRow}">
     </div>
 </c:if>
