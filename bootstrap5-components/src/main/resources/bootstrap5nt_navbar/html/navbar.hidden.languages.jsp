@@ -20,8 +20,9 @@
             <li class="nav-item dropdown">
                 <a href="#" class="dropdown-toggle nav-link" id="languageSwitchButton" data-bs-toggle="dropdown"
                    aria-haspopup="true"
-                   aria-expanded="false" aria-label="<fmt:message key='bootstrap5nt_navbar.label.change'/>"
-                        ${fn:toUpperCase(renderContext.mainResourceLocale.language)}
+                   aria-expanded="false"
+                   aria-label="<fmt:message key='bootstrap5nt_navbar.label.change'/>">
+                    ${fn:toUpperCase(renderContext.mainResourceLocale.language)}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageSwitchButton" role="menu" id="language-menu">
                     <c:set var="invalidLanguages" value=""/>
