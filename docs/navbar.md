@@ -61,7 +61,9 @@ In HTML, the navbar can be implemented as follows:
             <!-- language section -->
             <ul class="navbar-nav language-nav">
                 <li class="nav-item dropdown">
-                    <a href="#" class="dropdown-toggle nav-link" id="languageSwitchButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Choose your preferred language" aria-owns="language-menu">
+                    <a href="#" class="dropdown-toggle nav-link" id="languageSwitchButton" data-bs-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false"
+                       aria-label="Choose your preferred language">
                         FR
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="languageSwitchButton" role="menu" id="language-menu">
@@ -119,7 +121,8 @@ The `bootstrap5mix:navbarGlobalSettings` mixin provides the following global set
 | Display the sign-in button | `addLoginButton` | Display a sign-in button for anonymous users that opens a modal with the sign-in form. Once logged in, a dropdown menu allows switching to edit and preview modes. | true |
 | Maximum levels to display | `maxlevel` | Display subpages as a dropdown menu for levels greater than 1. | 2 |
 | Display the languages | `addLanguageButton` | Display a language switch menu. The current language is displayed using the 2-character ISO code, and other languages are displayed using their translated names. | true |
-| Wrap the navbar in a container | `addContainerWithinTheNavbar` | Wrap the content of the navbar in a container to center it on a page. This adds the `<div class="container">` inside the `nav` tag. | false |
+| Wrap the navbar in a container | `addContainerWithinTheNavbar` | Wrap the content of the navbar in a Bootstrap `.container` to constrain its width and prevent dropdown overflow on wide screens. This adds `<div class="container">` inside the `<nav>` tag. | **true** |
+| Display sub-pages | `recursive` | Include sub-pages in the navigation tree (shown as dropdown menus when `maxlevel` > 1). Disable to show only the top level. | true |
 
 ### Global Settings Definition
 
@@ -130,7 +133,8 @@ The `bootstrap5mix:navbarGlobalSettings` mixin provides the following global set
  - addLoginButton (boolean) = 'true' autocreated indexed=no
  - addLanguageButton (boolean) = 'true' autocreated indexed=no
  - maxlevel (string, choicelist[resourceBundle]) = '2' autocreated indexed=no < '1', '2', '3', '4', '5'
- - addContainerWithinTheNavbar (boolean) = 'false' autocreated indexed=no
+ - addContainerWithinTheNavbar (boolean) = 'true' autocreated indexed=no
+ - recursive (boolean) = 'true' autocreated indexed=no
 ```
 
 ## Customize Brand
