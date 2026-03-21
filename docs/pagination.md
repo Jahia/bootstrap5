@@ -1,69 +1,71 @@
 # Pagination
 
-The Pagination component allows you to paginate long lists by indicating the existence of related content across multiple pages.
+Splits a long content list across multiple pages and renders the navigation bar for moving between them.
 
-![Pagination](../images/pagination.png "Pagination")
+![Pagination](../images/pagination.png)
 
-## Add Pagination Above Your List
+> The Pagination component works alongside Jahia's **bound component** system — it must be linked to the list it paginates.
 
-Integrating pagination **above** a list in Jahia involves a few steps. Follow this animation to understand the process:
+---
 
-1. Add the pagination component after the Jahia content list you want to paginate.
-2. Move the pagination component above your list.
-3. Link (bind) the pagination to the list by clicking on the "pin" icon and selecting the list you want to link to.
+## How to set up pagination
 
-![Pagination Before](../images/pagination-before.gif "Pagination Before")
+Pagination always needs to be placed **before** the list in the page structure (even if you want it to appear after the list visually). Here's the recommended workflow:
 
-## Add Pagination After Your List
+### Pagination above the list
 
-To add pagination **after** your list, you can follow these steps:
+![Pagination above](../images/pagination-before.gif)
 
-1. Ensure that you already have a working pagination component above your list (refer to the previous example).
-2. Copy the pagination component and paste it after your list.
-3. Remove the pagination display from the first pagination component (the one above the list).
+1. Add a **Pagination** component.
+2. Drop your content list after it.
+3. Click the **pin icon** on the Pagination component and select your list to bind them together.
 
-![Pagination Init](../images/pagination-init.png "Pagination Init")
+### Pagination below the list
 
-Here's an animation illustrating the process:
+![Pagination below](../images/pagination-after.gif)
 
-![Pagination After](../images/pagination-after.gif "Pagination After")
+1. Set up pagination above your list first (as above).
+2. **Copy** the Pagination component and paste it after the list.
+3. On the first Pagination (above the list), uncheck **Display the pagination** — this one now only initialises the paging logic without rendering the bar.
+
+---
 
 ## Properties
 
-The Pagination component in Jahia requires setup before the list you want to paginate, even if you intend to display the pagination bar after the list. Therefore, if you want to display the pagination bar after your list, you still need to include a component before it and choose not to display the pagination bar.
+| Property | Name | Description | Default |
+|---|---|---|---|
+| **Display the pagination bar** | `displayPager` | Uncheck to initialise pagination without showing the bar (useful for the "above" hidden instance). | true |
 
-| Label | Name | Description | Default Value |
-| --- | --- | --- | --- |
-| Display the pagination | `displayPager` | Determines whether to display the pagination bar. If set to `false`, only initializes the pagination. | `true` |
+---
 
-## Advanced Properties
+## Advanced settings (`bootstrap5mix:advancedPagination`)
 
-There are several advanced properties that you can set on the pagination bar. Note that if you want to display pagination after your list, you still need to set the same values on the pagination component (which is not displayed) before the list, particularly the Size of the menu and the number of items shown.
+| Property | Name | Description | Default |
+|---|---|---|---|
+| **Items per page** | `pageSize` | How many list items to show on each page. | 10 |
+| **Number of page links** | `nbOfPages` | How many page number links to show in the bar. | 10 |
+| **Items per page (edit mode)** | `nbOfPagesInEdit` | Cap for edit mode — prevents loading huge lists while authoring. | 100 |
+| **Alignment** | `align` | Position of the bar: Start, Center, or End. | Center |
+| **Size** | `layout` | Smaller or larger buttons: `pagination-sm`, default, `pagination-lg`. | default |
 
-| Label | Name | Description | Default Value |
-| --- | --- | --- | --- |
-| How many items are shown | `pageSize` | Specifies the number of items shown on each page. | 10 |
-| Size of the menu | `nbOfPages` | Determines the number of links to pages to display in the menu. In this example, the size is set to 3 even if there are more pages. | 10 |
-| How many items are shown (edition mode) | `nbOfPagesInEdit` | Limits the number of items to show in edit mode. | 100 |
-| Alignment | `align` | Defines the position of the pagination bar. It can be set to Start, Center, or End. | Center |
-| Size | `layout` | Specifies the size of the pagination buttons. It can be set to smaller or larger than the default size. | Default |
-
-## Definition
+> If you have two Pagination instances (one hidden above, one visible below), set **the same** `pageSize` and `nbOfPages` values on both.
 
 ```cnd
-[bootstrap5mix:advancedPagination] mixin
- extends = bootstrap5nt:pagination
- itemtype = content
- - pageSize (long) = '10' autocreated mandatory indexed=no
- - nbOfPages (long) = '10' autocreated mandatory indexed=no
- - nbOfPagesInEdit (long) = '100' autocreated mandatory indexed=no
- - align (string, choicelist[resourceBundle]) = 'justify-content-center' autocreated indexed=no  < 'justify-content-center', 'justify-content-start', 'justify-content-end'
- - layout (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no   < 'pagination-lg', 'default', 'pagination-sm'
-
-
-
 [bootstrap5nt:pagination] > jnt:content, bootstrap5mix:component, jmix:bindedComponent
- - displayPager (boolean) = 'true' autocreated indexed=no
+  - displayPager (boolean) = 'true' autocreated indexed=no
+
+[bootstrap5mix:advancedPagination] mixin
+  extends = bootstrap5nt:pagination
+  itemtype = content
+  - pageSize       (long)   = '10'  autocreated mandatory indexed=no
+  - nbOfPages      (long)   = '10'  autocreated mandatory indexed=no
+  - nbOfPagesInEdit (long)  = '100' autocreated mandatory indexed=no
+  - align   (string, choicelist[resourceBundle]) = 'justify-content-center' autocreated indexed=no
+    < 'justify-content-center', 'justify-content-start', 'justify-content-end'
+  - layout  (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no
+    < 'pagination-lg', 'default', 'pagination-sm'
 ```
 
-[Back to README](../README.md)
+---
+
+[← Back to README](../README.md)

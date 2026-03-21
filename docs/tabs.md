@@ -1,59 +1,60 @@
 # Tabs and Pills
 
-Bootstrap's tabs and pills are powerful navigation components that greatly improve website clarity and enhance the user experience.
+Tabbed navigation that splits content into labelled panels — keeping your page clean when you have multiple distinct sections to show.
 
-![Tabs](../images/tabs.png "Tabs")
+![Tabs](../images/tabs.png)
 
-## Tabs Properties
+---
 
-| Label | Name | Description                                                                                              | Default Value |
-| --- | --- |----------------------------------------------------------------------------------------------------------| --- |
-| Type | `type` | Determines the layout of the tabs. It can be "Tab", "Underline" or "Pill".                                | Tab |
-| Fade Effect | `fade` | Enables the fade-in effect for tabs.                                                                     | true |
-| Horizontal Alignment | `align` | Changes the horizontal alignment of the navigation. Options are Start, Center, End, Fill, and Justified. | Start |
-| Use List Name as Anchor | `useListNameAsAnchor` | If enabled, the list name is used as the anchor. Otherwise, the UUID is used.                            | true |
+## Setting up tabs
 
-## Adding a List of Tabs to Your Page
+![Adding tabs in edit mode](../images/tabs-add.gif)
 
-To add tabs or pills to your page, follow these steps:
+1. Add a **Tabs** component to your page.
+2. Add **content lists** inside it — each list becomes a tab. The list's title is the tab label.
+3. Drop your content inside each list.
 
-1. Add the main tabs component.
-2. Add as many content lists as you need. The title of each content list will be used as the tab label.
-3. To add content to a specific tab, click on the tab and then add your content to the selected list.
+---
 
-![Edit Tabs](../images/tabs-add.gif "Edit Tabs")
+## Properties
+
+| Property | Name | Description | Default |
+|---|---|---|---|
+| **Style** | `type` | Visual style: Tab, Pill, Link, or Underline. | Tab |
+| **Fade effect** | `fade` | Fades the panel in when switching tabs. | true |
+| **Alignment** | `align` | Horizontal position of the tab bar: Start, Center, End, Fill, or Justified. | Start |
+| **Use list name as anchor** | `useListNameAsAnchor` | Uses the list's node name as the URL fragment (`#my-tab`). Disable to use the UUID instead. | true |
+
+```cnd
+[bootstrap5nt:tabs] > jnt:content, bootstrap5mix:component, jmix:manuallyOrderable,
+    jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
+  - type  (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no
+    < 'tab', 'pill', 'link', 'underline'
+  - fade  (boolean) = 'true' autocreated indexed=no
+  - align (string, choicelist[resourceBundle, moduleImage='svg'])
+    = 'justify-content-start' indexed=no
+    < 'justify-content-start', 'justify-content-center', 'justify-content-end',
+      'nav-fill', 'nav-justified'
+  - useListNameAsAnchor (boolean) = 'true' autocreated indexed=no
+  + * (jnt:contentList) = jnt:contentList
+```
+
+---
 
 ## FAQ
 
-### How to Change the Alignment or Type of Tabs After Creation?
+### How do I change the style or alignment after creating the tabs?
 
-To change the alignment or type of tabs after creating the main tabs component, follow these steps:
+Right-click the **Content List** button → **Edit**.
 
-1. Right-click on the "Content List" button used to create a new tab entry.
-2. Select "Edit" from the context menu.
+![Editing the tabs component](../images/edit-tabs.png)
 
-![Edit Tabs](../images/edit-tabs.png "Edit Tabs")
+### How do I rename a tab?
 
-### How to Change the Label of a Tab?
+Right-click the **+ Any Content** button of the list you want to rename → **Edit**.
 
-To change the label of a tab, follow these steps:
+![Editing a single tab label](../images/edit-tab.png)
 
-1. Right-click on the "+ Any Content" button of the respective list.
-2. Select "Edit" from the context menu.
+---
 
-![Edit Tab](../images/edit-tab.png "Edit Tab")
-
-## Tabs Definition
-
-Here is the definition of the tabs component:
-
-```cnd
-[bootstrap5nt:tabs] > jnt:content, bootstrap5mix:component, jmix:manuallyOrderable, jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
-- type (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no < 'tab', 'pill', 'link','underline'
-- fade (boolean) = 'true' autocreated indexed=no
-- align (string, choicelist[resourceBundle,moduleImage='svg']) = 'justify-content-start' indexed=no < 'justify-content-start', 'justify-content-center', 'justify-content-end', 'nav-fill', 'nav-justified'
-- useListNameAsAnchor (boolean) = 'true' autocreated indexed=no
-+ * (jnt:contentList) = jnt:contentList
-```
-
-[Back to README](../README.md)
+[← Back to README](../README.md)
