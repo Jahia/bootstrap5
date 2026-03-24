@@ -446,6 +446,60 @@ Switch URL approximated as `{mainNode.getPath()}.{lang}.html` (OQ-06, OQ-07).
 
 ---
 
+### Text — `Text/default.server.tsx`
+
+**Registers:** `bootstrap5nt:text` / `"default"`
+
+The JSP is a single line: `${currentNode.properties.text.string}`. The JS view reads
+the `text` property via `currentNode.getProperty("text").getString()` and injects it
+via `dangerouslySetInnerHTML`. The property is stored i18n and contains sanitized
+CKEditor HTML — no further escaping needed.
+
+---
+
+### List — `List/default.server.tsx`
+
+**Registers:** `jmix:list` / `"default"`
+
+**HTML layer only.** The JSP depends on Java-only constructs:
+
+| Blocked feature | Java API | Status |
+|---|---|---|
+| Paginated child list | `moduleMap.currentList` / `begin` / `end` | No JS equivalent |
+| Live-only AJAX load | `moduleMap.liveOnly` + jQuery `.load()` | No JS equivalent |
+| Sub-view delegation | `hidden.header` / `hidden.footer` | No JS equivalent |
+| Empty-state message | `moduleMap.emptyListMessage` | No JS equivalent |
+
+The JS view iterates all direct children via `currentNode.getNodes()` and renders
+each via `<Render>`. Edit-mode drop zone uses `<Area name="*">`. The clearfix div
+is present in edit mode only, mirroring the JSP.
+
+---
+
+### Privacy Settings Modal — `PrivacySettingsModal/bootstrap5.server.tsx`
+
+**Registers:** `wemnt:privacySettingsModal` / `"bootstrap5"`
+
+WEM (Jahia Experience Manager) GDPR privacy modal. Full HTML structure implemented
+(trigger button/link, Bootstrap modal, consent tabs, settings panel) with complete
+rendering parity to the JSP.
+
+**Pending WEM JS integration:**
+
+| Feature | WEM API | Status |
+|---|---|---|
+| Privacy instance init | `manageWemPrivacy.createInstance(...)` | No JS equivalent |
+| Profile download | `wem.downloadMyProfile()` | No JS equivalent |
+| Profile anonymize | `wem.anonymizeProfile(...)` | No JS equivalent |
+| Private browsing toggle | `wem.togglePrivateBrowsing(...)` | No JS equivalent |
+| Consent types URL | `url.context + url.baseLive + site.path` | No JS equivalent |
+
+The trigger and modal render correctly; interactive behaviour requires
+`wem-manage-privacy.js` to be loaded and `manageWemPrivacyInstances[id]` to be
+initialised (via an inline AddResources script, once the URL APIs are available).
+
+---
+
 ## Open questions (validation needed before production)
 
 | ID | Component | Issue |

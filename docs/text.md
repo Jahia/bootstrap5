@@ -81,4 +81,14 @@ Then in your JSP view, output the content unescaped (it's already sanitized by C
 
 ---
 
+## JS Rendering
+
+| Source file | Registers |
+|---|---|
+| `bootstrap5-js-rendering/src/components/Text/default.server.tsx` | `bootstrap5nt:text` / `"default"` |
+
+Reads the `text` property via `currentNode.getProperty("text").getString()` and injects it via `dangerouslySetInnerHTML` — identical to the JSP which outputs `${currentNode.properties.text.string}` unescaped.
+
+---
+
 [← Back to README](../README.md)
