@@ -68,16 +68,16 @@ Vertically collapsing content panels — great for FAQs, step-by-step guides, or
 
 ## JS Rendering
 
-| Fichier source | Enregistre |
+| Source file | Registers |
 |---|---|
 | `bootstrap5-js-rendering/src/components/Accordion/default.server.tsx` | `bootstrap5nt:accordions` / `"default"` |
 | `bootstrap5-js-rendering/src/components/Accordion/accordion-item.server.tsx` | `bootstrap5nt:accordion` / `"default"` |
 
-Le wrapper (`accordions`) rend `<div class="accordion [accordion-flush]" id="accordion-{uuid}">` et délègue les panneaux via `<RenderChildren nodeTypes="bootstrap5nt:accordion" />`.
+The group wrapper (`accordions`) renders `<div class="accordion [accordion-flush]" id="accordion-{uuid}">` and delegates panels via `<RenderChildren nodeTypes="bootstrap5nt:accordion" />`.
 
-Chaque panneau (`accordion`) lit `jcr:title`, `show`, et `text` (rich-text CKEditor via `dangerouslySetInnerHTML`). `data-bs-parent="#accordion-{uuidParent}"` est construit depuis `currentNode.getParent().getIdentifier()`.
+Each panel (`accordion`) reads `jcr:title`, `show`, and `text` (CKEditor rich-text via `dangerouslySetInnerHTML`). `data-bs-parent="#accordion-{parentUuid}"` is built from `currentNode.getParent().getIdentifier()`.
 
-> **Divergence JSP :** `accordions.jsp` contient un bug de copier-coller — le wrapper interne porte la classe `carousel-inner`. La vue JS supprime ce wrapper spurieux ; les `accordion-item` sont directement enfants du div `.accordion`.
+> **JSP divergence:** `accordions.jsp` has a copy-paste bug — the inner wrapper carries class `carousel-inner`. The JS view removes this spurious wrapper; accordion items sit directly inside the `.accordion` div.
 
 ---
 

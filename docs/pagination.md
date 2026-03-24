@@ -70,17 +70,17 @@ Pagination always needs to be placed **before** the list in the page structure (
 
 ## JS Rendering
 
-| Fichier source | Enregistre |
+| Source file | Registers |
 |---|---|
 | `bootstrap5-js-rendering/src/components/Pagination/default.server.tsx` | `bootstrap5nt:pagination` / `"default"` |
 
-> **Statut : couche HTML uniquement.** Le markup Bootstrap (précédent/suivant, fenêtre de pages, page active) est implémenté. L'intégration fonctionnelle est bloquée sur des constructs Java sans équivalent JS connu :
+> **Status: HTML layer only.** The Bootstrap pagination markup (previous/next, page window, active page) is implemented. Full integration is blocked on Java-only constructs with no known JS equivalent:
 >
-> - `uiComponents:getBindedComponent()` — résolution du composant liste lié
-> - `template:option` + `template:initPager` — initialisation de l'état du paginateur dans `moduleMap`
-> - Params HTTP `begin{id}` / `end{id}` / `pagesize{id}` — page courante
+> - `uiComponents:getBindedComponent()` — resolves the bound list component
+> - `template:option` + `template:initPager` — initialises pager state in `moduleMap`
+> - HTTP params `begin{id}` / `end{id}` / `pagesize{id}` — current page state
 >
-> Le composant affiche un placeholder informatif en mode édition et ne rend rien en mode live tant que ces APIs ne sont pas disponibles côté moteur JS.
+> The component renders an informative placeholder in edit mode and nothing in live mode until these APIs become available in the JS engine.
 
 ---
 

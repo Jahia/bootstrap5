@@ -239,16 +239,16 @@ For example, the *Class(es) for the navigation list* is set to `footer-links`, a
 
 ## JS Rendering
 
-| Fichier source | Enregistre |
+| Source file | Registers |
 |---|---|
 | `bootstrap5-js-rendering/src/components/Navbar/default.server.tsx` | `bootstrap5nt:navbar` / `"default"` |
 
-Consolide quatre JSPs en un seul fichier : `navbar.jsp`, `navbar.hidden.basenav.jsp`, `navbar.hidden.login.jsp`, `navbar.hidden.languages.jsp`.
+Consolidates four JSPs into a single file: `navbar.jsp`, `navbar.hidden.basenav.jsp`, `navbar.hidden.login.jsp`, `navbar.hidden.languages.jsp`.
 
-**Résolution de la marque :** `bootstrap5mix:siteBrand` sur le nœud site prend la priorité sur `bootstrap5mix:brand` sur le composant. Les images desktop/mobile utilisent des classes de visibilité responsive déduites du breakpoint extrait de `navClass` (ex : `"navbar-expand-lg"` → `expand = "lg"` → `d-none d-lg-inline-block`).
+**Brand resolution:** `bootstrap5mix:siteBrand` on the site node takes priority over `bootstrap5mix:brand` on the component. Desktop/mobile brand images use responsive visibility classes derived from the expand breakpoint extracted from `navClass` (e.g. `"navbar-expand-lg"` → `expand = "lg"` → `d-none d-lg-inline-block`).
 
-**Arborescence de navigation :** `getChildNodes(rootNode, "jmix:navMenuItem")`. Chaque item est routé par type de nœud : `jnt:navMenuText` → `#`, `jnt:externalLink` → URL brute, `jnt:page` → `node.getUrl()`, `jnt:nodeLink` → URL du nœud lié. La propriété multi-valeur `j:displayInMenuName` filtre les items par navbar. Dropdown de niveau 2 rendu quand `maxlevel ≥ 2`.
+**Navigation tree:** `getChildNodes(rootNode, "jmix:navMenuItem")`. Each item is routed by node type: `jnt:navMenuText` → `#`, `jnt:externalLink` → raw URL, `jnt:page` → `node.getUrl()`, `jnt:nodeLink` → linked node URL. The multi-value `j:displayInMenuName` property filters items per navbar. Level-2 dropdown rendered when `maxlevel ≥ 2`.
 
-**Points d'intégration non validés :** état de connexion (`renderContext.isLoggedIn()`), URLs de workspace (`url.logout`, `url.live`, etc.), action du formulaire de login (`ui:loginArea` n'a pas d'équivalent JS), liste des langues (`siteNode.getLanguages()`), URL de changement de langue (`b5:switchToLanguageLink`).
+**Pending integration points:** login state (`renderContext.isLoggedIn()`), workspace URLs (`url.logout`, `url.live`, etc.), login form action (`ui:loginArea` has no JS equivalent), language list (`siteNode.getLanguages()`), language switch URL (`b5:switchToLanguageLink`).
 
 [Back to README](../README.md)

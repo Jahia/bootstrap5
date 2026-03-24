@@ -91,16 +91,16 @@ Enable the `bootstrap5mix:advancedCarouselItem` mixin for per-slide customisatio
 
 ## JS Rendering
 
-| Fichier source | Enregistre |
+| Source file | Registers |
 |---|---|
 | `bootstrap5-js-rendering/src/components/Carousel/default.server.tsx` | `bootstrap5nt:carousel` / `"default"` |
 | `bootstrap5-js-rendering/src/components/Carousel/carousel-item.server.tsx` | `bootstrap5nt:carouselItem` / `"default"` |
 
-**Les slides sont rendus inline dans le parent.** Le JSP passait `currentStatus` (quelle slide est active) à chaque item via `<template:param>`. Les modules JS n'ont pas de mécanisme équivalent : le wrapper lit les propriétés de chaque item directement via `getChildNodes()` et attribue la classe `active` par `index === 0`.
+**Slides are rendered inline in the parent.** The JSP passed `currentStatus` (which slide is active) to each item via `<template:param>`. JS modules have no equivalent mechanism: the carousel wrapper reads each item's properties directly via `getChildNodes()` and assigns the `active` class by `index === 0`.
 
-`carousel-item.server.tsx` est une vue de secours pour le rendu direct d'un item. Elle détermine son état actif en vérifiant sa position parmi les siblings : `getChildNodes(currentNode.getParent(), "bootstrap5nt:carouselItem")[0]`.
+`carousel-item.server.tsx` is a standalone fallback view for direct rendering. It determines its active state by checking sibling position: `getChildNodes(currentNode.getParent(), "bootstrap5nt:carouselItem")[0]`.
 
-**Mode édition :** la div extérieure reçoit la classe `carouseledit` (pas `carousel`) et le wrapper intérieur `carousel-inneredit` — des hooks CSS qui désactivent l'animation dans l'éditeur. Chaque slide est rendue en miniature 64 px au lieu d'un item plein écran.
+**Edit mode:** the outer div gets class `carouseledit` (not `carousel`) and the inner wrapper gets `carousel-inneredit` — CSS hooks that disable animation in the editor. Each slide renders as a compact 64 px thumbnail instead of a full-screen item.
 
 ---
 

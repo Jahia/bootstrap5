@@ -75,17 +75,17 @@ Apply Bootstrap contextual colours to background, text, and border independently
 
 ## JS Rendering
 
-| Fichier source | Enregistre |
+| Source file | Registers |
 |---|---|
 | `bootstrap5-js-rendering/src/components/Card/default.server.tsx` | `bootstrap5nt:card` / `"default"` |
 
-Structure rendue :
-1. Image via l'utilitaire `ImageTag` avec `callerClass="card-img-top"` (uniquement si la propriété `image` est renseignée)
-2. Élément d'en-tête (`headerSize` : `div`, `h1`–`h6`) quand `jcr:title` est présent
-3. Corps (`cardBodyCssClass`) : enfants `jmix:droppableContent` récupérés via `getChildNodes()`, filtrés pour exclure le sous-nœud `"cardFooter"`
-4. Pied de page : texte libre + `<Area name="cardFooter">` optionnelle quand `freeFooter=true`
+Rendered structure:
+1. Image via the `ImageTag` helper with `callerClass="card-img-top"` (only when the `image` property is set)
+2. Header element (`headerSize`: `div`, `h1`–`h6`) when `jcr:title` is present
+3. Card body (`cardBodyCssClass`): `jmix:droppableContent` children fetched via `getChildNodes()`, filtered to exclude the `"cardFooter"` subnode
+4. Footer: plain text + optional `<Area name="cardFooter">` when `freeFooter=true`
 
-Les classes de couleur (`bg-{color}`, `text-{color}`, `border-{color}`) issues de `bootstrap5mix:colors` sont ajoutées à la div wrapper. La valeur `"default"` est systématiquement supprimée (pas de classe CSS produite).
+Colour classes (`bg-{color}`, `text-{color}`, `border-{color}`) from `bootstrap5mix:colors` are appended to the wrapper div. The `"default"` sentinel value is always stripped — no CSS class is emitted.
 
 ---
 

@@ -39,20 +39,20 @@ Enable the `bootstrap5mix:advancedBreadcrumb` mixin to unlock one extra option:
 
 ## JS Rendering
 
-| Fichier source | Enregistre |
+| Source file | Registers |
 |---|---|
 | `bootstrap5-js-rendering/src/components/Breadcrumb/default.server.tsx` | `bootstrap5nt:breadcrumb` / `"default"` |
 
-La collection des ancêtres utilise `currentNode.getAncestors().filter(n => n.isNodeType("jnt:page"))` (équivalent de `jcr:getParentsOfType`). Fallback : si la liste est vide (composant hors arborescence de pages), les ancêtres `jmix:navMenuItem` du `mainNode` sont utilisés.
+Ancestor collection uses `currentNode.getAncestors().filter(n => n.isNodeType("jnt:page"))` (equivalent to `jcr:getParentsOfType`). Fallback: if the list is empty (component placed outside a page tree), ancestors of `mainNode` filtered by `jmix:navMenuItem` are used instead.
 
-Affiche un `<ol class="breadcrumb">` renversé (racine en premier). Chaque item :
-- Chemin == `mainNode.getPath()` → `<li class="breadcrumb-item active" aria-current="page">`
-- Nœud non-affichable (approximé par `!isNodeType("jnt:page")`) → `<a href="#">`
-- Sinon → `<a href="{path}.html">`
+Renders a reversed `<ol class="breadcrumb">` (root first). Each item:
+- Path matches `mainNode.getPath()` → `<li class="breadcrumb-item active" aria-current="page">`
+- Non-displayable node (approximated as `!isNodeType("jnt:page")`) → `<a href="#">`
+- Otherwise → `<a href="{path}.html">`
 
-Quand le `mainNode` n'est pas une page, un item supplémentaire est ajouté pour la ressource elle-même (nom tronqué à 15–30 caractères).
+When `mainNode` is not a page, a final item is appended for the resource itself (name truncated to 15–30 characters).
 
-> **Questions ouvertes :** préfixe `url.base` non validé (rendu relatif en attendant) ; pas d'équivalent JS à `jcr:findDisplayableNode`.
+> **Open questions:** `url.base` prefix not yet validated (rendered as relative URL in the meantime); no JS equivalent for `jcr:findDisplayableNode`.
 
 ---
 

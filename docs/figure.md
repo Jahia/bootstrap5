@@ -86,13 +86,13 @@ Full property reference → [Images](images.md#bootstrap5miximageadvancedsetting
 
 ## JS Rendering
 
-| Fichier source | Enregistre |
+| Source file | Registers |
 |---|---|
 | `bootstrap5-js-rendering/src/components/Figure/default.server.tsx` | `bootstrap5nt:figure` / `"default"` |
 
-Le JSP délègue le rendu de l'image à `image.image.jsp` via `<template:include view="image">`. La vue JS utilise à la place l'utilitaire partagé `ImageTag` (`src/utils/image.tsx`) avec `callerClass="figure-img img-fluid"`.
+The JSP delegates image rendering to `image.image.jsp` via `<template:include view="image">`. The JS view uses the shared `ImageTag` helper (`src/utils/image.tsx`) instead, with `callerClass="figure-img img-fluid"`.
 
-`ImageTag` applique automatiquement toutes les options de `bootstrap5mix:imageAdvancedSettings` — classe, style, id, responsive, thumbnail, border-radius, alignement, alt. L'alignement de la légende vient de `bootstrap5mix:figureAdvancedSettings` (vérifié via `isNodeType()` avant lecture).
+`ImageTag` automatically applies all `bootstrap5mix:imageAdvancedSettings` options — class, style, id, responsive, thumbnail, border-radius, alignment, alt. Caption alignment comes from `bootstrap5mix:figureAdvancedSettings` (checked via `isNodeType()` before reading).
 
 ---
 

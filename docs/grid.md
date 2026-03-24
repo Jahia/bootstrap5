@@ -206,29 +206,29 @@ Setting level to `0` means "always show the content defined on the home page", r
 
 ## JS Rendering
 
-| Fichier source | Enregistre |
+| Source file | Registers |
 |---|---|
 | `bootstrap5-js-rendering/src/components/Grid/default.server.tsx` | `bootstrap5nt:grid` / `"default"` |
 
-Le JSP utilise `template:include view="hidden.*"` pour déléguer le rendu des colonnes à trois sous-vues séparées. Les modules JS n'ayant pas ce mécanisme, les quatre JSPs (`grid.jsp` + les trois `hidden`) sont consolidés dans un seul fichier TSX.
+The JSP uses `template:include view="hidden.*"` to delegate column rendering to three separate sub-views. Since JS modules have no equivalent mechanism, all four JSPs (`grid.jsp` + the three `hidden` sub-views) are consolidated into a single TSX file.
 
-**Trois couches de wrapper optionnelles** (vérifiées par mixin) :
+**Three optional wrapper layers** (each gated by a mixin check):
 
-| Mixin | Wrapper | Props clés |
+| Mixin | Wrapper | Key props |
 |---|---|---|
 | `bootstrap5mix:createSection` | `<section>`, `<main>`, `<aside>`… | `sectionElement`, `sectionId`, `sectionCssClass`, `sectionStyle`, `sectionRole`, `sectionAria` |
-| `bootstrap5mix:createContainer` | `<div class="container[-fluid]…">` | `containerType` dédupliqué de `containerCssClass` |
-| `bootstrap5mix:createRow` | `<div class="row…">` | `rowCssClass`, vAlign, hAlign, gX, gY — `"default"` supprimé |
+| `bootstrap5mix:createContainer` | `<div class="container[-fluid]…">` | `containerType` deduplicated from `containerCssClass` |
+| `bootstrap5mix:createRow` | `<div class="row…">` | `rowCssClass`, vAlign, hAlign, gX, gY — `"default"` sentinel stripped |
 
-**Trois modes de colonnes :**
+**Three column modes:**
 
-| Mode | Colonnes | Noms des areas |
+| Mode | Columns | Area names |
 |---|---|---|
-| `bootstrap5mix:predefinedGrid` | `grid="4_8"` découpé sur `_`, `col-md-{span}` | Calculés par `predefinedAreaNames()` : `side`/`main`/`extra`/`extra2` selon les proportions |
-| `bootstrap5mix:customGrid` | `gridClasses` séparé par virgules | `col0`, `col1`, … |
-| *(aucun)* — nogrid | Zone unique | `"main"` (ou nom du nœud dans `/modules`) |
+| `bootstrap5mix:predefinedGrid` | `grid="4_8"` split on `_`, `col-md-{span}` | Computed by `predefinedAreaNames()`: `side`/`main`/`extra`/`extra2` based on proportions |
+| `bootstrap5mix:customGrid` | `gridClasses` comma-split | `col0`, `col1`, … |
+| *(none)* — nogrid | Single area | `"main"` (or node name inside `/modules`) |
 
-`predefinedAreaNames()` reproduit exactement la logique `choose/when` du JSP : `[4,8]` → `["side","main"]`, `[3,6,3]` → `["side","main","extra"]`, etc.
+`predefinedAreaNames()` mirrors the JSP `choose/when` logic exactly: `[4,8]` → `["side","main"]`, `[3,6,3]` → `["side","main","extra"]`, etc.
 
 ---
 

@@ -230,21 +230,21 @@ The `bootstrap5mix:Offcanvas` mixin is a template mixin that extends `bootstrap5
 
 ## JS Rendering
 
-| Fichier source | Enregistre |
+| Source file | Registers |
 |---|---|
 | `bootstrap5-js-rendering/src/components/Button/default.server.tsx` | `bootstrap5nt:button` / `"default"` |
 
-Le composant le plus complexe : six variantes de `buttonType` produisent chacune un HTML différent.
+The most complex component: six `buttonType` variants each produce different HTML.
 
-| `buttonType` | Rendu |
+| `buttonType` | Output |
 |---|---|
-| `internalLink` | `<a href="{url du nœud cible}">` |
+| `internalLink` | `<a href="{target node URL}">` |
 | `externalLink` | `<a href="{externalLink}">` |
-| `modal` | `<button data-bs-toggle="modal">` + `.modal` avec `<Area>` pour le corps |
-| `collapse` | `<a data-bs-toggle="collapse">` + `.collapse` avec `<Area>` |
-| `popover` | `<button data-bs-toggle="popover">` + `<AddResources>` pour `new bootstrap.Popover(el)` |
-| `Offcanvas` | `<button data-bs-toggle="offcanvas">` + `.offcanvas` avec `<Area>` |
+| `modal` | `<button data-bs-toggle="modal">` + `.modal` div with `<Area>` for the body |
+| `collapse` | `<a data-bs-toggle="collapse">` + `.collapse` div with `<Area>` |
+| `popover` | `<button data-bs-toggle="popover">` + `<AddResources>` for `new bootstrap.Popover(el)` |
+| `Offcanvas` | `<button data-bs-toggle="offcanvas">` + `.offcanvas` panel with `<Area>` |
 
-La classe CSS du bouton est construite par `buildButtonClass()` qui reproduit exactement la logique JSP : `btn-{style}` (ou `btn-outline-{style}`), `btn-{size}`, `btn-block`, `disabled`, `active`, `text-nowrap`, `stretched-link`. Quand `style === "custom"`, seul le `cssClass` libre est appliqué — pas de préfixe `btn-*`.
+The button CSS class is built by `buildButtonClass()`, which mirrors the JSP logic exactly: `btn-{style}` (or `btn-outline-{style}`), `btn-{size}`, `btn-block`, `disabled`, `active`, `text-nowrap`, `stretched-link`. When `style === "custom"`, only the free-form `cssClass` is applied — no `btn-*` prefix.
 
 [Back to README](../README.md)
