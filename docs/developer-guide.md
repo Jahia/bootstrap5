@@ -170,6 +170,152 @@ Provides EL functions exposed via the `b5:` taglib prefix:
 
 ---
 
+## Module definition split
+
+Node type definitions are spread across two Java modules. Understanding the split matters if you add new types or move existing ones.
+
+### Current split
+
+| Module | CND file | What it defines |
+|---|---|---|
+| `bootstrap5-core` | `bootstrap5-core/src/main/resources/META-INF/definitions.cnd` | `bootstrap5mix:component`, `bootstrap5nt:version` |
+| `bootstrap5-components` | `bootstrap5-components/src/main/resources/META-INF/definitions.cnd` | All component and mixin types (`bootstrap5nt:*`, `bootstrap5mix:*`) |
+
+**`bootstrap5mix:component`** is the base mixin that every droppable component must extend (`> jnt:content, bootstrap5mix:component`). It lives in `bootstrap5-core` so that a lightweight "assets only" installation does not need to pull in the full components bundle. The `bootstrap5-components` module declares `<jahia-depends>default,bootstrap5-core,skins</jahia-depends>`, which ensures `bootstrap5-core` is loaded first.
+
+### Moving a definition to another module
+
+When refactoring requires moving a definition (e.g. splitting off a new module), follow this procedure on live platforms. Skipping it causes the JCR definition registry to be out of sync.
+
+**Example:** moving `bootstrap5mix:myMixin` from `bootstrap5-components` to a new `bootstrap5-extras` module.
+
+#### Code changes
+
+1. **Source module** — remove the definition from `definitions.cnd` (leave a comment explaining where it went):
+   ```cnd
+   // bootstrap5mix:myMixin moved to bootstrap5-extras
+   ```
+
+2. **Target module** — add the definition to its `definitions.cnd` and declare it as a dependency wherever it is used:
+   ```xml
+   <!-- bootstrap5-components pom.xml -->
+   <jahia-depends>default,bootstrap5-core,bootstrap5-extras,skins</jahia-depends>
+   ```
+
+3. **Consumer modules** — update any `<jahia-depends>` that relied on the source module for this type.
+
+#### Deployment procedure on a running platform
+
+> Moving definitions requires a full stop/start cycle. Hot-deploy alone is not sufficient.
+
+1. Stop the source module (e.g. `bootstrap5-components v1`) and any modules that depend on it
+2. Uninstall those modules from the OSGi container
+3. Install the updated source module (v2, without the moved type)
+4. Install the target module (v1, with the moved type)
+5. Run this SQL query in the Jahia DB Tools (`/tools/sql-explorer.jsp`):
+   ```sql
+   DELETE FROM jahia_nodetypes_provider;
+   ```
+6. Restart the **processing server**
+7. Start the updated modules in dependency order (target module first, then consumers)
+8. Restart all other cluster nodes
+
+After the restart, verify the type is now listed under the target module in the [Definitions Browser](http://localhost:8080/modules/tools/definitionsBrowser.jsp).
+
+> ⚠️ The `DELETE FROM jahia_nodetypes_provider` step clears the cached type-to-module mapping. Without it, Jahia may still associate the moved type with the old module and reject the new one as a conflict.
+
+---
+
+## Building and packaging
+
+### Java bundles (OSGi JARs)
+
+Each Java module compiles to an OSGi bundle (`.jar`). Build all of them from the repository root:
+
+```bash
+mvn clean package
+```
+
+Or build a single module:
+
+```bash
+mvn package -pl bootstrap5-core
+mvn package -pl bootstrap5-components
+```
+
+The output JARs are placed in each module's `target/` directory:
+
+```
+bootstrap5-core/target/bootstrap5-core-{version}.jar
+bootstrap5-components/target/bootstrap5-components-{version}.jar
+```
+
+### Jahia Package (distribution zip)
+
+`bootstrap5-package` assembles a Jahia installation package — a JAR whose manifest describes all included modules. It is built as part of the full build:
+
+```bash
+mvn clean package -pl bootstrap5-package
+```
+
+The package bundles:
+- `bootstrap5-core`
+- `bootstrap5-components`
+- `bootstrap5-templates-starter`
+- `skins` (external dependency, pulled from Jahia Nexus)
+
+The resulting file is:
+
+```
+bootstrap5-package/target/bootstrap5-package-{version}.jar
+```
+
+Upload it to a Jahia instance via **Administration → Available Modules → Upload**.
+
+> To include `bootstrap5-js-rendering` in a future package release, add it as a `<dependency>` in `bootstrap5-package/pom.xml` and update the `jahia.manifest.description` property.
+
+### JS rendering bundle (npm `.tgz`)
+
+`bootstrap5-js-rendering` is a Node.js module, not a Maven artifact. It is built with Yarn and packaged as a `.tgz` that Jahia loads as a JS module bundle:
+
+```bash
+cd bootstrap5-js-rendering
+yarn          # install dependencies (first time only)
+yarn build    # TypeScript check + Vite bundle + yarn pack
+```
+
+`yarn build` runs three steps in sequence:
+
+| Step | Command | Output |
+|---|---|---|
+| Type check | `tsc --noEmit` | Errors only |
+| Bundle | `vite build` | `dist/server/index.js` |
+| Pack | `yarn pack --out dist/package.tgz` | `dist/package.tgz` |
+
+Deploy `dist/package.tgz` to Jahia via **Administration → Available Modules → Upload** (same UI as Java bundles).
+
+For continuous development:
+
+```bash
+yarn dev       # watch mode — re-bundles on every save
+yarn watch     # alias for dev
+```
+
+The `jahia` block in `package.json` tells Jahia which file to use as the server entry point and where static client assets live:
+
+```json
+"jahia": {
+  "module-dependencies": "bootstrap5-components",
+  "module-type": "module",
+  "server": "dist/server/index.js",
+  "static-resources": "/dist/client,/dist/assets"
+}
+```
+
+`module-dependencies: "bootstrap5-components"` ensures the CND definitions from `bootstrap5-components` are loaded before the JS views register themselves.
+
+---
+
 ## Content node type definitions (CND)
 
 Node types are defined in `definitions.cnd` files. Key conventions:
