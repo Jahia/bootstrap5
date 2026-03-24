@@ -57,4 +57,18 @@ Right-click the **+ Any Content** button of the list you want to rename → **Ed
 
 ---
 
+## JS Rendering
+
+| Fichier source | Enregistre |
+|---|---|
+| `bootstrap5-js-rendering/src/components/Tabs/default.server.tsx` | `bootstrap5nt:tabs` / `"default"` |
+
+Les enfants sont des nœuds `jnt:contentList` récupérés via `getChildNodes(currentNode, "jnt:contentList")`. Chaque liste devient un panneau rendu via `<Render content={listNode} />`.
+
+**`toAnchor(name)`** — fonction locale remplaçant le taglib Java `b5:replaceAll` : remplace `[^A-Za-z0-9_]` par `-`, préfixe `tab-` si le premier caractère n'est pas une lettre.
+
+Le deep-linking (hash URL ↔ onglet actif) est géré par `DEEP_LINK_SCRIPT`, un snippet vanilla JS injecté via `<AddResources type="inline">` (dans `<head>` en mode édition, `<body>` en live). Aucun island React nécessaire.
+
+---
+
 [← Back to README](../README.md)

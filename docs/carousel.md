@@ -89,4 +89,19 @@ Enable the `bootstrap5mix:advancedCarouselItem` mixin for per-slide customisatio
 
 ---
 
+## JS Rendering
+
+| Fichier source | Enregistre |
+|---|---|
+| `bootstrap5-js-rendering/src/components/Carousel/default.server.tsx` | `bootstrap5nt:carousel` / `"default"` |
+| `bootstrap5-js-rendering/src/components/Carousel/carousel-item.server.tsx` | `bootstrap5nt:carouselItem` / `"default"` |
+
+**Les slides sont rendus inline dans le parent.** Le JSP passait `currentStatus` (quelle slide est active) à chaque item via `<template:param>`. Les modules JS n'ont pas de mécanisme équivalent : le wrapper lit les propriétés de chaque item directement via `getChildNodes()` et attribue la classe `active` par `index === 0`.
+
+`carousel-item.server.tsx` est une vue de secours pour le rendu direct d'un item. Elle détermine son état actif en vérifiant sa position parmi les siblings : `getChildNodes(currentNode.getParent(), "bootstrap5nt:carouselItem")[0]`.
+
+**Mode édition :** la div extérieure reçoit la classe `carouseledit` (pas `carousel`) et le wrapper intérieur `carousel-inneredit` — des hooks CSS qui désactivent l'animation dans l'éditeur. Chaque slide est rendue en miniature 64 px au lieu d'un item plein écran.
+
+---
+
 [← Back to README](../README.md)

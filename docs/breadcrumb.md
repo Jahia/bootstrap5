@@ -37,4 +37,23 @@ Enable the `bootstrap5mix:advancedBreadcrumb` mixin to unlock one extra option:
 
 ---
 
+## JS Rendering
+
+| Fichier source | Enregistre |
+|---|---|
+| `bootstrap5-js-rendering/src/components/Breadcrumb/default.server.tsx` | `bootstrap5nt:breadcrumb` / `"default"` |
+
+La collection des ancêtres utilise `currentNode.getAncestors().filter(n => n.isNodeType("jnt:page"))` (équivalent de `jcr:getParentsOfType`). Fallback : si la liste est vide (composant hors arborescence de pages), les ancêtres `jmix:navMenuItem` du `mainNode` sont utilisés.
+
+Affiche un `<ol class="breadcrumb">` renversé (racine en premier). Chaque item :
+- Chemin == `mainNode.getPath()` → `<li class="breadcrumb-item active" aria-current="page">`
+- Nœud non-affichable (approximé par `!isNodeType("jnt:page")`) → `<a href="#">`
+- Sinon → `<a href="{path}.html">`
+
+Quand le `mainNode` n'est pas une page, un item supplémentaire est ajouté pour la ressource elle-même (nom tronqué à 15–30 caractères).
+
+> **Questions ouvertes :** préfixe `url.base` non validé (rendu relatif en attendant) ; pas d'équivalent JS à `jcr:findDisplayableNode`.
+
+---
+
 [← Back to README](../README.md)

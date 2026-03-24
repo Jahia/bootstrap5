@@ -235,4 +235,20 @@ For example, the *Class(es) for the navigation list* is set to `footer-links`, a
 </ul>
 ```
 
+---
+
+## JS Rendering
+
+| Fichier source | Enregistre |
+|---|---|
+| `bootstrap5-js-rendering/src/components/Navbar/default.server.tsx` | `bootstrap5nt:navbar` / `"default"` |
+
+Consolide quatre JSPs en un seul fichier : `navbar.jsp`, `navbar.hidden.basenav.jsp`, `navbar.hidden.login.jsp`, `navbar.hidden.languages.jsp`.
+
+**Résolution de la marque :** `bootstrap5mix:siteBrand` sur le nœud site prend la priorité sur `bootstrap5mix:brand` sur le composant. Les images desktop/mobile utilisent des classes de visibilité responsive déduites du breakpoint extrait de `navClass` (ex : `"navbar-expand-lg"` → `expand = "lg"` → `d-none d-lg-inline-block`).
+
+**Arborescence de navigation :** `getChildNodes(rootNode, "jmix:navMenuItem")`. Chaque item est routé par type de nœud : `jnt:navMenuText` → `#`, `jnt:externalLink` → URL brute, `jnt:page` → `node.getUrl()`, `jnt:nodeLink` → URL du nœud lié. La propriété multi-valeur `j:displayInMenuName` filtre les items par navbar. Dropdown de niveau 2 rendu quand `maxlevel ≥ 2`.
+
+**Points d'intégration non validés :** état de connexion (`renderContext.isLoggedIn()`), URLs de workspace (`url.logout`, `url.live`, etc.), action du formulaire de login (`ui:loginArea` n'a pas d'équivalent JS), liste des langues (`siteNode.getLanguages()`), URL de changement de langue (`b5:switchToLanguageLink`).
+
 [Back to README](../README.md)

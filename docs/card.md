@@ -73,4 +73,20 @@ Apply Bootstrap contextual colours to background, text, and border independently
 
 ---
 
+## JS Rendering
+
+| Fichier source | Enregistre |
+|---|---|
+| `bootstrap5-js-rendering/src/components/Card/default.server.tsx` | `bootstrap5nt:card` / `"default"` |
+
+Structure rendue :
+1. Image via l'utilitaire `ImageTag` avec `callerClass="card-img-top"` (uniquement si la propriété `image` est renseignée)
+2. Élément d'en-tête (`headerSize` : `div`, `h1`–`h6`) quand `jcr:title` est présent
+3. Corps (`cardBodyCssClass`) : enfants `jmix:droppableContent` récupérés via `getChildNodes()`, filtrés pour exclure le sous-nœud `"cardFooter"`
+4. Pied de page : texte libre + `<Area name="cardFooter">` optionnelle quand `freeFooter=true`
+
+Les classes de couleur (`bg-{color}`, `text-{color}`, `border-{color}`) issues de `bootstrap5mix:colors` sont ajoutées à la div wrapper. La valeur `"default"` est systématiquement supprimée (pas de classe CSS produite).
+
+---
+
 [← Back to README](../README.md)

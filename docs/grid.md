@@ -204,4 +204,32 @@ Setting level to `0` means "always show the content defined on the home page", r
 
 ---
 
+## JS Rendering
+
+| Fichier source | Enregistre |
+|---|---|
+| `bootstrap5-js-rendering/src/components/Grid/default.server.tsx` | `bootstrap5nt:grid` / `"default"` |
+
+Le JSP utilise `template:include view="hidden.*"` pour déléguer le rendu des colonnes à trois sous-vues séparées. Les modules JS n'ayant pas ce mécanisme, les quatre JSPs (`grid.jsp` + les trois `hidden`) sont consolidés dans un seul fichier TSX.
+
+**Trois couches de wrapper optionnelles** (vérifiées par mixin) :
+
+| Mixin | Wrapper | Props clés |
+|---|---|---|
+| `bootstrap5mix:createSection` | `<section>`, `<main>`, `<aside>`… | `sectionElement`, `sectionId`, `sectionCssClass`, `sectionStyle`, `sectionRole`, `sectionAria` |
+| `bootstrap5mix:createContainer` | `<div class="container[-fluid]…">` | `containerType` dédupliqué de `containerCssClass` |
+| `bootstrap5mix:createRow` | `<div class="row…">` | `rowCssClass`, vAlign, hAlign, gX, gY — `"default"` supprimé |
+
+**Trois modes de colonnes :**
+
+| Mode | Colonnes | Noms des areas |
+|---|---|---|
+| `bootstrap5mix:predefinedGrid` | `grid="4_8"` découpé sur `_`, `col-md-{span}` | Calculés par `predefinedAreaNames()` : `side`/`main`/`extra`/`extra2` selon les proportions |
+| `bootstrap5mix:customGrid` | `gridClasses` séparé par virgules | `col0`, `col1`, … |
+| *(aucun)* — nogrid | Zone unique | `"main"` (ou nom du nœud dans `/modules`) |
+
+`predefinedAreaNames()` reproduit exactement la logique `choose/when` du JSP : `[4,8]` → `["side","main"]`, `[3,6,3]` → `["side","main","extra"]`, etc.
+
+---
+
 [← Back to README](../README.md)

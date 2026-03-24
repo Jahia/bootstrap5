@@ -226,4 +226,25 @@ extends = bootstrap5nt:button
 
 The `bootstrap5mix:Offcanvas` mixin is a template mixin that extends `bootstrap5nt:button`. It introduces properties such as `OffcanvasTitle` for specifying the title of the Offcanvas, `placement` for selecting the placement of the Offcanvas (start, end, or bottom), `enableBackdrop` for enabling a backdrop on the body, and `enableBodyScrolling` for allowing body scrolling while the Offcanvas is open.
 
+---
+
+## JS Rendering
+
+| Fichier source | Enregistre |
+|---|---|
+| `bootstrap5-js-rendering/src/components/Button/default.server.tsx` | `bootstrap5nt:button` / `"default"` |
+
+Le composant le plus complexe : six variantes de `buttonType` produisent chacune un HTML différent.
+
+| `buttonType` | Rendu |
+|---|---|
+| `internalLink` | `<a href="{url du nœud cible}">` |
+| `externalLink` | `<a href="{externalLink}">` |
+| `modal` | `<button data-bs-toggle="modal">` + `.modal` avec `<Area>` pour le corps |
+| `collapse` | `<a data-bs-toggle="collapse">` + `.collapse` avec `<Area>` |
+| `popover` | `<button data-bs-toggle="popover">` + `<AddResources>` pour `new bootstrap.Popover(el)` |
+| `Offcanvas` | `<button data-bs-toggle="offcanvas">` + `.offcanvas` avec `<Area>` |
+
+La classe CSS du bouton est construite par `buildButtonClass()` qui reproduit exactement la logique JSP : `btn-{style}` (ou `btn-outline-{style}`), `btn-{size}`, `btn-block`, `disabled`, `active`, `text-nowrap`, `stretched-link`. Quand `style === "custom"`, seul le `cssClass` libre est appliqué — pas de préfixe `btn-*`.
+
 [Back to README](../README.md)
