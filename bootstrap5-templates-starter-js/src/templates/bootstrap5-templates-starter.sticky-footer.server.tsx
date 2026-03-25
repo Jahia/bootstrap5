@@ -44,9 +44,9 @@ jahiaComponent(
   },
   function TemplateStickyFooterView() {
     const { renderContext, currentNode } = useServerContext();
-    const isEditMode: boolean = renderContext.isEditMode?.() ?? false;
-    const language: string =
-      renderContext.getMainResourceLocale?.()?.getLanguage?.() ?? "en";
+    const isEditMode: boolean = renderContext.isEditMode() as unknown as boolean;
+    const locale = renderContext.getMainResourceLocale();
+    const language: string = locale ? String(locale.getLanguage()) : "en";
     const isRtl = isRtlLanguage(language);
 
     return (
@@ -58,7 +58,7 @@ jahiaComponent(
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>{currentNode.getDisplayableName?.() ?? ""}</title>
+          <title>{currentNode.getDisplayableName()}</title>
           <AddResources type="css" resources="bootstrap.min.css" />
           {isEditMode && (
             <AddResources type="css" resources="starter-edit.css" />
