@@ -151,9 +151,9 @@ jahiaComponent(
       .join(" ");
 
     // ── Grid columns content ───────────────────────────────────────────────
-    const SectionTag = (sectionElement ?? "section") as keyof JSX.IntrinsicElements;
+    const SectionTag = (sectionElement ?? "section") as ('section' | 'div');
 
-    const GridColumns = (): JSX.Element => {
+    const GridColumns = () => {
       if (isPredefined) {
         // predefinedGrid — split "4_8" → [4, 8], compute area names
         const parts = (grid ?? "12").split("_").map(Number);
@@ -178,7 +178,7 @@ jahiaComponent(
                   {/* ⚠️ moduleType/level not yet confirmed for JS Area — validate absoluteArea support */}
                   <Area
                     name={areaPath}
-                    nodeTypes="jmix:droppableContent"
+                    nodeType="jmix:droppableContent"
                   />
                 </div>
               );
@@ -208,7 +208,7 @@ jahiaComponent(
                 <div key={areaPath} className={colClass}>
                   <Area
                     name={areaPath}
-                    nodeTypes="jmix:droppableContent"
+                    nodeType="jmix:droppableContent"
                   />
                 </div>
               );
@@ -225,7 +225,7 @@ jahiaComponent(
             !isModulesPath && !isStudioMode && (
               <span className="text-muted">#{currentNode.getName()}</span>
             )}
-          <Area name={colName} nodeTypes="jmix:droppableContent" />
+          <Area name={colName} nodeType="jmix:droppableContent" />
         </>
       );
     };

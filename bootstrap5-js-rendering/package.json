@@ -2,6 +2,7 @@
   "name": "bootstrap5-js-rendering",
   "version": "1.0.0-SNAPSHOT",
   "description": "Bootstrap 5 for Jahia — JS/React rendering module (reference implementation)",
+  "packageManager": "yarn@4.12.0",
   "type": "module",
   "license": "MIT",
   "author": "Jahia Solutions Group SA",
@@ -11,7 +12,7 @@
   ],
   "scripts": {
     "build": "tsc --noEmit && vite build && yarn pack --out dist/package.tgz",
-    "build:maven": "tsc --noEmit && vite build && yarn pack && mv *.tgz dist/package.tgz",
+    "build:maven": "tsc --noEmit && vite build && npm pack && mkdir -p dist && mv bootstrap5-js-rendering-*.tgz dist/package.tgz",
     "clean": "rm -rf dist/",
     "dev": "vite build --watch",
     "deploy": "jahia-deploy",
@@ -28,7 +29,7 @@
     "vite": "^7.0.0"
   },
   "engines": {
-    "node": ">=22.0.0",
+    "node": ">=18.0.0",
     "yarn": ">=4.0.0"
   },
   "jahia": {

@@ -79,12 +79,12 @@ jahiaComponent(
               targetTag="body"
             />
           )}
-          <Area path="header" areaAsSubNode={true} moduleType="absoluteArea" level={0} />
+          <Area name="header" />
           <main className="flex-shrink-0">
-            <Area path="pagecontent" areaAsSubNode={true} />
+            <Area name="pagecontent" />
           </main>
           <footer className="mt-auto">
-            <Area path="footer" areaAsSubNode={true} moduleType="absoluteArea" level={0} />
+            <Area name="footer" />
           </footer>
         </body>
       </html>

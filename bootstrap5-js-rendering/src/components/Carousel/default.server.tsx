@@ -28,6 +28,7 @@ import {
   jahiaComponent,
   useServerContext,
 } from "@jahia/javascript-modules-library";
+import type { JCRNodeWrapper } from "org.jahia.services.content";
 
 interface CarouselAdvancedSettings {
   interval?: number;
@@ -94,7 +95,7 @@ jahiaComponent(
     if (!wrap) bsProps["data-bs-wrap"] = "false";
 
     // ── Slide items ────────────────────────────────────────────────────────
-    const items = getChildNodes(currentNode, "bootstrap5nt:carouselItem");
+    const items = getChildNodes(currentNode).filter(n => n.isNodeType("bootstrap5nt:carouselItem"));
 
     return (
       <>
@@ -123,7 +124,7 @@ jahiaComponent(
               const title = item.getPropertyAsString("jcr:title") ?? "";
               const caption = item.getPropertyAsString("caption") ?? "";
               // ⚠️ image weakref — validate getProperty("image").getNode() in JS context
-              const imageNode = item.getProperty("image")?.getNode?.();
+              const imageNode = item.getProperty("image")?.getNode?.() as JCRNodeWrapper | undefined;
               const imageUrl = imageNode?.getUrl?.() ?? "";
 
               // bootstrap5mix:advancedCarouselItem
@@ -199,7 +200,7 @@ jahiaComponent(
         </div>
 
         {/* Edit-mode drop zone for new slides */}
-        {isEditMode && <Area name="*" nodeTypes="bootstrap5nt:carouselItem" />}
+        {isEditMode && <Area name="*" nodeType="bootstrap5nt:carouselItem" />}
       </>
     );
   },

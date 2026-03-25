@@ -37,10 +37,10 @@ jahiaComponent(
           className={`accordion${flush ? " accordion-flush" : ""}`}
           id={`accordion-${id}`}
         >
-          <RenderChildren nodeTypes="bootstrap5nt:accordion" />
+          <RenderChildren filter="bootstrap5nt:accordion" />
         </div>
         {/* Edit-mode drop zone for new accordion panels */}
-        <Area name="panels" nodeTypes="bootstrap5nt:accordion" />
+        <Area name="panels" nodeType="bootstrap5nt:accordion" />
       </>
     );
   },

@@ -29,6 +29,7 @@
  *     Approximated as an empty string prefix; validate with Jahia JS engine team.
  */
 import { jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import type { JCRNodeWrapper } from "org.jahia.services.content";
 
 /** Truncates a string like functions:abbreviate(str, 15, 30, '...') */
 function abbreviate(str: string, lower: number, upper: number, append: string): string {
@@ -50,8 +51,7 @@ jahiaComponent(
     // ── Collect ancestor page nodes ────────────────────────────────────────
     // Equivalent to jcr:getParentsOfType(currentNode, 'jnt:page')
     // getAncestors() returns nodes from root to parent in order.
-    let pageNodes = currentNode
-      .getAncestors()
+    let pageNodes = (currentNode.getAncestors() as unknown as JCRNodeWrapper[])
       .filter((n) => n.isNodeType("jnt:page"));
 
     // Fallback: if the component is not under a page, walk mainResource ancestors
@@ -59,12 +59,11 @@ jahiaComponent(
       if (mainNode.isNodeType("jnt:page")) {
         // getMeAndParentsOfType equivalent — include mainNode itself
         pageNodes = [
-          ...mainNode.getAncestors().filter((n) => n.isNodeType("jmix:navMenuItem")),
+          ...(mainNode.getAncestors() as unknown as JCRNodeWrapper[]).filter((n) => n.isNodeType("jmix:navMenuItem")),
           mainNode,
         ];
       } else {
-        pageNodes = mainNode
-          .getAncestors()
+        pageNodes = (mainNode.getAncestors() as unknown as JCRNodeWrapper[])
           .filter((n) => n.isNodeType("jmix:navMenuItem"));
       }
     }

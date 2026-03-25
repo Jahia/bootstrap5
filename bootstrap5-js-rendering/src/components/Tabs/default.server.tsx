@@ -83,7 +83,7 @@ jahiaComponent(
     const alignClass = align !== "justify-content-start" ? ` ${align}` : "";
 
     // Fetch jnt:contentList children — each one is a tab panel
-    const subLists = getChildNodes(currentNode, "jnt:contentList");
+    const subLists = getChildNodes(currentNode).filter(n => n.isNodeType("jnt:contentList"));
     const tabsId = `tabs-${currentNode.getIdentifier()}`;
 
     return (
@@ -140,14 +140,14 @@ jahiaComponent(
                 id={anchorName}
                 role="tabpanel"
               >
-                <Render content={listNode} />
+                <Render node={listNode} />
               </div>
             );
           })}
         </div>
 
         {/* Edit-mode drop zone for new tab panels */}
-        <Area name="tabs" nodeTypes="jnt:contentList" />
+        <Area name="tabs" nodeType="jnt:contentList" />
 
         {/* Deep-linking init script — placed in body (head in edit mode, same as JSP) */}
         <AddResources

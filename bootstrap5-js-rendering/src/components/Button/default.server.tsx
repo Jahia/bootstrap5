@@ -212,7 +212,7 @@ jahiaComponent(
                   )}
                   <div className="modal-body">
                     {/* Render droppable child content */}
-                    <Area name="modal-body" nodeTypes="jmix:droppableContent" />
+                    <Area name="modal-body" nodeType="jmix:droppableContent" />
                   </div>
                   <div className="modal-footer">
                     <button
@@ -250,7 +250,7 @@ jahiaComponent(
               {label}
             </a>
             <div className="collapse" id={collapseId}>
-              <Area name="collapse-body" nodeTypes="jmix:droppableContent" />
+              <Area name="collapse-body" nodeType="jmix:droppableContent" />
             </div>
           </>
         );
@@ -327,7 +327,7 @@ jahiaComponent(
                 </div>
               )}
               <div className="offcanvas-body">
-                <Area name="offcanvas-body" nodeTypes="jmix:droppableContent" />
+                <Area name="offcanvas-body" nodeType="jmix:droppableContent" />
               </div>
             </div>
           </>

@@ -65,7 +65,7 @@ function resolveNavItem(
     url = page.getUrl?.() ?? `${page.getPath()}.html`;
     title = page.getDisplayableName();
   } else if (page.isNodeType("jnt:nodeLink")) {
-    const linkedNode = page.getProperty("j:node")?.getNode?.();
+    const linkedNode = page.getProperty("j:node")?.getNode?.() as JCRNodeWrapper | undefined;
     if (linkedNode) {
       url = linkedNode.getUrl?.() ?? `${linkedNode.getPath()}.html`;
       title = page.getPropertyAsString("jcr:title") || linkedNode.getDisplayableName();
@@ -85,7 +85,7 @@ function resolveNavItem(
  */
 function isDisplayedInMenu(page: JCRNodeWrapper, navbarName: string): boolean {
   // ⚠️ Multi-value property access — validate API for getPropertyValues("j:displayInMenuName")
-  const displayInMenuValues = page.getPropertyValues?.("j:displayInMenuName");
+  const displayInMenuValues = (page.getProperty("j:displayInMenuName") as any)?.getValues?.();
   if (!displayInMenuValues || displayInMenuValues.length === 0) return true;
   return displayInMenuValues.some((v: { getString: () => string }) => v.getString() === navbarName);
 }
@@ -111,12 +111,12 @@ jahiaComponent(
     let brandText = "";
 
     if (siteNode?.isNodeType("bootstrap5mix:siteBrand")) {
-      brandImage = siteNode.getProperty("brandImage")?.getNode?.();
-      brandImageMobile = siteNode.getProperty("brandImageMobile")?.getNode?.();
+      brandImage = siteNode.getProperty("brandImage")?.getNode?.() as JCRNodeWrapper | undefined;
+      brandImageMobile = siteNode.getProperty("brandImageMobile")?.getNode?.() as JCRNodeWrapper | undefined;
       brandText = siteNode.getPropertyAsString("brandText") ?? "";
     } else if (currentNode.isNodeType("bootstrap5mix:brand")) {
-      brandImage = currentNode.getProperty("brandImage")?.getNode?.();
-      brandImageMobile = currentNode.getProperty("brandImageMobile")?.getNode?.();
+      brandImage = currentNode.getProperty("brandImage")?.getNode?.() as JCRNodeWrapper | undefined;
+      brandImageMobile = currentNode.getProperty("brandImageMobile")?.getNode?.() as JCRNodeWrapper | undefined;
       brandText = currentNode.getPropertyAsString("brandText") ?? "";
     }
 
@@ -171,8 +171,7 @@ jahiaComponent(
     // Resolve current page node (walk up to jmix:navMenuItem if needed)
     let currentPageNode: JCRNodeWrapper = mainNode;
     if (!currentPageNode.isNodeType("jmix:navMenuItem")) {
-      currentPageNode = currentPageNode
-        .getAncestors()
+      currentPageNode = (currentPageNode.getAncestors() as unknown as JCRNodeWrapper[])
         .reverse()
         .find((n) => n.isNodeType("jmix:navMenuItem")) ?? currentPageNode;
     }
@@ -181,9 +180,9 @@ jahiaComponent(
     if (root === "currentPage") {
       rootNode = currentPageNode;
     } else if (root === "parentPage") {
-      rootNode = currentPageNode.getParent?.();
+      rootNode = currentPageNode.getParent?.() as JCRNodeWrapper | undefined;
     } else if (root === "customRootPage") {
-      rootNode = currentNode.getProperty("customRootPage")?.getNode?.();
+      rootNode = currentNode.getProperty("customRootPage")?.getNode?.() as JCRNodeWrapper | undefined;
       if (!rootNode && isEditMode) {
         // Edit-mode warning for missing customRootPage
       }
@@ -204,12 +203,12 @@ jahiaComponent(
     // ── Navigation tree ────────────────────────────────────────────────────
     const mainResourcePath = mainNode.getPath();
     const navbarName = currentNode.getName();
-    const level1Pages = rootNode ? getChildNodes(rootNode, "jmix:navMenuItem") : [];
+    const level1Pages = rootNode ? getChildNodes(rootNode).filter(n => n.isNodeType("jmix:navMenuItem")) : [];
 
     // ── Language switcher ──────────────────────────────────────────────────
     // ⚠️ ui:initLangBarAttributes has no JS equivalent.
     // Approximate: site.getLanguages() (validate API)
-    const allLanguages: string[] = siteNode?.getLanguages?.() ?? [];
+    const allLanguages: string[] = [...((siteNode?.getLanguages?.() as unknown as Iterable<string> | undefined) ?? [])];
     // ⚠️ renderContext.getMainResourceLocale() — validate accessor
     const currentLang: string =
       (renderContext.getMainResourceLocale?.()?.getLanguage?.() ?? "").toLowerCase();
@@ -279,7 +278,7 @@ jahiaComponent(
                 if (!item1) return null;
 
                 const level2Pages = recursive
-                  ? getChildNodes(l1, "jmix:navMenuItem")
+                  ? getChildNodes(l1).filter(n => n.isNodeType("jmix:navMenuItem"))
                   : [];
                 const hasDropdown = level2Pages.length > 0 && recursive;
 

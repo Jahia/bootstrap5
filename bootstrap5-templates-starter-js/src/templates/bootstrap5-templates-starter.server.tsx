@@ -73,9 +73,9 @@ jahiaComponent(
               targetTag="body"
             />
           )}
-          <Area path="header" areaAsSubNode={true} moduleType="absoluteArea" level={0} />
-          <Area path="pagecontent" areaAsSubNode={true} />
-          <Area path="footer" areaAsSubNode={true} moduleType="absoluteArea" level={0} />
+          <Area name="header" />
+          <Area name="pagecontent" />
+          <Area name="footer" />
         </body>
       </html>
     );

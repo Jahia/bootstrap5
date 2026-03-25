@@ -27,6 +27,7 @@
 import {
   Area,
   Render,
+  getChildNodes,
   jahiaComponent,
   useServerContext,
 } from "@jahia/javascript-modules-library";
@@ -41,23 +42,15 @@ jahiaComponent(
   () => {
     const { currentNode, renderContext } = useServerContext();
     const isEditMode = renderContext.isEditMode();
-
-    // Fetch all direct child nodes (equivalent to moduleMap.currentList without pagination)
-    const children = currentNode.getNodes();
-    const childArray: React.ReactNode[] = [];
-    while (children.hasNext()) {
-      const child = children.next();
-      childArray.push(<Render key={child.getIdentifier()} content={child} />);
-    }
+    const children = getChildNodes(currentNode);
 
     return (
       <>
-        {/* hidden.header sub-view: no JS equivalent — omitted */}
-        {childArray}
+        {children.map((child) => (
+          <Render key={child.getIdentifier()} node={child} />
+        ))}
         {isEditMode && <div className="clearfix" />}
-        {/* Edit-mode drop zone */}
         {isEditMode && <Area name="*" />}
-        {/* hidden.footer sub-view: no JS equivalent — omitted */}
       </>
     );
   },

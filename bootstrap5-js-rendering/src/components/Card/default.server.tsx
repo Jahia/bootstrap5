@@ -81,11 +81,11 @@ jahiaComponent(
     }
 
     // Droppable children: jmix:droppableContent children, excluding the "cardFooter" subnode
-    const bodyChildren = getChildNodes(currentNode, "jmix:droppableContent").filter(
-      (child) => child.getName() !== "cardFooter",
+    const bodyChildren = getChildNodes(currentNode).filter(
+      (child) => child.isNodeType("jmix:droppableContent") && child.getName() !== "cardFooter",
     );
 
-    const HeaderTag = tag as keyof JSX.IntrinsicElements;
+    const HeaderTag = tag as ('div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6');
 
     return (
       <div className={`${cssClass}${alignClass}${bgClass}${textColorClass}${borderClass}`}>
@@ -101,18 +101,18 @@ jahiaComponent(
         )}
         <div className={cardBodyCssClass}>
           {bodyChildren.map((child) => (
-            <Render key={child.getIdentifier()} content={child} />
+            <Render key={child.getIdentifier()} node={child} />
           ))}
           {/* Edit-mode drop zone for new droppable content */}
           {renderContext.isEditMode() && (
-            <Area name="*" nodeTypes="jmix:droppableContent" />
+            <Area name="*" nodeType="jmix:droppableContent" />
           )}
         </div>
         {(footer || freeFooter) && (
           <div className={`card-footer${textColorClass}`}>
             {footer && <span dangerouslySetInnerHTML={{ __html: footer }} />}
             {freeFooter && (
-              <Area name="cardFooter" nodeTypes="jmix:droppableContent" />
+              <Area name="cardFooter" nodeType="jmix:droppableContent" />
             )}
           </div>
         )}

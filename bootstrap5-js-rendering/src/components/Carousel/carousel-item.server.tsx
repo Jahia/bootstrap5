@@ -19,6 +19,7 @@
  *   [x] bootstrap5mix:advancedCarouselItem: titleColor, captionColor, carouselItemClass, interval
  */
 import { getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import type { JCRNodeWrapper } from "org.jahia.services.content";
 
 interface CarouselItemProps {
   "jcr:title"?: string;
@@ -37,13 +38,14 @@ jahiaComponent(
     const isEditMode = renderContext.isEditMode();
 
     // Determine active: first among siblings
-    const siblings = getChildNodes(currentNode.getParent(), "bootstrap5nt:carouselItem");
+    const parent = currentNode.getParent() as JCRNodeWrapper;
+    const siblings = getChildNodes(parent).filter(n => n.isNodeType("bootstrap5nt:carouselItem"));
     const isFirst =
       siblings.length > 0 &&
       siblings[0].getIdentifier() === currentNode.getIdentifier();
 
     // ⚠️ image weakref
-    const imageNode = currentNode.getProperty("image")?.getNode?.();
+    const imageNode = currentNode.getProperty("image")?.getNode?.() as JCRNodeWrapper | undefined;
     const imageUrl = imageNode?.getUrl?.() ?? "";
 
     // bootstrap5mix:advancedCarouselItem

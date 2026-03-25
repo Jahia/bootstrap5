@@ -2,7 +2,7 @@
  * bootstrap5nt:accordion — SSR view (single panel)
  *
  * Reproduces accordion.jsp. Called by the parent accordions view via
- * <RenderChildren nodeTypes="bootstrap5nt:accordion" />.
+ * <RenderChildren nodeType="bootstrap5nt:accordion" />.
  *
  * Rendering parity checklist (from accordion.jsp):
  *   [x] accordion-item wrapper
@@ -73,7 +73,7 @@ jahiaComponent(
               <div dangerouslySetInnerHTML={{ __html: text }} />
             )}
             {/* Optional droppable area inside the panel body */}
-            <Area name="content" nodeTypes="jmix:droppableContent" />
+            <Area name="content" nodeType="jmix:droppableContent" />
           </div>
         </div>
       </div>
