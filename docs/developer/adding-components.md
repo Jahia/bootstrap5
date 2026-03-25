@@ -2,7 +2,7 @@
 
 ## Step 1 — Define the node type in the CND
 
-Edit `bootstrap5-js-rendering/META-INF/definitions.cnd`.
+Create `bootstrap5-js-rendering/src/components/MyComponent/definition.cnd`:
 
 ```cnd
 [bootstrap5nt:myComponent] > jnt:content, bootstrap5mix:component
@@ -15,6 +15,8 @@ Key points:
 - Use `i18n` for user-facing text properties
 - Use `choicelist[resourceBundle]` for enumerated values with labels
 - Choicelist with auto-mixin injection: `choicelist[gridTypeInitializer5,resourceBundle]` (see [CND definitions](cnd-definitions.md))
+- Namespaces (`bootstrap5nt`, `bootstrap5mix`, `jnt`, `jmix`, `mix`) are declared in `settings/definitions.cnd` — do **not** repeat them in component files
+- Cross-component mixins (`bootstrap5mix:image`, `bootstrap5mix:padding`, etc.) are also in `settings/definitions.cnd` — reference them freely
 
 ## Step 2 — Add i18n labels
 

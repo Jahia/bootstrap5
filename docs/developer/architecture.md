@@ -16,7 +16,7 @@ HTTP request
                  └─ Renders the component HTML
 ```
 
-All server-side rendering runs inside the **GraalVM polyglot engine**. TypeScript/JSX is compiled to CommonJS by Vite and executed in a Java-hosted JavaScript context.
+All server-side rendering runs inside the **Jahia JavaScript modules engine** (GraalVM on Jahia ≤ 8.2.2, OpenJDK-based engine on 8.2.3+). TypeScript/JSX is compiled to CommonJS by Vite and executed in a Java-hosted JavaScript context.
 
 ## Module priority and view resolution
 
@@ -27,16 +27,16 @@ Jahia resolves views by searching modules in dependency order — a module that 
 
 A custom module declaring `module-dependencies: bootstrap5-js-rendering` will override any view from `bootstrap5-js-rendering`.
 
-## GraalVM Java interop constraints
+## JS engine Java interop constraints
 
-> **Critical:** Calling Java methods from GraalVM JavaScript has specific syntax requirements.
+> **Critical:** Calling Java methods from the JS engine has specific syntax requirements. These apply to both GraalVM (Jahia ≤ 8.2.2) and the OpenJDK-based engine (Jahia 8.2.3+).
 
 ### The `?.()` optional-call problem
 
-GraalVM sends different messages to Java objects depending on call syntax:
+The JS engine sends different messages to Java objects depending on call syntax:
 
-| Syntax | GraalVM message | Result |
-|--------|----------------|--------|
+| Syntax | Engine message | Result |
+|--------|---------------|--------|
 | `obj.method()` | `invoke` | ✅ Works |
 | `obj.method?.()` | `execute` on stored member | ❌ `TypeError: Message not supported` |
 
@@ -95,18 +95,19 @@ The entry point `src/index.ts` (compiled to `dist/server/index.js`) imports all 
 
 ## CND and module ownership
 
-The canonical CND (`META-INF/definitions.cnd`) lives in `bootstrap5-js-rendering`. It owns all `bootstrap5nt:*` node types and `bootstrap5mix:*` mixins.
+`bootstrap5-js-rendering` owns all `bootstrap5nt:*` node types and `bootstrap5mix:*` mixins. Definitions are split across two locations:
+
+- **`settings/definitions.cnd`** — namespaces and cross-component shared mixins (image, padding, margin)
+- **`src/components/<Name>/definition.cnd`** — one file per component (12 files)
 
 `bootstrap5-core` owns only `bootstrap5mix:component` (the base marker mixin) and `bootstrap5nt:version`.
-
-When both modules are deployed, Jahia logs a `WARN` for any type already registered. This is harmless — the first-loaded module wins.
 
 ## Static assets packaging
 
 The `@jahia/vite-plugin` compiles TypeScript/TSX to `dist/server/index.js`. It does **not** copy static files. Static resources are packaged by listing their directories in the `files` array of `package.json`:
 
 ```json
-"files": ["dist", "META-INF", "resources", "img", "javascript", "settings", "css"]
+"files": ["dist/server", "src/**/*.cnd", "settings", "META-INF", "resources", "img", "javascript"]
 ```
 
-npm pack then includes all listed directories verbatim in the TGZ.
+The `src/**/*.cnd` glob includes all per-component `definition.cnd` files. `META-INF` is kept for the Content Editor forms JSON. npm pack includes all listed paths verbatim in the TGZ.

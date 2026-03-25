@@ -63,7 +63,7 @@ Check the Jahia logs for these lines after deploying `bootstrap5-js-rendering`:
 
 ```
 [TemplatePackageRegistry] Registered 'bootstrap5-js-rendering (javascript module)'
-[GraalVMEngine] Registered bundle bootstrap5-js-rendering in GraalVM engine
+[javascript-modules-engine] Registered bundle bootstrap5-js-rendering
 [StaticDefinitionsRegistry] Successfully loaded static fieldSets for name bootstrap5mix:brand ...
 Registered Jahia component: bootstrap5-js-rendering_view_bootstrap5nt:accordion_default
 ...

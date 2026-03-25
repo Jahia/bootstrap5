@@ -4,7 +4,7 @@ This guide is for developers who extend the Bootstrap 5 module stack — adding 
 
 ## Contents
 
-- [Architecture](architecture.md) — Module structure, rendering pipeline, GraalVM constraints
+- [Architecture](architecture.md) — Module structure, rendering pipeline, JS engine interop constraints
 - [Adding a component](adding-components.md) — Step-by-step guide to adding a new component view
 - [CND definitions](cnd-definitions.md) — How to define node types and mixins
 - [Build system](build.md) — Build, package, and deploy workflow
@@ -32,10 +32,18 @@ bootstrap5/
 │   ├─ src/main/resources/          Bootstrap CSS/JS (built by npm postinstall)
 │   └─ pom.xml
 ├─ bootstrap5-js-rendering/          JS module — component views + CND
-│   ├─ src/components/               TSX view files (one folder per component)
+│   ├─ src/
+│   │   ├─ components/               TSX view files + per-component CND (one folder per component)
+│   │   │   ├─ Accordion/
+│   │   │   │   ├─ default.server.tsx
+│   │   │   │   └─ definition.cnd    Node type definition for this component
+│   │   │   └─ … (12 component folders)
+│   │   ├─ utils/                    Shared utilities (ImageTag, etc.)
+│   │   └─ test/                     Vitest unit tests
+│   ├─ settings/
+│   │   └─ definitions.cnd           Namespaces + shared mixins (image, padding, margin)
 │   ├─ META-INF/
-│   │   ├─ definitions.cnd           Node type and mixin definitions
-│   │   └─ jahia-content-editor-forms/  Content Editor form customizations
+│   │   └─ jahia-content-editor-forms/  Content Editor form customizations (13 JSON files)
 │   ├─ resources/                    i18n .properties files
 │   ├─ img/                          Thumbnail images for choicelist pickers
 │   ├─ javascript/                   CKEditor config + static JS libs

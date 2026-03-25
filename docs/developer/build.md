@@ -58,9 +58,11 @@ The TGZ artifact is what Jahia installs. It contains exactly what is listed in t
 ```
 package/
 ├─ dist/server/index.js          Compiled TSX views
+├─ src/components/*/definition.cnd  Per-component node type definitions (12 files)
+├─ settings/
+│   └─ definitions.cnd           Namespaces + shared mixins
 ├─ META-INF/
-│   ├─ definitions.cnd           Node type definitions
-│   └─ jahia-content-editor-forms/  13 form JSON files
+│   └─ jahia-content-editor-forms/  13 Content Editor form JSON files
 ├─ resources/                    i18n .properties (6 languages)
 ├─ img/                          ~60 thumbnail images
 ├─ javascript/                   ckconfig.js + libs
@@ -108,6 +110,22 @@ export PATH="$(pwd)/node:$PATH"
 npm run build:maven
 ```
 
+## Unit tests
+
+`bootstrap5-js-rendering` includes a Vitest suite covering all 17 component views:
+
+```bash
+cd bootstrap5-js-rendering
+
+# Run all tests once
+node/node node_modules/.bin/vitest run
+
+# Watch mode
+node/node node_modules/.bin/vitest
+```
+
+Tests live in `src/test/components/`. Mocks for `@jahia/javascript-modules-library` and `react-i18next` are in `src/test/mocks/`. The test `tsconfig.test.json` extends the main tsconfig with test-only path aliases.
+
 ## TypeScript configuration
 
 `tsconfig.json` in each module is standard. Notable settings:
@@ -123,7 +141,7 @@ npm run build:maven
 }
 ```
 
-Type checking runs as part of `build:maven` via `tsc --noEmit`. Fix all type errors before deploying.
+Type checking runs as part of `build:maven` via `tsc --noEmit`. Fix all type errors before deploying. Test files are excluded from the main tsconfig via `"exclude": ["src/test"]` — they are checked by `tsconfig.test.json` instead.
 
 ## Troubleshooting build failures
 

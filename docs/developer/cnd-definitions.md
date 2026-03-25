@@ -1,6 +1,18 @@
 # CND Definitions
 
-The canonical CND file is `bootstrap5-js-rendering/META-INF/definitions.cnd`.
+CND definitions in `bootstrap5-js-rendering` follow the JS module convention — definitions are split across two locations:
+
+| File | Content |
+|------|---------|
+| `settings/definitions.cnd` | Namespace declarations + shared cross-component mixins (image, padding, margin) |
+| `src/components/<Name>/definition.cnd` | Node types and mixins specific to one component (12 files) |
+
+The Jahia JS engine loads `settings/definitions.cnd` first, then each component's `definition.cnd`. Namespace declarations must appear only in `settings/definitions.cnd` — do not repeat them in component files.
+
+`package.json` includes both locations via:
+```json
+"files": ["src/**/*.cnd", "settings", ...]
+```
 
 ## Namespaces
 
