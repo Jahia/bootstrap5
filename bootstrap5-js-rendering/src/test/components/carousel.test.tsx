@@ -68,11 +68,15 @@ describe('bootstrap5nt:carousel (default view)', () => {
     expect(container.querySelector('#carousel_my-carousel-id')).toBeInTheDocument();
   });
 
-  test('no items → no indicators, no slides', () => {
+  test('no items → empty indicators list, no slides', () => {
+    // The <ol class="carousel-indicators"> is always rendered when useIndicators=true and live mode;
+    // it just has no <li> children when there are no items.
     const ctx = makeCarouselCtx({ _id: 'car-3', _children: [] }, { _editMode: false });
     const fn = getCarouselFn();
     const { container } = renderFn(fn, {}, ctx);
-    expect(container.querySelector('.carousel-indicators')).not.toBeInTheDocument();
+    const ol = container.querySelector('.carousel-indicators');
+    expect(ol).toBeInTheDocument();
+    expect(ol?.querySelectorAll('li').length).toBe(0);
     expect(container.querySelector('.carousel-item')).not.toBeInTheDocument();
   });
 

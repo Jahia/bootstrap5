@@ -1,0 +1,40 @@
+// bootstrap5nt:carousel — Bootstrap carousel (image slideshow with indicators and controls).
+
+// Individual carousel slide
+[bootstrap5nt:carouselItem] > jnt:content, mix:title
+  - image   (weakreference, picker[type='image']) mandatory < 'jmix:image'
+  - caption (string, textarea) i18n
+
+// Per-slide advanced options (colour overrides, extra class, per-slide delay)
+[bootstrap5mix:advancedCarouselItem] mixin
+  extends = bootstrap5nt:carouselItem
+  itemtype = content
+  - titleColor (string, choicelist[resourceBundle, moduleImage='svg']) = 'light' autocreated indexed=no
+    < 'muted', 'primary', 'secondary', 'success', 'danger', 'warning', 'info',
+      'light', 'dark', 'white', 'body', 'black-50', 'white-50'
+  - captionColor (string, choicelist[resourceBundle, moduleImage='svg']) = 'light' autocreated indexed=no
+    < 'muted', 'primary', 'secondary', 'success', 'danger', 'warning', 'info',
+      'light', 'dark', 'white', 'body', 'black-50', 'white-50'
+  - carouselItemClass (string) indexed=no
+  - interval          (long)   indexed=no
+
+// Carousel node type — ordered list of carouselItem child nodes
+[bootstrap5nt:carousel] > jnt:content, bootstrap5mix:component, jmix:list,
+                          jmix:siteContent, jmix:browsableInEditorialPicker orderable
+  + * (bootstrap5nt:carouselItem)
+
+// Carousel-level advanced settings (behaviour, controls, variant)
+[bootstrap5mix:carouselAdvancedSettings] mixin
+  extends = bootstrap5nt:carousel
+  itemtype = content
+  - useIndicators           (boolean) = 'false' indexed=no
+  - useLeftAndRightControls (boolean) = 'true'  indexed=no
+  - interval  (long)    = '5000' indexed=no
+  - keyboard  (boolean) = 'true' indexed=no
+  - pause     (boolean) = 'true' indexed=no
+  - ride      (boolean) = 'true' indexed=no
+  - wrap      (boolean) = 'true' indexed=no
+  - fade      (boolean) = 'true' indexed=no
+  - carouselClass (string) indexed=no
+  - variant (string, choicelist[resourceBundle]) = 'white' autocreated indexed=no
+    < 'white', 'dark'

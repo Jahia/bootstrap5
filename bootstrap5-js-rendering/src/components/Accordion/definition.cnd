@@ -1,0 +1,12 @@
+// bootstrap5nt:accordion — Bootstrap accordion (vertically stacked collapsible panels).
+
+// A single accordion panel
+[bootstrap5nt:accordion] > jnt:content, mix:title, bootstrap5mix:text
+  - show (boolean) = 'false' indexed=no
+  + * (jmix:droppableContent) = jmix:droppableContent
+
+// Accordion group node type — ordered list of bootstrap5nt:accordion panels
+[bootstrap5nt:accordions] > jnt:content, bootstrap5mix:component, jmix:list,
+                            jmix:siteContent, jmix:browsableInEditorialPicker orderable
+  - flush (boolean) = 'false' indexed=no
+  + * (bootstrap5nt:accordion)

@@ -53,6 +53,12 @@ export function makeNode(overrides: NodeOverrides = {}): any {
     },
     _children: overrides._children ?? [],
   };
+  // Allow callers to override individual methods (e.g. makeCarouselItem overrides getProperty)
+  for (const [k, v] of Object.entries(overrides)) {
+    if (!k.startsWith('_') && typeof v === 'function') {
+      node[k] = v;
+    }
+  }
   return node;
 }
 

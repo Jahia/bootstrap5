@@ -1,0 +1,11 @@
+// bootstrap5nt:figure — Bootstrap <figure> with an image and optional caption.
+
+// Renders a Bootstrap <figure> with an image and an optional caption
+[bootstrap5nt:figure] > jnt:content, bootstrap5mix:component, bootstrap5mix:imageAdvanced, mix:title
+
+// Extends the figure node type with caption alignment control
+[bootstrap5mix:figureAdvancedSettings] mixin
+  extends = bootstrap5nt:figure
+  itemtype = content
+  - captionAlignment (string, choicelist[resourceBundle, moduleImage='svg']) = 'text-start' autocreated indexed=no
+    < 'text-start', 'text-center', 'text-end'

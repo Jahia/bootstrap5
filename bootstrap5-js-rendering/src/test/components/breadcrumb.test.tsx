@@ -76,16 +76,25 @@ describe('bootstrap5nt:breadcrumb (default view)', () => {
     expect(links[0]).toHaveAttribute('href', '/sites/test/home.html');
   });
 
-  test('non-page ancestor → href="#"', () => {
+  test('non-page ancestor (fallback path) → href="#"', () => {
+    // The href="#" branch is triggered by the fallback path: when currentNode has NO jnt:page
+    // ancestors, the component falls back to mainNode.getAncestors() filtered by jmix:navMenuItem.
+    // Those navMenuItem nodes are rendered with href="#" because isNodeType("jnt:page") === false.
     const navText = makeNode({ _id: 'nav-1', _name: 'Nav Text', _path: '/sites/test/nav', _nodeTypes: ['jmix:navMenuItem'] });
-    const page2 = makeNode({ _id: 'page-2', _name: 'About', _path: '/sites/test/about', _nodeTypes: ['jnt:page'] });
-    const currentNode = makeNode({ _id: 'bc-5', _ancestors: [navText, page2] });
-    const mainNode = page2;
-    const ctx = { currentNode, renderContext: makeRenderContext(), mainNode };
+    const navText2 = makeNode({ _id: 'nav-2', _name: 'Nav Text 2', _path: '/sites/test/nav2', _nodeTypes: ['jmix:navMenuItem'] });
+    // mainNode is a jnt:page whose ancestors are navMenuItems (not pages)
+    const mainPage = makeNode({
+      _id: 'page-main', _name: 'Current', _path: '/sites/test/current',
+      _nodeTypes: ['jnt:page'],
+      _ancestors: [navText, navText2],
+    });
+    // currentNode has no jnt:page ancestors → triggers fallback
+    const currentNode = makeNode({ _id: 'bc-5', _ancestors: [] });
+    const ctx = { currentNode, renderContext: makeRenderContext(), mainNode: mainPage };
     _setContext(ctx);
     const fn = getBreadcrumbFn();
     const { container } = renderFn(fn, {}, ctx);
-    // navText is jmix:navMenuItem but not jnt:page; link should be #
+    // navText and navText2 are jmix:navMenuItem but not jnt:page → href="#"
     const nonPageLinks = container.querySelectorAll('.breadcrumb-item:not(.active) a[href="#"]');
     expect(nonPageLinks.length).toBeGreaterThan(0);
   });

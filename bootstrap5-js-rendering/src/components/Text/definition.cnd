@@ -1,0 +1,11 @@
+// bootstrap5nt:text — Rich-text component powered by CKEditor with Bootstrap-aware toolbar.
+
+// Reusable rich-text mixin — attach to any node type that needs Bootstrap CKEditor
+[bootstrap5mix:text] mixin
+  - text (string,
+          richtext[ckeditor.toolbar='Tinny',
+                   ckeditor.customConfig='$context/modules/bootstrap5-js-rendering/javascript/ckconfig.js']
+         ) i18n
+
+// Standalone text content component
+[bootstrap5nt:text] > jnt:content, bootstrap5mix:component, bootstrap5mix:text

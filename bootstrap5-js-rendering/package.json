@@ -8,6 +8,7 @@
   "author": "Jahia Solutions Group SA",
   "files": [
     "dist/server",
+    "src/**/*.cnd",
     "settings",
     "META-INF",
     "resources",
@@ -28,17 +29,18 @@
   "devDependencies": {
     "@jahia/javascript-modules-library": "^1.0.0",
     "@jahia/vite-plugin": "^1.0.0",
-    "@testing-library/jest-dom": "^6.0.0",
-    "@testing-library/react": "^16.0.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "^19.0.0",
     "i18next": "^25.0.0",
-    "jsdom": "^26.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "jsdom": "^26.1.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "react-i18next": "^16.0.0",
     "typescript": "^5.0.0",
     "vite": "^7.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=18.0.0",
