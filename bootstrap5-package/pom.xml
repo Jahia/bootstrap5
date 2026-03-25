@@ -16,7 +16,7 @@
         <jahia.package.sources.assembly.file>src/main/assembly/bootstrap5-sources.xml</jahia.package.sources.assembly.file>
         <jahia.final.package.name>bootstrap5-package</jahia.final.package.name>
         <jahia.manifest.package.id>Bootstrap5</jahia.manifest.package.id>
-        <jahia.manifest.description>bootstrap5-core, bootstrap5-components, bootstrap5-templates-starter</jahia.manifest.description>
+        <jahia.manifest.description>bootstrap5-core, bootstrap5-components, bootstrap5-templates-starter, bootstrap5-js-rendering, bootstrap5-templates-starter-js</jahia.manifest.description>
         <jahia.manifest.license>org.jahia.core</jahia.manifest.license>
         <jahia.required.version>8.2.0.0</jahia.required.version>
     </properties>
@@ -54,6 +54,19 @@
             <groupId>org.jahia.modules</groupId>
             <artifactId>skins</artifactId>
             <version>8.2.0</version>
+        </dependency>
+        <!-- JS rendering modules — produce .tgz artifacts built by frontend-maven-plugin -->
+        <dependency>
+            <groupId>org.jahiacommunity.modules</groupId>
+            <artifactId>bootstrap5-js-rendering</artifactId>
+            <version>${project.version}</version>
+            <type>tgz</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jahiacommunity.modules</groupId>
+            <artifactId>bootstrap5-templates-starter-js</artifactId>
+            <version>${project.version}</version>
+            <type>tgz</type>
         </dependency>
     </dependencies>
 
@@ -103,6 +116,20 @@
                         </goals>
                         <configuration>
                             <includeGroupIds>org.jahiacommunity.modules,org.jahia.modules</includeGroupIds>
+                            <outputDirectory>${project.build.directory}/dependency</outputDirectory>
+                            <excludeTransitive>true</excludeTransitive>
+                        </configuration>
+                    </execution>
+                    <!-- Copy JS module .tgz artifacts to a separate folder for assembly -->
+                    <execution>
+                        <id>copy-tgz</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>org.jahiacommunity.modules</includeGroupIds>
+                            <includeTypes>tgz</includeTypes>
                             <outputDirectory>${project.build.directory}/dependency</outputDirectory>
                             <excludeTransitive>true</excludeTransitive>
                         </configuration>

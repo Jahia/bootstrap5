@@ -10,6 +10,7 @@
       <outputDirectory>/</outputDirectory>
       <includes>
         <include>**.jar</include>
+        <include>**.tgz</include>
       </includes>
     </fileSet>
     <fileSet>

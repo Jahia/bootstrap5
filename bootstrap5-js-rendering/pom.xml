@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Bootstrap 5 JS Rendering — Maven build wrapper
+  ================================================
+  This pom.xml allows bootstrap5-js-rendering to be built as part of the
+  Maven reactor (mvn clean package from the repository root).
+
+  Build flow:
+    1. frontend-maven-plugin downloads Node v22 + Yarn 1.x locally
+    2. yarn install — installs npm dependencies
+    3. yarn build:maven — TypeScript check + Vite bundle + yarn pack
+       Output: dist/package.tgz
+    4. build-helper-maven-plugin attaches dist/package.tgz as a Maven
+       artifact (type=tgz) so bootstrap5-package can resolve it via
+       dependency:copy-dependencies.
+
+  For day-to-day development (with Yarn 4 / Corepack), use:
+    yarn build       (uses yarn pack --out, Yarn 4 syntax)
+  For the Maven CI build, Maven invokes:
+    yarn build:maven (uses yarn pack + mv, compatible with Yarn 1)
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jahiacommunity.modules</groupId>
+    <artifactId>bootstrap5-modules</artifactId>
+    <version>2.4.5-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>bootstrap5-js-rendering</artifactId>
+  <packaging>pom</packaging>
+  <name>Bootstrap 5 JS Rendering</name>
+  <description>JS/React SSR views for Bootstrap 5 components (Jahia JS module)</description>
+
+  <build>
+    <plugins>
+
+      <!-- Step 1-3: Install Node + Yarn, then run the JS build -->
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.15.0</version>
+        <configuration>
+          <workingDirectory>${project.basedir}</workingDirectory>
+          <nodeVersion>v22.14.0</nodeVersion>
+          <yarnVersion>v1.22.22</yarnVersion>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install-node-and-yarn</id>
+            <goals><goal>install-node-and-yarn</goal></goals>
+            <phase>generate-resources</phase>
+          </execution>
+          <execution>
+            <id>yarn-install</id>
+            <goals><goal>yarn</goal></goals>
+            <phase>generate-resources</phase>
+            <!-- no arguments = yarn install -->
+          </execution>
+          <execution>
+            <id>yarn-build</id>
+            <goals><goal>yarn</goal></goals>
+            <phase>compile</phase>
+            <configuration>
+              <arguments>build:maven</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Step 4: Attach dist/package.tgz as a Maven artifact -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.4.0</version>
+        <executions>
+          <execution>
+            <id>attach-tgz</id>
+            <phase>package</phase>
+            <goals><goal>attach-artifact</goal></goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>${project.basedir}/dist/package.tgz</file>
+                  <type>tgz</type>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>
