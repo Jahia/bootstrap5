@@ -131,7 +131,7 @@ jahiaComponent(
 
     // ── Column name prefix for /modules paths or studiomode ────────────────
     const isModulesPath = currentNode.getPath().startsWith("/modules");
-    const isStudioMode = renderContext.getEditModeConfigName?.() === "studiomode";
+    const isStudioMode = renderContext.getEditModeConfigName() === "studiomode";
     const colNamePrefix = isModulesPath || isStudioMode ? `${currentNode.getName()}-` : "";
 
     // ── Container class: dedup containerType from extra classes ────────────

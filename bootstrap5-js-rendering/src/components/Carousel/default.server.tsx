@@ -124,8 +124,9 @@ jahiaComponent(
               const title = item.getPropertyAsString("jcr:title") ?? "";
               const caption = item.getPropertyAsString("caption") ?? "";
               // ⚠️ image weakref — validate getProperty("image").getNode() in JS context
-              const imageNode = item.getProperty("image")?.getNode?.() as JCRNodeWrapper | undefined;
-              const imageUrl = imageNode?.getUrl?.() ?? "";
+              const imageProp = item.getProperty("image");
+              const imageNode = imageProp ? imageProp.getNode() as JCRNodeWrapper : undefined;
+              const imageUrl = imageNode ? String(imageNode.getUrl()) : "";
 
               // bootstrap5mix:advancedCarouselItem
               let titleColor = "";

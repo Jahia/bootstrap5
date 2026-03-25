@@ -62,12 +62,13 @@ function resolveNavItem(
   } else if (page.isNodeType("jnt:externalLink")) {
     url = page.getPropertyAsString("j:url") ?? "#";
   } else if (page.isNodeType("jnt:page")) {
-    url = page.getUrl?.() ?? `${page.getPath()}.html`;
+    url = page.getPath() + ".html";
     title = page.getDisplayableName();
   } else if (page.isNodeType("jnt:nodeLink")) {
-    const linkedNode = page.getProperty("j:node")?.getNode?.() as JCRNodeWrapper | undefined;
+    const jNodeProp = page.getProperty("j:node");
+    const linkedNode = jNodeProp ? jNodeProp.getNode() as JCRNodeWrapper : undefined;
     if (linkedNode) {
-      url = linkedNode.getUrl?.() ?? `${linkedNode.getPath()}.html`;
+      url = linkedNode.getPath() + ".html";
       title = page.getPropertyAsString("jcr:title") || linkedNode.getDisplayableName();
     }
   } else {
@@ -85,7 +86,8 @@ function resolveNavItem(
  */
 function isDisplayedInMenu(page: JCRNodeWrapper, navbarName: string): boolean {
   // ⚠️ Multi-value property access — validate API for getPropertyValues("j:displayInMenuName")
-  const displayInMenuValues = (page.getProperty("j:displayInMenuName") as any)?.getValues?.();
+  const displayInMenuProp = page.getProperty("j:displayInMenuName");
+  const displayInMenuValues = displayInMenuProp ? (displayInMenuProp as any).getValues() : undefined;
   if (!displayInMenuValues || displayInMenuValues.length === 0) return true;
   return displayInMenuValues.some((v: { getString: () => string }) => v.getString() === navbarName);
 }
@@ -105,18 +107,22 @@ jahiaComponent(
     const navbarId = `navbar-${currentNode.getIdentifier()}`;
 
     // ── Brand resolution: site overrides component ─────────────────────────
-    const siteNode = renderContext.getSite?.();
+    const siteNode = renderContext.getSite() as JCRNodeWrapper | undefined;
     let brandImage: JCRNodeWrapper | undefined;
     let brandImageMobile: JCRNodeWrapper | undefined;
     let brandText = "";
 
     if (siteNode?.isNodeType("bootstrap5mix:siteBrand")) {
-      brandImage = siteNode.getProperty("brandImage")?.getNode?.() as JCRNodeWrapper | undefined;
-      brandImageMobile = siteNode.getProperty("brandImageMobile")?.getNode?.() as JCRNodeWrapper | undefined;
+      const brandImageProp = siteNode.getProperty("brandImage");
+      brandImage = brandImageProp ? brandImageProp.getNode() as JCRNodeWrapper : undefined;
+      const brandImageMobileProp = siteNode.getProperty("brandImageMobile");
+      brandImageMobile = brandImageMobileProp ? brandImageMobileProp.getNode() as JCRNodeWrapper : undefined;
       brandText = siteNode.getPropertyAsString("brandText") ?? "";
     } else if (currentNode.isNodeType("bootstrap5mix:brand")) {
-      brandImage = currentNode.getProperty("brandImage")?.getNode?.() as JCRNodeWrapper | undefined;
-      brandImageMobile = currentNode.getProperty("brandImageMobile")?.getNode?.() as JCRNodeWrapper | undefined;
+      const brandImageProp2 = currentNode.getProperty("brandImage");
+      brandImage = brandImageProp2 ? brandImageProp2.getNode() as JCRNodeWrapper : undefined;
+      const brandImageMobileProp2 = currentNode.getProperty("brandImageMobile");
+      brandImageMobile = brandImageMobileProp2 ? brandImageMobileProp2.getNode() as JCRNodeWrapper : undefined;
       brandText = currentNode.getPropertyAsString("brandText") ?? "";
     }
 
@@ -180,23 +186,29 @@ jahiaComponent(
     if (root === "currentPage") {
       rootNode = currentPageNode;
     } else if (root === "parentPage") {
-      rootNode = currentPageNode.getParent?.() as JCRNodeWrapper | undefined;
+      rootNode = currentPageNode.getParent() as JCRNodeWrapper | undefined;
     } else if (root === "customRootPage") {
-      rootNode = currentNode.getProperty("customRootPage")?.getNode?.() as JCRNodeWrapper | undefined;
+      const customRootProp = currentNode.getProperty("customRootPage");
+      rootNode = customRootProp ? customRootProp.getNode() as JCRNodeWrapper : undefined;
       if (!rootNode && isEditMode) {
         // Edit-mode warning for missing customRootPage
       }
     }
 
-    if (!rootNode) rootNode = siteNode?.getHome?.() ?? renderContext.getSite?.()?.getHome?.();
+    if (!rootNode) {
+      const site: any = siteNode ?? renderContext.getSite();
+      rootNode = site ? site.getHome() as JCRNodeWrapper : undefined;
+    }
 
     // Root node URL (site home gets site.home.url)
     let rootNodeUrl = "#";
     if (rootNode) {
       if (rootNode.isNodeType("jnt:virtualsite")) {
-        rootNodeUrl = siteNode?.getHome?.()?.getUrl?.() ?? "#";
+        const site2: any = siteNode ?? renderContext.getSite();
+        const homeNode = site2 ? site2.getHome() as JCRNodeWrapper : undefined;
+        rootNodeUrl = homeNode ? homeNode.getPath() + ".html" : "#";
       } else {
-        rootNodeUrl = rootNode.getUrl?.() ?? `${rootNode.getPath()}.html`;
+        rootNodeUrl = rootNode.getPath() + ".html";
       }
     }
 
@@ -208,10 +220,10 @@ jahiaComponent(
     // ── Language switcher ──────────────────────────────────────────────────
     // ⚠️ ui:initLangBarAttributes has no JS equivalent.
     // Approximate: site.getLanguages() (validate API)
-    const allLanguages: string[] = [...((siteNode?.getLanguages?.() as unknown as Iterable<string> | undefined) ?? [])];
+    const allLanguages: string[] = siteNode ? [...((siteNode as any).getLanguages() as unknown as Iterable<string>)] : [];
     // ⚠️ renderContext.getMainResourceLocale() — validate accessor
-    const currentLang: string =
-      (renderContext.getMainResourceLocale?.()?.getLanguage?.() ?? "").toLowerCase();
+    const currentLocale = renderContext.getMainResourceLocale();
+    const currentLang: string = currentLocale ? String(currentLocale.getLanguage()).toLowerCase() : "";
     const otherLanguages = allLanguages.filter(
       (lang: string) => lang !== currentLang,
     );
@@ -221,15 +233,16 @@ jahiaComponent(
 
     // ── Login state ────────────────────────────────────────────────────────
     // ⚠️ renderContext.isLoggedIn() — validate JS context API
-    const isLoggedIn: boolean = renderContext.isLoggedIn?.() ?? false;
+    const isLoggedIn: boolean = renderContext.isLoggedIn() as unknown as boolean;
     // ⚠️ currentUser.username — validate JS context API
-    const username: string = renderContext.getUser?.()?.getUsername?.() ?? "";
+    const currentUser = renderContext.getUser();
+    const username: string = currentUser ? String(currentUser.getUsername()) : "";
     // ⚠️ url.logout / url.login / url.live / url.preview / url.edit / url.contribute — validate
-    const urlGen = renderContext.getURLGenerator?.();
-    const logoutUrl: string = urlGen?.getLogout?.() ?? "#";
-    const liveUrl: string = urlGen?.getLive?.() ?? "#";
-    const previewUrl: string = urlGen?.getPreview?.() ?? "#";
-    const editUrl: string = urlGen?.getEdit?.() ?? "#";
+    const urlGen = renderContext.getURLGenerator();
+    const logoutUrl: string = urlGen ? String(urlGen.getLogout()) : "#";
+    const liveUrl: string = urlGen ? String(urlGen.getLive()) : "#";
+    const previewUrl: string = urlGen ? String(urlGen.getPreview()) : "#";
+    const editUrl: string = urlGen ? String(urlGen.getEdit()) : "#";
     const loginNodeId = `login-${currentNode.getIdentifier()}`;
 
     // ── Inner content (brand + toggler + collapse area) ───────────────────
@@ -238,9 +251,9 @@ jahiaComponent(
         {/* Brand link */}
         <a className={brandLinkClass} href={rootNodeUrl}>
           {brandImage && (() => {
-            const desktopUrl = brandImage.getUrl?.() ?? "";
+            const desktopUrl = String(brandImage.getUrl());
             if (brandImageMobile) {
-              const mobileUrl = brandImageMobile.getUrl?.() ?? "";
+              const mobileUrl = String(brandImageMobile.getUrl());
               return (
                 <>
                   <img src={desktopUrl} className={`align-top d-none d-${expand}-inline-block`} alt="" />
@@ -370,7 +383,7 @@ jahiaComponent(
                           </a>
                         </li>
                       )}
-                      {!renderContext.isPreviewMode?.() && (
+                      {!renderContext.isPreviewMode() && (
                         <li>
                           <a href={previewUrl} className="dropdown-item text-secondary">
                             Preview

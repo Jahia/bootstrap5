@@ -45,8 +45,9 @@ jahiaComponent(
       siblings[0].getIdentifier() === currentNode.getIdentifier();
 
     // ⚠️ image weakref
-    const imageNode = currentNode.getProperty("image")?.getNode?.() as JCRNodeWrapper | undefined;
-    const imageUrl = imageNode?.getUrl?.() ?? "";
+    const carouselImageProp = currentNode.getProperty("image");
+    const imageNode = carouselImageProp ? carouselImageProp.getNode() as JCRNodeWrapper : undefined;
+    const imageUrl = imageNode ? String(imageNode.getUrl()) : "";
 
     // bootstrap5mix:advancedCarouselItem
     let titleColor = "";
