@@ -1,27 +1,12 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:grid — SSR view
- *
- * Reproduces grid.jsp + grid.hidden.predefinedGrid.jsp + grid.hidden.customGrid.jsp
- * + grid.hidden.nogrid.jsp in a single TSX file (the JSP used template:include for
- * the hidden sub-views; JS modules have no sub-view mechanism).
- *
- * Rendering parity checklist:
- *   [x] Optional section wrapper (bootstrap5mix:createSection): sectionElement, id, class, style, role, aria-label
- *   [x] Optional container wrapper (bootstrap5mix:createContainer): containerId, containerType, containerCssClass
- *       JSP deduplicates containerType from extra CSS class field — reproduced here
- *   [x] Optional row wrapper (bootstrap5mix:createRow): rowId, rowCssClass, vAlign, hAlign, gX, gY
- *       "default" sentinels are normalised to empty string (no CSS class added) — matches JSP
- *   [x] predefinedGrid columns: split grid="4_8" on "_", compute area names from proportions
- *       naming rules from JSP (side/main/extra/extra2) — see predefinedAreaNames()
- *   [x] customGrid columns: gridClasses comma-split → col0, col1, ...
- *   [x] nogrid: single Area named "main" (or node name in /modules / studiomode)
- *   [x] bootstrap5mix:createAbsoluteAreas: moduleType="absoluteArea", level prop forwarded
- *       ⚠️  Area component absoluteArea support needs validation with Jahia JS engine team
- *   [x] bootstrap5mix:listLimit: listLimit prop forwarded to Area
- *   [x] colNamePrefix: prepended in /modules paths or studiomode to avoid area-name collisions
- *   [x] Edit-mode warning in predefinedGrid when column count is out of range (1–4)
- *   [x] Edit-mode warning in customGrid when gridClasses is empty
- *   [x] Edit-mode hint text in nogrid when no container/row wrapper
+ * bootstrap5nt:grid — layout grid with optional section, container, and row wrappers.
+ * Supports three column modes: predefinedGrid ("4_8" notation), customGrid (comma-separated
+ * CSS classes), and nogrid (single area). Area absoluteArea support needs validation
+ * with the Jahia JS engine team.
  */
 import { Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 

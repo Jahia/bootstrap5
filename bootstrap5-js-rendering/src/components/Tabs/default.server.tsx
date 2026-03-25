@@ -1,21 +1,12 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:tabs — SSR view
- *
- * Reproduces tabs.jsp. Children are jnt:contentList nodes; each list becomes
- * one tab panel. The list node name is used as the URL fragment anchor.
- *
- * Rendering parity checklist (from tabs.jsp):
- *   [x] nav type class: nav-tabs / nav-pills / nav-links / nav-underlines
- *   [x] align class (omitted when justify-content-start — same as JSP)
- *   [x] Anchor sanitization — replaces non-alphanumeric chars with "-";
- *       prefixes "tab-" when first char is not a-z (replaces custom b5:replaceAll taglib)
- *   [x] UUID-based anchor fallback when useListNameAsAnchor=false
- *   [x] First tab active by default
- *   [x] fade + show classes
- *   [x] Tab panels rendered via Render per child list node
- *   [x] Deep-linking init script via AddResources (activate tab from URL hash)
- *   [x] Edit-mode add zone via Area
- *   [x] No React island needed — pure data-bs-* + vanilla JS
+ * bootstrap5nt:tabs — tab group where each jnt:contentList child becomes one panel.
+ * Anchor sanitization replaces non-alphanumeric chars with "-" and prefixes "tab-"
+ * when the first character is not a letter (replaces the custom b5:replaceAll taglib).
+ * Deep-linking via URL hash is handled by an inline init script via AddResources.
  */
 import {
   AddResources,

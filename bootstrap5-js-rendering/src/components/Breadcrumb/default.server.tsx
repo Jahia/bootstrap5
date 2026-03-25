@@ -1,32 +1,11 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:breadcrumb — SSR view
- *
- * Reproduces breadcrumb.jsp. The JSP uses jcr:getParentsOfType to walk up the JCR
- * tree and collect page ancestor nodes, then renders them in reverse order.
- *
- * Rendering parity checklist (from breadcrumb.jsp):
- *   [x] Collect page ancestors via getParentsOfType(currentNode, "jnt:page")
- *       Fallback: if empty, use mainResource node ancestors (jmix:navMenuItem)
- *   [x] Only render when more than 1 node in the path (edit-mode placeholder otherwise)
- *   [x] <ol class="breadcrumb [cssClass]" aria-label="...">
- *   [x] bootstrap5mix:advancedBreadcrumb → cssClass appended to ol
- *   [x] Reversed page nodes: each one is a <li class="breadcrumb-item">
- *   [x] Current page (path == mainResource.path) → active item, no link
- *   [x] Non-displayable node (jcr:findDisplayableNode ≠ node) → "#" link
- *   [x] All other ancestors → <a href="{base}{path}.html">
- *   [x] When mainResource is not a page, append a final item for the resource itself
- *   [x] Edit-mode placeholder when breadcrumb path is too short (≤ 1 node)
- *
- * ⚠️  Open questions:
- *   - getParentsOfType: requires validation that the JS server context exposes a helper
- *     equivalent to jcr:getParentsOfType. This implementation uses currentNode.getAncestors()
- *     and filters by node type as a best approximation.
- *   - jcr:findDisplayableNode: no known JS equivalent — non-displayable node detection is
- *     approximated by checking whether the node is of type jnt:page.
- *   - functions:abbreviate: used in JSP for non-page resource name truncation (15,30,"...").
- *     Reproduced with a plain JS string truncation helper.
- *   - url.base: in JS context, the base URL is obtained from renderContext.getURLGenerator().
- *     Approximated as an empty string prefix; validate with Jahia JS engine team.
+ * bootstrap5nt:breadcrumb — walks the JCR ancestor tree to render a Bootstrap breadcrumb.
+ * Non-displayable node detection approximates jcr:findDisplayableNode by checking jnt:page type.
+ * The url.base prefix is approximated as an empty string; validate with Jahia JS engine team.
  */
 import { jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";

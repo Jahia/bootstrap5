@@ -1,15 +1,5 @@
-/**
- * bootstrap5nt:version — rendering contract smoke test
- *
- * This is the simplest possible component: it renders a version badge.
- * Its only purpose is to validate that:
- *   1. The module loads in Jahia
- *   2. jahiaComponent() registers views correctly
- *   3. Props flow from JCR → React props
- *   4. renderContext is accessible
- *
- * Once this renders in Jahia, Sprint 1 & 2 are proven. Delete or keep as
- * a permanent smoke test.
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
  */
 import { jahiaComponent } from "@jahia/javascript-modules-library";
 

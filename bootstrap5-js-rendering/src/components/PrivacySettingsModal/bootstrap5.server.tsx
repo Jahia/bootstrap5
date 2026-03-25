@@ -1,27 +1,12 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * wemnt:privacySettingsModal — SSR view (Bootstrap 5 skin)
- *
- * Source JSP: wemnt_privacySettingsModal/html/privacySettingsModal.bootstrap5.jsp
- * Registers:  wemnt:privacySettingsModal / "bootstrap5"
- *
- * This component is part of Jahia Experience Manager (jExperience / WEM).
- * It renders a GDPR privacy management modal with:
- *   - A trigger button or link
- *   - A Bootstrap modal containing consent tabs and privacy settings
- *
- * PENDING INTEGRATION — WEM-specific JS constructs with no known JS equivalent:
- *   - `manageWemPrivacy.createInstance(...)` from wem-manage-privacy.js
- *   - `wem.downloadMyProfile()` / `wem.anonymizeProfile()` / `wem.togglePrivateBrowsing()`
- *   - `url.context` + `url.baseLive` + `site.path` for the consent types URL
- *   - `renderContext.isLoggedIn()` for conditional anonymize button
- *   - jQuery `$(document).ready(...)` bootstrap for the WEM instance
- *   - i18n keys from the WEM bundle (wemnt_privacySettingsModal.*)
- *
- * What IS implemented:
- *   - The full HTML structure (trigger button/link, modal, tabs, settings panel)
- *   - Edit-mode placeholder when neither anonymizeProfile nor activatePrivateBrowsing is set
- *   - AddResources for bootstrap.min.css and bootstrap.bundle.min.js
- *   - Structural fidelity to the JSP for easy drop-in replacement when WEM APIs are available
+ * wemnt:privacySettingsModal — GDPR privacy modal for Jahia Experience Manager (WEM).
+ * Renders a trigger button/link and a Bootstrap modal with consent tabs and settings.
+ * WEM-specific client-side APIs (manageWemPrivacy, wem.*) must be wired up separately
+ * once available in the JS engine.
  */
 import {
   AddResources,

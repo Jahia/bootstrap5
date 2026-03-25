@@ -1,22 +1,11 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:carouselItem — SSR fallback view
- *
- * This view is registered for standalone rendering of carousel item nodes
- * (e.g. when a carouselItem is rendered directly, outside the carousel parent).
- *
- * In the normal carousel flow, the parent view (default.server.tsx) renders
- * all slide markup inline via getChildNodes(), including the active class for
- * the first slide. This view is the fallback for direct/standalone rendering.
- *
- * Active detection: checks sibling order to determine if this item is first —
- * mirrors the template:param currentStatus mechanism in carouselItem.jsp.
- *
- * Rendering parity checklist (from carouselItem.jsp):
- *   [x] Edit mode: compact 64 px thumbnail + title/caption
- *   [x] Live mode: <div class="carousel-item [active] [itemClass]" [data-bs-interval]>
- *   [x] Image: <img src="{url}" class="d-block w-100">
- *   [x] Caption block (d-none d-md-block) when title or caption present
- *   [x] bootstrap5mix:advancedCarouselItem: titleColor, captionColor, carouselItemClass, interval
+ * bootstrap5nt:carouselItem — standalone/fallback view for a single carousel slide.
+ * In normal flow the parent carousel view renders slides inline; this view handles
+ * direct or edit-mode rendering. Active detection uses sibling order via getChildNodes().
  */
 import { getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";

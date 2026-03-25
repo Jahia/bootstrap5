@@ -1,42 +1,13 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:navbar — SSR view
- *
- * Consolidates navbar.jsp + navbar.hidden.basenav.jsp + navbar.hidden.login.jsp
- * + navbar.hidden.languages.jsp into one TSX file.
- *
- * navbar.hidden.basenav-multilevel-resources.jsp only adds CSS/JS resources (handled
- * by the module's resource declarations); its nav tree logic is in basenav.jsp.
- *
- * Rendering parity checklist:
- *   [x] Brand: site-level bootstrap5mix:siteBrand overrides component-level bootstrap5mix:brand
- *       — brandImage (desktop), brandImageMobile (shown below expand breakpoint), brandText
- *   [x] bootstrap5mix:navbarGlobalSettings: addContainerWithinTheNavbar, addLoginButton,
- *       addLanguageButton, maxlevel, root
- *   [x] bootstrap5mix:customizeNavbar: navClass, divClass, togglerClass, brandLinkClass,
- *       ulClass, liClass, navLinkClass, loginMenuULClass
- *   [x] Defaults for all customizable classes
- *   [x] Expand breakpoint extracted from navbar-expand-* token in navClass
- *   [x] Root node resolution: currentPage / parentPage / customRootPage → site home fallback
- *   [x] Nav items: level 1 with optional level 2 dropdown (maxlevel ≥ 2)
- *   [x] j:displayInMenuName filtering (multi-value property)
- *   [x] Node type routing: jnt:navMenuText (#), jnt:externalLink, jnt:page, jnt:nodeLink
- *   [x] Active detection: mainResource path contains page path
- *   [x] Login fragment: logged-in dropdown (workspace switching) + anonymous login modal
- *   [x] Language switcher dropdown (active language shown, others linked)
- *
- * ⚠️  Open questions / blocked features:
- *   - renderContext.isLoggedIn() / currentUser.username — validate JS context API
- *   - url.login / url.logout / url.live / url.preview / url.edit / url.contribute —
- *     validate URLGenerator accessor in JS context
- *   - ui:loginArea (generates form action for Jahia login) — no JS equivalent;
- *     login form action URL is a TODO
- *   - ui:initLangBarAttributes — populates languageCodes from site active languages;
- *     replaced here by renderContext.getSite().getLanguages() (validate API)
- *   - b5:switchToLanguageLink — custom taglib that builds locale-switched URL;
- *     approximated as "{pagePath}.{lang}.html" (validate URL pattern)
- *   - jcr:hasPermission — no known JS equivalent; workspace-switching links always rendered
- *   - ui:isLoginError — no JS equivalent; login error detection omitted
- *   - renderContext.settings.distantPublicationServerMode — validate accessor
+ * bootstrap5nt:navbar — responsive navigation bar with brand, multi-level nav items,
+ * optional login modal, and language switcher.
+ * Site-level bootstrap5mix:siteBrand overrides component-level brand settings.
+ * Language switch URLs use the approximated "{pagePath}.{lang}.html" pattern;
+ * login form action and workspace permission gating need validation with Jahia JS engine team.
  */
 import { getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";

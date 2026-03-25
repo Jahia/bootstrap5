@@ -1,45 +1,12 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:pagination — SSR view
- *
- * ⚠️  INTEGRATION UNCERTAINTY — READ BEFORE IMPLEMENTING
- *
- * The JSP implementation is tightly coupled to Java-only server infrastructure:
- *
- *   1. uiComponents:getBindedComponent(currentNode, renderContext, 'j:bindedComponent')
- *      Resolves the bound list component from the JCR j:bindedComponent weakref.
- *      No known JS equivalent — validate with Jahia JS engine team.
- *
- *   2. template:option node="${boundComponent}" view="hidden.header"
- *      Triggers the bound list component to execute its data fetch and populate
- *      moduleMap.listTotalSize, moduleMap.listApproxSize, moduleMap.currentPage, etc.
- *      This is a Java rendering pipeline step — no JS equivalent.
- *
- *   3. template:initPager totalSize pageSize id
- *      Java tag that initialises the pager state variables (currentPage, nbPages, etc.)
- *      in moduleMap. No JS equivalent.
- *
- *   4. HTTP request params: begin{id}, end{id}, pagesize{id}
- *      The pager reads window.location search params to determine the current page.
- *      In JS SSR, request.getParameter() can be accessed via renderContext.getRequest().
- *      This IS potentially accessible — but only meaningful once (1)–(3) are resolved.
- *
- * This file implements the HTML rendering layer (Bootstrap pagination markup) that
- * would be produced once the above integration is resolved. It accepts the pager
- * state as props so that it can be wired up once a JS-side bound component API exists.
- *
- * Rendering parity checklist (from pagination.jsp):
- *   [x] Edit-mode empty placeholder when no bound component
- *   [x] <ul class="pagination [layout] [align]">
- *   [x] Previous « button (disabled when currentPage ≤ 1)
- *   [x] Page number links (window of nbOfPages pages around currentPage)
- *   [x] Active page shown as <span> (not <a>)
- *   [x] Next » button (disabled when currentPage ≥ nbPages)
- *   [x] bootstrap5mix:advancedPagination: pageSize, nbOfPages, nbOfPagesInEdit, layout, align
- *   [x] layout/align "default" → omit CSS class
- *   [?] URL construction for prev/next/page links — depends on bound component resolution
- *
- * TODO: Revisit once Jahia JS engine provides bound component resolution and
- * request parameter access. Track in Sprint 6 issue #23.
+ * bootstrap5nt:pagination — Bootstrap pagination markup layer.
+ * Bound component resolution (uiComponents:getBindedComponent / template:initPager)
+ * has no JS equivalent yet; the component renders an edit-mode placeholder until
+ * the Jahia JS engine exposes a bound component API.
  */
 import { jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 

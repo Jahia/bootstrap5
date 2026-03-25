@@ -1,26 +1,11 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:carousel — SSR view (wrapper + slides)
- *
- * Reproduces carousel.jsp. Because JS modules have no template:param mechanism,
- * the carousel wrapper renders item markup directly from child node properties
- * (via getChildNodes) instead of delegating to a separate carouselItem view.
- * The standalone carousel-item.server.tsx view handles direct/edit rendering.
- *
- * Rendering parity checklist (from carousel.jsp):
- *   [x] Outer div id="carousel_{id}" class="carousel[edit] slide [carousel-fade] [carouselClass] [carousel-dark]"
- *       — "carouseledit" class in edit mode (CSS hook to disable animation)
- *   [x] bootstrap5mix:carouselAdvancedSettings: interval, keyboard, pause, ride, wrap, fade,
- *       useIndicators, useLeftAndRightControls, carouselClass, variant (dark)
- *   [x] Defaults: useIndicators=true, useLeftAndRightControls=true, ride=true, keyboard=true, wrap=true, fade=false
- *   [x] data-bs-* attributes: interval only when ≠ 5000; keyboard only when false;
- *       pause="hover" when true; ride="carousel" when true; wrap="false" when false
- *   [x] Indicators <ol class="carousel-indicators"> (hidden in edit mode)
- *   [x] Slides in <div class="carousel-inner[edit]">; first slide gets "active" class
- *   [x] Per-slide: image (d-block w-100), title (h3), caption (p), individual interval override
- *   [x] bootstrap5mix:advancedCarouselItem per slide: titleColor, captionColor, carouselItemClass, interval
- *   [x] Edit-mode per-slide: compact 64 px thumbnail + text
- *   [x] Prev/next controls (hidden in edit mode)
- *   [x] Edit-mode Area for adding new slides
+ * bootstrap5nt:carousel — carousel wrapper that renders all slides inline via getChildNodes().
+ * Uses "carouseledit" CSS class in edit mode to disable animation.
+ * Per-slide advanced settings (color, class, interval) are read directly from child nodes.
  */
 import {
   Area,

@@ -1,20 +1,14 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * Shared image rendering helper.
- *
- * Reproduces the logic of bootstrap5mix_image/html/image.image.jsp which is
- * called via <template:include view="image"> from figure.jsp, card.jsp, etc.
+ * Shared image rendering helper used by figure, card, and other components.
+ * Applies bootstrap5mix:imageAdvancedSettings (class, style, id, responsive,
+ * thumbnails, borderRadius, alignment, alt) on top of the caller-supplied base class.
  *
  * Usage:
- *   import { ImageTag } from "../../utils/image.js";
  *   <ImageTag node={currentNode} imageNode={image} callerClass="figure-img img-fluid" />
- *
- * @param node       - The component node that carries bootstrap5mix:image and
- *                     optionally bootstrap5mix:imageAdvancedSettings.
- * @param imageNode  - The resolved JCR image node (weakref target). May be null
- *                     if no image has been selected yet.
- * @param callerClass - Base CSS class provided by the caller (e.g. "figure-img
- *                     img-fluid" or "card-img-top"). Advanced-settings classes
- *                     are appended after this.
  */
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 

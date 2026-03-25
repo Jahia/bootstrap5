@@ -1,20 +1,11 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:accordion — SSR view (single panel)
- *
- * Reproduces accordion.jsp. Called by the parent accordions view via
- * <RenderChildren nodeType="bootstrap5nt:accordion" />.
- *
- * Rendering parity checklist (from accordion.jsp):
- *   [x] accordion-item wrapper
- *   [x] accordion-header with toggle button (data-bs-toggle, data-bs-target)
- *   [x] data-bs-parent ties this panel to its group — no React island needed
- *   [x] show class when show=true (panel starts expanded)
- *   [x] Rich-text body via dangerouslySetInnerHTML (text property is CKEditor output)
- *   [x] Droppable children via Area
- *   [x] Edit-mode add button via Area
- *
- * Note: The parent node id is obtained via currentNode.getParent().getIdentifier()
- * to reproduce data-bs-parent="#accordion-{parentId}".
+ * bootstrap5nt:accordion — single accordion panel.
+ * Parent node id is obtained via currentNode.getParent().getIdentifier()
+ * to build the data-bs-parent="#accordion-{parentId}" binding.
  */
 import { Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 

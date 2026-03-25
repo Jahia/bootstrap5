@@ -1,17 +1,10 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:text — SSR view
- *
- * Renders the rich-text `text` property (CKEditor HTML) as raw HTML.
- *
- * Source JSP: bootstrap5nt_text/html/text.jsp
- * Registers:  bootstrap5nt:text / "default"
- *
- * The JSP is a single line: ${currentNode.properties.text.string}
- * (plus a bootstrap.min.css AddResources call).
- *
- * The `text` property is stored i18n and contains sanitized CKEditor HTML.
- * It is injected via dangerouslySetInnerHTML — identical to how the JSP EL
- * expression outputs it without escaping.
+ * bootstrap5nt:text — renders the i18n CKEditor rich-text property as raw HTML
+ * via dangerouslySetInnerHTML.
  */
 import { jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 

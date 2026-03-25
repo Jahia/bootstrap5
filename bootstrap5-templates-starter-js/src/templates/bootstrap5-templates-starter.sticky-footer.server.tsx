@@ -1,36 +1,11 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * jnt:template — "bootstrap5-templates-starter.sticky-footer" view
- *
- * Reproduces template.bootstrap5-templates-starter.sticky-footer.jsp.
- *
- * Page structure:
- *   <html class="h-100">
- *     <head> … </head>
- *     <body class="d-flex flex-column h-100">
- *       <Area header />
- *       <main class="flex-shrink-0">
- *         <Area pagecontent />
- *       </main>
- *       <footer class="mt-auto">
- *         <Area footer />
- *       </footer>
- *     </body>
- *   </html>
- *
- * The sticky footer pattern relies on Bootstrap's flex utility classes:
- *   html / body at h-100 + body as flex column → footer is pushed to the
- *   bottom of the viewport even when page content is short.
- *
- * Rendering parity checklist:
- *   [x] html class="h-100", body class="d-flex flex-column h-100"
- *   [x] lang + optional dir="rtl"
- *   [x] Page title from currentNode.getDisplayableName()
- *   [x] bootstrap.min.css always present
- *   [x] starter-edit.css in edit mode only
- *   [x] bootstrap.bundle.min.js in <head> (edit) or <body> (live)
- *   [x] header / pagecontent / footer areas as sub-nodes
- *   [x] <main class="flex-shrink-0"> wrapper around pagecontent
- *   [x] <footer class="mt-auto"> wrapper around footer area
+ * jnt:template — "bootstrap5-templates-starter.sticky-footer" page layout.
+ * Uses Bootstrap flex utilities (h-100, d-flex flex-column) so the footer
+ * is always pinned to the bottom of the viewport regardless of content height.
  */
 import { AddResources, Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import { isRtlLanguage } from "../utils/rtl";

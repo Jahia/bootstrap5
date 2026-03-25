@@ -1,23 +1,12 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:button — SSR view
- *
- * Faithful reproduction of button.jsp. Six buttonType variants, each producing
- * different HTML. Advanced settings are driven by the bootstrap5mix:buttonAdvancedSettings
- * mixin which is injected at save time by ButtonTypeInitializer (Java).
- *
- * Rendering parity checklist (from button.jsp):
- *   [x] buttonClass built from style, outline, size, state, block, cssClass, nowrap, stretchedLink
- *   [x] internalLink  → <a href="..."> with node URL; falls back to displayableName as title
- *   [x] externalLink  → <a href="..."> with raw URL
- *   [x] modal         → <button> + hidden .modal div with droppable body
- *   [x] collapse      → <a> + .collapse div with droppable body
- *   [x] popover       → <button data-bs-toggle="popover"> + AddResources init script
- *   [x] Offcanvas     → <button> + .offcanvas panel with droppable body
- *   [x] Edit-mode warnings for missing link / URL
- *   [x] aria-pressed / aria-disabled for active / disabled state
- *
- * Not in scope for Sprint 3:
- *   - Bootstrap CSS/JS resources (AddResources) — added once the template layer exists
+ * bootstrap5nt:button — six buttonType variants (internalLink, externalLink, modal,
+ * collapse, popover, Offcanvas), each producing different HTML.
+ * Advanced settings are driven by the bootstrap5mix:buttonAdvancedSettings mixin
+ * injected at save time by ButtonTypeInitializer (Java).
  */
 import {
   AddResources,

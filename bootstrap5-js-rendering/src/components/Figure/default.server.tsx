@@ -1,17 +1,10 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:figure — SSR view
- *
- * Reproduces figure.jsp. The JSP delegates <img> rendering to
- * bootstrap5mix_image/html/image.image.jsp via <template:include view="image">.
- * In the JS module this logic is inlined via the shared ImageTag helper.
- *
- * Rendering parity checklist (from figure.jsp + image.image.jsp):
- *   [x] <figure class="figure">
- *   [x] <img> via ImageTag helper — caller class "figure-img img-fluid"
- *   [x] <figcaption> rendered only when jcr:title is non-empty
- *   [x] captionAlignment from bootstrap5mix:figureAdvancedSettings (or empty)
- *   [x] caption text is plain text (fn:escapeXml in JSP → React escapes by default)
- *   [x] No JS required
+ * bootstrap5nt:figure — figure with image and optional caption.
+ * Image rendering is delegated to the shared ImageTag helper.
  */
 import { jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";

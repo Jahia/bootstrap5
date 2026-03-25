@@ -1,20 +1,11 @@
+/*
+ * MIT License — Copyright (c) 2024 Philippe Vollenweider <pvollenweider@jahia.com>
+ */
+
 /**
- * bootstrap5nt:card — SSR view
- *
- * Reproduces card.jsp. The image sub-view delegation (template:include view="image") is
- * replaced by the shared ImageTag helper (same approach as Figure).
- *
- * Rendering parity checklist (from card.jsp):
- *   [x] Outer div: cssClass (default "card") + textAlign + backgroundColor + textColor + borderColor
- *   [x] Image via ImageTag with callerClass="card-img-top" when image property is set
- *   [x] Header element (headerSize: div or h1–h6) with cardHeaderCssClass when jcr:title is set
- *   [x] Card body (cardBodyCssClass, default "card-body") with droppable children
- *   [x] Droppable children: all jmix:droppableContent children except the "cardFooter" subnode
- *   [x] Edit-mode Area drop zone for new droppable content
- *   [x] Footer div (card-footer textColor) when footer text or freeFooter=true
- *   [x] freeFooter Area as subnode "cardFooter" (bootstrap5mix:cardAdvancedSettings)
- *   [x] bootstrap5mix:colors: bg-{color} (omit when "default"), text-{color}, border-{color} (omit when "default")
- *   [x] bootstrap5mix:cardAdvancedSettings: cssClass, cardBodyCssClass, cardHeaderCssClass, freeFooter
+ * bootstrap5nt:card — card component with optional image, header, body, and footer.
+ * Image rendering is handled by the shared ImageTag helper.
+ * Droppable children exclude the reserved "cardFooter" subnode name.
  */
 import {
   Area,
