@@ -75,11 +75,10 @@
     <dependencies>
         <dependency>
             <groupId>org.jahiacommunity.modules</groupId>
-            <artifactId>bootstrap5-components</artifactId>
+            <artifactId>bootstrap5-core</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>
@@ -90,7 +89,7 @@
                 <configuration>
                     <instructions>
                         <Jahia-Module-Type>templatesSet</Jahia-Module-Type>
-                        <Jahia-Depends>default,bootstrap5-components</Jahia-Depends>
+                        <Jahia-Depends>default,bootstrap5-core</Jahia-Depends>
                         <Import-Package>org.jahia.modules.bootstrap5,${jahia.plugin.projectPackageImport},*</Import-Package>
                     </instructions>
                 </configuration>

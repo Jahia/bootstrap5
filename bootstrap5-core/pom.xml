@@ -31,6 +31,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
   <description>This module provide the Bootstrap 5 assets for Jahia</description>
   <properties>
     <jahia-static-resources>/css,/icons,/javascript</jahia-static-resources>
+    <version.compiler.plugin>3.3</version.compiler.plugin>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
   </properties>
   <build>
     <plugins>
@@ -68,7 +71,18 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
           <instructions>
             <Jahia-Depends>default</Jahia-Depends>
             <Jahia-Module-Priority>5</Jahia-Module-Priority>
+            <_dsannotations>org.jahia.modules.bootstrap5.initializers.*</_dsannotations>
+            <Export-Package>org.jahia.modules.bootstrap5</Export-Package>
           </instructions>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.compiler.plugin}</version>
+        <configuration>
+          <compilerArgument>-parameters</compilerArgument>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
         </configuration>
       </plugin>
     </plugins>

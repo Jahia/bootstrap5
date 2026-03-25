@@ -8,7 +8,11 @@
   "author": "Jahia Solutions Group SA",
   "files": [
     "dist",
-    "settings"
+    "settings",
+    "META-INF",
+    "resources",
+    "img",
+    "javascript"
   ],
   "scripts": {
     "build": "tsc --noEmit && vite build && yarn pack --out dist/package.tgz",
@@ -33,7 +37,7 @@
     "yarn": ">=4.0.0"
   },
   "jahia": {
-    "module-dependencies": "bootstrap5-components",
+    "module-dependencies": "bootstrap5-core",
     "module-type": "module",
     "server": "dist/server/index.js",
     "static-resources": "/dist/client,/dist/assets"
