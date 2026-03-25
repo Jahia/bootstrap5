@@ -26,7 +26,7 @@
                                 other template sets when resolving views.
       -->
       <bootstrap5-templates-starter j:dependencies="bootstrap5-components default"
-                                    j:installedModules="bootstrap5-templates-starter"
+                                    j:installedModules="bootstrap5-templates-starter bootstrap5-js-rendering bootstrap5-templates-starter-js"
                                     j:modulePriority="0"
                                     j:moduleType="templatesSet"
                                     j:title="bootstrap5-templates-starter"
