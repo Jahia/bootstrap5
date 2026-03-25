@@ -12,28 +12,30 @@ A production-ready Bootstrap 5 implementation for the [Jahia Digital Experience 
 
 | I am… | My doc |
 |---|---|
-| ✍️ **Content editor** — I add and edit content in Jahia | [User Guide](docs/user-guide.md) |
-| 🏗️ **Integrator / template developer** — I build Jahia templates | [Integrator Guide](docs/integrator-guide.md) |
-| 🔧 **Module developer** — I contribute to or extend this module | [Developer Guide](docs/developer-guide.md) |
-| 🖥️ **System administrator** — I install and operate Jahia | [SysOp Guide](docs/sysop-guide.md) |
+| ✍️ **Content editor** — I add and edit content in Jahia | [Content Editor Guide](docs/content-editor/README.md) |
+| 🏗️ **Integrator / template developer** — I build Jahia templates | [Integrator Guide](docs/integrator/README.md) |
+| 🔧 **Module developer** — I contribute to or extend this module | [Developer Guide](docs/developer/README.md) |
+| 🖥️ **System administrator** — I install and operate Jahia | [SysAdmin Guide](docs/sysadmin/README.md) |
 
 ---
 
-## Templates
+## Module stack
 
-[Templates Starter](docs/templates-starter.md) — two ready-to-use page layouts (standard + sticky footer) with RTL support, and a base to build your own template set.
+Three modules make up the full stack:
+
+| Module | Artifact | Role |
+|--------|----------|------|
+| `bootstrap5-core` | `.jar` (OSGi) | Bootstrap CSS/JS assets, Java initializers |
+| `bootstrap5-js-rendering` | `.tgz` (JS module) | All component views, CND definitions, Content Editor forms |
+| `bootstrap5-templates-starter-js` | `.tgz` (JS module, templatesSet) | Page templates; required to create sites |
 
 ## Components
 
-[Grid & Layout](docs/grid.md) · [Navbar](docs/navbar.md) · [Button](docs/button.md) · [Card](docs/card.md) · [Carousel](docs/carousel.md) · [Accordion](docs/accordion.md) · [Tabs](docs/tabs.md) · [Figure](docs/figure.md) · [Text](docs/text.md) · [Breadcrumb](docs/breadcrumb.md) · [Pagination](docs/pagination.md)
-
-## Images
-
-[Images & the `image` view](docs/images.md) — mixin hierarchy, shared `image` view, template parameters (`class`, `style`, `id`), and merge rules for integrators building custom components.
+[Accordion](docs/content-editor/components/accordion.md) · [Alert](docs/content-editor/components/alert.md) · [Breadcrumb](docs/content-editor/components/breadcrumb.md) · [Button](docs/content-editor/components/button.md) · [Card](docs/content-editor/components/card.md) · [Carousel](docs/content-editor/components/carousel.md) · [Figure](docs/content-editor/components/figure.md) · [Grid & Layout](docs/content-editor/components/grid.md) · [Navbar](docs/content-editor/components/navbar.md) · [Pagination](docs/content-editor/components/pagination.md) · [Tabs](docs/content-editor/components/tabs.md) · [Text](docs/content-editor/components/text.md)
 
 ## Reference
 
-[Mixin catalog](docs/mixins.md) · [Node type reference](docs/reference/node-types.md) · [Taglib reference](docs/reference/taglib.md) · [Changelog](CHANGELOG.md)
+[Mixin catalog](docs/integrator/mixins.md) · [Architecture](docs/developer/architecture.md) · [Build system](docs/developer/build.md) · [Changelog](CHANGELOG.md)
 
 ---
 
@@ -41,8 +43,11 @@ A production-ready Bootstrap 5 implementation for the [Jahia Digital Experience 
 
 **From the Jahia Store:** Administration → Modules → Available modules → search *Bootstrap 5 package* → Install.
 
-**From GitHub:** download the [latest release](https://github.com/Jahia/bootstrap5/releases/latest), install `bootstrap5-core` then `bootstrap5-components` via the module manager.
+**From GitHub:** download the [latest release](https://github.com/Jahia/bootstrap5/releases/latest), then deploy in order:
+1. `bootstrap5-core` (JAR)
+2. `bootstrap5-js-rendering` (TGZ)
+3. `bootstrap5-templates-starter-js` (TGZ)
 
-> Requires **Jahia 8.2+**. For Jahia 8.0.x use v2.3.x, for Jahia 7.3.x use v1.x.x.
+> Requires **Jahia 8.2+** with GraalVM polyglot JS engine.
 
-Full installation details → [SysOp Guide](docs/sysop-guide.md)
+Full installation details → [SysAdmin Guide](docs/sysadmin/installation.md)
