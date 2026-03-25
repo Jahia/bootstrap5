@@ -500,6 +500,65 @@ initialised (via an inline AddResources script, once the URL APIs are available)
 
 ---
 
+## Page template views (`jnt:template`)
+
+Bootstrap 5 page templates are rendered via `jnt:template` views. Unlike content components (which render a fragment inside an existing page), template views produce the full `<html>` document shell.
+
+Template TSX files live in `src/templates/` rather than `src/components/` to make the distinction clear at a glance. The `@jahia/vite-plugin` scans `src/**/*.server.tsx`, so they are picked up automatically.
+
+| View name | File | Replaces |
+|---|---|---|
+| `bootstrap5-templates-starter` | `src/templates/bootstrap5-templates-starter.server.tsx` | `template.bootstrap5-templates-starter.jsp` |
+| `bootstrap5-templates-starter.sticky-footer` | `src/templates/bootstrap5-templates-starter.sticky-footer.server.tsx` | `template.bootstrap5-templates-starter.sticky-footer.jsp` |
+
+### Registering a template view
+
+```tsx
+jahiaComponent(
+  {
+    nodeType: "jnt:template",
+    name: "bootstrap5-templates-starter",   // must match j:view on the jnt:template node
+    displayName: "Bootstrap 5 Starter",
+    componentType: "view",
+  },
+  function TemplateView() {
+    const { renderContext, currentNode } = useServerContext();
+    // …
+    return (
+      <html lang={language}>
+        <head>…</head>
+        <body>
+          <Area path="header" areaAsSubNode={true} moduleType="absoluteArea" level={0} />
+          <Area path="pagecontent" areaAsSubNode={true} />
+          <Area path="footer" areaAsSubNode={true} moduleType="absoluteArea" level={0} />
+        </body>
+      </html>
+    );
+  }
+);
+```
+
+### RTL detection
+
+`isRtlLanguage(language)` in `src/utils/rtl.ts` mirrors `Functions.java#isRtlLanguage`. It checks Unicode block ranges (Arabic, Hebrew, Syriac, Thaana, N'Ko, …) rather than a hardcoded list of language codes, so regional variants work without changes.
+
+### `<!DOCTYPE html>`
+
+React has no JSX node for the doctype. Jahia's JS rendering framework prepends `<!DOCTYPE html>` from the HTTP `Content-Type` response, equivalent to what the JSP `<%@ page contentType="text/html;charset=UTF-8" %>` directive produces.
+
+### Bootstrap JS placement
+
+`bootstrap.bundle.min.js` is injected in `<head>` during edit mode (Jahia editing infrastructure requirement) and at the end of `<body>` in live/preview mode (performance default):
+
+```tsx
+{isEditMode
+  ? <AddResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="head" />
+  : <AddResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="body" />
+}
+```
+
+---
+
 ## Open questions (validation needed before production)
 
 | ID | Component | Issue |

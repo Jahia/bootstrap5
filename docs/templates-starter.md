@@ -199,4 +199,39 @@ When building your own template, carry this file along — you'll likely need it
 
 ---
 
+## JS Rendering
+
+Both page templates are implemented in `bootstrap5-js-rendering` as full-page SSR components.
+
+| View name | Source file |
+|---|---|
+| `bootstrap5-templates-starter` | `bootstrap5-js-rendering/src/templates/bootstrap5-templates-starter.server.tsx` |
+| `bootstrap5-templates-starter.sticky-footer` | `bootstrap5-js-rendering/src/templates/bootstrap5-templates-starter.sticky-footer.server.tsx` |
+
+**nodeType:** `jnt:template`
+
+Both files are placed under `src/templates/` rather than `src/components/` to make the distinction between page-level templates and content fragments visually clear. The `@jahia/vite-plugin` scans `src/**/*.server.tsx` so they are discovered automatically.
+
+### RTL detection
+
+The `b5:isRtlLanguage()` EL function from `bootstrap5-components` is replicated in TypeScript as `isRtlLanguage()` in `bootstrap5-js-rendering/src/utils/rtl.ts`. The implementation uses the same strategy as `Functions.java`: it checks Unicode block ranges rather than maintaining a hardcoded list of language codes, so regional variants (`ar-SA`, `he-IL`, `fa-IR`, …) are handled automatically.
+
+### Doctype
+
+The JSP templates output `<!DOCTYPE html>` via the `<%@ page contentType="text/html;charset=UTF-8" %>` directive. In React SSR there is no equivalent JSX node for the doctype; Jahia's JS rendering framework is expected to prepend it based on the HTTP `Content-Type`. The template component returns `<html>` as its root element.
+
+### Bootstrap JS position
+
+The `bootstrap.bundle.min.js` script is placed in `<head>` when `renderContext.isEditMode()` is true (required by Jahia's editing infrastructure) and at the end of `<body>` otherwise (performance default), exactly mirroring the JSP `targetTag="${renderContext.editMode?'head':'body'}"` attribute.
+
+### Building a custom template set with JS views
+
+When creating a custom template set that replaces `bootstrap5-templates-starter`:
+
+1. Keep the `repository.xml` / `jnt:template` hierarchy in a Maven `templatesSet` module (this is required by Jahia)
+2. Declare new JS views in your JS rendering module by registering `jahiaComponent` entries with `nodeType: "jnt:template"` and the `name` matching the `j:view` value on your `jnt:template` / `jnt:pageTemplate` nodes
+3. Add your JS rendering module as an additional `Jahia-Depends` in the template set's `pom.xml`
+
+---
+
 [← Back to README](../README.md)
