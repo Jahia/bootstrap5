@@ -20,7 +20,9 @@ Three modules must be deployed to get a fully functional Bootstrap 5 JS site:
 
 ## Minimum Jahia version
 
-Jahia **8.2.0.0** or later. The JS rendering engine (GraalVM polyglot) is required and available from this version.
+Jahia **8.2.0.0** or later. The JS rendering engine is required and available from this version.
+
+> **Jahia 8.2.3+ note:** The provisioning commands have been renamed — use `installOrUpgradeModule` instead of the deprecated `installOrUpgradeBundle`. GraalVM has been replaced by OpenJDK in Docker images; no code changes are required as all `?.()` optional-call syntax has been removed from these modules.
 
 ## Supported Node.js
 

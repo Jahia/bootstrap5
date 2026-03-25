@@ -99,7 +99,7 @@ node/node node/node_modules/.bin/npm run build:maven
 
 curl -X POST http://localhost:8080/modules/api/provisioning \
   -u root:1234 \
-  -F 'script=[{"installOrUpgradeBundle":"package.tgz","ignoreChecks":true}]' \
+  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
   -F 'file=@dist/package.tgz;filename=package.tgz'
 ```
 

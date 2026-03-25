@@ -86,7 +86,7 @@ AUTH=$(echo -n "root:YOUR_PASSWORD" | base64)
 
 curl -X POST http://localhost:8080/modules/api/provisioning \
   -H "Authorization: Basic $AUTH" \
-  -F 'script=[{"installOrUpgradeBundle":"package.tgz","ignoreChecks":true}]' \
+  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
   -F 'file=@dist/package.tgz;filename=package.tgz'
 ```
 

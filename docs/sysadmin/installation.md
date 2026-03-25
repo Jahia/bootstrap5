@@ -15,7 +15,7 @@ Deploy the three modules in this order:
 ```bash
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeBundle":"bootstrap5-core.jar"}]' \
+  -F 'script=[{"installOrUpgradeModule":"bootstrap5-core.jar"}]' \
   -F 'file=@bootstrap5-core-2.4.5.jar;filename=bootstrap5-core.jar'
 ```
 
@@ -24,7 +24,7 @@ curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
 ```bash
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeBundle":"package.tgz","ignoreChecks":true}]' \
+  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
   -F 'file=@bootstrap5-js-rendering-1.0.0.tgz;filename=package.tgz'
 ```
 
@@ -33,7 +33,7 @@ curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
 ```bash
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeBundle":"package.tgz","ignoreChecks":true}]' \
+  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
   -F 'file=@bootstrap5-templates-starter-js-1.0.0.tgz;filename=package.tgz'
 ```
 

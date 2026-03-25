@@ -28,14 +28,14 @@ WARN [JahiaCndReader] Node type 'bootstrap5nt:accordion' already defined with a 
 
 ---
 
-## GraalVM render error — `execute` message not supported
+## JS engine render error — `execute` message not supported
 
 **Symptom:**
 ```
 TypeError: execute on org.jahia.services.render.RenderContext failed due to: Message not supported
 ```
 
-**Cause:** A `?.()` optional-call expression is used on a Java object reference in a TSX view. GraalVM sends an `execute` message instead of `invoke`, which Java objects do not support.
+**Cause:** A `?.()` optional-call expression is used on a Java object reference in a TSX view. The JS engine (GraalVM on Jahia ≤ 8.2.2, OpenJDK-based engine on 8.2.3+) sends an `execute` message instead of `invoke`, which Java objects do not support.
 
 **Fix:** Replace all `obj.method?.()` with explicit null guards:
 
@@ -97,7 +97,7 @@ const lang = locale ? String(locale.getLanguage()) : "en";
 
 | Log file | Content |
 |----------|---------|
-| `tomcat/logs/catalina.out` | Full startup/shutdown log, module lifecycle, GraalVM errors |
+| `tomcat/logs/catalina.out` | Full startup/shutdown log, module lifecycle, JS engine errors |
 | `tomcat/logs/jahia.log` | Jahia application log |
 | `tomcat/logs/jahia_access.log` | HTTP access log |
 
@@ -110,8 +110,8 @@ grep "bootstrap5" catalina.out | grep -E "INFO|ERROR|WARN"
 # CND loading
 grep "JahiaCndReader" catalina.out
 
-# GraalVM errors
-grep "GraalVM\|TypeError\|execute on" catalina.out
+# JS engine errors (GraalVM on ≤ 8.2.2, OpenJDK Nashorn on 8.2.3+)
+grep "TypeError\|execute on\|javascript-modules" catalina.out
 
 # Content Editor forms
 grep "StaticDefinitionsRegistry" catalina.out

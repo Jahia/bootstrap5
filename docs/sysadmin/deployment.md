@@ -16,13 +16,13 @@ curl -H "Authorization: Basic $AUTH" ...
 # JS module (TGZ)
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -H "Authorization: Basic $AUTH" \
-  -F 'script=[{"installOrUpgradeBundle":"package.tgz","ignoreChecks":true}]' \
+  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
   -F 'file=@dist/package.tgz;filename=package.tgz'
 
 # Java module (JAR)
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -H "Authorization: Basic $AUTH" \
-  -F 'script=[{"installOrUpgradeBundle":"module.jar"}]' \
+  -F 'script=[{"installOrUpgradeModule":"module.jar"}]' \
   -F 'file=@bootstrap5-core-2.4.5.jar;filename=module.jar'
 ```
 
@@ -72,7 +72,7 @@ Bundle bootstrap5-js-rendering has unresolved dependency bootstrap5-core and won
 Deploy `bootstrap5-core` first, then start the JS modules:
 
 ```yaml
-- installOrUpgradeBundle: "bootstrap5-core.jar"
+- installOrUpgradeModule: "bootstrap5-core.jar"
 - start: "bootstrap5-js-rendering"
 - start: "bootstrap5-templates-starter-js"
 ```
