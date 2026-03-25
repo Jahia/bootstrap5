@@ -2,6 +2,8 @@
 
 The Tabs component displays content in labelled panels. Only one panel is visible at a time; clicking a tab label reveals its panel.
 
+![Tabs](../../../images/tabs.png)
+
 ## How to use
 
 1. Add a **Tabs** component
@@ -23,3 +25,7 @@ The Tabs component displays content in labelled panels. Only one panel is visibl
 - Deep-linking is built in: if the page URL contains a hash matching a tab anchor (e.g. `#my-tab`), that tab opens automatically on load.
 - Navigating to a different tab updates the URL hash, allowing the browser Back button to work.
 - Tab anchor names are sanitized automatically: spaces and special characters become hyphens.
+
+![Tabs in edit mode](../../../images/edit-tabs.png)
+![Single tab edit](../../../images/edit-tab.png)
+![Adding a tab](../../../images/tabs-add.gif)

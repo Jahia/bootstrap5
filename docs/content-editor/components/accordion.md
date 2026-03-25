@@ -2,6 +2,9 @@
 
 An accordion displays a list of collapsible panels. Only one panel (or several) can be open at a time.
 
+![Accordion default](../../../images/accordion_default.png)
+![Accordion flush](../../../images/accordion_flush.png)
+
 ## How to use
 
 1. Add an **Accordion** component to your page area

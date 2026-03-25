@@ -33,6 +33,8 @@ Wraps content in a Bootstrap `.container` div.
 
 Divides the row into a preset ratio of Bootstrap columns. A droppable area is created for each column.
 
+![Grid layout presets](../../../images/grid-layout.png)
+
 | Field | Description |
 |-------|-------------|
 | Grid type | Choose the column ratio |
@@ -78,6 +80,8 @@ Renders shared content areas pulled from an ancestor level.
 ### List limit
 
 Caps the number of items rendered in each column area.
+
+![Grid list limit](../../../images/grid-limit.png)
 
 | Field | Description |
 |-------|-------------|

@@ -2,6 +2,9 @@
 
 A carousel cycles through a set of slides. Each slide contains an image with an optional title and caption.
 
+![Carousel](../../../images/carousel.png)
+![Carousel with controls](../../../images/carousel_controls.png)
+
 ## How to use
 
 1. Add a **Carousel** component

@@ -2,6 +2,8 @@
 
 A card is a flexible content container with an optional image, header, body, and footer.
 
+![Card](../../../images/card.png)
+
 ## Properties
 
 | Field | Description |

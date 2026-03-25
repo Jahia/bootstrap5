@@ -2,6 +2,8 @@
 
 The Navbar renders the site navigation header, including the brand logo/name, the page menu tree, an optional login button, and an optional language switcher.
 
+![Navbar](../../../images/navigation.png)
+
 ## Properties
 
 ### Navigation root
@@ -23,6 +25,10 @@ The Navbar renders the site navigation header, including the brand logo/name, th
 > **Note:** Brand settings can also be configured at the **site level** (via the site properties in the administration). Site-level brand overrides the component-level setting.
 
 ### Options
+
+![Navbar options](../../../images/navigation-options.png)
+![Login button](../../../images/navigation-signin.png)
+![Language switcher](../../../images/navigation-language.png)
 
 | Field | Description |
 |-------|-------------|
@@ -50,3 +56,9 @@ The Navbar renders the site navigation header, including the brand logo/name, th
 - Only pages with **Display in menu** enabled appear in the navbar.
 - The active page and its ancestors receive the `active` CSS class.
 - On mobile, the menu collapses and is revealed by a hamburger button.
+
+![Navbar in edit mode](../../../images/navigation-edit.png)
+![Rendered navigation view](../../../images/navigation-view.png)
+![Toggleable navbar](../../../images/navigation-toggleable.png)
+![Mobile toggler](../../../images/navigation-toggler.png)
+![Recursive navigation](../../../images/navigation-recursive.png)

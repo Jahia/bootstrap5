@@ -2,6 +2,8 @@
 
 The Text component renders a rich-text block using the Jahia CKEditor integration.
 
+![Text component](../../../images/text.png)
+
 ## Properties
 
 | Field | Description |

@@ -28,6 +28,12 @@ Choose the type first — it unlocks the relevant fields.
 | Disable text wrapping | Prevent the label from wrapping to a second line |
 | Stretched link | Make the entire parent card/container clickable |
 
+![Button styles](../../../images/button-style.png)
+![Button outline](../../../images/button-outline.png)
+![Button sizes](../../../images/button-size.png)
+![Button block](../../../images/button-block.png)
+![Button states](../../../images/button-state.png)
+
 ## Internal link fields
 
 | Field | Description |
@@ -43,6 +49,8 @@ Choose the type first — it unlocks the relevant fields.
 | URL | The target URL |
 
 ## Modal fields
+
+![Modal](../../../images/modal.png)
 
 | Field | Description |
 |-------|-------------|
@@ -66,6 +74,8 @@ The collapse body is a droppable area.
 
 ## Popover fields
 
+![Popover](../../../images/popover.png)
+
 | Field | Description |
 |-------|-------------|
 | Label | The button text |
@@ -75,6 +85,8 @@ The collapse body is a droppable area.
 | Allow HTML | Render HTML tags in the content |
 
 ## Offcanvas fields
+
+![Offcanvas](../../../images/offcanvas.png)
 
 | Field | Description |
 |-------|-------------|

@@ -2,6 +2,8 @@
 
 The Pagination component renders a Bootstrap pagination bar bound to a content list on the same page. Visitors can navigate through the list page by page.
 
+![Pagination](../../../images/pagination.png)
+
 ## Properties
 
 | Field | Description |
@@ -22,3 +24,8 @@ The Pagination component renders a Bootstrap pagination bar bound to a content l
 
 - The Pagination component must be **bound** to a content list on the same page using the Jahia binding mechanism.
 - The bound list controls which content is paginated; Pagination only renders the navigation bar.
+
+![Pagination initial setup](../../../images/pagination-init.png)
+![Pagination size variants](../../../images/pagination-size.png)
+![Before pagination](../../../images/pagination-before.gif)
+![After pagination](../../../images/pagination-after.gif)

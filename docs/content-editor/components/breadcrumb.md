@@ -1,6 +1,8 @@
 # Breadcrumb
 
-The breadcrumb component automatically reflects the current page's position in the site hierarchy. No manual configuration of the links is required.
+The breadcrumb component automatically reflects the current page's position in the site hierarchy.
+
+![Breadcrumb](../../../images/breadcrumb.png) No manual configuration of the links is required.
 
 ## Properties
 
