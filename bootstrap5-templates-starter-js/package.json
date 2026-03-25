@@ -1,0 +1,36 @@
+{
+  "name": "bootstrap5-templates-starter-js",
+  "version": "1.0.0-SNAPSHOT",
+  "description": "Bootstrap 5 for Jahia — JS/React page template views for bootstrap5-templates-starter",
+  "type": "module",
+  "license": "MIT",
+  "author": "Jahia Solutions Group SA",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit && vite build && yarn pack --out dist/package.tgz",
+    "clean": "rm -rf dist/",
+    "dev": "vite build --watch",
+    "deploy": "jahia-deploy",
+    "watch": "yarn dev",
+    "watch:callback": "yarn pack --out dist/package.tgz && yarn deploy"
+  },
+  "devDependencies": {
+    "@jahia/javascript-modules-library": "^1.0.0",
+    "@jahia/vite-plugin": "^1.0.0",
+    "@types/react": "^19.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "yarn": ">=4.0.0"
+  },
+  "jahia": {
+    "module-dependencies": "bootstrap5-templates-starter",
+    "module-type": "module",
+    "server": "dist/server/index.js",
+    "static-resources": "/dist/client,/dist/assets"
+  }
+}
