@@ -2,12 +2,12 @@
   <id>root</id>
   <includeBaseDirectory>false</includeBaseDirectory>
   <formats>
-    <format>zip</format>
+    <format>jar</format>
   </formats>
   <fileSets>
     <fileSet>
-      <directory>${basedir}/src/main/resources</directory>
-      <outputDirectory>/</outputDirectory>
+      <directory>${basedir}/src/main/resources/META-INF</directory>
+      <outputDirectory>/META-INF</outputDirectory>
       <includes>
         <include>provisioning.yaml</include>
       </includes>
