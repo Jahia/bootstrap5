@@ -34,9 +34,9 @@
   },
   "jahia": {
     "name": "Bootstrap5 Templates Starter",
-    "module-dependencies": "bootstrap5-core",
+    "module-dependencies": "bootstrap5-core, bootstrap5-components",
     "module-type": "templatesSet",
     "server": "dist/server/index.js",
-    "static-resources": "/dist/client,/dist/assets"
+    "static-resources": "/dist/client,/dist/assets,/css"
   }
 }
