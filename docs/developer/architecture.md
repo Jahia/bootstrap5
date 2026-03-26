@@ -95,10 +95,7 @@ The entry point `src/index.ts` (compiled to `dist/server/index.js`) imports all 
 
 ## CND and module ownership
 
-`bootstrap5-js-rendering` owns all `bootstrap5nt:*` node types and `bootstrap5mix:*` mixins. Definitions are split across two locations:
-
-- **`settings/definitions.cnd`** — namespaces and cross-component shared mixins (image, padding, margin)
-- **`src/components/<Name>/definition.cnd`** — one file per component (12 files)
+`bootstrap5-js-rendering` owns all `bootstrap5nt:*` node types and `bootstrap5mix:*` mixins. All definitions live in **`settings/definitions.cnd`** — the only CND file the Jahia JS engine reads. Per-component `src/components/*/definition.cnd` files exist for source readability but are not loaded by the engine.
 
 `bootstrap5-core` owns only `bootstrap5mix:component` (the base marker mixin) and `bootstrap5nt:version`.
 
@@ -107,7 +104,7 @@ The entry point `src/index.ts` (compiled to `dist/server/index.js`) imports all 
 The `@jahia/vite-plugin` compiles TypeScript/TSX to `dist/server/index.js`. It does **not** copy static files. Static resources are packaged by listing their directories in the `files` array of `package.json`:
 
 ```json
-"files": ["dist/server", "src/**/*.cnd", "settings", "META-INF", "resources", "img", "javascript"]
+"files": ["dist/server", "settings", "META-INF", "resources", "img", "javascript"]
 ```
 
-The `src/**/*.cnd` glob includes all per-component `definition.cnd` files. `META-INF` is kept for the Content Editor forms JSON. npm pack includes all listed paths verbatim in the TGZ.
+`META-INF` contains the Content Editor forms JSON. npm pack includes all listed paths verbatim in the TGZ.

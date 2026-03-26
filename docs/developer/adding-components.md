@@ -2,7 +2,7 @@
 
 ## Step 1 — Define the node type in the CND
 
-Create `bootstrap5-js-rendering/src/components/MyComponent/definition.cnd`:
+Add the new type to **`bootstrap5-js-rendering/settings/definitions.cnd`** — this is the only CND file the Jahia JS engine reads. Add it at the end of the file (after the existing types):
 
 ```cnd
 [bootstrap5nt:myComponent] > jnt:content, bootstrap5mix:component
@@ -15,7 +15,7 @@ Key points:
 - Use `i18n` for user-facing text properties
 - Use `choicelist[resourceBundle]` for enumerated values with labels
 - Choicelist with auto-mixin injection: `choicelist[gridTypeInitializer5,resourceBundle]` (see [CND definitions](cnd-definitions.md))
-- Namespaces (`bootstrap5nt`, `bootstrap5mix`, `jnt`, `jmix`, `mix`) are declared in `settings/definitions.cnd` — do **not** repeat them in component files
+- Namespaces (`bootstrap5nt`, `bootstrap5mix`, `jnt`, `jmix`, `mix`) are already declared at the top of `settings/definitions.cnd` — do **not** repeat them
 - Cross-component mixins (`bootstrap5mix:image`, `bootstrap5mix:padding`, etc.) are also in `settings/definitions.cnd` — reference them freely
 
 ## Step 2 — Add i18n labels
