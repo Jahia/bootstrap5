@@ -57,12 +57,12 @@ jahiaComponent(
               targetTag="body"
             />
           )}
-          <AbsoluteArea name="header" parent={siteNode} />
+          <AbsoluteArea name="header" parent={siteNode} numberOfItems={0} />
           <main className="flex-shrink-0">
-            <Area name="pagecontent" />
+            <Area name="pagecontent" numberOfItems={0} />
           </main>
           <footer className="mt-auto">
-            <AbsoluteArea name="footer" parent={siteNode} />
+            <AbsoluteArea name="footer" parent={siteNode} numberOfItems={0} />
           </footer>
         </body>
       </html>
