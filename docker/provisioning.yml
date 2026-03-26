@@ -1,0 +1,29 @@
+# Bootstrap 5 — Docker provisioning script
+# Used when starting a local Jahia Docker environment.
+# Installs the javascript-modules-engine and all Bootstrap 5 modules.
+#
+# Usage with docker-compose:
+#   environment:
+#     EXECUTE_PROVISIONING_SCRIPT: "file:/mnt/jahia/provisioning.yml"
+#   volumes:
+#     - type: bind
+#       source: ./docker
+#       target: /mnt/jahia
+
+- installOrUpgradeBundle: 'mvn:org.jahia.modules/javascript-modules-engine'
+  autoStart: true
+
+- installOrUpgradeBundle: 'mvn:org.jahia.modules/skins'
+  autoStart: true
+
+- installOrUpgradeBundle: 'mvn:org.jahiacommunity.modules/bootstrap5-core'
+  autoStart: true
+  uninstallPreviousVersion: true
+
+- installOrUpgradeBundle: 'js:mvn:org.jahiacommunity.modules/bootstrap5-components//tgz'
+  autoStart: true
+  uninstallPreviousVersion: true
+
+- installOrUpgradeBundle: 'js:mvn:org.jahiacommunity.modules/bootstrap5-templates-starter//tgz'
+  autoStart: true
+  uninstallPreviousVersion: true

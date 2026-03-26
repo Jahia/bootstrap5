@@ -1,8 +1,0 @@
-# Bootstrap 5 for Jahia — provisioning script
-# Modules are installed in dependency order
-- installOrUpgradeModule: skins-${skins.version}.jar
-- installOrUpgradeModule: bootstrap5-core-${project.version}.jar
-- installOrUpgradeModule: bootstrap5-components-${project.version}.tgz
-  ignoreChecks: true
-- installOrUpgradeModule: bootstrap5-templates-starter-${project.version}.tgz
-  ignoreChecks: true

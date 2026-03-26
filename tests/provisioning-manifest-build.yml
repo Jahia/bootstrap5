@@ -1,0 +1,22 @@
+# Bootstrap 5 — CI provisioning (build artifacts from local Maven repo)
+# Used in CI pipelines after `mvn package` to install freshly built modules.
+
+- installOrUpgradeBundle:
+    - 'mvn:org.jahia.modules/skins'
+  autoStart: true
+  uninstallPreviousVersion: true
+
+- installOrUpgradeBundle:
+    - 'mvn:org.jahiacommunity.modules/bootstrap5-core'
+  autoStart: true
+  uninstallPreviousVersion: true
+
+- installOrUpgradeBundle:
+    - 'js:mvn:org.jahiacommunity.modules/bootstrap5-components//tgz'
+  autoStart: true
+  uninstallPreviousVersion: true
+
+- installOrUpgradeBundle:
+    - 'js:mvn:org.jahiacommunity.modules/bootstrap5-templates-starter//tgz'
+  autoStart: true
+  uninstallPreviousVersion: true

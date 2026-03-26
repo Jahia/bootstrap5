@@ -1,0 +1,22 @@
+# Bootstrap 5 — CI provisioning (published snapshots from Nexus)
+# Used for nightly/release tests against published snapshot versions.
+
+- installOrUpgradeBundle:
+    - 'mvn:org.jahia.modules/skins'
+  autoStart: true
+  uninstallPreviousVersion: true
+
+- installOrUpgradeBundle:
+    - 'mvn:org.jahiacommunity.modules/bootstrap5-core/LATEST'
+  autoStart: true
+  uninstallPreviousVersion: true
+
+- installOrUpgradeBundle:
+    - 'js:mvn:org.jahiacommunity.modules/bootstrap5-components/LATEST/tgz'
+  autoStart: true
+  uninstallPreviousVersion: true
+
+- installOrUpgradeBundle:
+    - 'js:mvn:org.jahiacommunity.modules/bootstrap5-templates-starter/LATEST/tgz'
+  autoStart: true
+  uninstallPreviousVersion: true
