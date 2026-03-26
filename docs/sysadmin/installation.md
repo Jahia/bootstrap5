@@ -12,9 +12,10 @@ The package is a ZIP file (`bootstrap5-package-3.0.0-SNAPSHOT.zip`) containing a
 ```bash
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -u root:PASSWORD \
-  -F 'script=@provisioning.yaml' \
-  -F 'file=@bootstrap5-package-3.0.0-SNAPSHOT.zip'
+  -F 'script=@bootstrap5-package-3.0.0-SNAPSHOT.zip'
 ```
+
+The `provisioning.yaml` is embedded inside the ZIP — Jahia extracts it automatically. Do not pass it as a separate file.
 
 The provisioning script installs all modules in the correct order:
 1. `skins` (dependency)
