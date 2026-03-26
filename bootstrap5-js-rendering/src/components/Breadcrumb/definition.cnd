@@ -1,9 +1,5 @@
-// bootstrap5nt:breadcrumb — Auto-generated breadcrumb from the JCR page hierarchy.
-
-// Breadcrumb node type — no extra properties needed at the base level
 [bootstrap5nt:breadcrumb] > jnt:content, bootstrap5mix:component
 
-// Adds a custom CSS class to the breadcrumb wrapper
 [bootstrap5mix:advancedBreadcrumb] mixin
   extends = bootstrap5nt:breadcrumb
   itemtype = content

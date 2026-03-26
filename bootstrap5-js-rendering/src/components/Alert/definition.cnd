@@ -1,5 +1,3 @@
-// bootstrap5mix:alert — Bootstrap alert banner applied as a mixin on any droppable content area.
-
 [bootstrap5mix:alert] > jmix:templateMixin mixin
   extends = jmix:droppableContent
   itemtype = layout

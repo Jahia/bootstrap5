@@ -1,6 +1,3 @@
-// bootstrap5nt:card — Bootstrap card with optional header, body, image, and footer.
-
-// Card node type
 [bootstrap5nt:card] > jnt:content, bootstrap5mix:component, mix:title, jmix:list,
                       bootstrap5mix:image, jmix:browsableInEditorialPicker
   - headerSize (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no
@@ -10,7 +7,6 @@
   - footer (string) i18n
   + * (jmix:droppableContent) = jmix:droppableContent
 
-// Colour utilities (background, text, border)
 [bootstrap5mix:colors] mixin
   extends = bootstrap5nt:card
   itemtype = content
@@ -24,7 +20,6 @@
     < 'default', 'primary', 'secondary', 'success', 'danger', 'warning', 'info',
       'light', 'dark', 'white'
 
-// Overrides the CSS classes applied to the card wrapper and sub-elements
 [bootstrap5mix:cardAdvancedSettings] mixin
   extends = bootstrap5nt:card
   itemtype = content

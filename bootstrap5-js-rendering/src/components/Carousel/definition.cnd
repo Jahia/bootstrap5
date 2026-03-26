@@ -1,11 +1,7 @@
-// bootstrap5nt:carousel — Bootstrap carousel (image slideshow with indicators and controls).
-
-// Individual carousel slide
 [bootstrap5nt:carouselItem] > jnt:content, mix:title
   - image   (weakreference, picker[type='image']) mandatory < 'jmix:image'
   - caption (string, textarea) i18n
 
-// Per-slide advanced options (colour overrides, extra class, per-slide delay)
 [bootstrap5mix:advancedCarouselItem] mixin
   extends = bootstrap5nt:carouselItem
   itemtype = content
@@ -18,12 +14,10 @@
   - carouselItemClass (string) indexed=no
   - interval          (long)   indexed=no
 
-// Carousel node type — ordered list of carouselItem child nodes
 [bootstrap5nt:carousel] > jnt:content, bootstrap5mix:component, jmix:list,
                           jmix:siteContent, jmix:browsableInEditorialPicker orderable
   + * (bootstrap5nt:carouselItem)
 
-// Carousel-level advanced settings (behaviour, controls, variant)
 [bootstrap5mix:carouselAdvancedSettings] mixin
   extends = bootstrap5nt:carousel
   itemtype = content

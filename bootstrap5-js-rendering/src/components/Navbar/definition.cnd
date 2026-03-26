@@ -1,11 +1,7 @@
-// bootstrap5nt:navbar — Bootstrap navigation bar with multi-level navigation, branding, login, and language switcher.
-
-// Navbar node type
 [bootstrap5nt:navbar] > jnt:content, bootstrap5mix:component, jmix:navMenuComponent
   - root (string, choicelist[navbarRootInitializer5, resourceBundle]) = 'homePage' autocreated indexed=no
     < 'homePage', 'currentPage', 'parentPage', 'customRootPage'
 
-// Global behaviour toggles for the navbar
 [bootstrap5mix:navbarGlobalSettings] mixin
   extends = bootstrap5nt:navbar
   itemtype = content
@@ -15,7 +11,6 @@
     < '1', '2', '3', '4', '5'
   - addContainerWithinTheNavbar (boolean) = 'true' autocreated indexed=no
 
-// CSS class overrides for every element the navbar renders
 [bootstrap5mix:customizeNavbar] mixin
   extends = bootstrap5nt:navbar
   itemtype = content
@@ -29,14 +24,12 @@
   - navLinkClass    (string) = 'nav-link' autocreated indexed=no
   - loginMenuULClass (string) = 'navbar-nav ms-auto'
 
-// Component-level brand (overridden by siteBrand if set on the site)
 [bootstrap5mix:brand] mixin
   extends = bootstrap5nt:navbar
   - brandText        (string) i18n
   - brandImage       (weakreference, picker[type='image']) < 'jmix:image'
   - brandImageMobile (weakreference, picker[type='image']) < 'jmix:image'
 
-// Site-level brand — attached to the jnt:virtualsite node via Site Settings
 [bootstrap5mix:siteBrand] mixin
   extends = jnt:virtualsite
   itemtype = content
@@ -44,7 +37,6 @@
   - brandImage       (weakreference, picker[type='image']) < 'jmix:image'
   - brandImageMobile (weakreference, picker[type='image']) < 'jmix:image'
 
-// Allows overriding the navigation root to a specific page
 [bootstrap5mix:customRootPage] > jmix:templateMixin mixin
   extends = bootstrap5nt:navbar
   - customRootPage (weakreference, picker[type='page']) < 'jnt:page'

@@ -8,6 +8,7 @@
   "author": "Jahia Solutions Group SA",
   "files": [
     "dist/server",
+    "src/**/*.cnd",
     "settings",
     "META-INF",
     "resources",

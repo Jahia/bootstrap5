@@ -1,5 +1,3 @@
-// bootstrap5nt:tabs — Bootstrap tabs/pills interface where each tab panel is a jnt:contentList child node.
-
 [bootstrap5nt:tabs] > jnt:content, bootstrap5mix:component, jmix:manuallyOrderable,
                       jmix:list, jmix:siteContent, jmix:browsableInEditorialPicker orderable
   - type (string, choicelist[resourceBundle, moduleImage='png']) = 'tab' autocreated indexed=no

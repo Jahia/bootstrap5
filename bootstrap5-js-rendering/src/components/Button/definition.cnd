@@ -1,11 +1,7 @@
-// bootstrap5nt:button — Flexible call-to-action element with link, modal, collapse, popover, offcanvas modes.
-
-// Core button node type
 [bootstrap5nt:button] > jnt:content, bootstrap5mix:component, mix:title
   - buttonType (string, choicelist[buttonTypeInitializer5, resourceBundle]) = 'internalLink' autocreated indexed=no
     < 'internalLink', 'externalLink', 'modal', 'collapse', 'popover', 'Offcanvas'
 
-// Full Bootstrap visual styling for a button
 [bootstrap5mix:buttonAdvancedSettings] mixin
   extends = bootstrap5nt:button
   itemtype = content
@@ -21,23 +17,19 @@
   - disableTextWrapping (boolean) = 'false' indexed=no
   - stretchedLink       (boolean) = 'false' indexed=no
 
-// Collapse button — toggles a collapsible content area
 [bootstrap5mix:collapse] > jmix:templateMixin, jmix:browsableInEditorialPicker mixin orderable
   extends = bootstrap5nt:button
   - show (boolean) = 'false' indexed=no
   + * (jmix:droppableContent) = jmix:droppableContent
 
-// Internal link — points to a page, file, or resource within the same site
 [bootstrap5mix:internalLink] > jmix:templateMixin mixin
   extends = bootstrap5nt:button
   - internalLink (weakreference) < jmix:mainResource, jnt:page, jnt:file
 
-// External link — points to an absolute URL outside the site
 [bootstrap5mix:externalLink] > jmix:templateMixin mixin
   extends = bootstrap5nt:button
   - externalLink (string) = 'http://'
 
-// Modal button — opens a Bootstrap modal dialog
 [bootstrap5mix:modal] > jmix:templateMixin, jmix:browsableInEditorialPicker mixin orderable
   extends = bootstrap5nt:button
   - modalTitle         (string) i18n
@@ -48,7 +40,6 @@
   - verticallyCentered (boolean) = 'false' indexed=no
   + * (jmix:droppableContent) = jmix:droppableContent
 
-// Popover button — shows a Bootstrap popover tooltip on click
 [bootstrap5mix:popover] > jmix:templateMixin mixin
   extends = bootstrap5nt:button
   - popoverTitle   (string) i18n
@@ -57,7 +48,6 @@
     < 'top', 'left', 'right', 'bottom'
   - html (boolean) = 'false' indexed=no
 
-// Offcanvas button — slides a panel in from the edge of the viewport
 [bootstrap5mix:Offcanvas] > jmix:templateMixin, jmix:browsableInEditorialPicker mixin orderable
   extends = bootstrap5nt:button
   - OffcanvasTitle      (string) i18n

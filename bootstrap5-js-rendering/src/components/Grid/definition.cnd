@@ -1,17 +1,12 @@
-// bootstrap5nt:grid — Bootstrap 12-column flex grid with optional section, container, row wrappers.
-
-// Preset column split (e.g. "4_8" → col-4 + col-8)
 [bootstrap5mix:predefinedGrid] > jmix:templateMixin mixin
   extends = bootstrap5nt:grid
   - grid (string, choicelist[resourceBundle, moduleImage='png']) = '4_8' autocreated indexed=no
     < '2_10', '3_9', '4_8', '4_4_4', '3_6_3', '3_3_3_3', '6_6', '8_4', '9_3', '10_2', '12'
 
-// Free-form column classes — comma-separated, one <div> per value
 [bootstrap5mix:customGrid] > jmix:templateMixin mixin
   extends = bootstrap5nt:grid
   - gridClasses (string) = 'col col-md-8,col-6 col-md-4' indexed=no
 
-// Wraps the row in a semantic HTML element with optional id, class, style, ARIA
 [bootstrap5mix:createSection] mixin
   extends = bootstrap5nt:grid
   itemtype = content
@@ -23,7 +18,6 @@
   - sectionRole     (string) indexed=no
   - sectionAria     (string) indexed=no
 
-// Wraps grid content in a Bootstrap container div
 [bootstrap5mix:createContainer] mixin
   extends = bootstrap5nt:grid
   itemtype = content
@@ -32,7 +26,6 @@
   - containerType (string, choicelist[resourceBundle]) = 'container' autocreated indexed=no
     < 'container', 'container-fluid', 'container-sm', 'container-md', 'container-lg', 'container-xl', 'container-xxl'
 
-// Configures a Bootstrap row with flex alignment and gutters
 [bootstrap5mix:createRow] mixin
   extends = bootstrap5nt:grid
   itemtype = content
@@ -50,18 +43,15 @@
   - verticalGutters (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no
     < 'default', 'gy-0', 'gy-1', 'gy-2', 'gy-3', 'gy-4', 'gy-5'
 
-// Turns a grid area into a Jahia absolute area
 [bootstrap5mix:createAbsoluteAreas] mixin
   extends = bootstrap5nt:grid
   itemtype = content
   - level (string, choicelist[resourceBundle]) = '0' autocreated indexed=no
     < '0', '1', '2', '3', '4', '5'
 
-// Base grid node type
 [bootstrap5nt:grid] > jnt:content, bootstrap5mix:component, jmix:list, jmix:browsableInEditorialPicker
   + * (jmix:droppableContent) = jmix:droppableContent
 
-// Caps the number of items rendered by a grid-based list (-1 = unlimited)
 [bootstrap5mix:listLimit] mixin
   extends = bootstrap5nt:grid
   itemtype = content
