@@ -7,17 +7,19 @@
 
 ## Installing the full stack
 
-The package is a ZIP file (`bootstrap5-package-3.0.0-SNAPSHOT.zip`) containing all modules and a `provisioning.yaml` install script. It must be deployed via the **provisioning API** — not the module manager UI, which only handles OSGi JARs.
+Deploy all modules in one call via the **provisioning API**. Extract the ZIP first, then run from the directory containing the artifacts:
 
 ```bash
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -u root:PASSWORD \
-  -F 'script=@bootstrap5-package-3.0.0-SNAPSHOT.zip'
+  -F 'script=[{"installOrUpgradeModule":"skins-8.2.0.jar"},{"installOrUpgradeModule":"bootstrap5-core-3.0.0-SNAPSHOT.jar"},{"installOrUpgradeModule":"bootstrap5-components-3.0.0-SNAPSHOT.tgz","ignoreChecks":true},{"installOrUpgradeModule":"bootstrap5-templates-starter-3.0.0-SNAPSHOT.tgz","ignoreChecks":true}]' \
+  -F 'file=@skins-8.2.0.jar' \
+  -F 'file=@bootstrap5-core-3.0.0-SNAPSHOT.jar' \
+  -F 'file=@bootstrap5-components-3.0.0-SNAPSHOT.tgz' \
+  -F 'file=@bootstrap5-templates-starter-3.0.0-SNAPSHOT.tgz'
 ```
 
-The `provisioning.yaml` is embedded inside the ZIP — Jahia extracts it automatically. Do not pass it as a separate file.
-
-The provisioning script installs all modules in the correct order:
+The provisioning API installs all modules in the correct order:
 1. `skins` (dependency)
 2. `bootstrap5-core` (OSGi bundle — CND definitions, Java initializers)
 3. `bootstrap5-components` (JS module — TSX component views)

@@ -47,6 +47,7 @@
     "yarn": ">=4.0.0"
   },
   "jahia": {
+    "name": "Bootstrap5 Components",
     "module-dependencies": "bootstrap5-core",
     "module-type": "module",
     "server": "dist/server/index.js",

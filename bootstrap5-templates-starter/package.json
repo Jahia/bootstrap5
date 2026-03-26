@@ -9,6 +9,7 @@
   "files": [
     "dist/server",
     "settings",
+    "META-INF",
     "css"
   ],
   "scripts": {
@@ -32,6 +33,7 @@
     "yarn": ">=4.0.0"
   },
   "jahia": {
+    "name": "Bootstrap5 Templates Starter",
     "module-dependencies": "bootstrap5-core",
     "module-type": "templatesSet",
     "server": "dist/server/index.js",
