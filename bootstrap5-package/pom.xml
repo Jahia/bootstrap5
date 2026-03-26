@@ -4,11 +4,11 @@
     <parent>
         <artifactId>jahia-packages-parent</artifactId>
         <groupId>org.jahia.packages</groupId>
-        <version>8.2.0.0</version>
+        <version>8.2.3.0</version>
     </parent>
     <artifactId>bootstrap5-package</artifactId>
     <name>Bootstrap 5 Package</name>
-    <version>2.4.5-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Parent project to package all Bootstrap 5 related components.</description>
     <properties>
@@ -18,7 +18,7 @@
         <jahia.manifest.package.id>Bootstrap5</jahia.manifest.package.id>
         <jahia.manifest.description>bootstrap5-core, bootstrap5-components, bootstrap5-templates-starter</jahia.manifest.description>
         <jahia.manifest.license>org.jahia.core</jahia.manifest.license>
-        <jahia.required.version>8.2.0.0</jahia.required.version>
+        <jahia.required.version>8.2.3.0</jahia.required.version>
     </properties>
     <repositories>
         <repository>

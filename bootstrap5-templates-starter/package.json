@@ -1,6 +1,6 @@
 {
   "name": "bootstrap5-templates-starter",
-  "version": "1.0.0-SNAPSHOT",
+  "version": "3.0.0-SNAPSHOT",
   "description": "Bootstrap 5 for Jahia — JS/React template set (page templates + component views)",
   "packageManager": "yarn@4.12.0",
   "type": "module",
