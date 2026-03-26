@@ -232,35 +232,39 @@ jahiaComponent(
       }
 
       // ── Collapse ───────────────────────────────────────────────────────
-      // Entirely Bootstrap.js–driven — no react-bootstrap equivalent for SSR.
+      // Uses <button> (not <a href="#...">) to avoid Jahia edit-frame link interception.
       case "collapse": {
         const label = title || t("bootstrap5nt_button.readMore");
-        const showClass = props.show ? " show" : "";
         const collapseId = `collapse-${currentNode.getIdentifier()}`;
-        const cls = bsProps
-          ? [
-              "btn",
-              `btn-${props.outline ? `outline-${props.style ?? "primary"}` : (props.style ?? "primary")}`,
-              props.size && props.size !== "default" ? props.size : "",
-              props.state && props.state !== "default" ? props.state : "",
-              props.cssClass ?? "",
-              showClass.trim(),
-            ].filter(Boolean).join(" ")
-          : `${customClass(props)}${showClass}`;
+        const isExpanded = props.show ? "true" : "false";
         return (
           <>
-            <a
-              href={`#${collapseId}`}
-              className={cls}
-              role="button"
-              data-bs-toggle="collapse"
-              aria-expanded="false"
-              aria-controls={collapseId}
-              id={id}
-            >
-              {label}
-            </a>
-            <div className="collapse" id={collapseId}>
+            {bsProps
+              ? (
+                <Button
+                  id={id}
+                  data-bs-toggle="collapse"
+                  data-bs-target={`#${collapseId}`}
+                  aria-expanded={isExpanded}
+                  aria-controls={collapseId}
+                  {...bsProps}
+                >
+                  {label}
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  id={id}
+                  className={customClass(props)}
+                  data-bs-toggle="collapse"
+                  data-bs-target={`#${collapseId}`}
+                  aria-expanded={isExpanded}
+                  aria-controls={collapseId}
+                >
+                  {label}
+                </button>
+              )}
+            <div className={`collapse${props.show ? " show" : ""}`} id={collapseId}>
               <Area name="collapse-body" nodeType="jmix:droppableContent" numberOfItems={0} />
             </div>
           </>
