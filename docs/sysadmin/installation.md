@@ -2,39 +2,48 @@
 
 ## Prerequisites
 
-- Jahia 8.2.0.0 or later
+- Jahia 8.2.3.0 or later
 - The `default` module must be running (it is shipped with Jahia)
-- Karaf/OSGi container accessible
 
 ## Installing the full stack
 
-Deploy the three modules in this order:
-
-### 1. bootstrap5-core
+The package is a ZIP file (`bootstrap5-package-3.0.0-SNAPSHOT.zip`) containing all modules and a `provisioning.yaml` install script. It must be deployed via the **provisioning API** — not the module manager UI, which only handles OSGi JARs.
 
 ```bash
+curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
+  -u root:PASSWORD \
+  -F 'script=@provisioning.yaml' \
+  -F 'file=@bootstrap5-package-3.0.0-SNAPSHOT.zip'
+```
+
+The provisioning script installs all modules in the correct order:
+1. `skins` (dependency)
+2. `bootstrap5-core` (OSGi bundle — CND definitions, Java initializers)
+3. `bootstrap5-components` (JS module — TSX component views)
+4. `bootstrap5-templates-starter` (JS module — page templates)
+
+### Installing modules individually
+
+If needed, each module can be deployed separately:
+
+```bash
+# 1. bootstrap5-core (via module manager or provisioning)
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -u root:PASSWORD \
   -F 'script=[{"installOrUpgradeModule":"bootstrap5-core.jar"}]' \
-  -F 'file=@bootstrap5-core-2.4.5.jar;filename=bootstrap5-core.jar'
-```
+  -F 'file=@bootstrap5-core-3.0.0-SNAPSHOT.jar;filename=bootstrap5-core.jar'
 
-### 2. bootstrap5-components
-
-```bash
+# 2. bootstrap5-components
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -u root:PASSWORD \
   -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
-  -F 'file=@bootstrap5-components-1.0.0.tgz;filename=package.tgz'
-```
+  -F 'file=@bootstrap5-components-3.0.0-SNAPSHOT.tgz;filename=package.tgz'
 
-### 3. bootstrap5-templates-starter
-
-```bash
+# 3. bootstrap5-templates-starter
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -u root:PASSWORD \
   -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
-  -F 'file=@bootstrap5-templates-starter-1.0.0.tgz;filename=package.tgz'
+  -F 'file=@bootstrap5-templates-starter-3.0.0-SNAPSHOT.tgz;filename=package.tgz'
 ```
 
 ## Activating on a site
