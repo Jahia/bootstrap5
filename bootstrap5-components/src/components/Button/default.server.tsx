@@ -180,21 +180,26 @@ jahiaComponent(
                   {label}
                 </button>
               )}
-            {/* Overlay — Bootstrap.js manages show/hide via data-bs-toggle above */}
+            {/* Overlay — Bootstrap.js manages show/hide via data-bs-toggle above.
+                In edit mode: shown inline (class "show" + display:block + position:static)
+                so editors can reach the Area inside the modal body. */}
             <div
-              className="modal fade"
+              className={`modal fade${renderContext.isEditMode() ? " show" : ""}`}
               id={modalId}
               tabIndex={-1}
               role="dialog"
               aria-labelledby={modalLabelId}
-              aria-hidden={renderContext.isEditMode() ? "false" : "true"}
+              aria-hidden="false"
+              style={renderContext.isEditMode()
+                ? { display: "block", position: "static", zIndex: "auto" }
+                : undefined}
               {...(props.staticBackdrop
                 ? { "data-bs-backdrop": "static", "data-bs-keyboard": "false" }
                 : {})}
             >
               <div
                 className={`modal-dialog modal-dialog-scrollable${centeredClass}${sizeClass}`}
-                {...(renderContext.isEditMode() ? { style: { margin: "5px" } } : {})}
+                style={renderContext.isEditMode() ? { margin: "5px" } : undefined}
               >
                 <div className="modal-content">
                   {props.modalTitle && (
@@ -209,7 +214,7 @@ jahiaComponent(
                     </Modal.Header>
                   )}
                   <Modal.Body>
-                    <Area name="modal-body" nodeType="jmix:droppableContent" />
+                    <Area name="modal-body" nodeType="jmix:droppableContent" numberOfItems={0} />
                   </Modal.Body>
                   <Modal.Footer>
                     <Button
@@ -256,7 +261,7 @@ jahiaComponent(
               {label}
             </a>
             <div className="collapse" id={collapseId}>
-              <Area name="collapse-body" nodeType="jmix:droppableContent" />
+              <Area name="collapse-body" nodeType="jmix:droppableContent" numberOfItems={0} />
             </div>
           </>
         );
@@ -356,7 +361,7 @@ jahiaComponent(
                 </Offcanvas.Header>
               )}
               <Offcanvas.Body>
-                <Area name="offcanvas-body" nodeType="jmix:droppableContent" />
+                <Area name="offcanvas-body" nodeType="jmix:droppableContent" numberOfItems={0} />
               </Offcanvas.Body>
             </div>
           </>
