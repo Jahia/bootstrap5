@@ -1,6 +1,0 @@
-[bootstrap5mix:alert] > jmix:templateMixin mixin
-  extends = jmix:droppableContent
-  itemtype = layout
-  - backgroundColor (string, choicelist[resourceBundle, moduleImage='svg']) = 'primary' autocreated indexed=no
-    < 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'link', 'dark', 'light', 'custom'
-  - addDismissButton (boolean) = 'false' indexed=no

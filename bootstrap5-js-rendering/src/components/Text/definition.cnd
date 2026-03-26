@@ -1,7 +1,0 @@
-[bootstrap5mix:text] mixin
-  - text (string,
-          richtext[ckeditor.toolbar='Tinny',
-                   ckeditor.customConfig='$context/modules/bootstrap5-js-rendering/javascript/ckconfig.js']
-         ) i18n
-
-[bootstrap5nt:text] > jnt:content, bootstrap5mix:component, bootstrap5mix:text
