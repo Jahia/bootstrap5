@@ -4,14 +4,15 @@
 
 /**
  * bootstrap5mix:alert — alert skin view registered on jmix:skinnable (view name "skins.alert").
- * Wraps children in a Bootstrap alert div; optionally adds a dismiss button.
+ * Wraps children in a Bootstrap Alert; the dismiss button is managed by React on the client.
  */
 import { jahiaComponent, RenderChildren } from "@jahia/javascript-modules-library";
+import { Alert } from "react-bootstrap";
 
 interface AlertProps {
   /** Bootstrap contextual colour — maps to alert-{color} */
   backgroundColor?: string;
-  /** Adds a close button and the alert-dismissible fade show classes */
+  /** Adds a close button; dismiss state is managed by React after hydration */
   addDismissButton?: boolean;
 }
 
@@ -24,22 +25,9 @@ jahiaComponent(
     componentType: "view",
     displayName: "Alert",
   },
-  ({ backgroundColor = "primary", addDismissButton = false }: AlertProps) => {
-    const dismissClasses = addDismissButton ? " alert-dismissible fade show" : "";
-
-    return (
-      <div className={`alert alert-${backgroundColor}${dismissClasses}`} role="alert">
-        {/* Wrapped content — equivalent to ${wrappedContent} in JSP */}
-        <RenderChildren />
-        {addDismissButton && (
-          <button
-            type="button"
-            className="btn-close"
-            data-bs-dismiss="alert"
-            aria-label="Close"
-          />
-        )}
-      </div>
-    );
-  },
+  ({ backgroundColor = "primary", addDismissButton = false }: AlertProps) => (
+    <Alert variant={backgroundColor} dismissible={addDismissButton}>
+      <RenderChildren />
+    </Alert>
+  ),
 );
