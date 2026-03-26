@@ -58,8 +58,9 @@ The TGZ artifact is what Jahia installs. It contains exactly what is listed in t
 ```
 package/
 ├─ dist/server/index.js          Compiled TSX views
+├─ src/components/*/definition.cnd  Per-component node type definitions (12 files)
 ├─ settings/
-│   └─ definitions.cnd           All namespaces, mixins, and component node types
+│   └─ definitions.cnd           Namespaces + shared mixins
 ├─ META-INF/
 │   └─ jahia-content-editor-forms/  13 Content Editor form JSON files
 ├─ resources/                    i18n .properties (6 languages)

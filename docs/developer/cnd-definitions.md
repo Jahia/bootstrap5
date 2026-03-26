@@ -1,10 +1,16 @@
 # CND Definitions
 
-All CND definitions for `bootstrap5-js-rendering` live in a single file:
+CND definitions in `bootstrap5-js-rendering` are split across two locations:
 
-**`settings/definitions.cnd`** — namespaces, shared mixins, and every component node type.
+| File | Content |
+|------|---------|
+| `settings/definitions.cnd` | Namespace declarations + shared cross-component mixins (image, padding, margin) |
+| `src/components/<Name>/definition.cnd` | Node types and mixins specific to one component (12 files) |
 
-The Jahia JS engine reads only `settings/definitions.cnd`. Per-component `src/components/*/definition.cnd` files exist in the source tree for readability but are **not** loaded by the engine — do not rely on them being processed. `package.json` includes `settings` (not `src/**/*.cnd`) to ensure only this file is packaged.
+`package.json` includes both locations via:
+```json
+"files": ["src/**/*.cnd", "settings", ...]
+```
 
 ## Namespaces
 
