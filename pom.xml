@@ -32,6 +32,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     <groupId>org.jahiacommunity.modules</groupId>
     <properties>
         <jahia.package.version>1.0</jahia.package.version>
+        <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
     </properties>
     <scm>
         <connection>scm:git:git@github.com:Jahia/bootstrap5.git</connection>

@@ -9,8 +9,8 @@
  * Deep-linking via URL hash is handled by an inline init script via AddResources.
  */
 import {
+  AddContentButtons,
   AddResources,
-  Area,
   getChildNodes,
   jahiaComponent,
   Render,
@@ -138,7 +138,7 @@ jahiaComponent(
         </div>
 
         {/* Edit-mode drop zone for new tab panels */}
-        <Area name="tabs" nodeType="jnt:contentList" />
+        <AddContentButtons />
 
         {/* Deep-linking init script — placed in body (head in edit mode, same as JSP) */}
         <AddResources

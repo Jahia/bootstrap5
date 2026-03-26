@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "workspaces": [
+    "bootstrap5-components",
+    "bootstrap5-templates-starter"
+  ],
+  "scripts": {
+    "build": "yarn workspaces foreach -Atvv run build"
+  },
+  "packageManager": "yarn@4.12.0"
+}

@@ -7,6 +7,7 @@
  * Pagination, liveOnly AJAX, and emptyListMessage remain pending equivalent JS engine APIs.
  */
 import {
+  AddContentButtons,
   Render,
   getChildNodes,
   jahiaComponent,
@@ -32,7 +33,7 @@ jahiaComponent(
           <Render key={child.getIdentifier()} node={child} />
         ))}
         {isEditMode && <div className="clearfix" />}
-        {/* Edit-mode drop zone: handled automatically by Jahia (jmix:list + orderable) */}
+        <AddContentButtons />
       </>
     );
   },

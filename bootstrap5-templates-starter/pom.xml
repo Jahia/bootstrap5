@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Bootstrap 5 Templates Starter JS - Maven build wrapper
-  =======================================================
+  Bootstrap5 Templates Starter — Maven build wrapper
+  ===================================================
   Same pattern as bootstrap5-components/pom.xml.
-  Produces dist/package.tgz attached as a Maven artifact (type=tgz)
-  for inclusion in the bootstrap5-package distribution zip.
+  Produces dist/package.tgz attached as Maven artifact (type=tgz).
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -20,8 +19,8 @@
 
   <artifactId>bootstrap5-templates-starter</artifactId>
   <packaging>pom</packaging>
-  <name>Bootstrap 5 Templates Starter JS</name>
-  <description>JS/React SSR page template views for bootstrap5-templates-starter (Jahia JS module)</description>
+  <name>Bootstrap5 Templates Starter</name>
+  <description>JS/React SSR page template views for Bootstrap 5 (Jahia JS module)</description>
 
   <build>
     <plugins>
@@ -29,31 +28,47 @@
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.15.0</version>
+        <version>1.15.1</version>
         <configuration>
           <workingDirectory>${project.basedir}</workingDirectory>
-          <nodeVersion>v20.19.0</nodeVersion>
+          <nodeVersion>v22.11.0</nodeVersion>
+          <yarnVersion>v1.22.22</yarnVersion>
+          <installDirectory>${project.basedir}/target</installDirectory>
         </configuration>
         <executions>
           <execution>
-            <id>install-node-and-npm</id>
-            <goals><goal>install-node-and-npm</goal></goals>
+            <id>install-node-and-yarn</id>
+            <goals><goal>install-node-and-yarn</goal></goals>
             <phase>generate-resources</phase>
           </execution>
           <execution>
-            <id>npm-install</id>
-            <goals><goal>npm</goal></goals>
+            <id>yarn-install</id>
+            <goals><goal>yarn</goal></goals>
             <phase>generate-resources</phase>
-            <configuration>
-              <arguments>install</arguments>
-            </configuration>
           </execution>
           <execution>
-            <id>npm-build</id>
-            <goals><goal>npm</goal></goals>
+            <id>yarn-build</id>
+            <goals><goal>yarn</goal></goals>
             <phase>compile</phase>
             <configuration>
-              <arguments>run build:maven</arguments>
+              <arguments>build</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-tgz</id>
+            <phase>package</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <target>
+                <copy file="${project.basedir}/dist/package.tgz"
+                      tofile="${project.build.directory}/${project.build.finalName}.tgz" />
+              </target>
             </configuration>
           </execution>
         </executions>
@@ -62,11 +77,10 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.4.0</version>
+        <version>3.6.1</version>
         <executions>
           <execution>
-            <id>attach-tgz</id>
-            <phase>package</phase>
+            <id>attach-tgz-artifact</id>
             <goals><goal>attach-artifact</goal></goals>
             <configuration>
               <artifacts>
