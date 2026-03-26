@@ -1,0 +1,24 @@
+{
+  "name": "bootstrap5mix:internalLink",
+  "fields": [
+    {
+      "name": "internalLink",
+      "selectorType": "Picker",
+      "selectorOptionsMap": {
+        "type": "default",
+        "pickerConfig": {
+          "selectableTypesTable": ["jnt:page", "jnt:file", "jmix:mainResource"],
+          "pickerDialog": {
+            "dialogTitle": "bootstrap5:label.picker.internalLink",
+            "displayTree": true,
+            "displaySiteSwitcher": true,
+            "displaySearch": true
+          },
+          "pickerTable": {
+            "columns": ["publicationStatus", "name", "type", "lastModified"]
+          }
+        }
+      }
+    }
+  ]
+}

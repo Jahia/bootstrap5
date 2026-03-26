@@ -16,7 +16,7 @@
         <jahia.package.sources.assembly.file>src/main/assembly/bootstrap5-sources.xml</jahia.package.sources.assembly.file>
         <jahia.final.package.name>bootstrap5-package</jahia.final.package.name>
         <jahia.manifest.package.id>Bootstrap5</jahia.manifest.package.id>
-        <jahia.manifest.description>bootstrap5-core, bootstrap5-js-rendering, bootstrap5-templates-starter-js</jahia.manifest.description>
+        <jahia.manifest.description>bootstrap5-core, bootstrap5-components, bootstrap5-templates-starter</jahia.manifest.description>
         <jahia.manifest.license>org.jahia.core</jahia.manifest.license>
         <jahia.required.version>8.2.0.0</jahia.required.version>
     </properties>
@@ -48,13 +48,13 @@
         <!-- JS rendering modules — produce .tgz artifacts built by frontend-maven-plugin -->
         <dependency>
             <groupId>org.jahiacommunity.modules</groupId>
-            <artifactId>bootstrap5-js-rendering</artifactId>
+            <artifactId>bootstrap5-components</artifactId>
             <version>${project.version}</version>
             <type>tgz</type>
         </dependency>
         <dependency>
             <groupId>org.jahiacommunity.modules</groupId>
-            <artifactId>bootstrap5-templates-starter-js</artifactId>
+            <artifactId>bootstrap5-templates-starter</artifactId>
             <version>${project.version}</version>
             <type>tgz</type>
         </dependency>

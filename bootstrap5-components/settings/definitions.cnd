@@ -1,0 +1,64 @@
+// =============================================================================
+// Bootstrap 5 for Jahia — Global namespace declarations and shared mixins
+// =============================================================================
+// Component-specific node types live in src/components/<Name>/definition.cnd
+// =============================================================================
+
+// Namespace declarations
+<bootstrap5mix = 'http://www.jahia.org/bootstrap5/mix/1.0'>
+<bootstrap5nt  = 'http://www.jahia.org/bootstrap5/nt/1.0'>
+<jnt           = 'http://www.jahia.org/jahia/nt/1.0'>
+<jmix          = 'http://www.jahia.org/jahia/mix/1.0'>
+<mix           = 'http://www.jcp.org/jcr/mix/1.0'>
+
+
+// =============================================================================
+// SPACING — PADDING & MARGIN
+// =============================================================================
+
+[bootstrap5mix:hasPadding] mixin
+
+[bootstrap5mix:padding] mixin
+  extends = bootstrap5mix:hasPadding
+  itemtype = content
+  - paddingWhere (string, choicelist[resourceBundle]) = 'all' autocreated indexed=no
+    < 'all', 't', 'b', 's', 'e', 'x', 'y'
+  - paddingSize (string, choicelist[resourceBundle]) = '3' autocreated indexed=no
+    < '0', '1', '2', '3', '4', '5'
+
+[bootstrap5mix:hasMargin] mixin
+
+[bootstrap5mix:margin] mixin
+  extends = bootstrap5mix:hasMargin
+  itemtype = content
+  - marginWhere (string, choicelist[resourceBundle]) = 'all' autocreated indexed=no
+    < 'all', 't', 'b', 's', 'e', 'x', 'y'
+  - marginSize (string, choicelist[resourceBundle]) = '3' autocreated indexed=no
+    < '0', '1', '2', '3', '4', '5'
+
+
+// =============================================================================
+// IMAGE
+// =============================================================================
+
+[bootstrap5mix:image] mixin
+  - image (weakreference, picker[type='image']) < 'jmix:image'
+
+[bootstrap5mix:imageAdvanced] > bootstrap5mix:image mixin
+
+[bootstrap5mix:imageAdvancedSettings] mixin
+  extends = bootstrap5mix:imageAdvanced
+  itemtype = content
+  - imageClass      (string) indexed=no
+  - imageStyle      (string) indexed=no
+  - imageID         (string) indexed=no
+  - responsive      (boolean) = 'true'  indexed=no
+  - thumbnails      (boolean) = 'false' indexed=no
+  - align (string, choicelist[resourceBundle, moduleImage='svg']) = 'default' autocreated indexed=no
+    < 'default', 'start', 'end', 'center'
+  - alt             (string) i18n
+  - borderRadius (string, choicelist[resourceBundle]) = 'rounded-0' autocreated indexed=no
+    < 'rounded', 'rounded-top', 'rounded-end', 'rounded-bottom', 'rounded-start',
+      'rounded-circle', 'rounded-pill', 'rounded-0'
+  - borderRadiusSize (string, choicelist[resourceBundle]) = 'default'
+    < 'default', 'rounded-0', 'rounded-1', 'rounded-2', 'rounded-3'

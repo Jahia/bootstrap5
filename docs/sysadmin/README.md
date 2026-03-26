@@ -15,8 +15,8 @@ Three modules must be deployed to get a fully functional Bootstrap 5 JS site:
 | Module | Artifact type | Required |
 |--------|--------------|----------|
 | `bootstrap5-core` | `.jar` (OSGi bundle) | Yes — provides Bootstrap CSS/JS and Java initializers |
-| `bootstrap5-js-rendering` | `.tgz` (JS module) | Yes — provides all component views and CND definitions |
-| `bootstrap5-templates-starter-js` | `.tgz` (JS module, templatesSet) | Yes — provides page templates; required to create sites |
+| `bootstrap5-components` | `.tgz` (JS module) | Yes — provides all component views and CND definitions |
+| `bootstrap5-templates-starter` | `.tgz` (JS module, templatesSet) | Yes — provides page templates; required to create sites |
 
 ## Minimum Jahia version
 

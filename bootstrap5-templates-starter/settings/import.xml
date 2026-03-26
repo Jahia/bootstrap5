@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Bootstrap 5 Templates Starter JS — initial repository content
+  =============================================================
+  Imported by Jahia when the module is installed on a site.
+  Declares the template set structure, page templates, and initial home page.
+
+  Template view mapping (j:view → TSX component name):
+    "bootstrap5-templates-starter"                → TemplateView (default)
+    "bootstrap5-templates-starter.sticky-footer"  → TemplateStickyFooterView
+-->
+<content xmlns:j="http://www.jahia.org/jahia/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0">
+   <modules jcr:primaryType="jnt:modules">
+
+      <bootstrap5-templates-starter
+            j:dependencies="bootstrap5-core default"
+            j:installedModules="bootstrap5-components bootstrap5-templates-starter"
+            j:modulePriority="0"
+            j:moduleType="templatesSet"
+            j:title="Bootstrap 5 Templates Starter"
+            jcr:primaryType="jnt:module">
+
+         <portlets jcr:primaryType="jnt:portletFolder"/>
+         <files    jcr:primaryType="jnt:folder"/>
+         <contents jcr:primaryType="jnt:contentFolder"/>
+
+         <templates jcr:primaryType="jnt:templatesFolder"
+                    j:rootTemplateName="base"
+                    j:defaultTemplateName="starter">
+
+            <files jcr:primaryType="jnt:folder">
+               <themes jcr:primaryType="jnt:folder">
+                  <default jcr:primaryType="jnt:folder"/>
+               </themes>
+            </files>
+
+            <contents jcr:primaryType="jnt:contentFolder"/>
+
+            <base j:theme="#/modules/bootstrap5-templates-starter/templates/files/themes/default"
+                  j:view="bootstrap5-templates-starter"
+                  jcr:mixinTypes="jmix:theme"
+                  jcr:primaryType="jnt:template">
+
+               <starter jcr:primaryType="jnt:pageTemplate"/>
+
+               <sticky-footer j:view="bootstrap5-templates-starter.sticky-footer"
+                              jcr:primaryType="jnt:pageTemplate"/>
+
+            </base>
+
+            <content-template j:applyOn="jnt:content"
+                              j:hiddenTemplate="true"
+                              j:priority="1"
+                              j:view="bootstrap5-templates-starter"
+                              jcr:primaryType="jnt:contentTemplate">
+               <pagecontent jcr:primaryType="jnt:contentList">
+                  <main-resource-display j:mainResourceView="default"
+                                         jcr:primaryType="jnt:mainResourceDisplay"/>
+               </pagecontent>
+            </content-template>
+
+         </templates>
+
+         <home j:isHomePage="true"
+               j:templateName="starter"
+               jcr:primaryType="jnt:page">
+            <j:translation_en jcr:language="en"
+                              jcr:mixinTypes="mix:title"
+                              jcr:primaryType="jnt:translation"
+                              jcr:title="Home"/>
+         </home>
+
+      </bootstrap5-templates-starter>
+   </modules>
+</content>

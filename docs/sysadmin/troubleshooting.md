@@ -4,13 +4,13 @@
 
 **Symptom:**
 ```
-Bundle bootstrap5-js-rendering has unresolved dependency bootstrap5-core and won't be started
+Bundle bootstrap5-components has unresolved dependency bootstrap5-core and won't be started
 missing requirement: com.jahia.services.content; (nodetypes=bootstrap5mix:component)
 ```
 
 **Cause:** `bootstrap5-core` is not deployed or not started.
 
-**Fix:** Deploy and start `bootstrap5-core` first, then start `bootstrap5-js-rendering`.
+**Fix:** Deploy and start `bootstrap5-core` first, then start `bootstrap5-components`.
 
 ---
 
@@ -19,12 +19,12 @@ missing requirement: com.jahia.services.content; (nodetypes=bootstrap5mix:compon
 **Symptom:**
 ```
 WARN [JahiaCndReader] Node type 'bootstrap5nt:accordion' already defined with a different systemId
-(existing: 'bootstrap5-components', provided: 'bootstrap5-js-rendering'), ignoring.
+(existing: 'bootstrap5-components', provided: 'bootstrap5-components'), ignoring.
 ```
 
-**Cause:** A legacy `bootstrap5-components` module is still deployed alongside `bootstrap5-js-rendering`. Both define the same node types.
+**Cause:** A legacy `bootstrap5-components` module is still deployed alongside `bootstrap5-components`. Both define the same node types.
 
-**Fix:** Undeploy `bootstrap5-components`. `bootstrap5-js-rendering` is the authoritative owner of all `bootstrap5nt:*` and `bootstrap5mix:*` definitions.
+**Fix:** Undeploy `bootstrap5-components`. `bootstrap5-components` is the authoritative owner of all `bootstrap5nt:*` and `bootstrap5mix:*` definitions.
 
 ---
 
@@ -52,7 +52,7 @@ const lang = locale ? String(locale.getLanguage()) : "en";
 
 ## Template set not visible when creating a site
 
-**Symptom:** `bootstrap5-templates-starter-js` does not appear in the template set picker when creating a new site.
+**Symptom:** `bootstrap5-templates-starter` does not appear in the template set picker when creating a new site.
 
 **Cause:** The module is not started, or its `module-type` is not `templatesSet`.
 

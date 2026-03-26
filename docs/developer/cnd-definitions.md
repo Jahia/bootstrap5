@@ -1,6 +1,6 @@
 # CND Definitions
 
-CND definitions in `bootstrap5-js-rendering` are split across two locations:
+CND definitions in `bootstrap5-components` are split across two locations:
 
 | File | Content |
 |------|---------|
@@ -87,11 +87,11 @@ The `text` property on `bootstrap5nt:text` uses a custom CKEditor config:
 
 ```cnd
 - text (string, richtext[ckeditor.toolbar='Tinny',
-         ckeditor.customConfig='$context/modules/bootstrap5-js-rendering/javascript/ckconfig.js'])
+         ckeditor.customConfig='$context/modules/bootstrap5-components/javascript/ckconfig.js'])
     i18n
 ```
 
-The config file is at `bootstrap5-js-rendering/javascript/ckconfig.js`. It defines the `Tinny` toolbar and references additional plugins (`cktemplates.js`, `beautify-html.min.js`, `purify.min.js`) from the same `javascript/` folder.
+The config file is at `bootstrap5-components/javascript/ckconfig.js`. It defines the `Tinny` toolbar and references additional plugins (`cktemplates.js`, `beautify-html.min.js`, `purify.min.js`) from the same `javascript/` folder.
 
 ## Thumbnail images
 
@@ -102,4 +102,4 @@ Property values shown as image tiles in the Content Editor (e.g. grid ratio pick
     < '12'='img/12.png', '6_6'='img/6_6.png', ...
 ```
 
-The images are served from `bootstrap5-js-rendering/img/`.
+The images are served from `bootstrap5-components/img/`.

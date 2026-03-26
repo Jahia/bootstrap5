@@ -32,11 +32,11 @@ curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
 
 ```yaml
 # Enable
-- enable: "bootstrap5-js-rendering"
+- enable: "bootstrap5-components"
   site: "my-site"
 
 # Disable
-- disable: "bootstrap5-js-rendering"
+- disable: "bootstrap5-components"
   site: "my-site"
 ```
 
@@ -44,7 +44,7 @@ curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -H "Authorization: Basic $AUTH" \
   -H 'Content-Type: text/yaml' \
-  --data-binary '- enable: "bootstrap5-js-rendering"
+  --data-binary '- enable: "bootstrap5-components"
   site: "my-site"'
 ```
 
@@ -58,23 +58,23 @@ curl -s http://YOUR_JAHIA/modules/api/bundles \
 
 Expected states:
 - `bootstrap5-core` → `Active`
-- `bootstrap5-js-rendering` → `Active`
-- `bootstrap5-templates-starter-js` → `Active`
+- `bootstrap5-components` → `Active`
+- `bootstrap5-templates-starter` → `Active`
 
 ## Module startup order
 
-Jahia resolves OSGi dependencies automatically. However, if `bootstrap5-js-rendering` is deployed before `bootstrap5-core`, it will fail to start with:
+Jahia resolves OSGi dependencies automatically. However, if `bootstrap5-components` is deployed before `bootstrap5-core`, it will fail to start with:
 
 ```
-Bundle bootstrap5-js-rendering has unresolved dependency bootstrap5-core and won't be started
+Bundle bootstrap5-components has unresolved dependency bootstrap5-core and won't be started
 ```
 
 Deploy `bootstrap5-core` first, then start the JS modules:
 
 ```yaml
 - installOrUpgradeModule: "bootstrap5-core.jar"
-- start: "bootstrap5-js-rendering"
-- start: "bootstrap5-templates-starter-js"
+- start: "bootstrap5-components"
+- start: "bootstrap5-templates-starter"
 ```
 
 ## Using the Karaf console
@@ -89,7 +89,7 @@ osgi:list | grep bootstrap5
 osgi:start <bundle-id>
 
 # Restart the JS engine
-bundle:restart <bootstrap5-js-rendering-id>
+bundle:restart <bootstrap5-components-id>
 ```
 
 ## Clustered environments

@@ -6,13 +6,13 @@
 HTTP request
   └─ Jahia rendering engine
        ├─ Resolves the page template
-       │    └─ bootstrap5-templates-starter-js: TemplateView (TSX)
+       │    └─ bootstrap5-templates-starter: TemplateView (TSX)
        │         ├─ Renders <html>, <head>, <body>
        │         ├─ Includes Bootstrap CSS/JS from bootstrap5-core
        │         └─ Renders Areas (header, pagecontent, footer)
        │
        └─ For each node in each area, resolves the view
-            └─ bootstrap5-js-rendering: component view (TSX)
+            └─ bootstrap5-components: component view (TSX)
                  └─ Renders the component HTML
 ```
 
@@ -22,10 +22,10 @@ All server-side rendering runs inside the **Jahia JavaScript modules engine** (G
 
 Jahia resolves views by searching modules in dependency order — a module that declares `module-dependencies: X` has higher priority than `X`.
 
-- `bootstrap5-js-rendering` declares `module-dependencies: bootstrap5-core`
-- `bootstrap5-templates-starter-js` declares `module-dependencies: bootstrap5-core`
+- `bootstrap5-components` declares `module-dependencies: bootstrap5-core`
+- `bootstrap5-templates-starter` declares `module-dependencies: bootstrap5-core`
 
-A custom module declaring `module-dependencies: bootstrap5-js-rendering` will override any view from `bootstrap5-js-rendering`.
+A custom module declaring `module-dependencies: bootstrap5-components` will override any view from `bootstrap5-components`.
 
 ## JS engine Java interop constraints
 
@@ -95,7 +95,7 @@ The entry point `src/index.ts` (compiled to `dist/server/index.js`) imports all 
 
 ## CND and module ownership
 
-`bootstrap5-js-rendering` owns all `bootstrap5nt:*` node types and `bootstrap5mix:*` mixins. Definitions are split across two locations:
+`bootstrap5-components` owns all `bootstrap5nt:*` node types and `bootstrap5mix:*` mixins. Definitions are split across two locations:
 
 - **`settings/definitions.cnd`** — namespaces and cross-component shared mixins (image, padding, margin)
 - **`src/components/<Name>/definition.cnd`** — one file per component (12 files)

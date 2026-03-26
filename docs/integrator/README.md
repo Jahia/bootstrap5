@@ -11,27 +11,27 @@ This guide is for developers who build and customize page templates, theme asset
 
 ## Architecture overview
 
-The template set is a pure JavaScript module (`bootstrap5-templates-starter-js`) with `module-type: templatesSet`. It declares:
+The template set is a pure JavaScript module (`bootstrap5-templates-starter`) with `module-type: templatesSet`. It declares:
 
 - The site structure via `settings/import.xml` (template hierarchy, initial home page)
 - Two page templates implemented as TSX server components
 - A dependency on `bootstrap5-core` for Bootstrap CSS/JS assets
 
-Component views (accordion, card, grid, etc.) live in a separate module, `bootstrap5-js-rendering`, which is automatically activated on new sites via `j:installedModules` in `import.xml`.
+Component views (accordion, card, grid, etc.) live in a separate module, `bootstrap5-components`, which is automatically activated on new sites via `j:installedModules` in `import.xml`.
 
 ```
 Request
   └─ Jahia rendering engine
-       ├─ bootstrap5-templates-starter-js  ← page template (html, head, body, areas)
-       └─ bootstrap5-js-rendering          ← component views (accordion, card, grid…)
+       ├─ bootstrap5-templates-starter  ← page template (html, head, body, areas)
+       └─ bootstrap5-components          ← component views (accordion, card, grid…)
 ```
 
 ## Module dependencies
 
 ```
-bootstrap5-templates-starter-js
+bootstrap5-templates-starter
   └─ bootstrap5-core  (Bootstrap CSS/JS assets, choicelist initializers)
 
-bootstrap5-js-rendering
+bootstrap5-components
   └─ bootstrap5-core
 ```

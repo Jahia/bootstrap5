@@ -1,0 +1,6 @@
+[bootstrap5nt:breadcrumb] > jnt:content, bootstrap5mix:component
+
+[bootstrap5mix:advancedBreadcrumb] mixin
+  extends = bootstrap5nt:breadcrumb
+  itemtype = content
+  - cssClass (string) = 'float-start' indexed=no

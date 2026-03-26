@@ -1,0 +1,7 @@
+[bootstrap5nt:figure] > jnt:content, bootstrap5mix:component, bootstrap5mix:imageAdvanced, mix:title
+
+[bootstrap5mix:figureAdvancedSettings] mixin
+  extends = bootstrap5nt:figure
+  itemtype = content
+  - captionAlignment (string, choicelist[resourceBundle, moduleImage='svg']) = 'text-start' autocreated indexed=no
+    < 'text-start', 'text-center', 'text-end'

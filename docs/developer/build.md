@@ -14,10 +14,10 @@ Each JS module bundles its own Node binary at `node/node` to guarantee a consist
 
 ## Build commands
 
-### `bootstrap5-js-rendering`
+### `bootstrap5-components`
 
 ```bash
-cd bootstrap5-js-rendering
+cd bootstrap5-components
 
 # Type-check + compile + pack TGZ
 node/node node/node_modules/.bin/npm run build:maven
@@ -28,10 +28,10 @@ node/node node/node_modules/.bin/npm run dev
 
 **Output:** `dist/package.tgz`
 
-### `bootstrap5-templates-starter-js`
+### `bootstrap5-templates-starter`
 
 ```bash
-cd bootstrap5-templates-starter-js
+cd bootstrap5-templates-starter
 node/node node/node_modules/.bin/npm run build:maven
 ```
 
@@ -53,7 +53,7 @@ The `frontend-maven-plugin` in each JS module's `pom.xml` automatically invokes 
 
 The TGZ artifact is what Jahia installs. It contains exactly what is listed in the `files` array of `package.json`.
 
-### `bootstrap5-js-rendering` TGZ
+### `bootstrap5-components` TGZ
 
 ```
 package/
@@ -69,7 +69,7 @@ package/
 └─ package.json
 ```
 
-### `bootstrap5-templates-starter-js` TGZ
+### `bootstrap5-templates-starter` TGZ
 
 ```
 package/
@@ -112,10 +112,10 @@ npm run build:maven
 
 ## Unit tests
 
-`bootstrap5-js-rendering` includes a Vitest suite covering all 17 component views:
+`bootstrap5-components` includes a Vitest suite covering all 17 component views:
 
 ```bash
-cd bootstrap5-js-rendering
+cd bootstrap5-components
 
 # Run all tests once
 node/node node_modules/.bin/vitest run

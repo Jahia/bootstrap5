@@ -60,13 +60,13 @@ Use the same pattern for any edit-mode-only resource.
 To create a branded template set:
 
 1. Create a new JS module with `"module-type": "templatesSet"`
-2. Declare `"module-dependencies": "bootstrap5-core"` (or `"bootstrap5-js-rendering"` if you want all components)
-3. Copy and adapt `settings/import.xml` from `bootstrap5-templates-starter-js`
+2. Declare `"module-dependencies": "bootstrap5-core"` (or `"bootstrap5-components"` if you want all components)
+3. Copy and adapt `settings/import.xml` from `bootstrap5-templates-starter`
 4. Write your page templates in TSX (see [Template Structure](template-structure.md))
 5. Add your custom CSS/JS
 6. Deploy as a TGZ
 
-Your module's views will take priority over `bootstrap5-templates-starter-js` for `jnt:template` rendering because it declares a dependency on `bootstrap5-core`, making it higher priority.
+Your module's views will take priority over `bootstrap5-templates-starter` for `jnt:template` rendering because it declares a dependency on `bootstrap5-core`, making it higher priority.
 
 ## Overriding a component view
 
@@ -85,4 +85,4 @@ jahiaComponent(
 );
 ```
 
-Declare `"module-dependencies": "bootstrap5-js-rendering"` in your `package.json`. Jahia will use your view in preference to the one in `bootstrap5-js-rendering`.
+Declare `"module-dependencies": "bootstrap5-components"` in your `package.json`. Jahia will use your view in preference to the one in `bootstrap5-components`.

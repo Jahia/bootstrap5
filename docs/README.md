@@ -18,5 +18,5 @@ The Bootstrap 5 rendering stack consists of three modules:
 | Module | Type | Role |
 |--------|------|------|
 | `bootstrap5-core` | Java OSGi bundle | Bootstrap 5 CSS/JS assets + Java choicelist initializers |
-| `bootstrap5-js-rendering` | JS module | Component CND definitions, TSX views, Content Editor forms, i18n |
-| `bootstrap5-templates-starter-js` | JS templatesSet | Page templates (standard + sticky-footer), site import structure |
+| `bootstrap5-components` | JS module | Component CND definitions, TSX views, Content Editor forms, i18n |
+| `bootstrap5-templates-starter` | JS templatesSet | Page templates (standard + sticky-footer), site import structure |

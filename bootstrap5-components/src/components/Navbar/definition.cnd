@@ -1,0 +1,42 @@
+[bootstrap5nt:navbar] > jnt:content, bootstrap5mix:component, jmix:navMenuComponent
+  - root (string, choicelist[navbarRootInitializer5, resourceBundle]) = 'homePage' autocreated indexed=no
+    < 'homePage', 'currentPage', 'parentPage', 'customRootPage'
+
+[bootstrap5mix:navbarGlobalSettings] mixin
+  extends = bootstrap5nt:navbar
+  itemtype = content
+  - addLoginButton              (boolean) = 'true'  autocreated indexed=no
+  - addLanguageButton           (boolean) = 'true'  autocreated indexed=no
+  - maxlevel (string, choicelist[resourceBundle]) = '2' autocreated indexed=no
+    < '1', '2', '3', '4', '5'
+  - addContainerWithinTheNavbar (boolean) = 'true' autocreated indexed=no
+
+[bootstrap5mix:customizeNavbar] mixin
+  extends = bootstrap5nt:navbar
+  itemtype = content
+  - navClass        (string) = 'navbar navbar-expand-lg navbar-light bg-light' autocreated indexed=no
+  - togglerClass    (string) = 'navbar-toggler navbar-toggler-right' indexed=no
+  - brandLinkClass  (string) = 'navbar-brand' autocreated indexed=no
+  - brandImageClass (string) = 'navbar-brand' autocreated indexed=no
+  - divClass        (string) = 'collapse navbar-collapse' autocreated indexed=no
+  - ulClass         (string) = 'navbar-nav me-auto' autocreated indexed=no
+  - liClass         (string) = 'nav-item' autocreated indexed=no
+  - navLinkClass    (string) = 'nav-link' autocreated indexed=no
+  - loginMenuULClass (string) = 'navbar-nav ms-auto'
+
+[bootstrap5mix:brand] mixin
+  extends = bootstrap5nt:navbar
+  - brandText        (string) i18n
+  - brandImage       (weakreference, picker[type='image']) < 'jmix:image'
+  - brandImageMobile (weakreference, picker[type='image']) < 'jmix:image'
+
+[bootstrap5mix:siteBrand] mixin
+  extends = jnt:virtualsite
+  itemtype = content
+  - brandText        (string) i18n
+  - brandImage       (weakreference, picker[type='image']) < 'jmix:image'
+  - brandImageMobile (weakreference, picker[type='image']) < 'jmix:image'
+
+[bootstrap5mix:customRootPage] > jmix:templateMixin mixin
+  extends = bootstrap5nt:navbar
+  - customRootPage (weakreference, picker[type='page']) < 'jnt:page'

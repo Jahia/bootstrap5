@@ -1,0 +1,55 @@
+{
+  "name": "bootstrap5-components",
+  "version": "1.0.0-SNAPSHOT",
+  "description": "Bootstrap 5 for Jahia — JS/React rendering module (reference implementation)",
+  "packageManager": "yarn@4.12.0",
+  "type": "module",
+  "license": "MIT",
+  "author": "Jahia Solutions Group SA",
+  "files": [
+    "dist/server",
+    "src/**/*.cnd",
+    "settings",
+    "META-INF",
+    "resources",
+    "img",
+    "javascript"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit && vite build && yarn pack --out dist/package.tgz",
+    "build:maven": "tsc --noEmit && vite build && npm pack && mkdir -p dist && mv bootstrap5-components-*.tgz dist/package.tgz",
+    "clean": "rm -rf dist/",
+    "dev": "vite build --watch",
+    "deploy": "jahia-deploy",
+    "watch": "yarn dev",
+    "watch:callback": "yarn pack --out dist/package.tgz && yarn deploy",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@jahia/javascript-modules-library": "^1.0.0",
+    "@jahia/vite-plugin": "^1.0.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.0.0",
+    "i18next": "^25.0.0",
+    "jsdom": "^26.1.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-i18next": "^16.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^7.0.0",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "yarn": ">=4.0.0"
+  },
+  "jahia": {
+    "module-dependencies": "bootstrap5-core",
+    "module-type": "module",
+    "server": "dist/server/index.js",
+    "static-resources": "/dist/client,/dist/assets"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["react", "vitest/globals"],
+    "paths": {
+      "@jahia/javascript-modules-library": ["./src/test/mocks/jahia-lib.tsx"],
+      "react-i18next": ["./src/test/mocks/react-i18next.ts"]
+    }
+  },
+  "include": ["src/test/**/*", "src/components/**/*", "src/utils/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

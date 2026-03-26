@@ -12,8 +12,8 @@ This guide is for developers who extend the Bootstrap 5 module stack — adding 
 ## Quick start
 
 ```bash
-# Build bootstrap5-js-rendering
-cd bootstrap5-js-rendering
+# Build bootstrap5-components
+cd bootstrap5-components
 node/node node/node_modules/.bin/npm run build:maven
 
 # Deploy to local Jahia
@@ -31,7 +31,7 @@ bootstrap5/
 │   ├─ src/main/java/                Choicelist initializer classes
 │   ├─ src/main/resources/          Bootstrap CSS/JS (built by npm postinstall)
 │   └─ pom.xml
-├─ bootstrap5-js-rendering/          JS module — component views + CND
+├─ bootstrap5-components/          JS module — component views + CND
 │   ├─ src/
 │   │   ├─ components/               TSX view files + per-component CND (one folder per component)
 │   │   │   ├─ Accordion/
@@ -49,7 +49,7 @@ bootstrap5/
 │   ├─ javascript/                   CKEditor config + static JS libs
 │   ├─ package.json
 │   └─ vite.config.js
-├─ bootstrap5-templates-starter-js/  JS templatesSet — page templates
+├─ bootstrap5-templates-starter/  JS templatesSet — page templates
 │   ├─ src/templates/                TSX template files
 │   ├─ settings/
 │   │   └─ import.xml                Site structure import

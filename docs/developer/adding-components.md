@@ -2,7 +2,7 @@
 
 ## Step 1 — Define the node type in the CND
 
-Create `bootstrap5-js-rendering/src/components/MyComponent/definition.cnd`:
+Create `bootstrap5-components/src/components/MyComponent/definition.cnd`:
 
 ```cnd
 [bootstrap5nt:myComponent] > jnt:content, bootstrap5mix:component
@@ -20,7 +20,7 @@ Key points:
 
 ## Step 2 — Add i18n labels
 
-Edit `bootstrap5-js-rendering/resources/bootstrap5-js-rendering.properties`:
+Edit `bootstrap5-components/resources/bootstrap5-components.properties`:
 
 ```properties
 # Component label
@@ -40,7 +40,7 @@ Add the same keys to the other language files (`_fr.properties`, `_de.properties
 
 ## Step 3 — Create the TSX view file
 
-Create `bootstrap5-js-rendering/src/components/MyComponent/default.server.tsx`:
+Create `bootstrap5-components/src/components/MyComponent/default.server.tsx`:
 
 ```tsx
 import React from "react";
@@ -70,7 +70,7 @@ jahiaComponent(
 
 ## Step 4 — Register the export
 
-Edit `bootstrap5-js-rendering/src/index.ts` (or wherever the barrel file is) to import the new file:
+Edit `bootstrap5-components/src/index.ts` (or wherever the barrel file is) to import the new file:
 
 ```ts
 import "./components/MyComponent/default.server";
@@ -78,7 +78,7 @@ import "./components/MyComponent/default.server";
 
 ## Step 5 — (Optional) Add a Content Editor form
 
-Create `bootstrap5-js-rendering/META-INF/jahia-content-editor-forms/fieldsets/bootstrap5nt_myComponent.json` to control field ordering and grouping:
+Create `bootstrap5-components/META-INF/jahia-content-editor-forms/fieldsets/bootstrap5nt_myComponent.json` to control field ordering and grouping:
 
 ```json
 {
@@ -96,7 +96,7 @@ Create `bootstrap5-js-rendering/META-INF/jahia-content-editor-forms/fieldsets/bo
 ## Step 6 — Build and deploy
 
 ```bash
-cd bootstrap5-js-rendering
+cd bootstrap5-components
 node/node node/node_modules/.bin/npm run build:maven
 
 curl -X POST http://localhost:8080/modules/api/provisioning \
