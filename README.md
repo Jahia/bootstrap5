@@ -1,9 +1,18 @@
 # Bootstrap 5 for Jahia
 
-A production-ready Bootstrap 5 implementation for the [Jahia Digital Experience Platform](https://www.jahia.com).
+> ⚠️ **This branch (`main`) is under active development.**
+>
+> It is being migrated to a full JavaScript/React rendering stack. **Do not use this branch in production.**
+>
+> **Breaking changes** — the module names, CND definitions, and rendering pipeline have all changed significantly from the previous version.
+>
+> For stable, production-ready code use the **[`2_X` branch](https://github.com/Jahia/bootstrap5/tree/2_X)**.
 
-[![Latest release](https://img.shields.io/github/v/release/Jahia/bootstrap5)](https://github.com/Jahia/bootstrap5/releases/latest)
-[![Jahia 8.2+](https://img.shields.io/badge/Jahia-8.2%2B-blue)](https://www.jahia.com)
+---
+
+A Bootstrap 5 implementation for the [Jahia Digital Experience Platform](https://www.jahia.com), being rewritten as a JavaScript module stack.
+
+[![Jahia 8.2.3+](https://img.shields.io/badge/Jahia-8.2.3%2B-blue)](https://www.jahia.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
