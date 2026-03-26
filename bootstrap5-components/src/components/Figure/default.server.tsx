@@ -8,6 +8,7 @@
  */
 import { jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { Figure } from "react-bootstrap";
 import { ImageTag } from "../../utils/image.js";
 
 interface FigureProps {
@@ -33,20 +34,18 @@ jahiaComponent(
       : "";
 
     return (
-      <figure className="figure">
+      <Figure>
         <ImageTag
           node={currentNode}
           imageNode={image}
           callerClass="figure-img img-fluid"
         />
         {caption && (
-          <figcaption
-            className={`figure-caption${captionAlignment ? ` ${captionAlignment}` : ""}`}
-          >
+          <Figure.Caption className={captionAlignment || undefined}>
             {caption}
-          </figcaption>
+          </Figure.Caption>
         )}
-      </figure>
+      </Figure>
     );
   },
 );
