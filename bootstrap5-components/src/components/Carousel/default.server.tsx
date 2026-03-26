@@ -8,7 +8,6 @@
  * Per-slide advanced settings (color, class, interval) are read directly from child nodes.
  */
 import {
-  Area,
   getChildNodes,
   jahiaComponent,
   useServerContext,
@@ -185,8 +184,7 @@ jahiaComponent(
           )}
         </div>
 
-        {/* Edit-mode drop zone for new slides */}
-        {isEditMode && <Area name="*" nodeType="bootstrap5nt:carouselItem" />}
+        {/* Edit-mode drop zone: handled automatically by Jahia (jmix:list + orderable) */}
       </>
     );
   },
