@@ -17,6 +17,7 @@
   ],
   "scripts": {
     "build": "tsc --noEmit && vite build && yarn pack --out dist/package.tgz",
+    "build:maven": "tsc --noEmit && vite build && npm pack && mkdir -p dist && mv bootstrap5-components-*.tgz dist/package.tgz",
     "clean": "rm -rf dist/",
     "dev": "vite build --watch",
     "deploy": "jahia-deploy",

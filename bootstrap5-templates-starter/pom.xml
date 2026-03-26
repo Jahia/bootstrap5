@@ -32,26 +32,28 @@
         <configuration>
           <workingDirectory>${project.basedir}</workingDirectory>
           <nodeVersion>v22.11.0</nodeVersion>
-          <yarnVersion>v1.22.22</yarnVersion>
           <installDirectory>${project.basedir}/target</installDirectory>
         </configuration>
         <executions>
           <execution>
-            <id>install-node-and-yarn</id>
-            <goals><goal>install-node-and-yarn</goal></goals>
+            <id>install-node-and-npm</id>
+            <goals><goal>install-node-and-npm</goal></goals>
             <phase>generate-resources</phase>
           </execution>
           <execution>
-            <id>yarn-install</id>
-            <goals><goal>yarn</goal></goals>
+            <id>npm-install</id>
+            <goals><goal>npm</goal></goals>
             <phase>generate-resources</phase>
+            <configuration>
+              <arguments>install</arguments>
+            </configuration>
           </execution>
           <execution>
-            <id>yarn-build</id>
-            <goals><goal>yarn</goal></goals>
+            <id>npm-build</id>
+            <goals><goal>npm</goal></goals>
             <phase>compile</phase>
             <configuration>
-              <arguments>build</arguments>
+              <arguments>run build:maven</arguments>
             </configuration>
           </execution>
         </executions>
