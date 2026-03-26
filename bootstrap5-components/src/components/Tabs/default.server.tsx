@@ -74,7 +74,7 @@ jahiaComponent(
     const alignClass = align !== "justify-content-start" ? ` ${align}` : "";
 
     // Fetch jnt:contentList children — each one is a tab panel
-    const subLists = getChildNodes(currentNode).filter(n => n.isNodeType("jnt:contentList"));
+    const subLists = getChildNodes(currentNode, 50).filter(n => n.isNodeType("jnt:contentList"));
     const tabsId = `tabs-${currentNode.getIdentifier()}`;
 
     return (

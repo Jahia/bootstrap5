@@ -72,7 +72,7 @@ jahiaComponent(
     }
 
     // Droppable children: jmix:droppableContent children, excluding the "cardFooter" subnode
-    const bodyChildren = getChildNodes(currentNode).filter(
+    const bodyChildren = getChildNodes(currentNode, 50).filter(
       (child) => child.isNodeType("jmix:droppableContent") && child.getName() !== "cardFooter",
     );
 

@@ -186,7 +186,7 @@ jahiaComponent(
     // ── Navigation tree ────────────────────────────────────────────────────
     const mainResourcePath = mainNode.getPath();
     const navbarName = currentNode.getName();
-    const level1Pages = rootNode ? getChildNodes(rootNode).filter(n => n.isNodeType("jmix:navMenuItem")) : [];
+    const level1Pages = rootNode ? getChildNodes(rootNode, 100).filter(n => n.isNodeType("jmix:navMenuItem")) : [];
 
     // ── Language switcher ──────────────────────────────────────────────────
     // ⚠️ ui:initLangBarAttributes has no JS equivalent.
@@ -262,7 +262,7 @@ jahiaComponent(
                 if (!item1) return null;
 
                 const level2Pages = recursive
-                  ? getChildNodes(l1).filter(n => n.isNodeType("jmix:navMenuItem"))
+                  ? getChildNodes(l1, 100).filter(n => n.isNodeType("jmix:navMenuItem"))
                   : [];
                 const hasDropdown = level2Pages.length > 0 && recursive;
 

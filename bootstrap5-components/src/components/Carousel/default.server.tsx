@@ -80,7 +80,7 @@ jahiaComponent(
     if (!wrap) bsProps["data-bs-wrap"] = "false";
 
     // ── Slide items ────────────────────────────────────────────────────────
-    const items = getChildNodes(currentNode).filter(n => n.isNodeType("bootstrap5nt:carouselItem"));
+    const items = getChildNodes(currentNode, 100).filter(n => n.isNodeType("bootstrap5nt:carouselItem"));
 
     return (
       <>

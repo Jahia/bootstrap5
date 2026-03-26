@@ -28,7 +28,7 @@ jahiaComponent(
 
     // Determine active: first among siblings
     const parent = currentNode.getParent() as JCRNodeWrapper;
-    const siblings = getChildNodes(parent).filter(n => n.isNodeType("bootstrap5nt:carouselItem"));
+    const siblings = getChildNodes(parent, 100).filter(n => n.isNodeType("bootstrap5nt:carouselItem"));
     const isFirst =
       siblings.length > 0 &&
       siblings[0].getIdentifier() === currentNode.getIdentifier();

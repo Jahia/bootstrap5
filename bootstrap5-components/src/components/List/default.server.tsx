@@ -24,7 +24,8 @@ jahiaComponent(
   () => {
     const { currentNode, renderContext } = useServerContext();
     const isEditMode = renderContext.isEditMode();
-    const children = getChildNodes(currentNode);
+    const listLimit = parseInt(currentNode.getPropertyAsString("limit") ?? "", 10);
+    const children = getChildNodes(currentNode, isNaN(listLimit) ? 1000 : listLimit);
 
     return (
       <>
