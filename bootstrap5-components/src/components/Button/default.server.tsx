@@ -5,18 +5,20 @@
 /**
  * bootstrap5nt:button — six buttonType variants (internalLink, externalLink, modal,
  * collapse, popover, Offcanvas), each producing different HTML.
- * Advanced settings are driven by the bootstrap5mix:buttonAdvancedSettings mixin
- * injected at save time by ButtonTypeInitializer (Java).
+ *
+ * react-bootstrap's Button component replaces the manual buildButtonClass helper.
+ * Modal and Offcanvas overlay HTML is kept as-is because show/hide is driven by
+ * Bootstrap.js (data-bs-* attributes); only their inner sub-components are used.
+ * Collapse and Popover are fully Bootstrap.js–driven and unchanged.
  */
 import {
   AddResources,
   Area,
   jahiaComponent,
-  Render,
-  useServerContext,
 } from "@jahia/javascript-modules-library";
 import { useTranslation } from "react-i18next";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { Button, Modal, Offcanvas } from "react-bootstrap";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -27,7 +29,7 @@ interface ButtonBaseProps {
   "jcr:title"?: string;
   /** Drives which mixin was injected by ButtonTypeInitializer */
   buttonType: "internalLink" | "externalLink" | "modal" | "collapse" | "popover" | "Offcanvas";
-  // bootstrap5mix:buttonAdvancedSettings (injected by mixin, may be absent)
+  // bootstrap5mix:buttonAdvancedSettings
   style?: string;
   size?: string;
   outline?: boolean;
@@ -64,29 +66,37 @@ interface ButtonBaseProps {
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Builds the btn CSS class string, mirroring the JSP logic exactly. */
-function buildButtonClass(props: ButtonBaseProps): string {
+/**
+ * Derives react-bootstrap Button props from the Jahia advanced settings.
+ * Returns null when style === "custom" (caller must render plain HTML).
+ */
+function buttonProps(props: ButtonBaseProps) {
   const style = props.style ?? "primary";
-  const outline = props.outline ? "-outline" : "";
-  const size = props.size && props.size !== "default" ? ` ${props.size}` : "";
-  const state = props.state && props.state !== "default" ? ` ${props.state}` : "";
-  const block = props.block ? " btn-block" : "";
-  const cssClass = props.cssClass ? ` ${props.cssClass}` : "";
-  const nowrap = props.disableTextWrapping ? " text-nowrap" : "";
-  const stretched = props.stretchedLink ? " stretched-link" : "";
+  if (style === "custom") return null;
 
-  if (style === "custom") {
-    // "custom" uses cssClass verbatim as the full class string
-    return props.cssClass ?? "";
-  }
-  return `btn btn${outline}-${style}${size}${state}${block}${cssClass}${nowrap}${stretched}`;
+  const variant = props.outline ? `outline-${style}` : style;
+  const size = props.size && props.size !== "default"
+    ? (props.size as "sm" | "lg")
+    : undefined;
+  const active = props.state === "active";
+  const disabled = props.state === "disabled";
+  const extraClass = [
+    props.block ? "btn-block" : "",
+    props.cssClass ?? "",
+    props.disableTextWrapping ? "text-nowrap" : "",
+    props.stretchedLink ? "stretched-link" : "",
+  ].filter(Boolean).join(" ") || undefined;
+
+  const aria: Record<string, string> = {};
+  if (props.state === "active") aria["aria-pressed"] = "true";
+  if (props.state === "disabled") aria["aria-disabled"] = "true";
+
+  return { variant, size, active, disabled, className: extraClass, ...aria };
 }
 
-/** Returns aria attributes string based on button state. */
-function ariaForState(state?: string): Record<string, string> {
-  if (state === "active") return { "aria-pressed": "true" };
-  if (state === "disabled") return { "aria-disabled": "true" };
-  return {};
+/** Fallback for style === "custom": plain class string */
+function customClass(props: ButtonBaseProps): string {
+  return props.cssClass ?? "";
 }
 
 // ---------------------------------------------------------------------------
@@ -103,8 +113,7 @@ jahiaComponent(
   (props: ButtonBaseProps, { renderContext, currentNode }) => {
     const { t } = useTranslation();
     const title = props["jcr:title"];
-    const buttonClass = buildButtonClass(props);
-    const aria = ariaForState(props.state);
+    const bsProps = buttonProps(props);
     const id = `button_${currentNode.getIdentifier()}`;
 
     switch (props.buttonType) {
@@ -113,20 +122,15 @@ jahiaComponent(
       case "internalLink": {
         const linkNode = props.internalLink;
         if (!linkNode) {
-          // No target set yet — show warning in edit mode only
           return renderContext.isEditMode() ? (
-            <span className="badge badge-warning">
-              {t("bootstrap5nt_button.noLink")}
-            </span>
+            <span className="badge badge-warning">{t("bootstrap5nt_button.noLink")}</span>
           ) : null;
         }
-        const href = linkNode.getUrl();
+        const href = String(linkNode.getUrl());
         const label = title || linkNode.getDisplayableName();
-        return (
-          <a href={href} className={buttonClass} role="button" {...aria} id={id}>
-            {label}
-          </a>
-        );
+        return bsProps
+          ? <Button as="a" href={href} role="button" id={id} {...bsProps}>{label}</Button>
+          : <a href={href} className={customClass(props)} role="button" id={id}>{label}</a>;
       }
 
       // ── External link ──────────────────────────────────────────────────
@@ -135,41 +139,48 @@ jahiaComponent(
         const label = title || t("bootstrap5nt_button.readMore");
         const isBlank = !href || href === "http://";
         if (isBlank && renderContext.isEditMode()) {
-          return (
-            <span className="badge badge-warning">
-              {t("bootstrap5nt_button.noUrl")}
-            </span>
-          );
+          return <span className="badge badge-warning">{t("bootstrap5nt_button.noUrl")}</span>;
         }
-        return (
-          <a href={href} className={buttonClass} role="button" {...aria} id={id}>
-            {label}
-          </a>
-        );
+        return bsProps
+          ? <Button as="a" href={href} role="button" id={id} {...bsProps}>{label}</Button>
+          : <a href={href} className={customClass(props)} role="button" id={id}>{label}</a>;
       }
 
       // ── Modal ──────────────────────────────────────────────────────────
+      // Trigger uses react-bootstrap Button; overlay HTML stays as-is for Bootstrap.js.
+      // Modal.Header / Modal.Body / Modal.Footer are used for the inner structure.
       case "modal": {
         const label = title || t("bootstrap5nt_button.readMore");
         const closeLabel = props.closeText || t("bootstrap5nt_button.close");
-        const size = props.modalSize && props.modalSize !== "default"
-          ? ` modal-${props.modalSize}`
-          : "";
-        const centered = props.verticallyCentered ? " modal-dialog-centered" : "";
+        const sizeClass = props.modalSize && props.modalSize !== "default"
+          ? ` modal-${props.modalSize}` : "";
+        const centeredClass = props.verticallyCentered ? " modal-dialog-centered" : "";
         const modalId = `modal-${currentNode.getIdentifier()}`;
         const modalLabelId = `modalLabel_${currentNode.getIdentifier()}`;
         return (
           <>
-            <button
-              type="button"
-              className={buttonClass}
-              {...aria}
-              data-bs-toggle="modal"
-              data-bs-target={`#${modalId}`}
-              id={id}
-            >
-              {label}
-            </button>
+            {bsProps
+              ? (
+                <Button
+                  id={id}
+                  data-bs-toggle="modal"
+                  data-bs-target={`#${modalId}`}
+                  {...bsProps}
+                >
+                  {label}
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  className={customClass(props)}
+                  data-bs-toggle="modal"
+                  data-bs-target={`#${modalId}`}
+                  id={id}
+                >
+                  {label}
+                </button>
+              )}
+            {/* Overlay — Bootstrap.js manages show/hide via data-bs-toggle above */}
             <div
               className="modal fade"
               id={modalId}
@@ -182,36 +193,32 @@ jahiaComponent(
                 : {})}
             >
               <div
-                className={`modal-dialog modal-dialog-scrollable${centered}${size}`}
+                className={`modal-dialog modal-dialog-scrollable${centeredClass}${sizeClass}`}
                 {...(renderContext.isEditMode() ? { style: { margin: "5px" } } : {})}
               >
                 <div className="modal-content">
                   {props.modalTitle && (
-                    <div className="modal-header">
-                      <h5 className="modal-title" id={modalLabelId}>
-                        {props.modalTitle}
-                      </h5>
+                    <Modal.Header>
+                      <Modal.Title id={modalLabelId}>{props.modalTitle}</Modal.Title>
                       <button
                         type="button"
                         className="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"
                       />
-                    </div>
+                    </Modal.Header>
                   )}
-                  <div className="modal-body">
-                    {/* Render droppable child content */}
+                  <Modal.Body>
                     <Area name="modal-body" nodeType="jmix:droppableContent" />
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className={`btn btn-${props.style ?? "primary"}`}
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      variant={props.style ?? "primary"}
                       data-bs-dismiss="modal"
                     >
                       {closeLabel}
-                    </button>
-                  </div>
+                    </Button>
+                  </Modal.Footer>
                 </div>
               </div>
             </div>
@@ -220,16 +227,26 @@ jahiaComponent(
       }
 
       // ── Collapse ───────────────────────────────────────────────────────
+      // Entirely Bootstrap.js–driven — no react-bootstrap equivalent for SSR.
       case "collapse": {
         const label = title || t("bootstrap5nt_button.readMore");
-        const show = props.show ? " show" : "";
+        const showClass = props.show ? " show" : "";
         const collapseId = `collapse-${currentNode.getIdentifier()}`;
+        const cls = bsProps
+          ? [
+              "btn",
+              `btn-${props.outline ? `outline-${props.style ?? "primary"}` : (props.style ?? "primary")}`,
+              props.size && props.size !== "default" ? props.size : "",
+              props.state && props.state !== "default" ? props.state : "",
+              props.cssClass ?? "",
+              showClass.trim(),
+            ].filter(Boolean).join(" ")
+          : `${customClass(props)}${showClass}`;
         return (
           <>
             <a
               href={`#${collapseId}`}
-              className={`${buttonClass}${show}`}
-              {...aria}
+              className={cls}
               role="button"
               data-bs-toggle="collapse"
               aria-expanded="false"
@@ -246,51 +263,77 @@ jahiaComponent(
       }
 
       // ── Popover ────────────────────────────────────────────────────────
+      // Requires Bootstrap.js initialisation — no SSR-compatible react-bootstrap equivalent.
       case "popover": {
         const label = title || t("bootstrap5nt_button.readMore");
-        // Popovers require explicit JS initialisation.
-        // Bootstrap 5 does not auto-init popovers unlike tooltips.
         const initScript = `document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => new bootstrap.Popover(el));`;
         return (
           <>
-            <button
-              type="button"
-              className={buttonClass}
-              {...aria}
-              data-bs-toggle="popover"
-              {...(props.popoverTitle ? { title: props.popoverTitle } : {})}
-              {...(props.popoverContent
-                ? { "data-bs-content": props.popoverContent }
-                : {})}
-              {...(props.html ? { "data-bs-html": "true" } : {})}
-              data-bs-container="body"
-              data-bs-placement={props.direction ?? "top"}
-              data-bs-trigger="focus"
-              id={id}
-            >
-              {label}
-            </button>
-            {/* Init script — Bootstrap 5 (no jQuery) */}
+            {bsProps
+              ? (
+                <Button
+                  id={id}
+                  data-bs-toggle="popover"
+                  {...(props.popoverTitle ? { title: props.popoverTitle } : {})}
+                  {...(props.popoverContent ? { "data-bs-content": props.popoverContent } : {})}
+                  {...(props.html ? { "data-bs-html": "true" } : {})}
+                  data-bs-container="body"
+                  data-bs-placement={props.direction ?? "top"}
+                  data-bs-trigger="focus"
+                  {...bsProps}
+                >
+                  {label}
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  className={customClass(props)}
+                  data-bs-toggle="popover"
+                  {...(props.popoverTitle ? { title: props.popoverTitle } : {})}
+                  {...(props.popoverContent ? { "data-bs-content": props.popoverContent } : {})}
+                  {...(props.html ? { "data-bs-html": "true" } : {})}
+                  data-bs-container="body"
+                  data-bs-placement={props.direction ?? "top"}
+                  data-bs-trigger="focus"
+                  id={id}
+                >
+                  {label}
+                </button>
+              )}
             <AddResources type="inline" inlineResource={`<script>${initScript}</script>`} />
           </>
         );
       }
 
       // ── Offcanvas ──────────────────────────────────────────────────────
+      // Trigger uses react-bootstrap Button; overlay HTML stays as-is for Bootstrap.js.
+      // Offcanvas.Header / Offcanvas.Body are used for the inner structure.
       case "Offcanvas": {
         const offcanvasId = `offcanvas_${currentNode.getIdentifier()}`;
         return (
           <>
-            <button
-              className={buttonClass}
-              type="button"
-              {...aria}
-              data-bs-toggle="offcanvas"
-              data-bs-target={`#${offcanvasId}`}
-              aria-controls={offcanvasId}
-            >
-              {title}
-            </button>
+            {bsProps
+              ? (
+                <Button
+                  data-bs-toggle="offcanvas"
+                  data-bs-target={`#${offcanvasId}`}
+                  aria-controls={offcanvasId}
+                  {...bsProps}
+                >
+                  {title}
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  className={customClass(props)}
+                  data-bs-toggle="offcanvas"
+                  data-bs-target={`#${offcanvasId}`}
+                  aria-controls={offcanvasId}
+                >
+                  {title}
+                </button>
+              )}
+            {/* Overlay — Bootstrap.js manages show/hide */}
             <div
               className={`offcanvas offcanvas-${props.placement ?? "start"}`}
               data-bs-scroll={props.enableBodyScrolling ? "true" : "false"}
@@ -300,30 +343,27 @@ jahiaComponent(
               aria-labelledby={`${offcanvasId}Label`}
             >
               {props.OffcanvasTitle && (
-                <div className="offcanvas-header">
-                  <h5
-                    className="offcanvas-title"
-                    id={`${offcanvasId}Label`}
-                  >
+                <Offcanvas.Header>
+                  <Offcanvas.Title id={`${offcanvasId}Label`}>
                     {props.OffcanvasTitle}
-                  </h5>
+                  </Offcanvas.Title>
                   <button
                     type="button"
                     className="btn-close text-reset"
                     data-bs-dismiss="offcanvas"
                     aria-label="Close"
                   />
-                </div>
+                </Offcanvas.Header>
               )}
-              <div className="offcanvas-body">
+              <Offcanvas.Body>
                 <Area name="offcanvas-body" nodeType="jmix:droppableContent" />
-              </div>
+              </Offcanvas.Body>
             </div>
           </>
         );
       }
 
-      // ── Unknown type (should not happen) ───────────────────────────────
+      // ── Unknown type ───────────────────────────────────────────────────
       default:
         return renderContext.isEditMode() ? (
           <span className="badge badge-warning">
