@@ -7,7 +7,8 @@
  * Note: <!DOCTYPE html> is not renderable as a React node; the framework is
  * expected to emit the doctype at the HTTP response level.
  */
-import { AddResources, Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { AbsoluteArea, AddResources, Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { isRtlLanguage } from "../utils/rtl";
 
 jahiaComponent(
@@ -23,6 +24,8 @@ jahiaComponent(
     const locale = renderContext.getMainResourceLocale();
     const language: string = locale ? String(locale.getLanguage()) : "en";
     const isRtl = isRtlLanguage(language);
+    const siteKey = String(renderContext.getSite().getSiteKey());
+    const siteNode = currentNode.getSession().getNode(`/sites/${siteKey}`) as JCRNodeWrapper;
 
     return (
       <html
@@ -53,9 +56,9 @@ jahiaComponent(
               targetTag="body"
             />
           )}
-          <Area name="header" />
+          <AbsoluteArea name="header" parent={siteNode} />
           <Area name="pagecontent" />
-          <Area name="footer" />
+          <AbsoluteArea name="footer" parent={siteNode} />
         </body>
       </html>
     );

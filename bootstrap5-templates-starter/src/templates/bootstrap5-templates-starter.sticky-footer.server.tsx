@@ -7,7 +7,8 @@
  * Uses Bootstrap flex utilities (h-100, d-flex flex-column) so the footer
  * is always pinned to the bottom of the viewport regardless of content height.
  */
-import { AddResources, Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { AbsoluteArea, AddResources, Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { isRtlLanguage } from "../utils/rtl";
 
 jahiaComponent(
@@ -23,6 +24,8 @@ jahiaComponent(
     const locale = renderContext.getMainResourceLocale();
     const language: string = locale ? String(locale.getLanguage()) : "en";
     const isRtl = isRtlLanguage(language);
+    const siteKey = String(renderContext.getSite().getSiteKey());
+    const siteNode = currentNode.getSession().getNode(`/sites/${siteKey}`) as JCRNodeWrapper;
 
     return (
       <html
@@ -54,12 +57,12 @@ jahiaComponent(
               targetTag="body"
             />
           )}
-          <Area name="header" />
+          <AbsoluteArea name="header" parent={siteNode} />
           <main className="flex-shrink-0">
             <Area name="pagecontent" />
           </main>
           <footer className="mt-auto">
-            <Area name="footer" />
+            <AbsoluteArea name="footer" parent={siteNode} />
           </footer>
         </body>
       </html>
