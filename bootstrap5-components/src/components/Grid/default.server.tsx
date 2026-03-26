@@ -164,6 +164,7 @@ jahiaComponent(
                   <Area
                     name={areaPath}
                     nodeType="jmix:droppableContent"
+                    numberOfItems={0}
                   />
                 </div>
               );
@@ -194,6 +195,7 @@ jahiaComponent(
                   <Area
                     name={areaPath}
                     nodeType="jmix:droppableContent"
+                    numberOfItems={0}
                   />
                 </div>
               );
@@ -210,7 +212,7 @@ jahiaComponent(
             !isModulesPath && !isStudioMode && (
               <span className="text-muted">#{currentNode.getName()}</span>
             )}
-          <Area name={colName} nodeType="jmix:droppableContent" />
+          <Area name={colName} nodeType="jmix:droppableContent" numberOfItems={0} />
         </>
       );
     };
