@@ -19,6 +19,7 @@
         <jahia.manifest.description>bootstrap5-core, bootstrap5-components, bootstrap5-templates-starter</jahia.manifest.description>
         <jahia.manifest.license>org.jahia.core</jahia.manifest.license>
         <jahia.required.version>8.2.3.0</jahia.required.version>
+        <skins.version>8.2.0</skins.version>
     </properties>
     <repositories>
         <repository>
