@@ -15,20 +15,31 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * OSGi BundleActivator that installs all Bootstrap 5 modules when this package bundle starts.
- * - .jar modules: installed via ModuleManager (handles Jahia JCR registration)
- * - .tgz modules: written to the bundle's persistent data directory (stable path) and installed
- *   via bundleContext.installBundle("js:file://...") which uses the javascript-modules-engine's
- *   JavascriptProtocolStreamHandler URL handler to convert the tgz to a JAR stream on the fly.
- *   On redeploy, the stable location allows detecting the existing bundle and calling update()
- *   instead of install(), avoiding "Bundle symbolic name and version are not unique" errors.
+ *
+ * .jar modules: installed via ModuleManager (handles Jahia JCR registration).
+ *
+ * .tgz modules: written to the bundle's persistent data directory and installed via
+ * bundleContext.installBundle("js:file://...") which uses the javascript-modules-engine's
+ * JavascriptProtocolStreamHandler URL handler to convert the tgz to a JAR on the fly.
+ *
+ * Redeploy handling:
+ * - stop() uninstalls the tgz bundles we installed so that the next start() can do a clean
+ *   re-install without hitting "Bundle symbolic name and version are not unique".
+ * - If a tgz bundle is already present in OSGi (installed via the UI or another mechanism),
+ *   the installer updates it in place via bundle.update(stream) instead of installing anew.
  */
 public class Bootstrap5PackageActivator implements BundleActivator {
 
     private static final Logger logger = LoggerFactory.getLogger(Bootstrap5PackageActivator.class);
+
+    /** Bundle IDs of tgz bundles WE installed — uninstalled on stop() for clean redeploy. */
+    private final List<Long> tgzBundleIds = new CopyOnWriteArrayList<>();
 
     private BundleContext bundleContext;
 
@@ -42,7 +53,20 @@ public class Bootstrap5PackageActivator implements BundleActivator {
 
     @Override
     public void stop(BundleContext context) throws Exception {
-        // nothing
+        // Uninstall the tgz bundles we installed so that when this package is redeployed
+        // the next start() can do a fresh installBundle() without symbolic-name conflicts.
+        for (long id : tgzBundleIds) {
+            Bundle b = context.getBundle(id);
+            if (b != null && b.getState() != Bundle.UNINSTALLED) {
+                try {
+                    b.uninstall();
+                    logger.info("Bootstrap5 package: uninstalled tgz bundle id={}", id);
+                } catch (Exception e) {
+                    logger.warn("Bootstrap5 package: could not uninstall bundle id={}", id, e);
+                }
+            }
+        }
+        tgzBundleIds.clear();
     }
 
     private void installModules() {
@@ -94,17 +118,21 @@ public class Bootstrap5PackageActivator implements BundleActivator {
             }
         }
 
-        // .tgz modules installed via "js:file://" URL — the javascript-modules-engine's
-        // JavascriptProtocolStreamHandler converts the tgz to an OSGi bundle jar on the fly.
+        // .tgz modules: installed via "js:file://" URL.
+        // JavascriptProtocolStreamHandler converts the tgz to an OSGi bundle JAR on the fly.
+        // We write to bundleContext.getDataFile() so the location is stable within this
+        // package instance. We look up existing bundles by symbolic name to handle the case
+        // where the bundle was previously installed by the UI or another mechanism.
         String[] tgzModules = {
             "/jahia-packages/bootstrap5-components-" + version + ".tgz",
             "/jahia-packages/bootstrap5-templates-starter-" + version + ".tgz"
         };
         for (String path : tgzModules) {
             String filename = path.substring(path.lastIndexOf('/') + 1);
+            // Derive symbolic name by stripping "-VERSION.tgz"
+            String symbolicName = filename.replace("-" + version + ".tgz", "");
             try {
-                // Write to bundle's persistent data directory — the path is stable across
-                // redeployments of this package, which lets us detect and update existing bundles.
+                // Write tgz to data dir (content may have changed on redeploy)
                 File dataFile = bundleContext.getDataFile(filename);
                 try (InputStream in = getClass().getResourceAsStream(path);
                      FileOutputStream out = new FileOutputStream(dataFile)) {
@@ -112,26 +140,46 @@ public class Bootstrap5PackageActivator implements BundleActivator {
                     int n;
                     while ((n = in.read(buf)) != -1) out.write(buf, 0, n);
                 }
-                // "js:file://" URL — JavascriptProtocolStreamHandler converts tgz→JAR on the fly
+
                 String jsUrl = "js:" + dataFile.toURI().toString();
 
-                Bundle existing = bundleContext.getBundle(jsUrl);
+                // Check if a bundle with this symbolic name is already running
+                // (could be from a previous install by us, by the UI, or by Fileinstall)
+                Bundle existing = findBySymbolicName(symbolicName);
+
+                Bundle bundle;
                 if (existing != null) {
-                    // Redeploy: update in place to avoid "symbolic name not unique" conflict
-                    logger.info("Bootstrap5 package: updating {}...", filename);
-                    existing.update();
-                    existing.start();
-                    logger.info("Bootstrap5 package: updated {}", filename);
+                    logger.info("Bootstrap5 package: updating {} (id={})...", symbolicName, existing.getBundleId());
+                    // Update with fresh content via the js: URL handler
+                    try (InputStream stream = new URL(jsUrl).openStream()) {
+                        existing.update(stream);
+                    }
+                    if (existing.getState() != Bundle.ACTIVE) {
+                        existing.start();
+                    }
+                    bundle = existing;
+                    logger.info("Bootstrap5 package: updated {}", symbolicName);
                 } else {
                     logger.info("Bootstrap5 package: installing {}...", filename);
-                    Bundle bundle = bundleContext.installBundle(jsUrl);
+                    bundle = bundleContext.installBundle(jsUrl);
                     bundle.start();
                     logger.info("Bootstrap5 package: installed {}", filename);
                 }
+                tgzBundleIds.add(bundle.getBundleId());
+
             } catch (Exception e) {
                 logger.error("Bootstrap5 package: failed to install/update {}", filename, e);
                 return;
             }
         }
+    }
+
+    private Bundle findBySymbolicName(String symbolicName) {
+        for (Bundle b : bundleContext.getBundles()) {
+            if (symbolicName.equals(b.getSymbolicName()) && b.getState() != Bundle.UNINSTALLED) {
+                return b;
+            }
+        }
+        return null;
     }
 }
