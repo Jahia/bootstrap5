@@ -20,9 +20,11 @@ import java.util.Properties;
 /**
  * OSGi BundleActivator that installs all Bootstrap 5 modules when this package bundle starts.
  * - .jar modules: installed via ModuleManager (handles Jahia JCR registration)
- * - .tgz modules: written to a temp file and installed via bundleContext.installBundle("js:file://...")
- *   which uses the javascript-modules-engine's JavascriptProtocolStreamHandler URL handler to
- *   convert the tgz to a JAR stream on the fly.
+ * - .tgz modules: written to the bundle's persistent data directory (stable path) and installed
+ *   via bundleContext.installBundle("js:file://...") which uses the javascript-modules-engine's
+ *   JavascriptProtocolStreamHandler URL handler to convert the tgz to a JAR stream on the fly.
+ *   On redeploy, the stable location allows detecting the existing bundle and calling update()
+ *   instead of install(), avoiding "Bundle symbolic name and version are not unique" errors.
  */
 public class Bootstrap5PackageActivator implements BundleActivator {
 
@@ -101,22 +103,33 @@ public class Bootstrap5PackageActivator implements BundleActivator {
         for (String path : tgzModules) {
             String filename = path.substring(path.lastIndexOf('/') + 1);
             try {
-                // Write embedded tgz to a temp file so we can form a file:// URL
-                File tempFile = File.createTempFile("bs5-", ".tgz");
-                tempFile.deleteOnExit();
+                // Write to bundle's persistent data directory — the path is stable across
+                // redeployments of this package, which lets us detect and update existing bundles.
+                File dataFile = bundleContext.getDataFile(filename);
                 try (InputStream in = getClass().getResourceAsStream(path);
-                     FileOutputStream out = new FileOutputStream(tempFile)) {
+                     FileOutputStream out = new FileOutputStream(dataFile)) {
                     byte[] buf = new byte[8192];
                     int n;
                     while ((n = in.read(buf)) != -1) out.write(buf, 0, n);
                 }
-                String jsUrl = "js:" + tempFile.toURI().toString();
-                logger.info("Bootstrap5 package: installing {} via {}...", filename, jsUrl);
-                Bundle bundle = bundleContext.installBundle(jsUrl);
-                bundle.start();
-                logger.info("Bootstrap5 package: installed and started {}", filename);
+                // "js:file://" URL — JavascriptProtocolStreamHandler converts tgz→JAR on the fly
+                String jsUrl = "js:" + dataFile.toURI().toString();
+
+                Bundle existing = bundleContext.getBundle(jsUrl);
+                if (existing != null) {
+                    // Redeploy: update in place to avoid "symbolic name not unique" conflict
+                    logger.info("Bootstrap5 package: updating {}...", filename);
+                    existing.update();
+                    existing.start();
+                    logger.info("Bootstrap5 package: updated {}", filename);
+                } else {
+                    logger.info("Bootstrap5 package: installing {}...", filename);
+                    Bundle bundle = bundleContext.installBundle(jsUrl);
+                    bundle.start();
+                    logger.info("Bootstrap5 package: installed {}", filename);
+                }
             } catch (Exception e) {
-                logger.error("Bootstrap5 package: failed to install {}", filename, e);
+                logger.error("Bootstrap5 package: failed to install/update {}", filename, e);
                 return;
             }
         }
