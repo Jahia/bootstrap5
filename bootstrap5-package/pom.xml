@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jahiacommunity.modules</groupId>
+    <artifactId>bootstrap5-modules</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>bootstrap5-package</artifactId>
+  <packaging>bundle</packaging>
+  <name>Bootstrap 5 Package</name>
+  <description>Jahia module that installs Bootstrap 5 core, components, and templates-starter.</description>
+
+  <!--
+    Runtime dependencies: these are copied into the bundle jar by maven-dependency-plugin
+    and installed programmatically by Bootstrap5PackageInstaller on module start.
+  -->
+  <dependencies>
+    <dependency>
+      <groupId>org.jahia.modules</groupId>
+      <artifactId>skins</artifactId>
+      <version>8.2.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jahiacommunity.modules</groupId>
+      <artifactId>bootstrap5-core</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jahiacommunity.modules</groupId>
+      <artifactId>bootstrap5-components</artifactId>
+      <version>${project.version}</version>
+      <type>tgz</type>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jahiacommunity.modules</groupId>
+      <artifactId>bootstrap5-templates-starter</artifactId>
+      <version>${project.version}</version>
+      <type>tgz</type>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- Provided: available in Jahia OSGi runtime -->
+    <dependency>
+      <groupId>org.jahia.server</groupId>
+      <artifactId>jahia-impl</artifactId>
+      <version>8.2.3.0</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <!-- Filter bootstrap5-package.properties to replace ${project.version} -->
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>bootstrap5-package.properties</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>bootstrap5-package.properties</exclude>
+        </excludes>
+      </resource>
+    </resources>
+
+    <plugins>
+
+      <!--
+        Stage all runtime dependency artifacts (jars + tgz) into target/jahia-packages/.
+        The maven-bundle-plugin will embed them in the bundle jar via Include-Resource.
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-module-artifacts</id>
+            <phase>generate-resources</phase>
+            <goals><goal>copy-dependencies</goal></goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/jahia-packages</outputDirectory>
+              <includeScope>runtime</includeScope>
+              <useRepositoryLayout>false</useRepositoryLayout>
+              <stripVersion>false</stripVersion>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>bootstrap5-package</Bundle-SymbolicName>
+            <Bundle-Name>Bootstrap 5 Package</Bundle-Name>
+            <Bundle-Description>Installs Bootstrap 5 core, components and templates-starter</Bundle-Description>
+            <Jahia-GroupId>${project.groupId}</Jahia-GroupId>
+            <Jahia-Required-Version>8.2.3.0</Jahia-Required-Version>
+            <!-- Prevent auto-embedding of runtime scope dependencies as bundle classpath -->
+            <Embed-Dependency>!*</Embed-Dependency>
+            <Bundle-Activator>org.jahiacommunity.modules.bootstrap5.Bootstrap5PackageActivator</Bundle-Activator>
+            <Private-Package>org.jahiacommunity.modules.bootstrap5</Private-Package>
+            <Import-Package>
+              org.jahia.services,
+              org.jahia.services.modulemanager,
+              org.osgi.framework,
+              org.slf4j,
+              org.springframework.core.io,
+              *
+            </Import-Package>
+            <!--
+              Embed the staged module files as jahia-packages/* classpath resources.
+              Bootstrap5PackageInstaller reads them via ClassPathResource at runtime.
+            -->
+            <Include-Resource>
+              {maven-resources},
+              jahia-packages=${project.build.directory}/jahia-packages
+            </Include-Resource>
+          </instructions>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>

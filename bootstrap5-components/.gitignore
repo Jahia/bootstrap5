@@ -1,5 +1,6 @@
 node_modules/
 node/
+.node/
 dist/
 .yarn/
 .pnp.*

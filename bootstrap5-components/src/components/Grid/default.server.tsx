@@ -8,7 +8,8 @@
  * CSS classes), and nogrid (single area). Area absoluteArea support needs validation
  * with the Jahia JS engine team.
  */
-import { Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { AbsoluteArea, Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import type { JCRNodeWrapper } from "org.jahia.services.content";
 
 // ─── Predefined grid helpers ────────────────────────────────────────────────
 
@@ -138,6 +139,17 @@ jahiaComponent(
     // ── Grid columns content ───────────────────────────────────────────────
     const SectionTag = (sectionElement ?? "section") as ('section' | 'div');
 
+    // Mirrors JSP: Area for regular grids, AbsoluteArea when bootstrap5mix:createAbsoluteAreas
+    // is active — parent is resolved by navigating `level` steps up from the current page.
+    const renderCol = createAbsoluteAreas
+      ? (() => {
+          const levelInt = parseInt(level ?? "1", 10);
+          let parent = renderContext.getMainResource().getNode() as JCRNodeWrapper;
+          for (let i = 0; i < levelInt; i++) parent = parent.getParent() as JCRNodeWrapper;
+          return (areaPath: string) => <AbsoluteArea parent={parent} name={areaPath} />;
+        })()
+      : (areaPath: string) => <Area name={areaPath} />;
+
     const GridColumns = () => {
       if (isPredefined) {
         // predefinedGrid — split "4_8" → [4, 8], compute area names
@@ -160,12 +172,7 @@ jahiaComponent(
               const areaPath = `${colNamePrefix}${areaNames[i]}`;
               return (
                 <div key={areaPath} className={colClass}>
-                  {/* ⚠️ moduleType/level not yet confirmed for JS Area — validate absoluteArea support */}
-                  <Area
-                    name={areaPath}
-                    nodeType="jmix:droppableContent"
-                    numberOfItems={0}
-                  />
+                  {renderCol(areaPath)}
                 </div>
               );
             })}
@@ -192,11 +199,7 @@ jahiaComponent(
               const areaPath = `${colNamePrefix}col${i}`;
               return (
                 <div key={areaPath} className={colClass}>
-                  <Area
-                    name={areaPath}
-                    nodeType="jmix:droppableContent"
-                    numberOfItems={0}
-                  />
+                  {renderCol(areaPath)}
                 </div>
               );
             })}
@@ -204,7 +207,7 @@ jahiaComponent(
         );
       }
 
-      // nogrid — single Area; name is "main" normally, or node name in /modules
+      // nogrid — single area node; name is "main" normally, or node name in /modules
       const colName = isModulesPath || isStudioMode ? currentNode.getName() : "main";
       return (
         <>
@@ -212,7 +215,7 @@ jahiaComponent(
             !isModulesPath && !isStudioMode && (
               <span className="text-muted">#{currentNode.getName()}</span>
             )}
-          <Area name={colName} nodeType="jmix:droppableContent" numberOfItems={0} />
+          {renderCol(colName)}
         </>
       );
     };

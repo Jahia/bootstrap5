@@ -7,7 +7,7 @@
  * Non-displayable node detection approximates jcr:findDisplayableNode by checking jnt:page type.
  * The url.base prefix is approximated as an empty string; validate with Jahia JS engine team.
  */
-import { jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { buildNodeUrl, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { Breadcrumb } from "react-bootstrap";
 
@@ -61,9 +61,6 @@ jahiaComponent(
 
     // ── Build items ────────────────────────────────────────────────────────
     const mainResourcePath = mainNode.getPath();
-    // ⚠️ url.base approximation — validate with Jahia JS engine team
-    const urlBase = "";
-
     return (
       <Breadcrumb className={extraClass || undefined}>
         {pageNodes.map((pageNode) => {
@@ -77,10 +74,7 @@ jahiaComponent(
             );
           }
 
-          // ⚠️ Non-displayable node approximation: only jnt:page nodes are "directly displayable"
-          const href = pageNode.isNodeType("jnt:page")
-            ? `${urlBase}${pageNode.getPath()}.html`
-            : "#";
+          const href = pageNode.isNodeType("jnt:page") ? buildNodeUrl(pageNode) : "#";
 
           return (
             <Breadcrumb.Item key={pageNode.getIdentifier()} href={href}>
@@ -91,7 +85,7 @@ jahiaComponent(
 
         {/* When mainResource is not a page, append a final item for the resource itself */}
         {!mainNode.isNodeType("jnt:page") && (
-          <Breadcrumb.Item href={`${urlBase}${mainNode.getPath()}.html`}>
+          <Breadcrumb.Item href={buildNodeUrl(mainNode)}>
             {abbreviate(mainNode.getDisplayableName(), 15, 30, "...")}
           </Breadcrumb.Item>
         )}

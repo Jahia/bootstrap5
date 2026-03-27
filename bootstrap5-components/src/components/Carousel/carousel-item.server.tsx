@@ -7,7 +7,7 @@
  * In normal flow the parent carousel view renders slides inline; this view handles
  * direct or edit-mode rendering. Active detection uses sibling order via getChildNodes().
  */
-import { getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { buildNodeUrl, getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 
 interface CarouselItemProps {
@@ -36,7 +36,7 @@ jahiaComponent(
     // ⚠️ image weakref
     const carouselImageProp = currentNode.getProperty("image");
     const imageNode = carouselImageProp ? carouselImageProp.getNode() as JCRNodeWrapper : undefined;
-    const imageUrl = imageNode ? String(imageNode.getUrl()) : "";
+    const imageUrl = imageNode ? buildNodeUrl(imageNode) : "";
 
     // bootstrap5mix:advancedCarouselItem
     let titleColor = "";

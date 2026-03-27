@@ -10,6 +10,7 @@
  * Usage:
  *   <ImageTag node={currentNode} imageNode={image} callerClass="figure-img img-fluid" />
  */
+import { buildNodeUrl } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 
 interface ImageTagProps {
@@ -90,7 +91,7 @@ export function ImageTag({ node, imageNode, callerClass = "", callerStyle, calle
     cssClass = `${cssClass} img-fluid`.trim();
   }
 
-  const src = imageNode.getUrl();
+  const src = buildNodeUrl(imageNode);
 
   return (
     <img

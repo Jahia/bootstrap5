@@ -9,6 +9,7 @@
  */
 import { AbsoluteArea, AddResources, Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import type { JCRSiteNode } from "org.jahia.services.content.decorator";
 import { isRtlLanguage } from "../utils/rtl";
 
 jahiaComponent(
@@ -24,8 +25,8 @@ jahiaComponent(
     const locale = renderContext.getMainResourceLocale();
     const language: string = locale ? String(locale.getLanguage()) : "en";
     const isRtl = isRtlLanguage(language);
-    const siteKey = String(renderContext.getSite().getSiteKey());
-    const siteNode = currentNode.getSession().getNode(`/sites/${siteKey}`) as JCRNodeWrapper;
+    const siteNode = renderContext.getSite() as JCRSiteNode;
+    const homeNode = siteNode.getHome();
 
     return (
       <html
@@ -56,9 +57,9 @@ jahiaComponent(
               targetTag="body"
             />
           )}
-          <AbsoluteArea name="header" parent={siteNode} numberOfItems={0} />
-          <Area name="pagecontent" numberOfItems={0} />
-          <AbsoluteArea name="footer" parent={siteNode} numberOfItems={0} />
+          <AbsoluteArea name="header" parent={homeNode} />
+          <Area name="pagecontent" />
+          <AbsoluteArea name="footer" parent={homeNode} />
         </body>
       </html>
     );

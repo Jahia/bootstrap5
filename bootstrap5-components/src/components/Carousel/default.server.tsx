@@ -5,16 +5,18 @@
 /**
  * bootstrap5nt:carousel — carousel wrapper that renders all slides inline via getChildNodes().
  * Uses a compact thumbnail layout in edit mode to avoid animation in the editor.
- * Interactive behaviour (slide transitions, controls) is managed by react-bootstrap client-side.
+ * Live mode uses plain Bootstrap 5 HTML + data-bs-* (react-bootstrap Carousel does not render
+ * its outer wrapper correctly in GraalVM SSR).
  */
 import {
   AddContentButtons,
+  buildNodeUrl,
   getChildNodes,
   jahiaComponent,
   useServerContext,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
-import { Carousel } from "react-bootstrap";
+import { BootstrapJS } from "../../utils/bootstrap-resources.js";
 
 jahiaComponent(
   {
@@ -66,7 +68,7 @@ jahiaComponent(
               const caption = item.getPropertyAsString("caption") ?? "";
               const imageProp = item.getProperty("image");
               const imageNode = imageProp ? imageProp.getNode() as JCRNodeWrapper : undefined;
-              const imageUrl = imageNode ? String(imageNode.getUrl()) : "";
+              const imageUrl = imageNode ? buildNodeUrl(imageNode) : "";
 
               let titleColor = "";
               let captionColor = "";
@@ -95,29 +97,60 @@ jahiaComponent(
       );
     }
 
-    // ── Live mode: react-bootstrap Carousel ────────────────────────────────
+    // ── Live mode: plain Bootstrap 5 HTML ─────────────────────────────────
+    // react-bootstrap's Carousel does not render its outer wrapper in GraalVM SSR
+    // (internal hooks are incompatible). Pure HTML + data-bs-* attributes work
+    // perfectly and need no JS init script beyond bootstrap.bundle.min.js.
+    const carouselId = `carousel-${currentNode.getIdentifier()}`;
+    const carouselClasses = [
+      "carousel",
+      "slide",
+      fade ? "carousel-fade" : undefined,
+      isDark ? "carousel-dark" : undefined,
+      extraClass || undefined,
+    ].filter(Boolean).join(" ");
+
     return (
-      <Carousel
-        interval={interval ?? 5000}
-        keyboard={keyboard}
-        pause={pause ? "hover" : false}
-        wrap={wrap}
-        fade={fade}
-        indicators={useIndicators}
-        controls={useLeftAndRightControls}
-        variant={isDark ? "dark" : undefined}
-        className={extraClass || undefined}
+      <>
+      <BootstrapJS />
+      <div
+        id={carouselId}
+        className={carouselClasses}
+        data-bs-ride={interval !== 0 ? "carousel" : undefined}
+        data-bs-interval={interval ?? 5000}
+        data-bs-keyboard={keyboard ? "true" : "false"}
+        data-bs-pause={pause ? "hover" : "false"}
+        data-bs-wrap={wrap ? "true" : "false"}
       >
-        {items.map((item) => {
+        {/* Indicators */}
+        {useIndicators && (
+          <div className="carousel-indicators">
+            {items.map((item, i) => (
+              <button
+                key={item.getIdentifier()}
+                type="button"
+                data-bs-target={`#${carouselId}`}
+                data-bs-slide-to={String(i)}
+                className={i === 0 ? "active" : undefined}
+                aria-current={i === 0 ? "true" : undefined}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Slides */}
+        <div className="carousel-inner">
+        {items.map((item, i) => {
           const title = item.getPropertyAsString("jcr:title") ?? "";
           const caption = item.getPropertyAsString("caption") ?? "";
           const imageProp = item.getProperty("image");
           const imageNode = imageProp ? imageProp.getNode() as JCRNodeWrapper : undefined;
-          const imageUrl = imageNode ? String(imageNode.getUrl()) : "";
+          const imageUrl = imageNode ? buildNodeUrl(imageNode) : "";
 
           let titleColor = "";
           let captionColor = "";
-          let itemClass: string | undefined;
+          let itemClass = "";
           let itemInterval: number | undefined;
           if (item.isNodeType("bootstrap5mix:advancedCarouselItem")) {
             const tc = item.getPropertyAsString("titleColor") ?? "";
@@ -130,25 +163,42 @@ jahiaComponent(
             if (!isNaN(ii)) itemInterval = ii;
           }
 
+          const itemClasses = ["carousel-item", i === 0 ? "active" : undefined, itemClass || undefined]
+            .filter(Boolean).join(" ");
+
           return (
-            <Carousel.Item
+            <div
               key={item.getIdentifier()}
-              interval={itemInterval}
-              className={itemClass}
+              className={itemClasses}
+              data-bs-interval={itemInterval ?? undefined}
             >
-              {imageUrl && (
-                <img src={imageUrl} className="d-block w-100" alt="" />
-              )}
+              {imageUrl && <img src={imageUrl} className="d-block w-100" alt="" />}
               {(title || caption) && (
-                <Carousel.Caption>
+                <div className="carousel-caption d-none d-md-block">
                   {title && <h3 className={titleColor || undefined}>{title}</h3>}
                   {caption && <p className={captionColor || undefined}>{caption}</p>}
-                </Carousel.Caption>
+                </div>
               )}
-            </Carousel.Item>
+            </div>
           );
         })}
-      </Carousel>
+        </div>
+
+        {/* Controls */}
+        {useLeftAndRightControls && (
+          <>
+            <button className="carousel-control-prev" type="button" data-bs-target={`#${carouselId}`} data-bs-slide="prev">
+              <span className="carousel-control-prev-icon" aria-hidden="true" />
+              <span className="visually-hidden">Previous</span>
+            </button>
+            <button className="carousel-control-next" type="button" data-bs-target={`#${carouselId}`} data-bs-slide="next">
+              <span className="carousel-control-next-icon" aria-hidden="true" />
+              <span className="visually-hidden">Next</span>
+            </button>
+          </>
+        )}
+      </div>
+      </>
     );
   },
 );

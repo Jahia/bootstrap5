@@ -33,4 +33,14 @@ const fixJsxRuntimeDefaultImport = {
 
 export default defineConfig({
   plugins: [jahia(), fixJsxRuntimeDefaultImport],
+  build: {
+    rollupOptions: {
+      onwarn(warning, warn) {
+        // react-bootstrap ESM files contain "use client" directives that Rollup
+        // cannot handle in SSR bundles — safely ignored.
+        if (warning.code === "MODULE_LEVEL_DIRECTIVE") return;
+        warn(warning);
+      },
+    },
+  },
 });

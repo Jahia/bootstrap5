@@ -12,9 +12,11 @@ import {
   AddContentButtons,
   getChildNodes,
   jahiaComponent,
+  Render,
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { Accordion } from "react-bootstrap";
+import { BootstrapJS } from "../../utils/bootstrap-resources.js";
 
 interface AccordionsProps {
   /** Removes outer borders and rounded corners for a flat look */
@@ -41,6 +43,7 @@ jahiaComponent(
 
     return (
       <>
+        <BootstrapJS />
         <Accordion defaultActiveKey={defaultActiveKey} flush={flush}>
           {panels.map((panel, index) => {
             const title =
@@ -52,6 +55,7 @@ jahiaComponent(
                 <Accordion.Header>{title}</Accordion.Header>
                 <Accordion.Body>
                   {text && <div dangerouslySetInnerHTML={{ __html: text }} />}
+                  <Render node={panel} view="content" />
                 </Accordion.Body>
               </Accordion.Item>
             );

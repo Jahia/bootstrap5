@@ -4,7 +4,8 @@
 
 /**
  * bootstrap5nt:tabs — tab group where each jnt:contentList child becomes one panel.
- * Tab switching is managed by react-bootstrap client-side (no Bootstrap.js needed).
+ * Tab switching uses Bootstrap.js (data-bs-toggle / data-bs-target).
+ * react-bootstrap renders the correct HTML; we add the Bootstrap.js data attributes.
  * Anchor sanitization replaces non-alphanumeric chars with "-" and prefixes "tab-"
  * when the first character is not a letter.
  */
@@ -16,6 +17,7 @@ import {
   useServerContext,
 } from "@jahia/javascript-modules-library";
 import { Nav, Tab } from "react-bootstrap";
+import { BootstrapJS } from "../../utils/bootstrap-resources.js";
 
 interface TabsProps {
   /** Visual style of the tab bar */
@@ -76,6 +78,7 @@ jahiaComponent(
 
     return (
       <>
+        <BootstrapJS />
         <Tab.Container defaultActiveKey={defaultActiveKey}>
           <Nav
             variant={navVariant}
@@ -87,9 +90,16 @@ jahiaComponent(
                 ? toAnchor(listNode.getName())
                 : `tab-${listNode.getIdentifier()}`;
 
+              // data-bs-toggle + data-bs-target → Bootstrap.js handles tab switching
+              // data-bs-target avoids #hash href which Jahia edit-frame would intercept
+              const bsToggle = type === "pill" ? "pill" : "tab";
               return (
                 <Nav.Item key={listNode.getIdentifier()} as="li">
-                  <Nav.Link eventKey={anchorName}>
+                  <Nav.Link
+                    eventKey={anchorName}
+                    data-bs-toggle={bsToggle}
+                    data-bs-target={`#${anchorName}`}
+                  >
                     {listNode.getDisplayableName()}
                   </Nav.Link>
                 </Nav.Item>
@@ -107,6 +117,7 @@ jahiaComponent(
                 <Tab.Pane
                   key={listNode.getIdentifier()}
                   eventKey={anchorName}
+                  id={anchorName}
                   transition={fade ? undefined : false}
                 >
                   <Render node={listNode} />

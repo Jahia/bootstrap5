@@ -109,9 +109,7 @@ jahiaComponent(
         {(footer || freeFooter) && (
           <Card.Footer bsPrefix="card-footer" className={textColorClass}>
             {footer && <span dangerouslySetInnerHTML={{ __html: footer }} />}
-            {freeFooter && (
-              <Area name="cardFooter" nodeType="jmix:droppableContent" numberOfItems={0} />
-            )}
+            {freeFooter && <Area name="cardFooter" />}
           </Card.Footer>
         )}
       </Card>

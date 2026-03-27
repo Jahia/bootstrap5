@@ -14,11 +14,13 @@
 import {
   AddResources,
   Area,
+  buildNodeUrl,
   jahiaComponent,
 } from "@jahia/javascript-modules-library";
 import { useTranslation } from "react-i18next";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
-import { Button, Modal, Offcanvas } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { BootstrapJS } from "../../utils/bootstrap-resources.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -115,6 +117,7 @@ jahiaComponent(
     const title = props["jcr:title"];
     const bsProps = buttonProps(props);
     const id = `button_${currentNode.getIdentifier()}`;
+    const needsJS = ["modal", "collapse", "popover", "Offcanvas"].includes(props.buttonType ?? "");
 
     switch (props.buttonType) {
 
@@ -126,7 +129,7 @@ jahiaComponent(
             <span className="badge badge-warning">{t("bootstrap5nt_button.noLink")}</span>
           ) : null;
         }
-        const href = String(linkNode.getUrl());
+        const href = buildNodeUrl(linkNode);
         const label = title || linkNode.getDisplayableName();
         return bsProps
           ? <Button as="a" href={href} role="button" id={id} {...bsProps}>{label}</Button>
@@ -159,6 +162,7 @@ jahiaComponent(
         const modalLabelId = `modalLabel_${currentNode.getIdentifier()}`;
         return (
           <>
+            <BootstrapJS />
             {bsProps
               ? (
                 <Button
@@ -184,15 +188,12 @@ jahiaComponent(
                 In edit mode: shown inline (class "show" + display:block + position:static)
                 so editors can reach the Area inside the modal body. */}
             <div
-              className={`modal fade${renderContext.isEditMode() ? " show" : ""}`}
+              className="modal fade"
               id={modalId}
               tabIndex={-1}
               role="dialog"
               aria-labelledby={modalLabelId}
-              aria-hidden="false"
-              style={renderContext.isEditMode()
-                ? { display: "block", position: "static", zIndex: "auto" }
-                : undefined}
+              aria-hidden="true"
               {...(props.staticBackdrop
                 ? { "data-bs-backdrop": "static", "data-bs-keyboard": "false" }
                 : {})}
@@ -203,27 +204,28 @@ jahiaComponent(
               >
                 <div className="modal-content">
                   {props.modalTitle && (
-                    <Modal.Header>
-                      <Modal.Title id={modalLabelId}>{props.modalTitle}</Modal.Title>
+                    <div className="modal-header">
+                      <h5 className="modal-title" id={modalLabelId}>{props.modalTitle}</h5>
                       <button
                         type="button"
                         className="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"
                       />
-                    </Modal.Header>
+                    </div>
                   )}
-                  <Modal.Body>
-                    <Area name="modal-body" nodeType="jmix:droppableContent" numberOfItems={0} />
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button
-                      variant={props.style ?? "primary"}
+                  <div className="modal-body">
+                    <Area name="modal-body" />
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className={`btn btn-${props.style ?? "primary"}`}
                       data-bs-dismiss="modal"
                     >
                       {closeLabel}
-                    </Button>
-                  </Modal.Footer>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -239,6 +241,7 @@ jahiaComponent(
         const isExpanded = props.show ? "true" : "false";
         return (
           <>
+            <BootstrapJS />
             {bsProps
               ? (
                 <Button
@@ -265,7 +268,7 @@ jahiaComponent(
                 </button>
               )}
             <div className={`collapse${props.show ? " show" : ""}`} id={collapseId}>
-              <Area name="collapse-body" nodeType="jmix:droppableContent" numberOfItems={0} />
+              <Area name="collapse-body" />
             </div>
           </>
         );
@@ -278,6 +281,7 @@ jahiaComponent(
         const initScript = `document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => new bootstrap.Popover(el));`;
         return (
           <>
+            <BootstrapJS />
             {bsProps
               ? (
                 <Button
@@ -321,6 +325,7 @@ jahiaComponent(
         const offcanvasId = `offcanvas_${currentNode.getIdentifier()}`;
         return (
           <>
+            <BootstrapJS />
             {bsProps
               ? (
                 <Button
@@ -352,21 +357,21 @@ jahiaComponent(
               aria-labelledby={`${offcanvasId}Label`}
             >
               {props.OffcanvasTitle && (
-                <Offcanvas.Header>
-                  <Offcanvas.Title id={`${offcanvasId}Label`}>
+                <div className="offcanvas-header">
+                  <h5 className="offcanvas-title" id={`${offcanvasId}Label`}>
                     {props.OffcanvasTitle}
-                  </Offcanvas.Title>
+                  </h5>
                   <button
                     type="button"
                     className="btn-close text-reset"
                     data-bs-dismiss="offcanvas"
                     aria-label="Close"
                   />
-                </Offcanvas.Header>
+                </div>
               )}
-              <Offcanvas.Body>
-                <Area name="offcanvas-body" nodeType="jmix:droppableContent" numberOfItems={0} />
-              </Offcanvas.Body>
+              <div className="offcanvas-body">
+                <Area name="offcanvas-body" />
+              </div>
             </div>
           </>
         );

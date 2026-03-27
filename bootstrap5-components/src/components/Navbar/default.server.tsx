@@ -9,7 +9,7 @@
  * Language switch URLs use the approximated "{pagePath}.{lang}.html" pattern;
  * login form action and workspace permission gating need validation with Jahia JS engine team.
  */
-import { getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { buildNodeUrl, getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 
 // ─── Nav item URL/title resolution ─────────────────────────────────────────
@@ -17,7 +17,10 @@ import type { JCRNodeWrapper } from "org.jahia.services.content";
 interface NavItem {
   url: string;
   title: string;
+  /** Exact match — this IS the current page */
   isActive: boolean;
+  /** Ancestor of the current page (in path but not current) */
+  isInPath: boolean;
   node: JCRNodeWrapper;
 }
 
@@ -33,21 +36,23 @@ function resolveNavItem(
   } else if (page.isNodeType("jnt:externalLink")) {
     url = page.getPropertyAsString("j:url") ?? "#";
   } else if (page.isNodeType("jnt:page")) {
-    url = page.getPath() + ".html";
+    url = buildNodeUrl(page);
     title = page.getDisplayableName();
   } else if (page.isNodeType("jnt:nodeLink")) {
-    const jNodeProp = page.getProperty("j:node");
+    const jNodeProp = page.hasProperty("j:node") ? page.getProperty("j:node") : undefined;
     const linkedNode = jNodeProp ? jNodeProp.getNode() as JCRNodeWrapper : undefined;
     if (linkedNode) {
-      url = linkedNode.getPath() + ".html";
+      url = buildNodeUrl(linkedNode);
       title = page.getPropertyAsString("jcr:title") || linkedNode.getDisplayableName();
     }
   } else {
     return null;
   }
 
-  const isActive = mainResourcePath.startsWith(page.getPath());
-  return { url, title, isActive, node: page };
+  const pagePath = page.getPath();
+  const isActive = mainResourcePath === pagePath;
+  const isInPath = !isActive && mainResourcePath.startsWith(pagePath + "/");
+  return { url, title, isActive, isInPath, node: page };
 }
 
 /**
@@ -56,11 +61,10 @@ function resolveNavItem(
  * the property is empty OR when the current navbar name is in the list.
  */
 function isDisplayedInMenu(page: JCRNodeWrapper, navbarName: string): boolean {
-  // ⚠️ Multi-value property access — validate API for getPropertyValues("j:displayInMenuName")
-  const displayInMenuProp = page.getProperty("j:displayInMenuName");
-  const displayInMenuValues = displayInMenuProp ? (displayInMenuProp as any).getValues() : undefined;
-  if (!displayInMenuValues || displayInMenuValues.length === 0) return true;
-  return displayInMenuValues.some((v: { getString: () => string }) => v.getString() === navbarName);
+  if (!page.hasProperty("j:displayInMenuName")) return true;
+  const values = (page.getProperty("j:displayInMenuName") as any).getValues() as { getString: () => string }[];
+  if (!values || values.length === 0) return true;
+  return values.some((v) => v.getString() === navbarName);
 }
 
 // ─── Component ──────────────────────────────────────────────────────────────
@@ -84,21 +88,17 @@ jahiaComponent(
     let brandText = "";
 
     if (siteNode?.isNodeType("bootstrap5mix:siteBrand")) {
-      const brandImageProp = siteNode.getProperty("brandImage");
-      brandImage = brandImageProp ? brandImageProp.getNode() as JCRNodeWrapper : undefined;
-      const brandImageMobileProp = siteNode.getProperty("brandImageMobile");
-      brandImageMobile = brandImageMobileProp ? brandImageMobileProp.getNode() as JCRNodeWrapper : undefined;
+      brandImage = siteNode.hasProperty("brandImage") ? siteNode.getProperty("brandImage").getNode() as JCRNodeWrapper : undefined;
+      brandImageMobile = siteNode.hasProperty("brandImageMobile") ? siteNode.getProperty("brandImageMobile").getNode() as JCRNodeWrapper : undefined;
       brandText = siteNode.getPropertyAsString("brandText") ?? "";
     } else if (currentNode.isNodeType("bootstrap5mix:brand")) {
-      const brandImageProp2 = currentNode.getProperty("brandImage");
-      brandImage = brandImageProp2 ? brandImageProp2.getNode() as JCRNodeWrapper : undefined;
-      const brandImageMobileProp2 = currentNode.getProperty("brandImageMobile");
-      brandImageMobile = brandImageMobileProp2 ? brandImageMobileProp2.getNode() as JCRNodeWrapper : undefined;
+      brandImage = currentNode.hasProperty("brandImage") ? currentNode.getProperty("brandImage").getNode() as JCRNodeWrapper : undefined;
+      brandImageMobile = currentNode.hasProperty("brandImageMobile") ? currentNode.getProperty("brandImageMobile").getNode() as JCRNodeWrapper : undefined;
       brandText = currentNode.getPropertyAsString("brandText") ?? "";
     }
 
     // ── Global settings ────────────────────────────────────────────────────
-    let addContainerWithinTheNavbar = false;
+    let addContainerWithinTheNavbar = true;
     let addLoginButton = true;
     let addLanguageButton = true;
     let maxlevel = 2;
@@ -106,7 +106,7 @@ jahiaComponent(
 
     if (currentNode.isNodeType("bootstrap5mix:navbarGlobalSettings")) {
       addContainerWithinTheNavbar =
-        currentNode.getPropertyAsString("addContainerWithinTheNavbar") === "true";
+        currentNode.getPropertyAsString("addContainerWithinTheNavbar") !== "false";
       addLoginButton = currentNode.getPropertyAsString("addLoginButton") !== "false";
       addLanguageButton = currentNode.getPropertyAsString("addLanguageButton") !== "false";
       maxlevel = parseInt(currentNode.getPropertyAsString("maxlevel") ?? "2", 10) || 2;
@@ -159,8 +159,7 @@ jahiaComponent(
     } else if (root === "parentPage") {
       rootNode = currentPageNode.getParent() as JCRNodeWrapper | undefined;
     } else if (root === "customRootPage") {
-      const customRootProp = currentNode.getProperty("customRootPage");
-      rootNode = customRootProp ? customRootProp.getNode() as JCRNodeWrapper : undefined;
+      rootNode = currentNode.hasProperty("customRootPage") ? currentNode.getProperty("customRootPage").getNode() as JCRNodeWrapper : undefined;
       if (!rootNode && isEditMode) {
         // Edit-mode warning for missing customRootPage
       }
@@ -177,9 +176,9 @@ jahiaComponent(
       if (rootNode.isNodeType("jnt:virtualsite")) {
         const site2: any = siteNode ?? renderContext.getSite();
         const homeNode = site2 ? site2.getHome() as JCRNodeWrapper : undefined;
-        rootNodeUrl = homeNode ? homeNode.getPath() + ".html" : "#";
+        rootNodeUrl = homeNode ? buildNodeUrl(homeNode) : "#";
       } else {
-        rootNodeUrl = rootNode.getPath() + ".html";
+        rootNodeUrl = buildNodeUrl(rootNode);
       }
     }
 
@@ -222,9 +221,9 @@ jahiaComponent(
         {/* Brand link */}
         <a className={brandLinkClass} href={rootNodeUrl}>
           {brandImage && (() => {
-            const desktopUrl = String(brandImage.getUrl());
+            const desktopUrl = buildNodeUrl(brandImage);
             if (brandImageMobile) {
-              const mobileUrl = String(brandImageMobile.getUrl());
+              const mobileUrl = buildNodeUrl(brandImageMobile);
               return (
                 <>
                   <img src={desktopUrl} className={`align-top d-none d-${expand}-inline-block`} alt="" />
@@ -234,7 +233,9 @@ jahiaComponent(
             }
             return <img src={desktopUrl} className="d-inline-block align-top" alt="" />;
           })()}
-          {brandText}
+          {!siteNode?.isNodeType("bootstrap5mix:siteBrand") && !currentNode.isNodeType("bootstrap5mix:brand")
+            ? (siteNode?.getDisplayableName() ?? "")
+            : brandText}
         </a>
 
         {/* Mobile toggler */}
@@ -271,15 +272,17 @@ jahiaComponent(
                   return (
                     <li
                       key={l1.getIdentifier()}
-                      className={`${liClass}${item1.isActive ? " active" : ""} dropdown`}
+                      className={`${liClass} dropdown`}
                     >
                       <a
-                        className={`${navLinkClass} dropdown-toggle${item1.isActive ? " active" : ""}`}
+                        className={`${navLinkClass} dropdown-toggle${(item1.isActive || item1.isInPath) ? " active" : ""}`}
                         href="#"
                         id={dropId}
                         data-bs-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false"
+                        {...(item1.isActive ? { "aria-current": "page" } : {})}
+                        {...(maxlevel >= 3 ? { "data-bs-auto-close": "outside" } : {})}
                       >
                         {item1.title}
                       </a>
@@ -290,11 +293,65 @@ jahiaComponent(
                           if (!isDisplayedInMenu(l2, navbarName)) return null;
                           const item2 = resolveNavItem(l2, mainResourcePath);
                           if (!item2) return null;
+
+                          const level3Pages = maxlevel >= 3
+                            ? getChildNodes(l2, 100).filter(n => n.isNodeType("jmix:navMenuItem"))
+                            : [];
+                          const hasSubDropdown = level3Pages.length > 0;
+
+                          if (hasSubDropdown) {
+                            const dropId3 = `navbarDropdownMen-${currentNode.getIdentifier()}-${l2.getIdentifier()}`;
+                            return (
+                              <div key={l2.getIdentifier()} className="dropend">
+                                <a
+                                  className={`dropdown-item dropdown-toggle${(item2.isActive || item2.isInPath) ? " active" : ""}`}
+                                  href="#"
+                                  id={dropId3}
+                                  data-bs-toggle="dropdown"
+                                  aria-haspopup="true"
+                                  aria-expanded="false"
+                                  {...(item2.isActive ? { "aria-current": "page" } : {})}
+                                >
+                                  {item2.title}
+                                </a>
+                                <div className="dropdown-menu" aria-labelledby={dropId3}>
+                                  <a
+                                    className={`dropdown-item${item2.isActive ? " active" : ""}`}
+                                    href={item2.url}
+                                    {...(item2.isActive ? { "aria-current": "page" } : {})}
+                                  >
+                                    {item2.title}
+                                  </a>
+                                  <div className="dropdown-divider" />
+                                  {level3Pages.map((l3) => {
+                                    if (!isDisplayedInMenu(l3, navbarName)) return null;
+                                    const item3 = resolveNavItem(l3, mainResourcePath);
+                                    if (!item3) return null;
+                                    return (
+                                      <a
+                                        key={l3.getIdentifier()}
+                                        className={`dropdown-item${item3.isActive ? " active" : ""}`}
+                                        href={item3.url}
+                                        {...(item3.isActive ? { "aria-current": "page" } : {})}
+                                      >
+                                        {item3.title}
+                                        {item3.isActive && (
+                                          <span className="visually-hidden">(current)</span>
+                                        )}
+                                      </a>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            );
+                          }
+
                           return (
                             <a
                               key={l2.getIdentifier()}
                               className={`dropdown-item${item2.isActive ? " active" : ""}`}
                               href={item2.url}
+                              {...(item2.isActive ? { "aria-current": "page" } : {})}
                             >
                               {item2.title}
                               {item2.isActive && (
@@ -311,9 +368,13 @@ jahiaComponent(
                 return (
                   <li
                     key={l1.getIdentifier()}
-                    className={`${liClass}${item1.isActive ? " active" : ""}`}
+                    className={liClass}
                   >
-                    <a className={navLinkClass} href={item1.url}>
+                    <a
+                      className={`${navLinkClass}${item1.isActive ? " active" : ""}`}
+                      href={item1.url}
+                      {...(item1.isActive ? { "aria-current": "page" } : {})}
+                    >
                       {item1.title}
                       {item1.isActive && (
                         <span className="visually-hidden">(current)</span>
@@ -499,8 +560,7 @@ jahiaComponent(
                   {otherLanguages
                     .filter((lang: string) => !invalidLangs.includes(lang))
                     .map((lang: string) => {
-                      // ⚠️ URL pattern for language switch — approximation only
-                      const switchUrl = `${mainNode.getPath()}.${lang}.html`;
+                      const switchUrl = buildNodeUrl(mainNode, { language: lang });
                       return (
                         <li key={lang}>
                           <a className="dropdown-item" href={switchUrl}>
