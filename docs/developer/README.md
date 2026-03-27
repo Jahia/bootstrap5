@@ -12,9 +12,9 @@ This guide is for developers who extend the Bootstrap 5 module stack — adding 
 ## Quick start
 
 ```bash
-# Build bootstrap5-components
+# Build bootstrap5-components (requires Yarn 4 via corepack)
 cd bootstrap5-components
-node/node node/node_modules/.bin/npm run build:maven
+yarn build:maven
 
 # Deploy to local Jahia
 curl -X POST http://localhost:8080/modules/api/provisioning \
@@ -23,13 +23,15 @@ curl -X POST http://localhost:8080/modules/api/provisioning \
   -F 'file=@dist/package.tgz;filename=package.tgz'
 ```
 
+See [Build system](build.md) for full build options including watch mode and Maven reactor.
+
 ## Repository layout
 
 ```
 bootstrap5/
 ├─ bootstrap5-core/                  Java OSGi bundle — Bootstrap assets + initializers
 │   ├─ src/main/java/                Choicelist initializer classes
-│   ├─ src/main/resources/          Bootstrap CSS/JS (built by npm postinstall)
+│   ├─ src/main/resources/          Bootstrap CSS/JS
 │   └─ pom.xml
 ├─ bootstrap5-components/          JS module — component views + CND
 │   ├─ src/
@@ -37,7 +39,7 @@ bootstrap5/
 │   │   │   ├─ Accordion/
 │   │   │   │   ├─ default.server.tsx
 │   │   │   │   └─ definition.cnd    Node type definition for this component
-│   │   │   └─ … (12 component folders)
+│   │   │   └─ … (15 component folders)
 │   │   ├─ utils/                    Shared utilities (ImageTag, etc.)
 │   │   └─ test/                     Vitest unit tests
 │   ├─ settings/
@@ -54,5 +56,10 @@ bootstrap5/
 │   ├─ settings/
 │   │   └─ import.xml                Site structure import
 │   └─ package.json
+├─ bootstrap5-package/             OSGi package bundle — embeds + auto-installs all modules
+│   ├─ src/main/java/                Bootstrap5PackageActivator (BundleActivator)
+│   ├─ src/main/resources/          bootstrap5-package.properties (version placeholder)
+│   └─ pom.xml
+├─ package.json                      Yarn 4 workspace root
 └─ pom.xml                           Maven reactor
 ```

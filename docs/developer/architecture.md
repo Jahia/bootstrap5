@@ -98,9 +98,13 @@ The entry point `src/index.ts` (compiled to `dist/server/index.js`) imports all 
 `bootstrap5-components` owns all `bootstrap5nt:*` node types and `bootstrap5mix:*` mixins. Definitions are split across two locations:
 
 - **`settings/definitions.cnd`** — namespaces and cross-component shared mixins (image, padding, margin)
-- **`src/components/<Name>/definition.cnd`** — one file per component (12 files)
+- **`src/components/<Name>/definition.cnd`** — one file per component (15 files)
 
 `bootstrap5-core` owns only `bootstrap5mix:component` (the base marker mixin) and `bootstrap5nt:version`.
+
+## react-bootstrap
+
+Most component views use `react-bootstrap` for idiomatic JSX rendering. `react-bootstrap` is a **devDependency** — it is compiled into `dist/server/index.js` by Vite and not loaded at runtime by Jahia. When adding or modifying components, import from `react-bootstrap` where a suitable component exists (e.g. `Accordion`, `Alert`, `Button`, `Card`, `Carousel`, `Figure`, `Tabs`) rather than building raw HTML.
 
 ## Static assets packaging
 

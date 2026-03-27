@@ -30,13 +30,14 @@ A Bootstrap 5 implementation for the [Jahia Digital Experience Platform](https:/
 
 ## Module stack
 
-Three modules make up the full stack:
+Four modules make up the full stack:
 
 | Module | Artifact | Role |
 |--------|----------|------|
 | `bootstrap5-core` | `.jar` (OSGi) | Bootstrap CSS/JS assets, Java initializers |
 | `bootstrap5-components` | `.tgz` (JS module) | All component views, CND definitions, Content Editor forms |
 | `bootstrap5-templates-starter` | `.tgz` (JS module, templatesSet) | Page templates; required to create sites |
+| `bootstrap5-package` | `.jar` (OSGi) | Self-contained installer — embeds and auto-installs all three modules above |
 
 ## Components
 
@@ -52,10 +53,9 @@ Three modules make up the full stack:
 
 **From the Jahia Store:** Administration → Modules → Available modules → search *Bootstrap 5 package* → Install.
 
-**From GitHub:** download the [latest release](https://github.com/Jahia/bootstrap5/releases/latest), then deploy in order:
-1. `bootstrap5-core` (JAR)
-2. `bootstrap5-components` (TGZ)
-3. `bootstrap5-templates-starter` (TGZ)
+**From GitHub:** download the [latest release](https://github.com/Jahia/bootstrap5/releases/latest), then either:
+- Deploy the single `bootstrap5-package` JAR — it auto-installs everything, or
+- Deploy individually in order: `bootstrap5-core` (JAR) → `bootstrap5-components` (TGZ) → `bootstrap5-templates-starter` (TGZ)
 
 > Requires **Jahia 8.2+** with GraalVM polyglot JS engine.
 

@@ -4,38 +4,35 @@
 
 | Tool | Version | Role |
 |------|---------|------|
-| Node.js | 20.19.0 (bundled) | JavaScript runtime |
-| npm | bundled with Node | Package management |
+| Node.js | v22.12.0 (via Maven) | JavaScript runtime |
+| Yarn | 4.x (via corepack) | Package management (day-to-day dev) |
+| npm | bundled with Node | Package management (Maven build) |
 | Vite + `@jahia/vite-plugin` | latest | TSX → CommonJS compilation |
 | TypeScript | ^5.0.0 | Type checking |
+| react-bootstrap | ^2.10.0 | React component library |
 | Maven | 3.x | Orchestrates JS builds, packages the reactor |
 
-Each JS module bundles its own Node binary at `node/node` to guarantee a consistent Node version regardless of the system.
+The repository root is a **Yarn 4 workspace** (`package.json` with `"workspaces": ["bootstrap5-components", "bootstrap5-templates-starter"]`). For day-to-day development use Yarn; Maven builds use a locally-installed Node (`frontend-maven-plugin` downloads Node v22.12.0 to `.node/` inside each JS module on first build).
 
 ## Build commands
 
-### `bootstrap5-components`
+### Day-to-day development (Yarn 4)
+
+Requires Yarn 4 — enable via `corepack enable` if you haven't already.
 
 ```bash
+# From the repository root — build all workspaces
+yarn build
+
+# Or from within a module
 cd bootstrap5-components
-
-# Type-check + compile + pack TGZ
-node/node node/node_modules/.bin/npm run build:maven
-
-# Development watch mode (recompiles on file change)
-node/node node/node_modules/.bin/npm run dev
+yarn build       # type-check + compile + pack TGZ
+yarn dev         # watch mode (recompiles on file change)
+yarn test        # run Vitest suite once
+yarn test:watch  # Vitest watch mode
 ```
 
-**Output:** `dist/package.tgz`
-
-### `bootstrap5-templates-starter`
-
-```bash
-cd bootstrap5-templates-starter
-node/node node/node_modules/.bin/npm run build:maven
-```
-
-**Output:** `dist/package.tgz`
+**Output:** `dist/package.tgz` in each module.
 
 ### Full Maven reactor build
 
@@ -43,11 +40,11 @@ node/node node/node_modules/.bin/npm run build:maven
 # From the repository root — builds all modules in dependency order
 mvn clean install
 
-# Build only the two Java modules
+# Build only the Java modules (skip JS workspaces)
 mvn clean install -pl bootstrap5-core,bootstrap5-package -am
 ```
 
-The `frontend-maven-plugin` in each JS module's `pom.xml` automatically invokes `npm run build:maven` during the Maven `generate-resources` phase.
+The `frontend-maven-plugin` in each JS module's `pom.xml` installs Node v22.12.0 to `.node/` (on first run) and invokes `npm run build:maven` during the Maven `compile` phase.
 
 ## TGZ contents
 
@@ -58,7 +55,7 @@ The TGZ artifact is what Jahia installs. It contains exactly what is listed in t
 ```
 package/
 ├─ dist/server/index.js          Compiled TSX views
-├─ src/components/*/definition.cnd  Per-component node type definitions (12 files)
+├─ src/components/*/definition.cnd  Per-component node type definitions (15 files)
 ├─ settings/
 │   └─ definitions.cnd           Namespaces + shared mixins
 ├─ META-INF/
@@ -96,35 +93,25 @@ curl -X POST http://localhost:8080/modules/api/provisioning \
 
 ## Node version constraint
 
-The bundled Node is v20.19.0. The system Node (if different) may be too old for `@jahia/vite-plugin` (requires Node ≥ 20). Always use the bundled binary:
+Maven builds download **Node v22.12.0** to `.node/` inside each JS module (via `frontend-maven-plugin`). This happens automatically on `mvn compile` or `mvn install`.
 
-```bash
-# Instead of: npm run build:maven
-node/node node/node_modules/.bin/npm run build:maven
-```
-
-Or set the PATH:
-
-```bash
-export PATH="$(pwd)/node:$PATH"
-npm run build:maven
-```
+For Yarn-based dev, the system Node must be ≥ 18. Yarn 4 is managed via `corepack` — run `corepack enable` once to activate it.
 
 ## Unit tests
 
-`bootstrap5-components` includes a Vitest suite covering all 17 component views:
+`bootstrap5-components` includes a Vitest suite covering component views:
 
 ```bash
 cd bootstrap5-components
 
 # Run all tests once
-node/node node_modules/.bin/vitest run
+yarn test
 
 # Watch mode
-node/node node_modules/.bin/vitest
+yarn test:watch
 ```
 
-Tests live in `src/test/components/`. Mocks for `@jahia/javascript-modules-library` and `react-i18next` are in `src/test/mocks/`. The test `tsconfig.test.json` extends the main tsconfig with test-only path aliases.
+Tests live in `src/test/components/`. Mocks for `@jahia/javascript-modules-library`, `react-bootstrap`, and `react-i18next` are in `src/test/mocks/`. The test `tsconfig.test.json` extends the main tsconfig with test-only path aliases.
 
 ## TypeScript configuration
 
@@ -147,6 +134,7 @@ Type checking runs as part of `build:maven` via `tsc --noEmit`. Fix all type err
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| `styleText` not exported from `node:util` | System Node < 20 | Use bundled `node/node` |
+| `command not found: yarn` | corepack not enabled | Run `corepack enable` |
 | `tsc` errors on Java interop | `?.()` on Java method | Replace with explicit null guard (see [Architecture](architecture.md)) |
 | TGZ missing files | Directory not in `files` | Add to `files` array in `package.json` |
+| Maven `npm: command not found` | `.node/` not yet populated | Run `mvn install` once to download Node |

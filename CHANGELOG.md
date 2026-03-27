@@ -3,7 +3,32 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-Version numbers follow `major.minor.patch`: `2.x.x` targets Jahia 8, `1.x.x` targets Jahia 7.3.
+Version numbers follow `major.minor.patch`: `3.x.x` is the JavaScript/React rewrite (this branch), `2.x.x` was the legacy Groovy/JSP stack.
+
+---
+
+## [3.0.0] — Unreleased
+
+_Requires Jahia 8.2.3.0 — complete rewrite as JavaScript/React (TSX) rendering stack._
+
+### Added
+- **JavaScript/React rendering stack** — all component views rewritten as TypeScript/TSX server components using `@jahia/javascript-modules-library` and `react-bootstrap`
+- **`bootstrap5-package` module** — self-contained OSGi JAR that embeds and auto-installs all three modules (`skins`, `bootstrap5-core`, `bootstrap5-components`, `bootstrap5-templates-starter`) on activation; supports clean redeploy
+- **Version component** — now displays the actual running package version (e.g. `v3.0.0-SNAPSHOT`) from the embedded `bootstrap5-package.properties`
+- **`List` component** — droppable content list used by Tabs and other container components
+- **`PrivacySettingsModal` component** — Bootstrap 5 view for Jahia's privacy settings modal
+
+### Changed
+- **react-bootstrap migration** — Accordion, Alert, Breadcrumb, Button, Card, Carousel, Figure, Navbar, Tabs migrated to `react-bootstrap` component library for cleaner, idiomatic JSX
+- **Build system** — moved to Yarn 4 workspaces (root `package.json`); Maven uses `frontend-maven-plugin` with **Node v22.12.0** installed to `.node/` per module; day-to-day dev via `yarn build` / `yarn dev`
+- **Collapse trigger** — `<Button data-bs-target>` replaces `<a href>` to avoid Jahia edit-frame link interception
+- **Areas** — `numberOfItems` set to `0` (unlimited) on all droppable areas in Card, Grid, and Button components
+
+### Fixed
+- **Modal** — now rendered inline in edit mode so content is accessible in the Jahia editor
+- **TGZ bundle redeploy** — `stop()` uninstalls previously installed TGZ bundles; `start()` updates by symbolic name, avoiding symbolic-name conflicts on redeploy
+- **TGZ bundle path** — stable `data-dir` path used for TGZ files to support redeploy without symbolic-name conflicts
+- **react/jsx-runtime** — patched default import for GraalVM compatibility
 
 ---
 
