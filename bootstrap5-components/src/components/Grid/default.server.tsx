@@ -9,7 +9,6 @@
  * with the Jahia JS engine team.
  */
 import { AbsoluteArea, Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
-import type { JCRNodeWrapper } from "org.jahia.services.content";
 
 // ─── Predefined grid helpers ────────────────────────────────────────────────
 
@@ -107,9 +106,6 @@ jahiaComponent(
 
     // ── Absolute areas ─────────────────────────────────────────────────────
     const createAbsoluteAreas = currentNode.isNodeType("bootstrap5mix:createAbsoluteAreas");
-    // ⚠️ absoluteArea moduleType not confirmed for JS Area component — validate before deploying
-    const areaModuleType = createAbsoluteAreas ? "absoluteArea" : "area";
-    const areaLevel = createAbsoluteAreas ? (level ?? "0") : "0";
 
     // ── List limit ─────────────────────────────────────────────────────────
     const hasListLimit = currentNode.isNodeType("bootstrap5mix:listLimit");
@@ -140,14 +136,13 @@ jahiaComponent(
     const SectionTag = (sectionElement ?? "section") as ('section' | 'div');
 
     // Mirrors JSP: Area for regular grids, AbsoluteArea when bootstrap5mix:createAbsoluteAreas
-    // is active — parent is resolved by navigating `level` steps up from the current page.
+    // is active. Parent is currentNode (the grid node itself), so column areas are stored at
+    // {gridPath}/main, {gridPath}/side, etc. — a fixed absolute path that does not change per
+    // page. This is correct when the grid lives inside a template AbsoluteArea: the grid node
+    // is stored once under the home/root page and inherited; anchoring to it makes the column
+    // content shared across all inheriting pages.
     const renderCol = createAbsoluteAreas
-      ? (() => {
-          const levelInt = parseInt(level ?? "1", 10);
-          let parent = renderContext.getMainResource().getNode() as JCRNodeWrapper;
-          for (let i = 0; i < levelInt; i++) parent = parent.getParent() as JCRNodeWrapper;
-          return (areaPath: string) => <AbsoluteArea parent={parent} name={areaPath} />;
-        })()
+      ? (areaPath: string) => <AbsoluteArea parent={currentNode} name={areaPath} />
       : (areaPath: string) => <Area name={areaPath} />;
 
     const GridColumns = () => {
