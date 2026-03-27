@@ -52,6 +52,6 @@
     "module-dependencies": "bootstrap5-core",
     "module-type": "module",
     "server": "dist/server/index.js",
-    "static-resources": "/dist/client,/dist/assets"
+    "static-resources": "/dist/client,/dist/assets,/img"
   }
 }
