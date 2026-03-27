@@ -1,5 +1,30 @@
 # Troubleshooting
 
+## "Bundle symbolic name and version are not unique" on upload
+
+**Symptom:**
+```
+ModuleManagementException: BundleException: Bundle symbolic name and version are not unique: bootstrap5-components:3.0.0.SNAPSHOT
+```
+
+**Cause:** The Jahia admin UI upload path does not support replacing a bundle that is already running with the same symbolic name and version. This error only occurs when using **Administration → Modules → Upload module**; it never occurs via the provisioning API.
+
+**Fix:** Use the provisioning API instead of the UI to redeploy:
+
+```bash
+# TGZ module
+curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
+  -u root:PASSWORD \
+  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
+  -F 'file=@bootstrap5-components-3.0.0-SNAPSHOT.tgz;filename=package.tgz'
+```
+
+The `installOrUpgradeModule` action handles the upgrade atomically (stop → uninstall → install → start), which the UI upload does not.
+
+If you must use the UI, first stop and uninstall the existing bundle via **Administration → Modules**, then upload the new TGZ.
+
+---
+
 ## Module fails to start — unresolved dependency
 
 **Symptom:**
