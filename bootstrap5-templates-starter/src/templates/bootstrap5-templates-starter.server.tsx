@@ -57,7 +57,7 @@ jahiaComponent(
               targetTag="body"
             />
           )}
-          <AbsoluteArea name="header" parent={homeNode} />
+          <AbsoluteArea name="header" parent={homeNode}/>
           <Area name="pagecontent" />
           <AbsoluteArea name="footer" parent={homeNode} />
         </body>
