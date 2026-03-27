@@ -269,22 +269,22 @@ describe('bootstrap5nt:button — collapse type', () => {
     return _getComponent('bootstrap5nt:button', 'default');
   }
 
-  test('show=true → button/link has "show" class', () => {
+  test('show=true → collapse div has "show" class', () => {
     const ctx = makeCtx({ _id: 'btn-col-1' });
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'collapse', show: true }, ctx);
-    const a = container.querySelector('a[data-bs-toggle="collapse"]');
-    expect(a).toHaveClass('show');
+    const collapse = container.querySelector('.collapse');
+    expect(collapse).toHaveClass('show');
   });
 
-  test('show=false → no show class', () => {
+  test('show=false → collapse div has no show class', () => {
     const ctx = makeCtx({ _id: 'btn-col-2' });
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'collapse', show: false }, ctx);
-    const a = container.querySelector('a[data-bs-toggle="collapse"]');
-    expect(a).not.toHaveClass('show');
+    const collapse = container.querySelector('.collapse');
+    expect(collapse).not.toHaveClass('show');
   });
 
   test('data-bs-toggle="collapse" on link', () => {

@@ -40,3 +40,9 @@ export function getChildNodes(node: any): any[] { return node?._children ?? []; 
 export function AddResources({ type, resources, inlineResource, targetTag }: { type?: string; resources?: string; inlineResource?: string; targetTag?: string }) {
   return <div data-testid="add-resources" data-type={type} data-resources={resources} />;
 }
+export function AddContentButtons() {
+  return <div data-testid="add-content-buttons" />;
+}
+export function buildNodeUrl(node: any, opts?: { language?: string }): string {
+  return node?.getUrl?.() ?? '#';
+}

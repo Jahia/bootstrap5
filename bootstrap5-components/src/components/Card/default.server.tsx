@@ -8,7 +8,6 @@
  * Droppable children exclude the reserved "cardFooter" subnode name.
  */
 import {
-  AddContentButtons,
   Area,
   getChildNodes,
   jahiaComponent,
@@ -40,7 +39,7 @@ jahiaComponent(
     displayName: "Card",
   },
   ({ "jcr:title": title, headerSize, textAlign, image, footer }: CardProps) => {
-    const { currentNode } = useServerContext();
+    const { currentNode, renderContext } = useServerContext();
 
     // headerSize: "default" → render as <div>
     const HeaderTag = (!headerSize || headerSize === "default" ? "div" : headerSize) as
@@ -104,7 +103,7 @@ jahiaComponent(
             <Render key={child.getIdentifier()} node={child} />
           ))}
           {/* Edit-mode drop zone for new droppable content */}
-          <AddContentButtons />
+          {renderContext.isEditMode() && <Area name="content" />}
         </Card.Body>
         {(footer || freeFooter) && (
           <Card.Footer bsPrefix="card-footer" className={textColorClass}>

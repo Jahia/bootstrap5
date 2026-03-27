@@ -9,7 +9,7 @@
  * its outer wrapper correctly in GraalVM SSR).
  */
 import {
-  AddContentButtons,
+  Area,
   buildNodeUrl,
   getChildNodes,
   jahiaComponent,
@@ -58,11 +58,13 @@ jahiaComponent(
     // ── Slide items ────────────────────────────────────────────────────────
     const items = getChildNodes(currentNode, 100).filter(n => n.isNodeType("bootstrap5nt:carouselItem"));
 
+    const carouselId = `carousel_${currentNode.getIdentifier()}`;
+
     // ── Edit mode: compact thumbnail list ─────────────────────────────────
     if (isEditMode) {
       return (
         <>
-          <div className="carouseledit">
+          <div id={carouselId} className="carouseledit">
             {items.map((item) => {
               const title = item.getPropertyAsString("jcr:title") ?? "";
               const caption = item.getPropertyAsString("caption") ?? "";
@@ -92,7 +94,7 @@ jahiaComponent(
               );
             })}
           </div>
-          <AddContentButtons />
+          <Area name="slides" />
         </>
       );
     }
@@ -101,7 +103,6 @@ jahiaComponent(
     // react-bootstrap's Carousel does not render its outer wrapper in GraalVM SSR
     // (internal hooks are incompatible). Pure HTML + data-bs-* attributes work
     // perfectly and need no JS init script beyond bootstrap.bundle.min.js.
-    const carouselId = `carousel-${currentNode.getIdentifier()}`;
     const carouselClasses = [
       "carousel",
       "slide",
@@ -116,8 +117,8 @@ jahiaComponent(
       <div
         id={carouselId}
         className={carouselClasses}
-        data-bs-ride={interval !== 0 ? "carousel" : undefined}
-        data-bs-interval={interval ?? 5000}
+        data-bs-ride="carousel"
+        data-bs-interval={interval !== undefined && interval !== 5000 ? interval : undefined}
         data-bs-keyboard={keyboard ? "true" : "false"}
         data-bs-pause={pause ? "hover" : "false"}
         data-bs-wrap={wrap ? "true" : "false"}

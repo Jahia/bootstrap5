@@ -35,6 +35,7 @@ jahiaComponent(
     const { currentNode } = useServerContext();
 
     const id = currentNode.getIdentifier();
+    const parentId = currentNode.getParent().getIdentifier();
     const headerId = `accordion-${id}`;
     const collapseId = `collapse-${id}`;
     const label = title ?? currentNode.getDisplayableName();
@@ -57,6 +58,7 @@ jahiaComponent(
           id={collapseId}
           className={`accordion-collapse collapse${show ? " show" : ""}`}
           aria-labelledby={headerId}
+          data-bs-parent={`#accordion-${parentId}`}
         >
           <div className="accordion-body">
             {text && <div dangerouslySetInnerHTML={{ __html: text }} />}

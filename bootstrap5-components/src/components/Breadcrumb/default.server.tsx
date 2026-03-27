@@ -53,7 +53,7 @@ jahiaComponent(
     // ── Too short: only render placeholder in edit mode ────────────────────
     if (pageNodes.length <= 1) {
       return renderContext.isEditMode() ? (
-        <Breadcrumb className={extraClass || undefined}>
+        <Breadcrumb listProps={{ className: extraClass || undefined }}>
           <Breadcrumb.Item active>Breadcrumb too small...</Breadcrumb.Item>
         </Breadcrumb>
       ) : null;
@@ -62,7 +62,7 @@ jahiaComponent(
     // ── Build items ────────────────────────────────────────────────────────
     const mainResourcePath = mainNode.getPath();
     return (
-      <Breadcrumb className={extraClass || undefined}>
+      <Breadcrumb listProps={{ className: extraClass || undefined }}>
         {pageNodes.map((pageNode) => {
           const isCurrentPage = pageNode.getPath() === mainResourcePath;
 

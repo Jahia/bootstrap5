@@ -43,6 +43,7 @@ export function makeNode(overrides: NodeOverrides = {}): any {
     getParent: () => overrides._parent ?? makeNode({ _id: 'parent-abc' }),
     getAncestors: () => overrides._ancestors ?? [],
     isNodeType: (type: string) => nodeTypes.has(type),
+    hasProperty: (name: string) => properties.has(name),
     getProperty: (name: string) => {
       const v = properties.get(name);
       return v !== undefined ? makeProp(v) : null;

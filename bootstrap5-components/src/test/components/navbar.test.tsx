@@ -5,13 +5,15 @@ import '../../components/Navbar/default.server';
 
 function makeNavPage(id: string, overrides: any = {}): any {
   const nodeTypes: string[] = overrides._nodeTypes ?? ['jnt:page', 'jmix:navMenuItem'];
+  const path = overrides._path ?? `/sites/test/${id}`;
   return {
     getIdentifier: () => id,
     getDisplayableName: () => overrides._name ?? id,
     getName: () => id,
-    getPath: () => overrides._path ?? `/sites/test/${id}`,
-    getUrl: () => overrides._url ?? `${overrides._path ?? `/sites/test/${id}`}`,
+    getPath: () => path,
+    getUrl: () => overrides._url ?? `${path}.html`,
     isNodeType: (t: string) => nodeTypes.includes(t),
+    hasProperty: (name: string) => (overrides._properties ?? {})[name] !== undefined,
     getPropertyAsString: (name: string) => overrides._props?.[name] ?? '',
     getProperty: (name: string) => {
       const v = overrides._properties?.[name];
@@ -31,6 +33,7 @@ function makeSiteNode(overrides: any = {}): any {
     getName: () => 'testsite',
     getPath: () => '/sites/test',
     isNodeType: (t: string) => (overrides._nodeTypes ?? []).includes(t),
+    hasProperty: (name: string) => (overrides._properties ?? {})[name] !== undefined,
     getPropertyAsString: (name: string) => overrides._properties?.[name] ?? '',
     getProperty: (name: string) => {
       const v = overrides._imageProps?.[name];
@@ -245,7 +248,7 @@ describe('bootstrap5nt:navbar (default view)', () => {
     expect(container.querySelector('.language-nav')).not.toBeInTheDocument();
   });
 
-  test('active page → li and link have "active" class', () => {
+  test('active page → nav link has "active" class', () => {
     const activePage = makeNavPage('current', {
       _path: '/sites/test/current',
       _nodeTypes: ['jnt:page', 'jmix:navMenuItem'],
@@ -259,8 +262,8 @@ describe('bootstrap5nt:navbar (default view)', () => {
     _setContext(ctx);
     const fn = getNavbarFn();
     const { container } = renderFn(fn, {}, ctx);
-    const activeLi = container.querySelector('li.active');
-    expect(activeLi).toBeInTheDocument();
+    const activeLink = container.querySelector('a.nav-link.active');
+    expect(activeLink).toBeInTheDocument();
   });
 
   test('maxlevel=1 → no dropdown rendered', () => {

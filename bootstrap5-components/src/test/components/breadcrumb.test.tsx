@@ -63,8 +63,8 @@ describe('bootstrap5nt:breadcrumb (default view)', () => {
   });
 
   test('ancestor page items have link to path.html', () => {
-    const page1 = makeNode({ _id: 'page-1', _name: 'Home', _path: '/sites/test/home', _nodeTypes: ['jnt:page'] });
-    const page2 = makeNode({ _id: 'page-2', _name: 'About', _path: '/sites/test/about', _nodeTypes: ['jnt:page'] });
+    const page1 = makeNode({ _id: 'page-1', _name: 'Home', _path: '/sites/test/home', _url: '/sites/test/home.html', _nodeTypes: ['jnt:page'] });
+    const page2 = makeNode({ _id: 'page-2', _name: 'About', _path: '/sites/test/about', _url: '/sites/test/about.html', _nodeTypes: ['jnt:page'] });
     const currentNode = makeNode({ _id: 'bc-4', _ancestors: [page1, page2] });
     const mainNode = page2;
     const ctx = { currentNode, renderContext: makeRenderContext(), mainNode };

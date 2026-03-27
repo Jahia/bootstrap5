@@ -4,18 +4,15 @@
 
 /**
  * bootstrap5nt:accordions — accordion group wrapper.
- * Renders all panels inline via getChildNodes() so that react-bootstrap's
- * Accordion context is shared across the whole component tree.
- * The accordion-item.server.tsx view serves as a fallback for standalone rendering.
+ * Renders child panels via RenderChildren so each bootstrap5nt:accordion item
+ * uses its own view (accordion-item.server.tsx) with Bootstrap.js data-bs-* attributes.
  */
 import {
-  AddContentButtons,
-  getChildNodes,
+  Area,
   jahiaComponent,
-  Render,
+  RenderChildren,
+  useServerContext,
 } from "@jahia/javascript-modules-library";
-import type { JCRNodeWrapper } from "org.jahia.services.content";
-import { Accordion } from "react-bootstrap";
 import { BootstrapJS } from "../../utils/bootstrap-resources.js";
 
 interface AccordionsProps {
@@ -30,40 +27,22 @@ jahiaComponent(
     name: "default",
     displayName: "Accordion",
   },
-  ({ flush }: AccordionsProps, { currentNode }) => {
-    const panels = getChildNodes(currentNode as JCRNodeWrapper, 100).filter(n =>
-      n.isNodeType("bootstrap5nt:accordion"),
-    );
-
-    // The first panel marked show=true becomes the default open panel
-    const defaultOpenIndex = panels.findIndex(
-      n => n.getPropertyAsString("show") === "true",
-    );
-    const defaultActiveKey = defaultOpenIndex >= 0 ? String(defaultOpenIndex) : undefined;
+  ({ flush }: AccordionsProps) => {
+    const { currentNode } = useServerContext();
+    const id = currentNode.getIdentifier();
 
     return (
       <>
         <BootstrapJS />
-        <Accordion defaultActiveKey={defaultActiveKey} flush={flush}>
-          {panels.map((panel, index) => {
-            const title =
-              panel.getPropertyAsString("jcr:title") ?? panel.getDisplayableName();
-            const text = panel.getPropertyAsString("text") ?? "";
-
-            return (
-              <Accordion.Item key={panel.getIdentifier()} eventKey={String(index)}>
-                <Accordion.Header>{title}</Accordion.Header>
-                <Accordion.Body>
-                  {text && <div dangerouslySetInnerHTML={{ __html: text }} />}
-                  <Render node={panel} view="content" />
-                </Accordion.Body>
-              </Accordion.Item>
-            );
-          })}
-        </Accordion>
+        <div
+          id={`accordion-${id}`}
+          className={["accordion", flush ? "accordion-flush" : undefined].filter(Boolean).join(" ")}
+        >
+          <RenderChildren filter="bootstrap5nt:accordion" />
+        </div>
 
         {/* Edit-mode drop zone for new panels */}
-        <AddContentButtons />
+        <Area name="panels" />
       </>
     );
   },

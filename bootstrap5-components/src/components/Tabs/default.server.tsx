@@ -5,18 +5,18 @@
 /**
  * bootstrap5nt:tabs — tab group where each jnt:contentList child becomes one panel.
  * Tab switching uses Bootstrap.js (data-bs-toggle / data-bs-target).
- * react-bootstrap renders the correct HTML; we add the Bootstrap.js data attributes.
+ * Plain HTML buttons are used for nav items to avoid the Jahia edit-frame
+ * link interceptor that would intercept <a href="#"> anchors.
  * Anchor sanitization replaces non-alphanumeric chars with "-" and prefixes "tab-"
  * when the first character is not a letter.
  */
 import {
-  AddContentButtons,
+  Area,
   getChildNodes,
   jahiaComponent,
   Render,
   useServerContext,
 } from "@jahia/javascript-modules-library";
-import { Nav, Tab } from "react-bootstrap";
 import { BootstrapJS } from "../../utils/bootstrap-resources.js";
 
 interface TabsProps {
@@ -40,12 +40,12 @@ function toAnchor(name: string): string {
   return /^[a-zA-Z]/.test(sanitized) ? sanitized : `tab-${sanitized}`;
 }
 
-/** Maps the Jahia "type" prop to a react-bootstrap Nav variant */
-function toNavVariant(type: string): "tabs" | "pills" | "underline" | undefined {
-  if (type === "tab") return "tabs";
-  if (type === "pill") return "pills";
-  if (type === "underline") return "underline";
-  return undefined; // "link" → no variant, rendered as plain nav-links
+/** Maps the Jahia "type" prop to a Bootstrap 5 nav CSS class */
+function toNavClass(type: string): string {
+  if (type === "tab") return "nav-tabs";
+  if (type === "pill") return "nav-pills";
+  if (type === "underline") return "nav-underline";
+  return "nav-links"; // "link" type
 }
 
 jahiaComponent(
@@ -61,74 +61,63 @@ jahiaComponent(
     // Fetch jnt:contentList children — each one is a tab panel
     const subLists = getChildNodes(currentNode, 50).filter(n => n.isNodeType("jnt:contentList"));
 
-    // Default active key = first tab's anchor
-    const defaultActiveKey = subLists[0]
-      ? useListNameAsAnchor
-        ? toAnchor(subLists[0].getName())
-        : `tab-${subLists[0].getIdentifier()}`
-      : undefined;
-
     // Omit align class when it's the default (justify-content-start)
     const alignClass = align !== "justify-content-start" ? align : undefined;
 
-    // Nav variant for react-bootstrap
-    const navVariant = toNavVariant(type);
-    // "link" type uses nav-links class (not a react-bootstrap variant)
-    const extraNavClass = type === "link" ? "nav-links" : undefined;
+    const navClass = ["nav", toNavClass(type), alignClass].filter(Boolean).join(" ");
 
     return (
       <>
         <BootstrapJS />
-        <Tab.Container defaultActiveKey={defaultActiveKey}>
-          <Nav
-            variant={navVariant}
-            as="ul"
-            className={[extraNavClass, alignClass].filter(Boolean).join(" ") || undefined}
-          >
-            {subLists.map((listNode) => {
-              const anchorName = useListNameAsAnchor
-                ? toAnchor(listNode.getName())
-                : `tab-${listNode.getIdentifier()}`;
-
-              // data-bs-toggle + data-bs-target → Bootstrap.js handles tab switching
-              // data-bs-target avoids #hash href which Jahia edit-frame would intercept
-              const bsToggle = type === "pill" ? "pill" : "tab";
-              return (
-                <Nav.Item key={listNode.getIdentifier()} as="li">
-                  <Nav.Link
-                    eventKey={anchorName}
-                    data-bs-toggle={bsToggle}
-                    data-bs-target={`#${anchorName}`}
-                  >
-                    {listNode.getDisplayableName()}
-                  </Nav.Link>
-                </Nav.Item>
-              );
-            })}
-          </Nav>
-
-          <Tab.Content>
-            {subLists.map((listNode) => {
-              const anchorName = useListNameAsAnchor
-                ? toAnchor(listNode.getName())
-                : `tab-${listNode.getIdentifier()}`;
-
-              return (
-                <Tab.Pane
-                  key={listNode.getIdentifier()}
-                  eventKey={anchorName}
-                  id={anchorName}
-                  transition={fade ? undefined : false}
+        <ul className={navClass} role="tablist">
+          {subLists.map((listNode, index) => {
+            const anchorName = useListNameAsAnchor
+              ? toAnchor(listNode.getName())
+              : `tab-${listNode.getIdentifier()}`;
+            const isFirst = index === 0;
+            return (
+              <li key={listNode.getIdentifier()} className="nav-item" role="presentation">
+                <button
+                  type="button"
+                  className={["nav-link", isFirst ? "active" : undefined].filter(Boolean).join(" ")}
+                  data-bs-toggle="tab"
+                  data-bs-target={`#${anchorName}`}
+                  aria-selected={isFirst ? "true" : "false"}
                 >
-                  <Render node={listNode} />
-                </Tab.Pane>
-              );
-            })}
-          </Tab.Content>
-        </Tab.Container>
+                  {listNode.getDisplayableName()}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="tab-content">
+          {subLists.map((listNode, index) => {
+            const anchorName = useListNameAsAnchor
+              ? toAnchor(listNode.getName())
+              : `tab-${listNode.getIdentifier()}`;
+            const isFirst = index === 0;
+            const paneClasses = [
+              "tab-pane",
+              fade ? "fade" : undefined,
+              isFirst ? "active" : undefined,
+              fade && isFirst ? "show" : undefined,
+            ].filter(Boolean).join(" ");
+            return (
+              <div
+                key={listNode.getIdentifier()}
+                className={paneClasses}
+                id={anchorName}
+                role="tabpanel"
+              >
+                <Render node={listNode} />
+              </div>
+            );
+          })}
+        </div>
 
         {/* Edit-mode drop zone for new tab panels */}
-        <AddContentButtons />
+        <Area name="tabs" />
       </>
     );
   },

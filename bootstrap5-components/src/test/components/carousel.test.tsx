@@ -239,8 +239,8 @@ describe('bootstrap5nt:carousel (default view)', () => {
     const { container } = renderFn(fn, {}, ctx);
     const indicators = container.querySelector('.carousel-indicators');
     expect(indicators).toBeInTheDocument();
-    const lis = indicators?.querySelectorAll('li');
-    expect(lis?.length).toBe(2);
+    const buttons = indicators?.querySelectorAll('button');
+    expect(buttons?.length).toBe(2);
   });
 
   test('live mode → prev/next controls rendered by default', () => {
