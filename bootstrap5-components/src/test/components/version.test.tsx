@@ -8,14 +8,14 @@ describe('bootstrap5nt:version (default view)', () => {
     return _getComponent('bootstrap5nt:version', 'default');
   }
 
-  test('live mode → renders div with "bootstrap5-components" text', () => {
+  test('live mode → renders div with "bootstrap5-components vX.Y.Z" text', () => {
     const ctx = makeCtx({}, { _editMode: false });
     _setContext(ctx);
     const fn = getVersionFn();
     const { container } = renderFn(fn, {}, ctx);
     const div = container.querySelector('[data-testid="bs5-version"]');
     expect(div).toBeInTheDocument();
-    expect(div?.textContent).toContain('bootstrap5-components');
+    expect(div?.textContent).toMatch(/bootstrap5-components v\S+/);
   });
 
   test('live mode → no [edit mode] span', () => {
@@ -38,11 +38,11 @@ describe('bootstrap5nt:version (default view)', () => {
     expect(span?.textContent).toContain('[edit mode]');
   });
 
-  test('edit mode → still shows "bootstrap5-components" text', () => {
+  test('edit mode → still shows "bootstrap5-components vX.Y.Z" text', () => {
     const ctx = makeCtx({}, { _editMode: true });
     _setContext(ctx);
     const fn = getVersionFn();
     const { container } = renderFn(fn, {}, ctx);
-    expect(container.textContent).toContain('bootstrap5-components');
+    expect(container.textContent).toMatch(/bootstrap5-components v\S+/);
   });
 });

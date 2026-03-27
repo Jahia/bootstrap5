@@ -1,5 +1,8 @@
 import { defineConfig } from "vite";
 import jahia from "@jahia/vite-plugin";
+import { readFileSync } from "fs";
+
+const { version } = JSON.parse(readFileSync("./package.json", "utf8"));
 
 /**
  * Fixes the GraalVM error:
@@ -32,6 +35,9 @@ const fixJsxRuntimeDefaultImport = {
 };
 
 export default defineConfig({
+  define: {
+    __PACKAGE_VERSION__: JSON.stringify(version),
+  },
   plugins: [jahia(), fixJsxRuntimeDefaultImport],
   build: {
     rollupOptions: {
