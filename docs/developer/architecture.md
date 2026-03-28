@@ -104,7 +104,16 @@ The entry point `src/index.ts` (compiled to `dist/server/index.js`) imports all 
 
 ## react-bootstrap
 
-Most component views use `react-bootstrap` for idiomatic JSX rendering. `react-bootstrap` is a **devDependency** — it is compiled into `dist/server/index.js` by Vite and not loaded at runtime by Jahia. When adding or modifying components, import from `react-bootstrap` where a suitable component exists (e.g. `Accordion`, `Alert`, `Button`, `Card`, `Carousel`, `Figure`, `Tabs`) rather than building raw HTML.
+`react-bootstrap` is a **devDependency** — it is compiled into `dist/server/index.js` by Vite and not loaded at runtime by Jahia. It is used selectively for a small number of components where it adds clear value without introducing Jahia-specific compatibility issues.
+
+**Components that use react-bootstrap:** `Breadcrumb`, `Button`, `Card`, `Figure`.
+
+**Components that use plain Bootstrap 5 HTML:** `Accordion`, `Alert`, `Carousel`, `Navbar`, `Tabs`, and all layout components. These were rewritten to plain HTML to avoid two categories of issues:
+
+- `<a href="#">` rendered by react-bootstrap navigation components is intercepted by Jahia's edit-frame link interceptor in edit mode (e.g. `Nav.Link` in Tabs → replaced with `<button data-bs-toggle="tab">`).
+- Extra wrapper elements and class names injected by react-bootstrap components that conflict with Bootstrap 5 CSS or with the expected DOM structure in Jahia tests.
+
+**Rule for new components:** Use plain Bootstrap 5 HTML by default. Only reach for react-bootstrap for purely presentational components (e.g. `Figure`, `Card`) where no Jahia edit-mode interactivity is involved.
 
 ## Static assets packaging
 
@@ -115,3 +124,20 @@ The `@jahia/vite-plugin` compiles TypeScript/TSX to `dist/server/index.js`. It d
 ```
 
 `src/**/*.cnd` includes all per-component `definition.cnd` files. `META-INF` contains the Content Editor forms JSON. npm pack includes all listed paths verbatim in the TGZ.
+
+## Known limitations
+
+### `Area` has no `areaAsSubNode` equivalent
+
+**Upstream issue:** [Jahia/jahia-private#4894](https://github.com/Jahia/jahia-private/issues/4894)
+
+In the JSP rendering stack, `<template:area areaAsSubNode="true" />` stores the area's content as a child of the *component node* rather than the *page node*. This makes area content shared across all pages that inherit the component (e.g. a grid placed inside a template-level `AbsoluteArea` footer).
+
+In `@jahia/javascript-modules-library` (as of v1.2.0):
+
+- `<Area name="foo" />` always stores content under the *current page node*, so each page gets its own independent content — `areaAsSubNode` behaviour is not available.
+- `<AbsoluteArea parent={node} name="foo" />` does anchor to a fixed parent node, but it carries additional semantics: it always inherits content from the parent page downward, and the parent node must already exist in the repository.
+
+**Current workaround:** For grid components placed inside an `AbsoluteArea` (e.g. the template footer), activate `bootstrap5mix:createAbsoluteAreas` on the grid node. The Grid view then renders columns using `<AbsoluteArea parent={currentNode} name={areaPath} />`, which anchors each column area to the grid node itself — equivalent to `areaAsSubNode="true"`. The grid node must live under the home/root page (which is always the case for template-level grids).
+
+**Limitation:** This workaround does not cover non-Grid components or `Area` components used outside of template-level `AbsoluteArea` contexts. A proper `areaAsSubNode` prop on `Area` requires an upstream fix in `@jahia/javascript-modules-library`.

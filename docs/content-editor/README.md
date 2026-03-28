@@ -18,6 +18,7 @@ This guide is for content editors who create and manage page content in Jahia us
 | [Pagination](components/pagination.md) | Page-by-page content navigation |
 | [Tabs](components/tabs.md) | Tabbed content panels |
 | [Text](components/text.md) | Rich-text content block |
+| Privacy Settings Modal | GDPR consent modal for Jahia Experience Manager (WEM). Available when WEM is active. Node type: `wemnt:privacySettingsModal`, view: `bootstrap5`. |
 
 ## How to add a component
 

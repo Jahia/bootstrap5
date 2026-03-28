@@ -27,6 +27,20 @@ See [Build system](build.md) for full build options including watch mode and Mav
 
 ## Repository layout
 
+## Internal and utility components
+
+In addition to the 12 content-editor-visible components, `bootstrap5-components` includes:
+
+| Component | Node type | Purpose |
+|-----------|-----------|---------|
+| List | `jmix:list` | Generic list renderer — renders child nodes and an edit-mode drop zone. Used internally by Tabs and other container components. |
+| Version | `bootstrap5nt:version` | Displays the deployed `bootstrap5-components` package version. Useful on a diagnostic page to confirm which version is running. |
+| Privacy Settings Modal | `wemnt:privacySettingsModal` | Bootstrap 5 view for the Jahia WEM GDPR consent modal. Only relevant when the WEM module is deployed. |
+
+---
+
+## Repository layout
+
 ```
 bootstrap5/
 ├─ bootstrap5-core/                  Java OSGi bundle — Bootstrap assets + initializers

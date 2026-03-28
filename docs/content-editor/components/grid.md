@@ -71,11 +71,9 @@ Specify arbitrary Bootstrap column classes manually.
 
 ### Absolute areas
 
-Renders shared content areas pulled from an ancestor level.
+Anchors each column area to the grid node itself so that the same content is shared across all pages that inherit this grid (equivalent to `areaAsSubNode="true"` in the JSP stack). Use this when the grid is placed inside a template-level `AbsoluteArea` (e.g. a footer), and you want a single set of column content shared across the whole site rather than per-page overrides.
 
-| Field | Description |
-|-------|-------------|
-| Level | Ancestor depth to pull areas from (0 = current, 1 = parent, …, 5) |
+> **Note:** The *Level* field is retained in the form for compatibility but is not used by the current JavaScript rendering engine. Column areas are always anchored to the grid node itself (see [Architecture — Known limitations](../../developer/architecture.md#known-limitations)).
 
 ### List limit
 
