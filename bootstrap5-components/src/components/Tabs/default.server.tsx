@@ -117,7 +117,7 @@ jahiaComponent(
         </div>
 
         {/* Edit-mode drop zone for new tab panels */}
-        <Area name="tabs" />
+        <Area name="tabs" areaAsSubNode={true} />
       </>
     );
   },

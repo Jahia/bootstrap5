@@ -215,7 +215,7 @@ jahiaComponent(
                     </div>
                   )}
                   <div className="modal-body">
-                    <Area name="modal-body" />
+                    <Area name="modal-body" areaAsSubNode={true} />
                   </div>
                   <div className="modal-footer">
                     <button
@@ -268,7 +268,7 @@ jahiaComponent(
                 </button>
               )}
             <div className={`collapse${props.show ? " show" : ""}`} id={collapseId}>
-              <Area name="collapse-body" />
+              <Area name="collapse-body" areaAsSubNode={true} />
             </div>
           </>
         );
@@ -370,7 +370,7 @@ jahiaComponent(
                 </div>
               )}
               <div className="offcanvas-body">
-                <Area name="offcanvas-body" />
+                <Area name="offcanvas-body" areaAsSubNode={true} />
               </div>
             </div>
           </>

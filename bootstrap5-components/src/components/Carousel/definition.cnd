@@ -16,6 +16,7 @@
 
 [bootstrap5nt:carousel] > jnt:content, bootstrap5mix:component, jmix:list,
                           jmix:siteContent, jmix:browsableInEditorialPicker orderable
+  + slides (jnt:contentList) = jnt:contentList
   + * (bootstrap5nt:carouselItem)
 
 [bootstrap5mix:carouselAdvancedSettings] mixin

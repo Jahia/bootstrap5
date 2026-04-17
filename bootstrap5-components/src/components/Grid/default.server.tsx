@@ -143,7 +143,7 @@ jahiaComponent(
     // content shared across all inheriting pages.
     const renderCol = createAbsoluteAreas
       ? (areaPath: string) => <AbsoluteArea parent={currentNode} name={areaPath} />
-      : (areaPath: string) => <Area name={areaPath} />;
+      : (areaPath: string) => <Area name={areaPath} areaAsSubNode={true} />;
 
     const GridColumns = () => {
       if (isPredefined) {

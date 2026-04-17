@@ -5,4 +5,5 @@
 [bootstrap5nt:accordions] > jnt:content, bootstrap5mix:component, jmix:list,
                             jmix:siteContent, jmix:browsableInEditorialPicker orderable
   - flush (boolean) = 'false' indexed=no
+  + panels (jnt:contentList) = jnt:contentList
   + * (bootstrap5nt:accordion)

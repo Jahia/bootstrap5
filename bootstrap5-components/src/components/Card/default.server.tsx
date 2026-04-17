@@ -79,7 +79,7 @@ jahiaComponent(
       freeFooter = currentNode.getPropertyAsString("freeFooter") === "true";
     }
 
-    // Droppable children: jmix:droppableContent children, excluding the "cardFooter" subnode
+    // Droppable children: jmix:droppableContent direct children, excluding "cardFooter" subnode
     const bodyChildren = getChildNodes(currentNode, 50).filter(
       (child) => child.isNodeType("jmix:droppableContent") && child.getName() !== "cardFooter",
     );
@@ -108,7 +108,7 @@ jahiaComponent(
         {(footer || freeFooter) && (
           <Card.Footer bsPrefix="card-footer" className={textColorClass}>
             {footer && <span dangerouslySetInnerHTML={{ __html: footer }} />}
-            {freeFooter && <Area name="cardFooter" />}
+            {freeFooter && <Area name="cardFooter" areaAsSubNode={true} />}
           </Card.Footer>
         )}
       </Card>

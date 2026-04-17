@@ -19,5 +19,5 @@ jahiaComponent(
     name: "content",
     displayName: "Accordion panel content",
   },
-  () => <Area name="content" />,
+  () => <Area name="content" areaAsSubNode={true} />,
 );

@@ -94,7 +94,7 @@ jahiaComponent(
               );
             })}
           </div>
-          <Area name="slides" />
+          <Area name="slides" areaAsSubNode={true} />
         </>
       );
     }

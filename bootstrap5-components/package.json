@@ -27,7 +27,7 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "@jahia/javascript-modules-library": "^1.0.0",
+    "@jahia/javascript-modules-library": "file:/Users/pol/Desktop/b12/javascript-modules/javascript-modules-library",
     "@jahia/vite-plugin": "^1.0.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",

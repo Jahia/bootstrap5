@@ -22,7 +22,7 @@
     "watch:callback": "yarn pack --out dist/package.tgz && yarn deploy"
   },
   "devDependencies": {
-    "@jahia/javascript-modules-library": "^1.0.0",
+    "@jahia/javascript-modules-library": "file:/Users/pol/Desktop/b12/javascript-modules/javascript-modules-library",
     "@jahia/vite-plugin": "^1.0.0",
     "@types/react": "^19.0.0",
     "typescript": "^5.0.0",

@@ -63,7 +63,7 @@ jahiaComponent(
           <div className="accordion-body">
             {text && <div dangerouslySetInnerHTML={{ __html: text }} />}
             {/* Droppable content area inside the panel body */}
-            <Area name="content" nodeType="jmix:droppableContent" numberOfItems={0} />
+            <Area name="content" numberOfItems={0} areaAsSubNode={true} />
           </div>
         </div>
       </div>
