@@ -82,6 +82,12 @@ of Cypress environment wiring (base URL, credentials, etc.) before handing off t
 Cypress will execute all spec files in alphabetical order. Specs are numbered to enforce a
 deterministic run order — **01** sets up the site, **99** tears it down.
 
+> **Important:** `01-Tests.cy.ts` must have run at least once before executing any individual
+> spec in isolation. It creates the `bootstrap5test` site that every other test depends on.
+> If you run a single spec directly (e.g. `--spec cypress/e2e/06-carousel.cy.ts`) without the
+> site already in place, the `before` hooks will fail. Run the full suite first, or re-run
+> `01-Tests.cy.ts` manually after a teardown.
+
 ### Generating the HTML report
 
 After a headless run:
