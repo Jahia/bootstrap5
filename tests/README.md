@@ -53,17 +53,31 @@ yarn install
 
 ## Running the tests
 
+Before running, export the environment variables from your `.env` file:
+
+```bash
+source set-env.sh
+```
+
 ### Interactive mode (headed, with Cypress UI)
 
 ```bash
+./env.debug.sh   # sets up the Cypress environment via @jahia/cypress, then opens the UI
+# or, once env vars are exported:
 yarn e2e:debug
 ```
 
 ### Headless / CI mode
 
 ```bash
+./env.run.sh     # sets up the Cypress environment via @jahia/cypress, then runs headless
+# or, once env vars are exported:
 yarn e2e:ci
 ```
+
+`env.run.sh` and `env.debug.sh` read the `@jahia/cypress` version declared in `package.json`
+and delegate to the matching `env.run` / `env.debug` binary from that package, which takes care
+of Cypress environment wiring (base URL, credentials, etc.) before handing off to Cypress itself.
 
 Cypress will execute all spec files in alphabetical order. Specs are numbered to enforce a
 deterministic run order — **01** sets up the site, **99** tears it down.
