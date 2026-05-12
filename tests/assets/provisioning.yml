@@ -1,0 +1,27 @@
+- karafCommand: "log:log 'START - Bootstrap5 provisioning'"
+
+- karafCommand: "log:log 'START - Install skins'"
+- installBundle: 'mvn:org.jahia.modules/skins/8.2.0'
+  autoStart: true
+  uninstallPreviousVersion: true
+- karafCommand: "log:log 'END - Install skins'"
+
+- karafCommand: "log:log 'START - Install bootstrap5-core'"
+- installBundle: 'bootstrap5-core-2.4.5-SNAPSHOT.jar'
+  autoStart: true
+  uninstallPreviousVersion: true
+- karafCommand: "log:log 'END - Install bootstrap5-core'"
+
+- karafCommand: "log:log 'START - Install bootstrap5-components'"
+- installBundle: 'bootstrap5-components-2.4.5-SNAPSHOT.jar'
+  autoStart: true
+  uninstallPreviousVersion: true
+- karafCommand: "log:log 'END - Install bootstrap5-components'"
+
+- karafCommand: "log:log 'START - Install bootstrap5-templates-starter'"
+- installBundle: 'bootstrap5-templates-starter-2.4.5-SNAPSHOT.jar'
+  autoStart: true
+  uninstallPreviousVersion: true
+- karafCommand: "log:log 'END - Install bootstrap5-templates-starter'"
+
+- karafCommand: "log:log 'END - Bootstrap5 provisioning'"
