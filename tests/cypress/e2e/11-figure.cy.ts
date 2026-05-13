@@ -1,27 +1,52 @@
 import {createTestPage, publishPage, deleteTestPage, pageUrl, uploadPlaceholderImage} from '../support/bootstrap5'
 
+const siteKey = 'bootstrap5test'
+
+const addSeparator = (name: string) => {
+    cy.apollo({
+        mutationFile: 'graphql/jcr/mutation/addNode.graphql',
+        variables: {
+            parentPathOrId: `/sites/${siteKey}/home/figure-test/pagecontent`,
+            name,
+            primaryNodeType: 'bootstrap5nt:text',
+            properties: [{name: 'text', value: '<hr/>', language: 'en'}]
+        }
+    })
+}
+
 describe('Bootstrap5 — Figure', () => {
-    let sharedImageUuid: string
+    // One distinct colored image per figure variant
+    let redUuid: string    // figure (base)
+    let blueUuid: string   // figure-centered
+    let greenUuid: string  // figure-thumbnail
+    let orangeUuid: string // figure-nofluid
 
     before(() => {
         cy.login()
         createTestPage('figure-test')
-        uploadPlaceholderImage().then(uuid => {
-            sharedImageUuid = uuid
+
+        // Upload all four images upfront so nested contexts can reference the UUIDs
+        uploadPlaceholderImage('placeholder-red.png').then(uuid => { redUuid = uuid })
+        uploadPlaceholderImage('placeholder-blue.png').then(uuid => { blueUuid = uuid })
+        uploadPlaceholderImage('placeholder-green.png').then(uuid => { greenUuid = uuid })
+        uploadPlaceholderImage('placeholder-orange.png').then(uuid => { orangeUuid = uuid })
+
+        // Base figure (red image) — tests default rendering
+        cy.then(() => {
             cy.apollo({
                 mutationFile: 'graphql/jcr/mutation/addNode.graphql',
                 variables: {
-                    parentPathOrId: '/sites/bootstrap5test/home/figure-test/pagecontent',
+                    parentPathOrId: `/sites/${siteKey}/home/figure-test/pagecontent`,
                     name: 'figure',
                     primaryNodeType: 'bootstrap5nt:figure',
                     properties: [
-                        {name: 'image', value: uuid, type: 'WEAKREFERENCE'},
+                        {name: 'image', value: redUuid, type: 'WEAKREFERENCE'},
                         {name: 'jcr:title', value: 'A test caption', language: 'en'}
                     ]
                 }
             })
-            publishPage('figure-test')
         })
+        publishPage('figure-test')
     })
 
     after(() => {
@@ -57,19 +82,23 @@ describe('Bootstrap5 — Figure', () => {
     context('Caption alignment', () => {
         before(() => {
             cy.login()
-            cy.apollo({
-                mutationFile: 'graphql/jcr/mutation/addNode.graphql',
-                variables: {
-                    parentPathOrId: '/sites/bootstrap5test/home/figure-test/pagecontent',
-                    name: 'figure-centered',
-                    primaryNodeType: 'bootstrap5nt:figure',
-                    mixins: ['bootstrap5mix:figureAdvancedSettings'],
-                    properties: [
-                        {name: 'image', value: sharedImageUuid, type: 'WEAKREFERENCE'},
-                        {name: 'jcr:title', value: 'Centered caption', language: 'en'},
-                        {name: 'captionAlignment', value: 'text-center'}
-                    ]
-                }
+            // Separator + blue image figure with centered caption
+            addSeparator('hr-before-centered')
+            cy.then(() => {
+                cy.apollo({
+                    mutationFile: 'graphql/jcr/mutation/addNode.graphql',
+                    variables: {
+                        parentPathOrId: `/sites/${siteKey}/home/figure-test/pagecontent`,
+                        name: 'figure-centered',
+                        primaryNodeType: 'bootstrap5nt:figure',
+                        mixins: ['bootstrap5mix:figureAdvancedSettings'],
+                        properties: [
+                            {name: 'image', value: blueUuid, type: 'WEAKREFERENCE'},
+                            {name: 'jcr:title', value: 'Centered caption', language: 'en'},
+                            {name: 'captionAlignment', value: 'text-center'}
+                        ]
+                    }
+                })
             })
             publishPage('figure-test')
         })
@@ -83,32 +112,39 @@ describe('Bootstrap5 — Figure', () => {
     context('Image options', () => {
         before(() => {
             cy.login()
-            // thumbnails=true → img-thumbnail class; responsive=false → no img-fluid
-            cy.apollo({
-                mutationFile: 'graphql/jcr/mutation/addNode.graphql',
-                variables: {
-                    parentPathOrId: '/sites/bootstrap5test/home/figure-test/pagecontent',
-                    name: 'figure-thumbnail',
-                    primaryNodeType: 'bootstrap5nt:figure',
-                    mixins: ['bootstrap5mix:imageAdvancedSettings'],
-                    properties: [
-                        {name: 'image', value: sharedImageUuid, type: 'WEAKREFERENCE'},
-                        {name: 'thumbnails', value: 'true', type: 'BOOLEAN'}
-                    ]
-                }
+            // Separator + green image figure with thumbnail style
+            addSeparator('hr-before-thumbnail')
+            cy.then(() => {
+                cy.apollo({
+                    mutationFile: 'graphql/jcr/mutation/addNode.graphql',
+                    variables: {
+                        parentPathOrId: `/sites/${siteKey}/home/figure-test/pagecontent`,
+                        name: 'figure-thumbnail',
+                        primaryNodeType: 'bootstrap5nt:figure',
+                        mixins: ['bootstrap5mix:imageAdvancedSettings'],
+                        properties: [
+                            {name: 'image', value: greenUuid, type: 'WEAKREFERENCE'},
+                            {name: 'thumbnails', value: 'true', type: 'BOOLEAN'}
+                        ]
+                    }
+                })
             })
-            cy.apollo({
-                mutationFile: 'graphql/jcr/mutation/addNode.graphql',
-                variables: {
-                    parentPathOrId: '/sites/bootstrap5test/home/figure-test/pagecontent',
-                    name: 'figure-nofluid',
-                    primaryNodeType: 'bootstrap5nt:figure',
-                    mixins: ['bootstrap5mix:imageAdvancedSettings'],
-                    properties: [
-                        {name: 'image', value: sharedImageUuid, type: 'WEAKREFERENCE'},
-                        {name: 'responsive', value: 'false', type: 'BOOLEAN'}
-                    ]
-                }
+            // Separator + orange image figure with responsive disabled
+            addSeparator('hr-before-nofluid')
+            cy.then(() => {
+                cy.apollo({
+                    mutationFile: 'graphql/jcr/mutation/addNode.graphql',
+                    variables: {
+                        parentPathOrId: `/sites/${siteKey}/home/figure-test/pagecontent`,
+                        name: 'figure-nofluid',
+                        primaryNodeType: 'bootstrap5nt:figure',
+                        mixins: ['bootstrap5mix:imageAdvancedSettings'],
+                        properties: [
+                            {name: 'image', value: orangeUuid, type: 'WEAKREFERENCE'},
+                            {name: 'responsive', value: 'false', type: 'BOOLEAN'}
+                        ]
+                    }
+                })
             })
             publishPage('figure-test')
         })
@@ -120,7 +156,7 @@ describe('Bootstrap5 — Figure', () => {
 
         it('responsive=false removes img-fluid class', () => {
             cy.visit(pageUrl('figure-test'))
-            // figure-nofluid is the last non-fluid figure — it should not have img-fluid
+            // figure-nofluid is the last figure — its image must not have img-fluid
             cy.get('figure.figure').last().find('img').should('not.have.class', 'img-fluid')
         })
     })
