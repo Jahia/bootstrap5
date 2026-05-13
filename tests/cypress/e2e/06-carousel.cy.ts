@@ -1,7 +1,8 @@
 import {createTestPage, publishPage, deleteTestPage, pageUrl, uploadPlaceholderImage} from '../support/bootstrap5'
 
 describe('Bootstrap5 — Carousel', () => {
-    let sharedImageUuid: string
+    let redImageUuid: string
+    let blueImageUuid: string
 
     before(() => {
         cy.login()
@@ -20,9 +21,9 @@ describe('Bootstrap5 — Carousel', () => {
                 ]
             }
         })
-        // Upload placeholder image once, reuse UUID for all slides
-        uploadPlaceholderImage().then(uuid => {
-            sharedImageUuid = uuid
+        // Upload two distinct placeholder images (red + blue) — one per slide
+        uploadPlaceholderImage('placeholder-red.png').then(uuid => {
+            redImageUuid = uuid
             cy.apollo({
                 mutationFile: 'graphql/jcr/mutation/addNode.graphql',
                 variables: {
@@ -35,6 +36,9 @@ describe('Bootstrap5 — Carousel', () => {
                     ]
                 }
             })
+        })
+        uploadPlaceholderImage('placeholder-blue.png').then(uuid => {
+            blueImageUuid = uuid
             cy.apollo({
                 mutationFile: 'graphql/jcr/mutation/addNode.graphql',
                 variables: {
@@ -117,7 +121,7 @@ describe('Bootstrap5 — Carousel', () => {
                     primaryNodeType: 'bootstrap5nt:carouselItem',
                     properties: [
                         {name: 'jcr:title', value: 'Auto Slide', language: 'en'},
-                        {name: 'image', value: sharedImageUuid, type: 'WEAKREFERENCE'}
+                        {name: 'image', value: blueImageUuid, type: 'WEAKREFERENCE'}
                     ]
                 }
             })
@@ -157,7 +161,7 @@ describe('Bootstrap5 — Carousel', () => {
                     primaryNodeType: 'bootstrap5nt:carouselItem',
                     properties: [
                         {name: 'jcr:title', value: 'No KB Slide', language: 'en'},
-                        {name: 'image', value: sharedImageUuid, type: 'WEAKREFERENCE'}
+                        {name: 'image', value: blueImageUuid, type: 'WEAKREFERENCE'}
                     ]
                 }
             })
@@ -178,7 +182,7 @@ describe('Bootstrap5 — Carousel', () => {
     context('Fade variant', () => {
         before(() => {
             cy.login()
-            // Reuse sharedImageUuid set by the outer before() — no second upload needed
+            // Reuse blueImageUuid set by the outer before() — no second upload needed
             cy.apollo({
                 mutationFile: 'graphql/jcr/mutation/addNode.graphql',
                 variables: {
@@ -200,7 +204,7 @@ describe('Bootstrap5 — Carousel', () => {
                     primaryNodeType: 'bootstrap5nt:carouselItem',
                     properties: [
                         {name: 'jcr:title', value: 'Fade Slide', language: 'en'},
-                        {name: 'image', value: sharedImageUuid, type: 'WEAKREFERENCE'}
+                        {name: 'image', value: blueImageUuid, type: 'WEAKREFERENCE'}
                     ]
                 }
             })
