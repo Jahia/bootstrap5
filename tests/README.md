@@ -185,7 +185,7 @@ Covers `bootstrap5nt:carousel` + `bootstrap5nt:carouselItem`.
 
 - Carousel wrapper (`.carousel`) renders
 - Two slides render as `.carousel-item`, first slide has `.active`
-- Slide image renders
+- Slide image renders (distinct colored images per slide for visual isolation)
 - Indicators (`.carousel-indicators`) render when `useIndicators=true`
 - Prev/next controls render when `useLeftAndRightControls=true`
 - `ride=false` → no `data-bs-ride` attribute; `ride=true` → `data-bs-ride="carousel"`
@@ -195,18 +195,22 @@ Covers `bootstrap5nt:carousel` + `bootstrap5nt:carouselItem`.
 ### 07 — Grid (`07-grid.cy.ts`)
 Covers `bootstrap5nt:grid` with predefined, custom and section layout variants.
 
-- Predefined 6/6 split renders two `.col-md-6` columns inside `.row`
-- `containerType=container` wraps the row in `.container`
-- Custom grid (`gridClasses=col-8,col-4`) renders matching column classes
-- Section wrapper (`bootstrap5mix:sectionWrapper`) renders `<section>` element
-- Columns accept droppable child content
+- Predefined 6/6 split renders two `.col-md-6` columns inside `.row` within `.container`
+- Each column renders its droppable child content (distinct text per column)
+- Custom grid (`gridClasses=col-8,col-4`) renders matching column classes with child content
+- Section wrapper (`bootstrap5mix:sectionWrapper`) renders `<section>` element with configured `id`
 
 ### 08 — Navbar (`08-navbar.cy.ts`)
 Covers `bootstrap5nt:navbar`.
 
 - Navbar wrapper (`.navbar`), brand link (`.navbar-brand`), toggler (`.navbar-toggler`), and collapsible region (`.collapse.navbar-collapse`) render
 - Navigation links (`.nav-item`, `.nav-link`) render
-- `navClass` override → `navbar-dark bg-dark` classes applied
+- Multi-level navigation: top-level item with children renders as a dropdown (`.dropdown`)
+- Dropdown toggle uses `data-bs-toggle="dropdown"`; dropdown menu is present in DOM
+- Second-level pages render as `.dropdown-item` inside the menu
+- Third-level pages render inside a `.dropend` submenu
+- Leaf pages at top level render as plain `.nav-item` (no dropdown)
+- `navClass=navbar-dark bg-dark` → `.navbar-dark` and `.bg-dark` classes applied
 - `addContainerWithinTheNavbar=true` → `.container` inside `<nav>`; `false` → no `.container`
 
 ### 09 — Text (`09-text.cy.ts`)
@@ -234,7 +238,8 @@ Covers `bootstrap5nt:figure`.
 - `<figure class="figure">` wrapper renders
 - Image renders as `img.figure-img`
 - Image is responsive (`img-fluid`) by default
-- `<figcaption class="figure-caption">` renders when a title is set, with the correct text
+- `<figcaption class="figure-caption">` renders when a title is set and contains the caption text
+- Each context uses a distinct colored image (blue / green / orange) separated by `<hr>` dividers so tests target the correct figure instance
 - `captionAlignment=text-center` → `figcaption.figure-caption.text-center`
 - `thumbnails=true` → `img.img-thumbnail`
 - `responsive=false` → image does not have `img-fluid`
