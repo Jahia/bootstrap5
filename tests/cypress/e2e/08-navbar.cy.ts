@@ -59,6 +59,17 @@ describe('Bootstrap5 — Navbar', () => {
                 includeSubTree: true
             }
         })
+        // Explicitly publish the level-3 subtree so it reaches the live workspace
+        // before the first page visit caches the navbar Groovy output
+        cy.apollo({
+            mutationFile: 'graphql/jcr/mutation/publishNode.graphql',
+            variables: {
+                pathOrId: `/sites/${siteKey}/home/nav-section-a/nav-page-a2`,
+                languages: ['en'],
+                publishSubNodes: true,
+                includeSubTree: true
+            }
+        })
         cy.apollo({
             mutationFile: 'graphql/jcr/mutation/publishNode.graphql',
             variables: {
@@ -68,7 +79,7 @@ describe('Bootstrap5 — Navbar', () => {
                 includeSubTree: true
             }
         })
-        cy.wait(2000)
+        cy.wait(4000)
     })
 
     after(() => {
