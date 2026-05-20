@@ -88,7 +88,14 @@
                 <fmt:message key="bootstrap5nt_button.noUrl"/>
             </span>
         </c:if>
-        <a href="${linkUrl}" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}">${title}</a>
+        <c:choose>
+            <c:when test="${(empty linkUrl or linkUrl eq '#') and not renderContext.editMode}">
+                <button type="button" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}" disabled>${title}</button>
+            </c:when>
+            <c:otherwise>
+                <a href="${linkUrl}" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}">${title}</a>
+            </c:otherwise>
+        </c:choose>
     </c:when>
     <c:when test="${buttonType eq 'modal'}">
         <c:set var="modalSize" value=" modal-${currentNode.properties.modalSize.string}"/>
@@ -110,7 +117,7 @@
         </button>
 
         <%-- Modal id is derived from the node identifier to guarantee uniqueness when multiple buttons exist on the page --%>
-        <div class="modal fade" id="modal-${currentNode.identifier}" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="modalLabel_${currentNode.identifier}" aria-hidden="${renderContext.editMode ? 'false' : 'true'}"<c:if test="${staticBackdrop}"><c:out value=" "
+        <div class="modal fade" id="modal-${currentNode.identifier}" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="modalLabel_${currentNode.identifier}"<c:if test="${staticBackdrop}"><c:out value=" "
         /> data-bs-backdrop="static" data-bs-keyboard="false"</c:if>>
             <div class="modal-dialog ${verticallyCentered} modal-dialog-scrollable ${modalSize}"<c:if test='${renderContext.editMode}'> style="margin:5px;"</c:if>>
                 <div class="modal-content">
@@ -189,8 +196,15 @@
         <c:set var="placement" value="${currentNode.properties.placement.string}"/>
 
         <button class="${buttonClass}"  type="button" ${aria} data-bs-toggle="offcanvas" data-bs-target="#offcanvas_${currentNode.identifier}" aria-controls="offcanvas_${currentNode.identifier}">${title}</button>
+        <c:set var="OffcanvasTitle" value="${currentNode.properties.OffcanvasTitle.string}"/>
+        <c:choose>
+            <c:when test="${not empty OffcanvasTitle}">
         <div class="offcanvas offcanvas-${placement}" data-bs-scroll="${enableBodyScrolling}" data-bs-backdrop="${enableBackdrop}" tabindex="-1" id="offcanvas_${currentNode.identifier}" aria-labelledby="offcanvas_${currentNode.identifier}Label">
-            <c:set var="OffcanvasTitle" value="${currentNode.properties.OffcanvasTitle.string}"/>
+            </c:when>
+            <c:otherwise>
+        <div class="offcanvas offcanvas-${placement}" data-bs-scroll="${enableBodyScrolling}" data-bs-backdrop="${enableBackdrop}" tabindex="-1" id="offcanvas_${currentNode.identifier}" aria-label="${fn:escapeXml(title)}">
+            </c:otherwise>
+        </c:choose>
             <c:if test="${! empty OffcanvasTitle}">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvas_${currentNode.identifier}Label">${OffcanvasTitle}</h5>

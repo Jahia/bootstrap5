@@ -84,6 +84,7 @@
                 </c:otherwise>
             </c:choose>
 
+                <nav aria-label="Pagination">
                 <ul class="pagination ${layout} ${align}">
                     <%-- All current URL params are forwarded to keep search/filter state; only pagination-specific
                          params (beginid, endid, pagesizeid, and src_* for search mode) are excluded and rebuilt --%>
@@ -159,14 +160,12 @@
                                 </c:if>
                             </c:url>
                             <li class="page-item">
-                                <a class="page-link" href="${paginationPageUrl}">${i}</a>
+                                <a class="page-link" href="${paginationPageUrl}" aria-label="Page ${i}">${i}</a>
                             </li>
                         </c:if>
                         <c:if test="${i == moduleMap.currentPage}">
-                            <li class="page-item active">
-                                <span class="page-link">${i}
-                                    <span class="visually-hidden">(current)</span>
-                                </span>
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">${i}</span>
                             </li>
                         </c:if>
                     </c:forEach>
@@ -201,6 +200,7 @@
                         </a>
                     </li>
                 </ul>
+                </nav>
             <c:set target="${moduleMap}" property="usePagination" value="false"/>
             <c:remove var="listTemplate"/>
         </c:if>

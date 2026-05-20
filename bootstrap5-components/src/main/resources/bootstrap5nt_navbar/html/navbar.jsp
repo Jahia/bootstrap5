@@ -127,11 +127,26 @@
                 <c:when test="${! empty brandImageMobile}">
                     <c:url var="brandImageMobileUrl" value="${brandImageMobile.url}" context="/"/>
                     <%-- Desktop image: hidden below the expand breakpoint; mobile image: hidden at or above it. --%>
-                    <img src="${brandImageUrl}" class="align-top d-none d-${expand}-inline-block" alt="">
-                    <img src="${brandImageMobileUrl}" class="align-top d-inline-block d-${expand}-none" alt="">
+                    <c:choose>
+                        <c:when test="${empty brandText}">
+                            <img src="${brandImageUrl}" class="align-top d-none d-${expand}-inline-block" alt="${fn:escapeXml(siteNode.displayableName)}">
+                            <img src="${brandImageMobileUrl}" class="align-top d-inline-block d-${expand}-none" alt="${fn:escapeXml(siteNode.displayableName)}">
+                        </c:when>
+                        <c:otherwise>
+                            <img src="${brandImageUrl}" class="align-top d-none d-${expand}-inline-block" alt="">
+                            <img src="${brandImageMobileUrl}" class="align-top d-inline-block d-${expand}-none" alt="">
+                        </c:otherwise>
+                    </c:choose>
                 </c:when>
                 <c:otherwise>
-                    <img src="${brandImageUrl}" class="d-inline-block align-top" alt="">
+                    <c:choose>
+                        <c:when test="${empty brandText}">
+                            <img src="${brandImageUrl}" class="d-inline-block align-top" alt="${fn:escapeXml(siteNode.displayableName)}">
+                        </c:when>
+                        <c:otherwise>
+                            <img src="${brandImageUrl}" class="d-inline-block align-top" alt="">
+                        </c:otherwise>
+                    </c:choose>
                 </c:otherwise>
             </c:choose>
         </c:if>

@@ -40,7 +40,7 @@
             <c:forEach items="${functions:reverse(pageNodes)}" var="pageNode" varStatus="status">
                 <c:choose>
                     <c:when test="${jcr:findDisplayableNode(pageNode, renderContext) ne pageNode}">
-                        <li class="breadcrumb-item"><a href="#"><c:out value="${pageNode.displayableName}"/></a></li>
+                        <li class="breadcrumb-item"><span><c:out value="${pageNode.displayableName}"/></span></li>
                     </c:when>
                     <c:when test="${renderContext.mainResource.node.path ne pageNode.path}">
                         <li class="breadcrumb-item"><a href="<c:url value='${url.base}${pageNode.path}.html'/>"><c:out

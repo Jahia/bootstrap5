@@ -73,33 +73,34 @@
                 </button>
             </c:when>
             <c:otherwise>
-                <a href="#privacyModal_${currentNode.identifier}" <c:if test="${not empty htmlId}"> id="${htmlId}"</c:if>
-                   role="button" class="${cssClass}"
+                <button type="button" <c:if test="${not empty htmlId}"> id="${htmlId}"</c:if>
+                   class="${cssClass}"
+                   data-bs-toggle="modal" data-bs-target="#privacyModal_${currentNode.identifier}"
                    onclick="manageWemPrivacyInstances['${currentNode.identifier}'].openModal(true)">
                         ${privacyModalButtonLabel}
-                </a>
+                </button>
             </c:otherwise>
         </c:choose>
 
 
-        <div id="privacyModal_${currentNode.identifier}" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div id="privacyModal_${currentNode.identifier}" class="modal fade" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="privacyModal_${currentNode.identifier}-title" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog wem-privacy-manager" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" id="closeDialogTopButton_${currentNode.identifier}" hidden aria-label="Close" onclick="manageWemPrivacyInstances['${currentNode.identifier}'].closeModal()">&times;</button>
+                        <button type="button" class="close" id="closeDialogTopButton_${currentNode.identifier}" aria-label="Close" onclick="manageWemPrivacyInstances['${currentNode.identifier}'].closeModal()">&times;</button>
 
                         <fmt:message var="privacyModalTitle" key="wemnt_privacySettingsModal.title.privacy"/>
                         <c:if test="${not empty currentNode.properties['wem:privacyModalTitle']}">
                             <c:set var="privacyModalTitle" value="${currentNode.properties['wem:privacyModalTitle'].string}"/>
                         </c:if>
-                        <h4 class="modal-title">${privacyModalTitle}</h4>
+                        <h4 class="modal-title" id="privacyModal_${currentNode.identifier}-title">${privacyModalTitle}</h4>
                     </div>
 
                     <div class="modal-body">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs" role="tablist" id="privacyTabs_${currentNode.identifier}" aria-label="Privacy settings">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-consents-${currentNode.identifier}" role="tab" data-bs-toggle="tab" data-bs-target="#consents_${currentNode.identifier}" aria-controls="consents_${currentNode.identifier}" aria-selected="true">
+                                <button class="nav-link active" id="tab-consents-${currentNode.identifier}" role="tab" tabindex="0" data-bs-toggle="tab" data-bs-target="#consents_${currentNode.identifier}" aria-controls="consents_${currentNode.identifier}" aria-selected="true">
                                     <fmt:message key="wemnt_privacySettingsModal.label.consents"/>
                                 </button>
                             </li>
@@ -178,7 +179,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" id="closeDialogLowerButton_${currentNode.identifier}" hidden aria-label="Close" onclick="manageWemPrivacyInstances['${currentNode.identifier}'].closeModal()">
+                        <button type="button" class="btn btn-default" id="closeDialogLowerButton_${currentNode.identifier}" aria-label="Close" onclick="manageWemPrivacyInstances['${currentNode.identifier}'].closeModal()">
                             <fmt:message key="label.close"/>
                         </button>
                         <p class="text-danger" hidden="true" id="incompleteConsentsWarning_${currentNode.identifier}"><fmt:message key="wemnt_privacySettingsModal.error.incompleteConsents"/></p>

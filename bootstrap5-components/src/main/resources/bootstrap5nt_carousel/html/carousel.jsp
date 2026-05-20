@@ -72,7 +72,7 @@
     </c:if>
 </c:set>
 
-<div id="carousel_${currentNode.identifier}" class="carousel${renderContext.editMode?'edit':' '} slide${carouselClass}${variant}" ${options} >
+<div id="carousel_${currentNode.identifier}" class="carousel${renderContext.editMode?'edit':' '} slide${carouselClass}${variant}" aria-roledescription="carousel" aria-label="${fn:escapeXml(currentNode.displayableName)}" ${options} >
     <%-- Indicators --%>
     <c:if test="${useIndicators && ! renderContext.editMode}">
         <div class="carousel-indicators">
@@ -85,6 +85,16 @@
                 </button>
             </c:forEach>
         </div>
+    </c:if>
+
+    <c:if test="${ride}">
+    <button type="button"
+            class="carousel-pause-btn visually-hidden-focusable"
+            aria-label="Pause slideshow"
+            data-bs-target="#carousel_${currentNode.identifier}"
+            onclick="var c=document.getElementById('carousel_${currentNode.identifier}'); var paused=this.getAttribute('data-paused')==='true'; if(paused){bootstrap.Carousel.getInstance(c).cycle();this.setAttribute('aria-label','Pause slideshow');this.setAttribute('data-paused','false');}else{bootstrap.Carousel.getInstance(c).pause();this.setAttribute('aria-label','Play slideshow');this.setAttribute('data-paused','true');}">
+        Pause
+    </button>
     </c:if>
 
     <%-- Wrapper for slides --%>

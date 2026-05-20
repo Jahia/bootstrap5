@@ -49,14 +49,13 @@
     <c:otherwise>
 
         <%-- data-bs-interval overrides the carousel-level interval for this slide when set --%>
-        <div class="carousel-item${currentStatus}${carouselItemClass}" <c:if test="${! empty interval}"><c:out value=" "/> data-bs-interval="${interval}"</c:if>>
+        <div class="carousel-item${currentStatus}${carouselItemClass}" aria-roledescription="slide" aria-label="${fn:escapeXml(title)}" <c:if test="${! empty interval}"><c:out value=" "/> data-bs-interval="${interval}"</c:if>>
             <c:if test="${! empty imageNode}">
                 <c:url var="imageUrl" value="${imageNode.url}" context="/"/>
                 <img src="${imageUrl}" class="d-block w-100" alt="${fn:escapeXml(title)}"/>
             </c:if>
             <c:if test="${! empty title || ! empty caption}">
-                <%-- d-none d-md-block: caption is intentionally hidden on small screens --%>
-                <div class="carousel-caption d-none d-md-block">
+                <div class="carousel-caption d-md-block">
                     <c:if test="${not empty title}">
                         <h3${titleClass}>${title}</h3>
                     </c:if>

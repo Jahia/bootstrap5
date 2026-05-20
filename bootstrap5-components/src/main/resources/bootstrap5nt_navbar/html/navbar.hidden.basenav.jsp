@@ -160,8 +160,7 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                                             </c:when>
                                         </c:choose>
                                         <a class="dropdown-item ${page2Active? ' active' :''}"
-                                           href="${page2Url}">${page2Title} <c:if test="${page2Active}"><span
-                                                class="visually-hidden">(current)</span></c:if></a>
+                                           href="${page2Url}"${page2Active ? ' aria-current="page"' : ''}>${page2Title}</a>
                                     </c:if>
                                     <c:remove var="page2Active"/>
                                     <c:remove var="page2Url"/>
@@ -172,8 +171,7 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                     </c:when>
                     <c:otherwise>
                         <li class="${liClass}${page1Active? ' active' :''}">
-                            <a class="${navLinkClass}" href="${page1Url}">${page1Title} <c:if
-                                    test="${page1Active}"><span class="visually-hidden">(current)</span></c:if></a>
+                            <a class="${navLinkClass}" href="${page1Url}"${page1Active ? ' aria-current="page"' : ''}>${page1Title}</a>
                         </li>
                     </c:otherwise>
                 </c:choose>

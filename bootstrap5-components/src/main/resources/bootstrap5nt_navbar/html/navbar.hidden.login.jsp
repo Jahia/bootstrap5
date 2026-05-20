@@ -90,9 +90,9 @@
         <ul class="${loginMenuULClass}">
             <li class="nav-item">
                 <%--<a class="nav-link p-2 login" href="${url.login}" >--%>
-                <a class="nav-link py-2 login" href="#" role="button" data-bs-toggle="modal" data-bs-target="#login-${currentNode.identifier}">
+                <button class="nav-link py-2 login btn btn-link" type="button" data-bs-toggle="modal" data-bs-target="#login-${currentNode.identifier}">
                     <fmt:message key="bootstrap5nt_navbar.label.login"/>
-                </a>
+                </button>
             </li>
         </ul>
     </c:otherwise>
@@ -177,7 +177,7 @@
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><fmt:message key="bootstrap5nt_navbar.label.close"/></button>
                     <button type="submit" name="loginButton" class="btn btn-primary"><fmt:message key='bootstrap5nt_navbar.label.login'/></button>
                 </div>
 
