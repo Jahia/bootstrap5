@@ -159,12 +159,65 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                                                 </c:if>
                                             </c:when>
                                         </c:choose>
-                                        <a class="dropdown-item ${page2Active? ' active' :''}"
-                                           href="${page2Url}"${page2Active ? ' aria-current="page"' : ''}>${page2Title}</a>
+                                        <c:set var="level3Pages" value="${jcr:getChildrenOfType(level2Page, 'jmix:navMenuItem')}"/>
+                                        <c:set var="hasLevel3Pages" value="${fn:length(level3Pages) > 0}"/>
+                                        <c:choose>
+                                            <c:when test="${hasLevel3Pages}">
+                                                <li class="dropend">
+                                                    <a class="dropdown-item dropdown-toggle${page2Active ? ' active' : ''}"
+                                                       href="${page2Url}"
+                                                       data-bs-toggle="dropdown"
+                                                       aria-expanded="false"
+                                                       id="dropend-${currentNode.identifier}-${level2Page.identifier}">${page2Title}</a>
+                                                    <ul class="dropdown-menu submenu"
+                                                        aria-labelledby="dropend-${currentNode.identifier}-${level2Page.identifier}">
+                                                        <c:forEach items="${level3Pages}" var="level3Page">
+                                                            <c:choose>
+                                                                <c:when test="${jcr:isNodeType(level3Page, 'jnt:navMenuText')}">
+                                                                    <c:set var="page3Url" value="#"/>
+                                                                    <c:set var="page3Title" value="${level3Page.displayableName}"/>
+                                                                </c:when>
+                                                                <c:when test="${jcr:isNodeType(level3Page, 'jnt:externalLink')}">
+                                                                    <c:url var="page3Url" value="${level3Page.properties['j:url'].string}"/>
+                                                                    <c:set var="page3Title" value="${level3Page.displayableName}"/>
+                                                                </c:when>
+                                                                <c:when test="${jcr:isNodeType(level3Page, 'jnt:page')}">
+                                                                    <c:url var="page3Url" value="${level3Page.url}"/>
+                                                                    <c:set var="page3Title" value="${level3Page.displayableName}"/>
+                                                                    <c:if test="${fn:contains(renderContext.mainResource.path, level3Page.path)}">
+                                                                        <c:set var="page3Active" value="true"/>
+                                                                    </c:if>
+                                                                </c:when>
+                                                                <c:when test="${jcr:isNodeType(level3Page, 'jnt:nodeLink')}">
+                                                                    <c:url var="page3Url" value="${level3Page.properties['j:node'].node.url}"/>
+                                                                    <c:set var="page3Title" value="${level3Page.properties['jcr:title'].string}"/>
+                                                                    <c:if test="${empty page3Title}">
+                                                                        <c:set var="page3Title" value="${level3Page.properties['j:node'].node.displayableName}"/>
+                                                                    </c:if>
+                                                                </c:when>
+                                                            </c:choose>
+                                                            <li>
+                                                                <a class="dropdown-item${page3Active ? ' active' : ''}"
+                                                                   href="${page3Url}"${page3Active ? ' aria-current="page"' : ''}>${page3Title}</a>
+                                                            </li>
+                                                            <c:remove var="page3Active"/>
+                                                            <c:remove var="page3Url"/>
+                                                            <c:remove var="page3Title"/>
+                                                        </c:forEach>
+                                                    </ul>
+                                                </li>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="dropdown-item${page2Active ? ' active' : ''}"
+                                                   href="${page2Url}"${page2Active ? ' aria-current="page"' : ''}>${page2Title}</a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:if>
                                     <c:remove var="page2Active"/>
                                     <c:remove var="page2Url"/>
                                     <c:remove var="page2Title"/>
+                                    <c:remove var="level3Pages"/>
+                                    <c:remove var="hasLevel3Pages"/>
                                 </c:forEach>
                             </div>
                         </li>
