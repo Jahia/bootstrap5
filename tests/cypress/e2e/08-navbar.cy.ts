@@ -43,7 +43,8 @@ describe('Bootstrap5 — Navbar', () => {
                 name: 'navbar',
                 primaryNodeType: 'bootstrap5nt:navbar',
                 properties: [
-                    {name: 'root', value: 'homePage'}
+                    {name: 'root', value: 'homePage'},
+                    {name: 'maxlevel', value: '3'}
                 ]
             }
         })

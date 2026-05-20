@@ -36,24 +36,26 @@ def renderMenu(menuNode, currentLevel, ulCssClass, liCssClass, navLinkCssClass, 
  * Renders a dropdown menu item that contains submenus.
  */
 def renderDropdownMenuItem(menuItem, currentLevel, ulCssClass, liCssClass, navLinkCssClass, maxDepth, menuItemDetails, htmlBuilder) {
-    def currentIndicator = menuItemDetails.isCurrent ? " <span class='visually-hidden'>(current)</span>" : ""
+    def currentAttr = menuItemDetails.isCurrent ? " aria-current='page'" : ""
 
     if (currentLevel == 1) {
         htmlBuilder << """
             <li class='${liCssClass} dropdown'>
                 <a class='${navLinkCssClass} dropdown-toggle${menuItemDetails.activeClass}'
-                   id='dropdown-${menuItem.identifier}' data-bs-toggle='dropdown' href='#'>
-                    ${menuItemDetails.menuItemTitle}${currentIndicator}
+                   id='dropdown-${menuItem.identifier}' data-bs-toggle='dropdown' href='#'${currentAttr}>
+                    ${menuItemDetails.menuItemTitle}
                 </a>
                 <ul class='dropdown-menu' aria-labelledby='dropdown-${menuItem.identifier}'>
         """
     } else {
         htmlBuilder << """
             <li class='dropend'>
-                <a class='dropdown-item dropdown-toggle' href='#'>
-                    ${menuItemDetails.menuItemTitle}${currentIndicator}
+                <a class='dropdown-item dropdown-toggle' href='${menuItemDetails.menuItemUrl}'
+                   data-bs-toggle='dropdown' aria-expanded='false'
+                   id='dropend-${menuItem.identifier}'${currentAttr}>
+                    ${menuItemDetails.menuItemTitle}
                 </a>
-                <ul class='submenu dropdown-menu'>
+                <ul class='submenu dropdown-menu' aria-labelledby='dropend-${menuItem.identifier}'>
         """
     }
 
@@ -70,20 +72,20 @@ def renderDropdownMenuItem(menuItem, currentLevel, ulCssClass, liCssClass, navLi
  * Renders a simple menu item without submenus.
  */
 def renderSimpleMenuItem(menuItem, currentLevel, liCssClass, navLinkCssClass, menuItemDetails, htmlBuilder) {
-    def currentIndicator = menuItemDetails.isCurrent ? " <span class='visually-hidden'>(current)</span>" : ""
+    def currentAttr = menuItemDetails.isCurrent ? " aria-current='page'" : ""
     if (currentLevel == 1) {
         htmlBuilder << """
             <li class='${liCssClass}'>
-                <a class='${navLinkCssClass}${menuItemDetails.activeClass}' href='${menuItemDetails.menuItemUrl}'>
-                    ${menuItemDetails.menuItemTitle}${currentIndicator}
+                <a class='${navLinkCssClass}${menuItemDetails.activeClass}' href='${menuItemDetails.menuItemUrl}'${currentAttr}>
+                    ${menuItemDetails.menuItemTitle}
                 </a>
             </li>
         """
     } else {
         htmlBuilder << """
             <li>
-                <a class='dropdown-item${menuItemDetails.activeClass}' href='${menuItemDetails.menuItemUrl}'>
-                    ${menuItemDetails.menuItemTitle}${currentIndicator}
+                <a class='dropdown-item${menuItemDetails.activeClass}' href='${menuItemDetails.menuItemUrl}'${currentAttr}>
+                    ${menuItemDetails.menuItemTitle}
                 </a>
             </li>
         """
