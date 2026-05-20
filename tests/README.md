@@ -226,7 +226,7 @@ Covers `bootstrap5nt:breadcrumb`.
 > `fn:length(pageNodes) > 1` condition). Tests use a 3-level hierarchy:
 > `/home/breadcrumb-l1/breadcrumb-l2/breadcrumb-test`.
 
-- `ol.breadcrumb` renders with an `aria-label` attribute
+- `<nav aria-label="…">` wraps `ol.breadcrumb` (WCAG 4.1.2 — landmark with accessible name)
 - Home link is present
 - Intermediate level is present
 - Active (current) page item has `.active` and `aria-current="page"`

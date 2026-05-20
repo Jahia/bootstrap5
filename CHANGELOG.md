@@ -7,6 +7,27 @@ Version numbers follow `major.minor.patch`: `2.x.x` targets Jahia 8, `1.x.x` tar
 
 ---
 
+## [2.4.5] — 2026-05-20
+
+### Added
+- **Navbar** — third-level pages now render as Bootstrap 5 dropend submenus (`.dropend` + `.submenu.dropdown-menu`), supported in both the Groovy multilevel renderer and the legacy JSP view
+
+### Fixed
+- **Accordion** — `aria-expanded` was hardcoded to `"true"`; now reflects actual open/closed state
+- **Breadcrumb** — `aria-label` moved from `<ol>` to the wrapping `<nav>` element (WCAG 4.1.2); non-navigable items replaced `<a href="#">` with `<span>` to remove dead links
+- **Button** — removed invalid `role="button"` from `<a>` elements; modal trigger gains `aria-haspopup="dialog"` and `aria-modal="true"`; collapse trigger exposes dynamic `aria-expanded`; offcanvas uses conditional `aria-labelledby`/`aria-label`; disabled state uses `<button disabled>` instead of `<a href="#">`
+- **Carousel** — indicators converted from `<ol>/<li>` to `<div>/<button>` with `aria-label="Slide N"` and `aria-current="true"`; prev/next controls converted to `<button>` with `data-bs-target`; outer div gains `aria-roledescription="carousel"` and `aria-label`; pause/play toggle added
+- **CarouselItem** — added `alt` text, `aria-roledescription="slide"`, and `aria-label` per slide; caption visible to AT on all viewports
+- **Navbar login** — duplicate input `id` attributes eliminated; visually-hidden `<label>` elements added; login trigger converted from `<a role="button">` to `<button>`; all decorative SVGs gain `aria-hidden="true" focusable="false"`
+- **Navbar multilevel (Groovy)** — `aria-current="page"` on active links replaces the deprecated visually-hidden span; dropend toggle includes `href`, `data-bs-toggle`, `aria-expanded`, and `id`; submenu `<ul>` gains `aria-labelledby`
+- **Navbar multilevel (JSP)** — `aria-current="page"` on active links; removed `aria-haspopup="true"` from dropdown toggles; removed invalid `aria-labelledby` from `<div class="dropdown-menu">`
+- **Navbar wrapper** — `aria-hidden="true"` on toggler icon span; conditional `alt` on brand image
+- **Pagination** — wrapped `<ul class="pagination">` in `<nav aria-label="Pagination">`; numbered links gain `aria-label="Page N"`; active item gains `aria-current="page"`
+- **Privacy settings modal** — converted BS4 tab markup to BS5 (`data-bs-toggle`; `<button>` tabs); `aria-modal="true"`, `aria-labelledby`, and `tabindex="-1"` on modal; tab panels gain `aria-labelledby` and `tabindex="0"`; duplicate `id` (`#privacyTabs_…`) corrected
+- **Tabs** — `aria-selected` leading-space typo fixed; `tabindex` added to tab buttons and panels; `aria-label` on tablist; `aria-labelledby` on tab panels
+
+---
+
 ## [2.4.4] — 2026-03-21
 
 ### Updated
