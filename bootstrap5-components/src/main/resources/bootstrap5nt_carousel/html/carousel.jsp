@@ -75,11 +75,16 @@
 <div id="carousel_${currentNode.identifier}" class="carousel${renderContext.editMode?'edit':' '} slide${carouselClass}${variant}" ${options} >
     <%-- Indicators --%>
     <c:if test="${useIndicators && ! renderContext.editMode}">
-        <ol class="carousel-indicators">
+        <div class="carousel-indicators">
             <c:forEach items="${items}" var="item" varStatus="status">
-                <li data-bs-target="#carousel_${currentNode.identifier}" data-bs-slide-to="${status.index}" <c:if test='${status.first}'>class="active"</c:if>></li>
+                <button type="button"
+                        data-bs-target="#carousel_${currentNode.identifier}"
+                        data-bs-slide-to="${status.index}"
+                        aria-label="Slide ${status.index + 1}"
+                        <c:if test='${status.first}'>class="active" aria-current="true"</c:if>>
+                </button>
             </c:forEach>
-        </ol>
+        </div>
     </c:if>
 
     <%-- Wrapper for slides --%>
@@ -96,14 +101,16 @@
     <%-- Controls --%>
     <c:if test="${useLeftAndRightControls && ! renderContext.editMode}">
 
-        <a class="carousel-control-prev" href="#carousel_${currentNode.identifier}" role="button" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button"
+                data-bs-target="#carousel_${currentNode.identifier}" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden"><fmt:message key="bootstrap5nt_carousel.previous"/></span>
-        </a>
-        <a class="carousel-control-next" href="#carousel_${currentNode.identifier}" role="button" data-bs-slide="next">
+        </button>
+        <button class="carousel-control-next" type="button"
+                data-bs-target="#carousel_${currentNode.identifier}" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden"><fmt:message key="bootstrap5nt_carousel.next"/></span>
-        </a>
+        </button>
     </c:if>
 </div>
 

@@ -86,7 +86,7 @@
             <div class="modal-dialog wem-privacy-manager" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" id="closeDialogTopButton_${currentNode.identifier}" hidden="true" onclick="manageWemPrivacyInstances['${currentNode.identifier}'].closeModal()" aria-hidden="true">&times;</button>
+                        <button type="button" class="close" id="closeDialogTopButton_${currentNode.identifier}" hidden aria-label="Close" onclick="manageWemPrivacyInstances['${currentNode.identifier}'].closeModal()">&times;</button>
 
                         <fmt:message var="privacyModalTitle" key="wemnt_privacySettingsModal.title.privacy"/>
                         <c:if test="${not empty currentNode.properties['wem:privacyModalTitle']}">
@@ -97,29 +97,29 @@
 
                     <div class="modal-body">
                         <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist" id="#privacyTabs_${currentNode.identifier}">
-                            <li role="presentation" class="active">
-                                <a href="#consents_${currentNode.identifier}" aria-controls="home" role="tab" data-toggle="tab">
+                        <ul class="nav nav-tabs" role="tablist" id="privacyTabs_${currentNode.identifier}" aria-label="Privacy settings">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-consents-${currentNode.identifier}" role="tab" data-bs-toggle="tab" data-bs-target="#consents_${currentNode.identifier}" aria-controls="consents_${currentNode.identifier}" aria-selected="true">
                                     <fmt:message key="wemnt_privacySettingsModal.label.consents"/>
-                                </a>
+                                </button>
                             </li>
-                            <li role="presentation">
-                                <a href="#settings_${currentNode.identifier}" aria-controls="settings" role="tab" data-toggle="tab">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-settings-${currentNode.identifier}" role="tab" data-bs-toggle="tab" data-bs-target="#settings_${currentNode.identifier}" aria-controls="settings_${currentNode.identifier}" aria-selected="false" tabindex="-1">
                                     <fmt:message key="wemnt_privacySettingsModal.label.settings"/>
-                                </a>
+                                </button>
                             </li>
                         </ul>
 
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="consents_${currentNode.identifier}">
+                            <div role="tabpanel" class="tab-pane active" id="consents_${currentNode.identifier}" aria-labelledby="tab-consents-${currentNode.identifier}" tabindex="0">
                                 <div id="consentLoadNetworkError_${currentNode.identifier}" class="alert alert-danger">
                                     <fmt:message key="wemnt_privacySettingsModal.error.consentLoadNetworkError"/>
                                 </div>
                                 <div id="consents_list_${currentNode.identifier}">
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="settings_${currentNode.identifier}">
+                            <div role="tabpanel" class="tab-pane" id="settings_${currentNode.identifier}" aria-labelledby="tab-settings-${currentNode.identifier}" tabindex="0">
                                 <c:if test="${renderContext.editMode}">
                                     <div class="alert alert-info">
                                         <fmt:message key="wemnt_privacySettingsModal.info.buttonDisabled"/>
@@ -178,7 +178,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" id="closeDialogLowerButton_${currentNode.identifier}" hidden="true" onclick="manageWemPrivacyInstances['${currentNode.identifier}'].closeModal()" aria-hidden="true">
+                        <button type="button" class="btn btn-default" id="closeDialogLowerButton_${currentNode.identifier}" hidden aria-label="Close" onclick="manageWemPrivacyInstances['${currentNode.identifier}'].closeModal()">
                             <fmt:message key="label.close"/>
                         </button>
                         <p class="text-danger" hidden="true" id="incompleteConsentsWarning_${currentNode.identifier}"><fmt:message key="wemnt_privacySettingsModal.error.incompleteConsents"/></p>

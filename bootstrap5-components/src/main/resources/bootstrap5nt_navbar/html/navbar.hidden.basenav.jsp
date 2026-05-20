@@ -112,11 +112,10 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                         <li class="${liClass} ${page1Active? ' active' :''} dropdown">
                             <a class="${navLinkClass}${' '}dropdown-toggle ${page1Active? ' active' :''}" href="#"
                                id="navbarDropdownMen-${currentNode.identifier}-${level1Page.identifier}"
-                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                             data-bs-toggle="dropdown" aria-expanded="false">
                                     ${page1Title}
                             </a>
-                            <div class="dropdown-menu"
-                                 aria-labelledby="navbarDropdownMen-${currentNode.identifier}-${level1Page.identifier}">
+                            <div class="dropdown-menu">
                                 <a class="dropdown-item" href="${page1Url}">${page1Title}</a>
                                 <div class="dropdown-divider"></div>
                                 <c:forEach items="${level2Pages}" var="level2Page" varStatus="status">

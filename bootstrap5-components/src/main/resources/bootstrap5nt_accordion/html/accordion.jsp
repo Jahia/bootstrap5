@@ -24,7 +24,11 @@
 
 <div class="accordion-item">
     <h2 class="accordion-header" id="accordion-${currentNode.identifier}">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${currentNode.identifier}" aria-expanded="true" aria-controls="collapse-${currentNode.identifier}">
+        <button class="accordion-button${show eq ' show' ? '' : ' collapsed'}" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapse-${currentNode.identifier}"
+                aria-expanded="${show eq ' show' ? 'true' : 'false'}"
+                aria-controls="collapse-${currentNode.identifier}">
             ${title}
         </button>
     </h2>

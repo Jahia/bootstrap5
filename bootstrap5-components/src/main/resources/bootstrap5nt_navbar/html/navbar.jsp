@@ -141,7 +141,7 @@
     <button class="${togglerClass}" type="button" data-bs-toggle="collapse"
           data-bs-target="#navbar-${currentNode.identifier}" aria-controls="navbar-${currentNode.identifier}"
             aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon" aria-hidden="true"></span>
     </button>
 
     <div class="${divClass}" id="navbar-${currentNode.identifier}">

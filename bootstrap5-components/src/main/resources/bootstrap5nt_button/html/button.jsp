@@ -76,7 +76,7 @@
                 </c:if>
             </c:otherwise>
         </c:choose>
-        <a href="${linkUrl}" class="${buttonClass}" role="button" ${aria} id="button_${currentNode.identifier}">${title}</a>
+        <a href="${linkUrl}" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}">${title}</a>
     </c:when>
     <c:when test="${buttonType eq 'externalLink'}">
         <c:url var="linkUrl" value="${currentNode.properties.externalLink.string}"/>
@@ -88,7 +88,7 @@
                 <fmt:message key="bootstrap5nt_button.noUrl"/>
             </span>
         </c:if>
-        <a href="${linkUrl}" class="${buttonClass}" role="button" ${aria} id="button_${currentNode.identifier}">${title}</a>
+        <a href="${linkUrl}" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}">${title}</a>
     </c:when>
     <c:when test="${buttonType eq 'modal'}">
         <c:set var="modalSize" value=" modal-${currentNode.properties.modalSize.string}"/>
@@ -105,19 +105,19 @@
         <c:if test="${empty closeText}">
             <fmt:message key="bootstrap5nt_button.close" var="closeText"/>
         </c:if>
-        <button type="button" class="${buttonClass}" ${aria} data-bs-toggle="modal" data-bs-target="#modal-${currentNode.identifier}" id="button_${currentNode.identifier}">
+        <button type="button" class="${buttonClass}" ${aria} data-bs-toggle="modal" data-bs-target="#modal-${currentNode.identifier}" aria-haspopup="dialog" id="button_${currentNode.identifier}">
             ${title}
         </button>
 
         <%-- Modal id is derived from the node identifier to guarantee uniqueness when multiple buttons exist on the page --%>
-        <div class="modal fade" id="modal-${currentNode.identifier}" tabindex="-1" role="dialog" aria-labelledby="modalLabel_${currentNode.identifier}" aria-hidden="${renderContext.editMode ? 'false' : 'true'}"<c:if test="${staticBackdrop}"><c:out value=" "
+        <div class="modal fade" id="modal-${currentNode.identifier}" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="modalLabel_${currentNode.identifier}" aria-hidden="${renderContext.editMode ? 'false' : 'true'}"<c:if test="${staticBackdrop}"><c:out value=" "
         /> data-bs-backdrop="static" data-bs-keyboard="false"</c:if>>
             <div class="modal-dialog ${verticallyCentered} modal-dialog-scrollable ${modalSize}"<c:if test='${renderContext.editMode}'> style="margin:5px;"</c:if>>
                 <div class="modal-content">
                     <c:if test="${not empty modalTitle}">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel_${currentNode.identifier}">${modalTitle}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h5 class="modal-title" id="modalLabel_${currentNode.identifier}">${modalTitle}</h5>
                         </div>
                     </c:if>
                     <div class="modal-body">
@@ -141,7 +141,12 @@
         </c:if>
         <c:set var="show" value="${currentNode.properties.show.boolean ? ' show' : ''}"/>
 
-        <a href="#collapse-${currentNode.identifier}" class="${buttonClass}${show}" ${aria} role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="collapse-${currentNode.identifier}" id="button_${currentNode.identifier}">${title}</a>
+        <button type="button" class="${buttonClass}${show}" ${aria}
+                data-bs-toggle="collapse"
+                data-bs-target="#collapse-${currentNode.identifier}"
+                aria-expanded="${show eq ' show' ? 'true' : 'false'}"
+                aria-controls="collapse-${currentNode.identifier}"
+                id="button_${currentNode.identifier}">${title}</button>
 
         <div class="collapse" id="collapse-${currentNode.identifier}">
             <c:forEach items="${jcr:getChildrenOfType(currentNode, 'jmix:droppableContent')}" var="droppableContent">

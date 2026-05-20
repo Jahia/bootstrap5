@@ -46,12 +46,12 @@
     <c:set var="navItems">
         ${navItems}
         <li class="nav-item" role="presentation">
-            <button class="nav-link ${status.first?' active':''}" aria-selected="${status.first?' true':'false'}" data-bs-toggle="tab" data-bs-target="#${anchorName}" role="tab" aria-controls="${anchorName}">${droppableContent.displayableName}</button>
+            <button class="nav-link ${status.first?' active':''}" id="tab-btn-${anchorName}" aria-selected="${status.first ? 'true' : 'false'}" tabindex="${status.first ? '0' : '-1'}" data-bs-toggle="tab" data-bs-target="#${anchorName}" role="tab" aria-controls="${anchorName}">${droppableContent.displayableName}</button>
         </li>
     </c:set>
     <c:set var="tabPanes">
         ${tabPanes}
-        <div class="tab-pane  ${status.first?' active':''} ${fade ? ' fade' : ''} ${fade && status.first ? ' show' : ''}" id="${anchorName}" role="tabpanel">
+        <div class="tab-pane  ${status.first?' active':''} ${fade ? ' fade' : ''} ${fade && status.first ? ' show' : ''}" id="${anchorName}" role="tabpanel" aria-labelledby="tab-btn-${anchorName}" tabindex="0">
             <template:module node="${droppableContent}" editable="true"/>
         </div>
     </c:set>
@@ -59,7 +59,7 @@
 
 
 
-<ul class="nav ${type} ${align ne ' justify-content-start' ? align : ''}" id="tabs-${currentNode.identifier}" role="tablist">
+<ul class="nav ${type} ${align ne ' justify-content-start' ? align : ''}" id="tabs-${currentNode.identifier}" role="tablist" aria-label="${fn:escapeXml(currentNode.displayableName)}">
     ${navItems}
 </ul>
 <div class="tab-content">
