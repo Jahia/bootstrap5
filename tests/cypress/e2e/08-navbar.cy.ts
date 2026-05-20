@@ -42,6 +42,7 @@ describe('Bootstrap5 — Navbar', () => {
                 parentPathOrId: `/sites/${siteKey}/home/navbar-test/pagecontent`,
                 name: 'navbar',
                 primaryNodeType: 'bootstrap5nt:navbar',
+                mixins: ['bootstrap5mix:navbarGlobalSettings'],
                 properties: [
                     {name: 'root', value: 'homePage'},
                     {name: 'maxlevel', value: '3'}
