@@ -78,11 +78,10 @@ describe('Bootstrap5 — Breadcrumb', () => {
         deleteTestPage('breadcrumb-l1')
     })
 
-    it('renders the breadcrumb list (ol.breadcrumb with aria-label)', () => {
+    it('renders the breadcrumb list wrapped in <nav aria-label>', () => {
         cy.visit(testPageUrl)
-        // JSP renders <ol class="breadcrumb" aria-label="..."> directly — no <nav> wrapper
-        cy.get('ol.breadcrumb').should('exist')
-        cy.get('ol.breadcrumb').should('have.attr', 'aria-label')
+        cy.get('nav[aria-label]').should('exist')
+        cy.get('nav[aria-label] ol.breadcrumb').should('exist')
     })
 
     it('renders at least two breadcrumb items', () => {
