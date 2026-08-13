@@ -98,7 +98,7 @@
 <c:if test="${empty rootNode}">
     <c:set var="rootNode" value="${renderContext.site.home}"/>
 </c:if>
-<nav class="${navClass}">
+<nav class="${fn:escapeXml(navClass)}">
     <%-- Optional inner .container constrains navbar width and prevents dropdowns from overflowing the viewport. --%>
     <c:if test="${addContainerWithinTheNavbar}">
         <div class="container">
@@ -120,7 +120,7 @@
     </c:choose>
 
 
-    <a class="${brandLinkClass}" href="${rootNodeUrl}">
+    <a class="${fn:escapeXml(brandLinkClass)}" href="${rootNodeUrl}">
         <c:if test="${! empty brandImage}">
             <c:url var="brandImageUrl" value="${brandImage.url}" context="/"/>
             <c:choose>
@@ -153,13 +153,13 @@
         ${brandText}
     </a>
 
-    <button class="${togglerClass}" type="button" data-bs-toggle="collapse"
+    <button class="${fn:escapeXml(togglerClass)}" type="button" data-bs-toggle="collapse"
           data-bs-target="#navbar-${currentNode.identifier}" aria-controls="navbar-${currentNode.identifier}"
             aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon" aria-hidden="true"></span>
     </button>
 
-    <div class="${divClass}" id="navbar-${currentNode.identifier}">
+    <div class="${fn:escapeXml(divClass)}" id="navbar-${currentNode.identifier}">
         <template:include view="basenav-multilevel"/>
         <c:if test="${addLoginButton}">
             <%--<template:include view="hidden.login"/>--%>

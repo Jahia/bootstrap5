@@ -7,6 +7,18 @@ Version numbers follow `major.minor.patch`: `2.x.x` targets Jahia 8, `1.x.x` tar
 
 ---
 
+## [Unreleased]
+
+### Fixed
+
+- **Grid** — the section `style` attribute is now escaped, aligning it with the sibling `id`, `class`, `role` and `aria-label` attributes on the same tag
+- **Card** — the `cssClass`, `cardHeaderCssClass` and `cardBodyCssClass` values from `bootstrap5mix:cardAdvancedSettings` are now escaped
+- **Navbar** — `navClass`, `brandLinkClass`, `togglerClass` and `divClass` are now escaped in the wrapper view; `ulClass`, `liClass` and `navLinkClass` in the legacy JSP view; `loginMenuULClass` in the login view
+- **Navbar multilevel (Groovy)** — CSS class properties, menu item titles and menu item URLs are now escaped before interpolation; attributes there are single-quoted, so the escaping covers `'` as well
+- **Privacy settings modal** — the `cssClass` and `htmlId` values are now escaped
+
+---
+
 ## [2.4.5] — 2026-05-20
 
 ### Added

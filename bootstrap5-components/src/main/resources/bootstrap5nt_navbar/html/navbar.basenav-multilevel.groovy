@@ -124,8 +124,8 @@ def getMenuItemDetails(menuItem) {
             isActive     : isActive,
             isCurrent    : isCurrent,
             activeClass  : activeClass,
-            menuItemUrl  : getMenuItemUrl(menuItem),
-            menuItemTitle: menuItem.displayableName ?: "Untitled"
+            menuItemUrl  : escapeHtml(getMenuItemUrl(menuItem)),
+            menuItemTitle: escapeHtml(menuItem.displayableName ?: "Untitled")
     ]
 }
 
@@ -176,6 +176,20 @@ def getStartNode() {
     }
 }
 
+/**
+ * Escapes a value for inclusion in the generated markup.
+ * The single quote is escaped too: the attributes emitted below are single-quoted.
+ */
+def escapeHtml(value) {
+    if (value == null) return ""
+    return value.toString()
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace('"', "&quot;")
+            .replace("'", "&#39;")
+}
+
 def getStringProperty(node, propertyName, defaultValue) {
     return node.hasProperty(propertyName) ? (node.getProperty(propertyName)?.string?.trim() ?: defaultValue) : defaultValue
 }
@@ -184,10 +198,11 @@ def getIntegerProperty(node, propertyName, defaultValue) {
     return node.hasProperty(propertyName) ? (node.getProperty(propertyName)?.string?.toInteger() ?: defaultValue) : defaultValue
 }
 
-// Retrieve CSS classes with default values
-String ulCssClass = getStringProperty(currentNode, "ulClass", "navbar-nav me-auto")
-String liCssClass = getStringProperty(currentNode, "liClass", "nav-item")
-String navLinkCssClass = getStringProperty(currentNode, "navLinkClass", "nav-link")
+// Retrieve CSS classes with default values, escaped once here so every
+// interpolation below is safe regardless of the call path.
+String ulCssClass = escapeHtml(getStringProperty(currentNode, "ulClass", "navbar-nav me-auto"))
+String liCssClass = escapeHtml(getStringProperty(currentNode, "liClass", "nav-item"))
+String navLinkCssClass = escapeHtml(getStringProperty(currentNode, "navLinkClass", "nav-link"))
 def maxDepth = getIntegerProperty(currentNode, 'maxlevel', 2)
 
 // Determine the starting node for the menu

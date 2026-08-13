@@ -66,15 +66,15 @@
 
         <c:choose>
             <c:when test="${currentNode.properties['wem:buttonType'].string eq 'tagButton'}">
-                <button type="button" class="${cssClass}" <c:if test="${not empty htmlId}"> id="${htmlId}"</c:if>
+                <button type="button" class="${fn:escapeXml(cssClass)}" <c:if test="${not empty htmlId}"> id="${fn:escapeXml(htmlId)}"</c:if>
                         bs-data-target="#privacyModal_${currentNode.identifier}"
                         onclick="manageWemPrivacyInstances['${currentNode.identifier}'].openModal(true)">
                         ${privacyModalButtonLabel}
                 </button>
             </c:when>
             <c:otherwise>
-                <button type="button" <c:if test="${not empty htmlId}"> id="${htmlId}"</c:if>
-                   class="${cssClass}"
+                <button type="button" <c:if test="${not empty htmlId}"> id="${fn:escapeXml(htmlId)}"</c:if>
+                   class="${fn:escapeXml(cssClass)}"
                    data-bs-toggle="modal" data-bs-target="#privacyModal_${currentNode.identifier}"
                    onclick="manageWemPrivacyInstances['${currentNode.identifier}'].openModal(true)">
                         ${privacyModalButtonLabel}

@@ -17,7 +17,7 @@
 </c:if>
 <c:choose>
     <c:when test="${renderContext.loggedIn}">
-        <ul class="${loginMenuULClass}">
+        <ul class="${fn:escapeXml(loginMenuULClass)}">
             <li class="nav-item dropdown">
                 <a class="nav-item nav-link dropdown-toggle me-md-2" href="#" id="list-${currentNode.identifier}"
                  data-bs-toggle="dropdown" aria-expanded="false" role="button">
@@ -87,7 +87,7 @@
         </ul>
     </c:when>
     <c:otherwise>
-        <ul class="${loginMenuULClass}">
+        <ul class="${fn:escapeXml(loginMenuULClass)}">
             <li class="nav-item">
                 <%--<a class="nav-link p-2 login" href="${url.login}" >--%>
                 <button class="nav-link py-2 login btn btn-link" type="button" data-bs-toggle="modal" data-bs-target="#login-${currentNode.identifier}">

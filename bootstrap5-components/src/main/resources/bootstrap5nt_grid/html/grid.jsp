@@ -30,7 +30,7 @@
     <c:if test="${not empty sectionId}"> id="${fn:escapeXml(sectionId)}"</c:if>
     <c:if test="${not empty sectionClass}"> class="${fn:escapeXml(fn:trim(sectionClass))}"</c:if>
     <c:if test="${not empty sectionRole}"> role="${fn:escapeXml(sectionRole)}"</c:if>
-    <c:if test="${not empty sectionStyle}"> style="${sectionStyle}"</c:if>
+    <c:if test="${not empty sectionStyle}"> style="${fn:escapeXml(sectionStyle)}"</c:if>
     <c:if test="${not empty sectionAria}"> aria-label="${fn:escapeXml(sectionAria)}"</c:if>
     >
 </c:if>

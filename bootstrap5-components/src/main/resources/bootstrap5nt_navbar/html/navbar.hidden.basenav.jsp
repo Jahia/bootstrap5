@@ -68,7 +68,7 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
 <c:set var="level1Pages" value="${jcr:getChildrenOfType(rootNode, 'jmix:navMenuItem')}"/>
 <c:set var="hasLevel1Pages" value="${fn:length(level1Pages) > 0}"/>
 <c:if test="${hasLevel1Pages}">
-    <ul class="${ulClass}">
+    <ul class="${fn:escapeXml(ulClass)}">
         <c:forEach items="${level1Pages}" var="level1Page" varStatus="status">
             <c:set var="displayLevel1Page" value="true"/>
             <c:if test="${!empty level1Page.properties['j:displayInMenuName']}">
@@ -109,8 +109,8 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                 <c:set var="hasLevel2Pages" value="${fn:length(level2Pages) > 0}"/>
                 <c:choose>
                     <c:when test="${hasLevel2Pages && recursive}">
-                        <li class="${liClass} ${page1Active? ' active' :''} dropdown">
-                            <a class="${navLinkClass}${' '}dropdown-toggle ${page1Active? ' active' :''}" href="#"
+                        <li class="${fn:escapeXml(liClass)} ${page1Active? ' active' :''} dropdown">
+                            <a class="${fn:escapeXml(navLinkClass)}${' '}dropdown-toggle ${page1Active? ' active' :''}" href="#"
                                id="navbarDropdownMen-${currentNode.identifier}-${level1Page.identifier}"
                              data-bs-toggle="dropdown" aria-expanded="false">
                                     ${page1Title}
@@ -223,8 +223,8 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li class="${liClass}${page1Active? ' active' :''}">
-                            <a class="${navLinkClass}" href="${page1Url}"${page1Active ? ' aria-current="page"' : ''}>${page1Title}</a>
+                        <li class="${fn:escapeXml(liClass)}${page1Active? ' active' :''}">
+                            <a class="${fn:escapeXml(navLinkClass)}" href="${page1Url}"${page1Active ? ' aria-current="page"' : ''}>${page1Title}</a>
                         </li>
                     </c:otherwise>
                 </c:choose>

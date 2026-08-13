@@ -58,16 +58,16 @@
 </c:if>
 
 
-<div class="${cssClass}${textAlign}${backgroundColor}${textColor}${borderColor}">
+<div class="${fn:escapeXml(cssClass)}${textAlign}${backgroundColor}${textColor}${borderColor}">
     <c:if test="${! empty imageNode}">
         <template:include view="image">
             <template:param name="class" value="card-img-top"/>
         </template:include>
     </c:if>
     <c:if test="${! empty title}">
-        <${headerSize} class="${cardHeaderCssClass}">${title}</${headerSize}>
+        <${headerSize} class="${fn:escapeXml(cardHeaderCssClass)}">${title}</${headerSize}>
     </c:if>
-    <div class="${cardBodyCssClass}">
+    <div class="${fn:escapeXml(cardBodyCssClass)}">
         <c:forEach items="${jcr:getChildrenOfType(currentNode, 'jmix:droppableContent')}" var="droppableContent">
             <c:if test="${droppableContent.name ne 'cardFooter'}">
                 <template:module node="${droppableContent}" editable="true"/>
