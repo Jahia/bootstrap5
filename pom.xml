@@ -22,7 +22,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     <parent>
         <artifactId>jahia-modules</artifactId>
         <groupId>org.jahia.modules</groupId>
-        <version>8.2.3.0</version>
+        <version>8.2.3.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>bootstrap5-modules</artifactId>
