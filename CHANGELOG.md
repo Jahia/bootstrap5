@@ -16,6 +16,7 @@ Version numbers follow `major.minor.patch`: `2.x.x` targets Jahia 8, `1.x.x` tar
 - **Navbar** — `navClass`, `brandLinkClass`, `togglerClass` and `divClass` are now escaped in the wrapper view; `ulClass`, `liClass` and `navLinkClass` in the legacy JSP view; `loginMenuULClass` in the login view
 - **Navbar multilevel (Groovy)** — CSS class properties, menu item titles and menu item URLs are now escaped before interpolation; attributes there are single-quoted, so the escaping covers `'` as well
 - **Privacy settings modal** — the `cssClass` and `htmlId` values are now escaped
+- **i18n** — English labels containing an em dash (padding/margin sizes, carousel variant, absolute areas level, container/section/row ID tooltips, image settings) rendered as `â` plus two control characters: the build reads `.properties` as ISO-8859-1, so the raw UTF-8 `—` in `bootstrap5-components.properties` was mangled. The character is now escaped as `\u2014`, like in the other bundles
 
 ---
 
