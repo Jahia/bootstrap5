@@ -11,6 +11,7 @@ Version numbers follow `major.minor.patch`: `2.x.x` targets Jahia 8, `1.x.x` tar
 
 ### Fixed
 
+- **Navbar login** — the modal "Close" button rendered `???bootstrap5nt_navbar.label.close???`: the key introduced in 2.4.5 was missing from every resource bundle. Added it in all six languages
 - **Grid** — the section `style` attribute is now escaped, aligning it with the sibling `id`, `class`, `role` and `aria-label` attributes on the same tag
 - **Card** — the `cssClass`, `cardHeaderCssClass` and `cardBodyCssClass` values from `bootstrap5mix:cardAdvancedSettings` are now escaped
 - **Navbar** — `navClass`, `brandLinkClass`, `togglerClass` and `divClass` are now escaped in the wrapper view; `ulClass`, `liClass` and `navLinkClass` in the legacy JSP view; `loginMenuULClass` in the login view
