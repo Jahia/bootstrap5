@@ -12,9 +12,10 @@ Version numbers follow `major.minor.patch`: `2.x.x` targets Jahia 8, `1.x.x` tar
 ### Fixed
 
 - **Links** — external link targets set by editors (button `externalLink`, `jnt:externalLink` menu items in the multilevel and legacy navbar views) are now checked by the new `b5:safeUrl` function: only relative URLs and the `http`, `https`, `mailto` and `tel` schemes are kept, anything else (`javascript:`, `data:`, `vbscript:`, `ftp:`…) becomes `#`. HTML escaping alone kept these values inside the `href` but still let a `javascript:` link run when clicked. A button whose link is rejected renders disabled in live mode and shows the "no URL" badge in edit mode
+- **Navbar login** — the logged-in username in the login menu is now escaped
+- **Carousel** — without `bootstrap5mix:carouselAdvancedSettings`, the carousel rendered `data-bs-wrap="false"` and stopped at the last slide: the `wrap` default was set under a `${empty ride}` test instead of `${empty wrap}`. It now wraps, which is the Bootstrap default. Carousels that set `wrap` explicitly are unchanged
 
 ---
-- **Navbar login** — the logged-in username in the login menu is now escaped
 
 ## [2.4.6] — 2026-09-29
 
