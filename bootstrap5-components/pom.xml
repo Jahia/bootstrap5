@@ -56,7 +56,7 @@
     <packaging>bundle</packaging>
     <description>This module provide a Bootstrap 5 implementation of http://getbootstrap.com for Jahia</description>
     <properties>
-        <version.compiler.plugin>3.3</version.compiler.plugin>
+        <version.compiler.plugin>3.16.0</version.compiler.plugin>
         <jahia.plugin.version>6.9</jahia.plugin.version>
         <jahia-depends>default,bootstrap5-core,skins</jahia-depends>
         <maven.compiler.source>11</maven.compiler.source>
