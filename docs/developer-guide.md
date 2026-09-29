@@ -610,7 +610,10 @@ The `extends` value must exactly match the concrete node type that should carry 
 
 ## Testing changes locally
 
-1. Build the changed module: `mvn package -pl bootstrap5-components`
+1. Build the changed module: `mvn package -pl bootstrap5-components`. The build runs the JUnit tests in `bootstrap5-components/src/test/java` (`mvn test -pl bootstrap5-components` runs them alone):
+   - `FunctionsTest` covers the `b5:` EL functions (`safeUrl`, `isRtlLanguage`, `replaceAll`)
+   - `ChoiceInitializersTest` covers the choices and mixins returned by the choicelist initializers
+   - `ModuleDescriptorsTest` checks that `definitions.cnd` and `bootstrap5-components.tld` still match the Java code: every `choicelist[...Initializer...]` has an initializer with that key, every mixin an initializer adds is defined, and every TLD function or tag resolves to a class and a public static method
 2. Copy the JAR to your Jahia instance's `digital-factory-data/karaf/deploy/` (or use the admin UI)
 3. Jahia hot-reloads the module — no server restart needed in most cases
 4. Test in edit mode and live mode
