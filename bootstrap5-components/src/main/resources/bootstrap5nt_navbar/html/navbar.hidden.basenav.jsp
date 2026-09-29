@@ -3,6 +3,7 @@
 <%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="b5" uri="http://www.jahia.org/b5" %>
 
 <%--@elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper"--%>
 
@@ -86,7 +87,7 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                         <c:set var="page1Title" value="${level1Page.displayableName}"/>
                     </c:when>
                     <c:when test="${jcr:isNodeType(level1Page, 'jnt:externalLink')}">
-                        <c:url var="page1Url" value="${level1Page.properties['j:url'].string}"/>
+                        <c:url var="page1Url" value="${b5:safeUrl(level1Page.properties['j:url'].string)}"/>
                         <c:set var="page1Title" value="${level1Page.displayableName}"/>
                     </c:when>
                     <c:when test="${jcr:isNodeType(level1Page, 'jnt:page')}">
@@ -138,7 +139,7 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                                             </c:when>
                                             <c:when test="${jcr:isNodeType(level2Page, 'jnt:externalLink')}">
                                                 <c:url var="page2Url"
-                                                       value="${level2Page.properties['j:url'].string}"/>
+                                                       value="${b5:safeUrl(level2Page.properties['j:url'].string)}"/>
                                                 <c:set var="page2Title" value="${level2Page.displayableName}"/>
                                             </c:when>
                                             <c:when test="${jcr:isNodeType(level2Page, 'jnt:page')}">
@@ -178,7 +179,7 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                                                                     <c:set var="page3Title" value="${level3Page.displayableName}"/>
                                                                 </c:when>
                                                                 <c:when test="${jcr:isNodeType(level3Page, 'jnt:externalLink')}">
-                                                                    <c:url var="page3Url" value="${level3Page.properties['j:url'].string}"/>
+                                                                    <c:url var="page3Url" value="${b5:safeUrl(level3Page.properties['j:url'].string)}"/>
                                                                     <c:set var="page3Title" value="${level3Page.displayableName}"/>
                                                                 </c:when>
                                                                 <c:when test="${jcr:isNodeType(level3Page, 'jnt:page')}">

@@ -4,6 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="jcr" uri="http://www.jahia.org/tags/jcr" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="b5" uri="http://www.jahia.org/b5" %>
 <%--@elvariable id="currentNode" type="org.jahia.services.content.JCRNodeWrapper"--%>
 
 <template:addResources type="css" resources="bootstrap.min.css"/>
@@ -79,11 +80,12 @@
         <a href="${fn:escapeXml(linkUrl)}" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}">${fn:escapeXml(title)}</a>
     </c:when>
     <c:when test="${buttonType eq 'externalLink'}">
-        <c:url var="linkUrl" value="${currentNode.properties.externalLink.string}"/>
+        <%-- b5:safeUrl turns javascript:, data: and other non-http(s)/mailto/tel schemes into "#" --%>
+        <c:url var="linkUrl" value="${b5:safeUrl(currentNode.properties.externalLink.string)}"/>
         <c:if test="${empty title}">
             <fmt:message key="bootstrap5nt_button.readMore" var="title"/>
         </c:if>
-        <c:if test="${(empty linkUrl or linkUrl eq 'http://') && renderContext.editMode}">
+        <c:if test="${(empty linkUrl or linkUrl eq 'http://' or linkUrl eq '#') && renderContext.editMode}">
             <span class="badge badge-warning">
                 <fmt:message key="bootstrap5nt_button.noUrl"/>
             </span>

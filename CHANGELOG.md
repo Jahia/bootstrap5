@@ -7,6 +7,14 @@ Version numbers follow `major.minor.patch`: `2.x.x` targets Jahia 8, `1.x.x` tar
 
 ---
 
+## [Unreleased]
+
+### Fixed
+
+- **Links** — external link targets set by editors (button `externalLink`, `jnt:externalLink` menu items in the multilevel and legacy navbar views) are now checked by the new `b5:safeUrl` function: only relative URLs and the `http`, `https`, `mailto` and `tel` schemes are kept, anything else (`javascript:`, `data:`, `vbscript:`, `ftp:`…) becomes `#`. HTML escaping alone kept these values inside the `href` but still let a `javascript:` link run when clicked. A button whose link is rejected renders disabled in live mode and shows the "no URL" badge in edit mode
+
+---
+
 ## [2.4.6] — 2026-09-29
 
 ### Fixed
