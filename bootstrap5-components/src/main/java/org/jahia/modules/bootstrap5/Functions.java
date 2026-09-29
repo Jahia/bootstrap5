@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class Functions {
@@ -45,7 +46,41 @@ public final class Functions {
         return RTL_LANGS.contains(base.toLowerCase(Locale.ROOT));
     }
 
+    /**
+     * Return a link target that is safe to put in an {@code href}, or {@code "#"} when it is not.
+     * Relative URLs, fragments, query strings and protocol-relative URLs are kept as-is.
+     * Absolute URLs are kept only for the http, https, mailto and tel schemes, so values such as
+     * {@code javascript:} or {@code data:} set by an editor cannot run script when the link is followed.
+     * The result still has to be HTML-escaped by the caller.
+     */
+    public static String safeUrl(String url) {
+        if (url == null) {
+            return "#";
+        }
+        String trimmed = url.trim();
+        if (trimmed.isEmpty()) {
+            return "#";
+        }
+        // Browsers ignore ASCII control characters and whitespace inside a scheme ("java\tscript:"),
+        // so they are removed before the scheme is read.
+        String compact = CONTROL_AND_SPACE.matcher(trimmed).replaceAll("");
+        Matcher scheme = URL_SCHEME.matcher(compact);
+        if (!scheme.find()) {
+            return trimmed;
+        }
+        return SAFE_SCHEMES.contains(scheme.group(1).toLowerCase(Locale.ROOT)) ? trimmed : "#";
+    }
+
     // ---------------- internals (small & maintainable) ----------------
+
+    private static final Set<String> SAFE_SCHEMES = new HashSet<>(Arrays.asList(
+            "http", "https", "mailto", "tel"
+    ));
+
+    // A scheme is only present when the ':' comes before any '/', '?' or '#'
+    private static final Pattern URL_SCHEME = Pattern.compile("^([a-zA-Z][a-zA-Z0-9+.-]*):");
+
+    private static final Pattern CONTROL_AND_SPACE = Pattern.compile("[\\x00-\\x20\\x7F]+");
 
     // Base languages usually written RTL
     private static final Set<String> RTL_LANGS = new HashSet<>(Arrays.asList(

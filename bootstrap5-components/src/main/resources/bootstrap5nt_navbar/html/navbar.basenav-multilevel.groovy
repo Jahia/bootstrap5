@@ -1,4 +1,5 @@
 import javax.jcr.ItemNotFoundException
+import org.jahia.modules.bootstrap5.Functions
 import org.jahia.services.content.JCRContentUtils
 import org.jahia.services.render.RenderService
 import org.jahia.services.render.Resource
@@ -139,7 +140,8 @@ def getMenuItemUrl(menuItem) {
         } else if (menuItem.isNodeType('jnt:nodeLink')) {
             return getNodeLinkUrl(menuItem)
         } else if (menuItem.isNodeType('jnt:externalLink')) {
-            return menuItem.hasProperty('j:url') ? menuItem.getProperty('j:url').string : "#"
+            // Functions.safeUrl turns javascript:, data: and other non-http(s)/mailto/tel schemes into "#"
+            return menuItem.hasProperty('j:url') ? Functions.safeUrl(menuItem.getProperty('j:url').string) : "#"
         }
     } catch (Exception e) {
         logger.error("Error getting menu item URL: ${e.message}", e)
