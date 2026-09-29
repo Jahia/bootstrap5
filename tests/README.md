@@ -244,6 +244,24 @@ Covers `bootstrap5nt:figure`.
 - `thumbnails=true` → `img.img-thumbnail`
 - `responsive=false` → image does not have `img-fluid`
 
+### 12 — Escaping (`12-escaping.cy.ts`)
+Stores an `<img onerror>` payload in text fields and an attribute-breaking payload in class fields, then checks that nothing is injected and the payload shows as text.
+
+- Button (title, modal title, close text, `cssClass`), card (title, footer), carousel item (title, caption, `carouselItemClass`), custom grid column classes
+- Page `<title>` in the standard starter template
+
+### 13 — Hardening (`13-hardening.cy.ts`)
+Link schemes, carousel defaults, and escaping in views that `12-escaping` does not cover.
+
+- No `javascript:` link is rendered on the page
+- Button with a `javascript:` external link renders as a disabled `<button>`; an `https` link is kept
+- Navbar `jnt:externalLink` menu item with a `javascript:` URL points to `#`; an `https` one is kept
+- Carousel without `bootstrap5mix:carouselAdvancedSettings` has no `data-bs-wrap` attribute (Bootstrap default: wrap)
+- Navbar `brandText`, accordion item title and tab title render as text
+- Page `<title>` in the sticky-footer template
+
+> Choicelist properties with a value constraint (for example figure `captionAlignment`) are rejected by the JCR when set to an arbitrary value, so they are not exercised with payloads.
+
 ### 99 — Teardown (`99-teardown.cy.ts`)
 Deletes the `bootstrap5test` site to leave the Jahia instance in a clean state.
 
