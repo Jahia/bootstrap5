@@ -7,7 +7,7 @@ Version numbers follow `major.minor.patch`: `2.x.x` targets Jahia 8, `1.x.x` tar
 
 ---
 
-## [Unreleased]
+## [2.4.7] — 2026-09-29
 
 ### Fixed
 
