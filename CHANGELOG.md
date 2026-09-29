@@ -21,6 +21,11 @@ Version numbers follow `major.minor.patch`: `2.x.x` targets Jahia 8, `1.x.x` tar
 - **Grid / Card** — `sectionElement` and `headerSize` are used as tag names; values outside the choicelist now fall back to `div`
 - **i18n** — English labels containing an em dash (padding/margin sizes, carousel variant, absolute areas level, container/section/row ID tooltips, image settings) rendered as `â` plus two control characters: the build reads `.properties` as ISO-8859-1, so the raw UTF-8 `—` in `bootstrap5-components.properties` was mangled. The character is now escaped as `\u2014`, like in the other bundles
 
+### Updated
+
+- **Build** \u2014 `bootstrap5-core` now runs `npm ci` instead of `npm install`, so the bundled Bootstrap assets always match `package-lock.json`
+- **Build** \u2014 removed the unused optional `icu4j` dependency from `bootstrap5-components`, and the `<version>` redundant with the parent in `bootstrap5-components` and `bootstrap5-templates-starter`
+
 ---
 
 ## [2.4.5] — 2026-05-20

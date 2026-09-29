@@ -53,7 +53,6 @@
     </parent>
     <artifactId>bootstrap5-components</artifactId>
     <name>Bootstrap 5 Components</name>
-    <version>2.4.6</version>
     <packaging>bundle</packaging>
     <description>This module provide a Bootstrap 5 implementation of http://getbootstrap.com for Jahia</description>
     <properties>
@@ -69,12 +68,6 @@
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm.icu</groupId>
-            <artifactId>icu4j</artifactId>
-            <version>74.2</version>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 
