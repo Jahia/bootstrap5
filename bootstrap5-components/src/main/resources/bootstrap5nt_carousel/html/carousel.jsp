@@ -41,7 +41,7 @@
 <c:if test="${empty keyboard}">
     <c:set var="keyboard" value="true"/>
 </c:if>
-<c:if test="${empty ride}">
+<c:if test="${empty wrap}">
     <c:set var="wrap" value="true"/>
 </c:if>
 <c:if test="${empty fade}">
