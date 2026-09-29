@@ -18,9 +18,9 @@
 <c:set var="caption" value="${currentNode.properties.caption.string}"/>
 <c:set var="imageNode" value="${currentNode.properties.image.node}"/>
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:advancedCarouselItem')}">
-    <c:set var="titleColor" value="text-${currentNode.properties.titleColor.string}"/>
-    <c:set var="captionColor" value="text-${currentNode.properties.captionColor.string}"/>
-    <c:set var="carouselItemClass" value=" ${currentNode.properties.carouselItemClass.string}"/>
+    <c:set var="titleColor" value="text-${fn:escapeXml(currentNode.properties.titleColor.string)}"/>
+    <c:set var="captionColor" value="text-${fn:escapeXml(currentNode.properties.captionColor.string)}"/>
+    <c:set var="carouselItemClass" value=" ${fn:escapeXml(currentNode.properties.carouselItemClass.string)}"/>
     <c:set var="interval" value=" ${currentNode.properties.interval.long}"/>
     <c:set var="titleClass" value=" class='${titleColor}'"/>
     <c:set var="captionClass" value=" class='${captionColor}'"/>
@@ -38,10 +38,10 @@
             </c:if>
             <div>
                 <c:if test="${not empty title}">
-                    <h4 class="${titleColor}">${title}</h4>
+                    <h4 class="${titleColor}">${fn:escapeXml(title)}</h4>
                 </c:if>
                 <c:if test="${not empty caption}">
-                    <p class="${captionColor}">${caption}</p>
+                    <p class="${captionColor}">${fn:escapeXml(caption)}</p>
                 </c:if>
             </div>
         </div>
@@ -57,10 +57,10 @@
             <c:if test="${! empty title || ! empty caption}">
                 <div class="carousel-caption d-md-block">
                     <c:if test="${not empty title}">
-                        <h3${titleClass}>${title}</h3>
+                        <h3${titleClass}>${fn:escapeXml(title)}</h3>
                     </c:if>
                     <c:if test="${not empty caption}">
-                        <p${captionClass}>${caption}</p>
+                        <p${captionClass}>${fn:escapeXml(caption)}</p>
                     </c:if>
                 </div>
             </c:if>

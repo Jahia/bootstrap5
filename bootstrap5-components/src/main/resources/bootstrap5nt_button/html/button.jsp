@@ -15,13 +15,13 @@
 <c:set var="style" value="primary"/>
 
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:buttonAdvancedSettings')}">
-    <c:set var="style" value="${currentNode.properties.style.string}"/>
-    <c:set var="size" value="${currentNode.properties.size.string}"/>
-    <c:set var="state" value="${currentNode.properties.state.string}"/>
+    <c:set var="style" value="${fn:escapeXml(currentNode.properties.style.string)}"/>
+    <c:set var="size" value="${fn:escapeXml(currentNode.properties.size.string)}"/>
+    <c:set var="state" value="${fn:escapeXml(currentNode.properties.state.string)}"/>
     <c:set var="outline" value="${currentNode.properties.outline.boolean ? '-outline' : ''}"/>
     <c:set var="nowrap" value="${currentNode.properties.disableTextWrapping.boolean ? ' text-nowrap' : ''}"/>
     <c:set var="block" value="${currentNode.properties.block.boolean ? ' btn-block' : ''}"/>
-    <c:set var="cssClass" value=" ${currentNode.properties.cssClass.string}"/>
+    <c:set var="cssClass" value=" ${fn:escapeXml(currentNode.properties.cssClass.string)}"/>
     <%-- stretched-link uses CSS ::after to make the entire parent container clickable --%>
     <c:set var="stretchedLink" value="${currentNode.properties.stretchedLink.boolean ? ' stretched-link' : ''}"/>
     <c:choose>
@@ -76,7 +76,7 @@
                 </c:if>
             </c:otherwise>
         </c:choose>
-        <a href="${linkUrl}" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}">${title}</a>
+        <a href="${fn:escapeXml(linkUrl)}" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}">${fn:escapeXml(title)}</a>
     </c:when>
     <c:when test="${buttonType eq 'externalLink'}">
         <c:url var="linkUrl" value="${currentNode.properties.externalLink.string}"/>
@@ -90,15 +90,15 @@
         </c:if>
         <c:choose>
             <c:when test="${(empty linkUrl or linkUrl eq '#') and not renderContext.editMode}">
-                <button type="button" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}" disabled>${title}</button>
+                <button type="button" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}" disabled>${fn:escapeXml(title)}</button>
             </c:when>
             <c:otherwise>
-                <a href="${linkUrl}" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}">${title}</a>
+                <a href="${fn:escapeXml(linkUrl)}" class="${buttonClass}" ${aria} id="button_${currentNode.identifier}">${fn:escapeXml(title)}</a>
             </c:otherwise>
         </c:choose>
     </c:when>
     <c:when test="${buttonType eq 'modal'}">
-        <c:set var="modalSize" value=" modal-${currentNode.properties.modalSize.string}"/>
+        <c:set var="modalSize" value=" modal-${fn:escapeXml(currentNode.properties.modalSize.string)}"/>
         <c:set var="modalTitle" value="${currentNode.properties.modalTitle.string}"/>
         <c:set var="closeText" value="${currentNode.properties.closeText.string}"/>
         <c:set var="staticBackdrop" value="${currentNode.properties.staticBackdrop.boolean}"/>
@@ -113,7 +113,7 @@
             <fmt:message key="bootstrap5nt_button.close" var="closeText"/>
         </c:if>
         <button type="button" class="${buttonClass}" ${aria} data-bs-toggle="modal" data-bs-target="#modal-${currentNode.identifier}" aria-haspopup="dialog" id="button_${currentNode.identifier}">
-            ${title}
+            ${fn:escapeXml(title)}
         </button>
 
         <%-- Modal id is derived from the node identifier to guarantee uniqueness when multiple buttons exist on the page --%>
@@ -124,7 +124,7 @@
                     <c:if test="${not empty modalTitle}">
                         <div class="modal-header">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            <h5 class="modal-title" id="modalLabel_${currentNode.identifier}">${modalTitle}</h5>
+                            <h5 class="modal-title" id="modalLabel_${currentNode.identifier}">${fn:escapeXml(modalTitle)}</h5>
                         </div>
                     </c:if>
                     <div class="modal-body">
@@ -136,7 +136,7 @@
                         </c:if>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-${style}" data-bs-dismiss="modal">${closeText}</button>
+                        <button type="button" class="btn btn-${style}" data-bs-dismiss="modal">${fn:escapeXml(closeText)}</button>
                     </div>
                 </div>
             </div>
@@ -153,7 +153,7 @@
                 data-bs-target="#collapse-${currentNode.identifier}"
                 aria-expanded="${show eq ' show' ? 'true' : 'false'}"
                 aria-controls="collapse-${currentNode.identifier}"
-                id="button_${currentNode.identifier}">${title}</button>
+                id="button_${currentNode.identifier}">${fn:escapeXml(title)}</button>
 
         <div class="collapse" id="collapse-${currentNode.identifier}">
             <c:forEach items="${jcr:getChildrenOfType(currentNode, 'jmix:droppableContent')}" var="droppableContent">
@@ -168,7 +168,7 @@
         <c:if test="${empty title}">
             <fmt:message key="bootstrap5nt_button.readMore" var="title"/>
         </c:if>
-        <c:set var="direction" value="${currentNode.properties.direction.string}"/>
+        <c:set var="direction" value="${fn:escapeXml(currentNode.properties.direction.string)}"/>
         <c:set var="popoverTitle" value="${currentNode.properties.popoverTitle.string}"/>
         <c:set var="popoverContent" value="${currentNode.properties.popoverContent.string}"/>
         <c:set var="html" value="${currentNode.properties.html.boolean}"/>
@@ -179,7 +179,7 @@
             <c:set var="pContent"> data-bs-content="${fn:escapeXml(popoverContent)}"</c:set>
         </c:if>
         <button type="button" class="${buttonClass}" ${aria} data-bs-toggle="popover" ${pTitle} ${pContent} <c:if test="${html}"><c:out
-                value=" "/> data-bs-html="true" </c:if> data-bs-container="body" data-bs-placement="${direction}" data-bs-trigger="focus" id="button_${currentNode.identifier}">${title}</button>
+                value=" "/> data-bs-html="true" </c:if> data-bs-container="body" data-bs-placement="${direction}" data-bs-trigger="focus" id="button_${currentNode.identifier}">${fn:escapeXml(title)}</button>
         <%-- Popovers are not auto-initialised by Bootstrap; this inline jQuery snippet activates all popover elements.
              Requires Bootstrap JS and jQuery to be loaded on the page. --%>
         <template:addResources type="inline">
@@ -193,9 +193,9 @@
     <c:when test="${buttonType eq 'Offcanvas'}">
         <c:set var="enableBackdrop" value="${currentNode.properties.enableBackdrop.boolean?'true':'false'}"/>
         <c:set var="enableBodyScrolling" value="${currentNode.properties.enableBodyScrolling.boolean?'true':'false'}"/>
-        <c:set var="placement" value="${currentNode.properties.placement.string}"/>
+        <c:set var="placement" value="${fn:escapeXml(currentNode.properties.placement.string)}"/>
 
-        <button class="${buttonClass}"  type="button" ${aria} data-bs-toggle="offcanvas" data-bs-target="#offcanvas_${currentNode.identifier}" aria-controls="offcanvas_${currentNode.identifier}">${title}</button>
+        <button class="${buttonClass}"  type="button" ${aria} data-bs-toggle="offcanvas" data-bs-target="#offcanvas_${currentNode.identifier}" aria-controls="offcanvas_${currentNode.identifier}">${fn:escapeXml(title)}</button>
         <c:set var="OffcanvasTitle" value="${currentNode.properties.OffcanvasTitle.string}"/>
         <c:choose>
             <c:when test="${not empty OffcanvasTitle}">
@@ -207,7 +207,7 @@
         </c:choose>
             <c:if test="${! empty OffcanvasTitle}">
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvas_${currentNode.identifier}Label">${OffcanvasTitle}</h5>
+                    <h5 class="offcanvas-title" id="offcanvas_${currentNode.identifier}Label">${fn:escapeXml(OffcanvasTitle)}</h5>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
             </c:if>

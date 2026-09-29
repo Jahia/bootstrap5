@@ -69,7 +69,7 @@
                 <button type="button" class="${fn:escapeXml(cssClass)}" <c:if test="${not empty htmlId}"> id="${fn:escapeXml(htmlId)}"</c:if>
                         bs-data-target="#privacyModal_${currentNode.identifier}"
                         onclick="manageWemPrivacyInstances['${currentNode.identifier}'].openModal(true)">
-                        ${privacyModalButtonLabel}
+                        ${fn:escapeXml(privacyModalButtonLabel)}
                 </button>
             </c:when>
             <c:otherwise>
@@ -77,7 +77,7 @@
                    class="${fn:escapeXml(cssClass)}"
                    data-bs-toggle="modal" data-bs-target="#privacyModal_${currentNode.identifier}"
                    onclick="manageWemPrivacyInstances['${currentNode.identifier}'].openModal(true)">
-                        ${privacyModalButtonLabel}
+                        ${fn:escapeXml(privacyModalButtonLabel)}
                 </button>
             </c:otherwise>
         </c:choose>
@@ -93,7 +93,7 @@
                         <c:if test="${not empty currentNode.properties['wem:privacyModalTitle']}">
                             <c:set var="privacyModalTitle" value="${currentNode.properties['wem:privacyModalTitle'].string}"/>
                         </c:if>
-                        <h4 class="modal-title" id="privacyModal_${currentNode.identifier}-title">${privacyModalTitle}</h4>
+                        <h4 class="modal-title" id="privacyModal_${currentNode.identifier}-title">${fn:escapeXml(privacyModalTitle)}</h4>
                     </div>
 
                     <div class="modal-body">
@@ -142,7 +142,7 @@
                                 <button type="button" class="btn btn-default button-privacy"
                                         onclick="wem.downloadMyProfile()"
                                         <c:if test="${renderContext.editMode}">disabled</c:if>>
-                                        ${downloadMyProfileButtonLabel}
+                                        ${fn:escapeXml(downloadMyProfileButtonLabel)}
                                 </button>
 
                                 <c:if test="${currentNode.properties['wem:anonymizeProfile'].boolean and not renderContext.loggedIn}">
@@ -153,7 +153,7 @@
                                     <button type="button" class="btn btn-default button-privacy"
                                             onclick="wem.anonymizeProfile(manageWemPrivacyInstances['${currentNode.identifier}'].onSuccess, function(xhr) {$('#anonymizeError').show(); console.error(xhr.responseText)})"
                                             <c:if test="${renderContext.editMode}">disabled</c:if>>
-                                            ${anonymizeProfileButtonLabel}
+                                            ${fn:escapeXml(anonymizeProfileButtonLabel)}
                                     </button>
                                     <div id="anonymizeError_${currentNode.identifier}" class="alert alert-danger">
                                         <fmt:message key="wemnt_privacySettingsModal.wem_anonymizeProfile.error"/>
@@ -166,7 +166,7 @@
                                             onclick="wem.togglePrivateBrowsing(manageWemPrivacyInstances['${currentNode.identifier}'].onSuccess, function(xhr) {$('#privateBrowsingError').show(); console.error(xhr.responseText)})"
                                             <c:if test="${renderContext.editMode}">disabled</c:if>>
                                         <c:if test="${renderContext.editMode}">
-                                            ${startPrivateBrowsingButton}
+                                            ${fn:escapeXml(startPrivateBrowsingButton)}
                                         </c:if>
                                     </button>
                                     <div id="privateBrowsingError_${currentNode.identifier}" class="alert alert-danger">

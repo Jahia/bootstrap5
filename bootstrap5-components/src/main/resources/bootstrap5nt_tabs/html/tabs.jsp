@@ -20,9 +20,9 @@
 <template:addResources type="css" resources="bootstrap.min.css"/>
 <template:addResources type="javascript" resources="bootstrap.bundle.min.js" targetTag="${renderContext.editMode?'head':'body'}"/>
 <c:set var="subLists" value="${jcr:getChildrenOfType(currentNode, 'jnt:contentList')}"/>
-<c:set var="typeValue" value="${currentNode.properties.type.string}"/>
+<c:set var="typeValue" value="${fn:escapeXml(currentNode.properties.type.string)}"/>
 <c:set var="type" value="nav-${typeValue}${typeValue eq 'underline' ? '':'s'}"/>
-<c:set var="align" value=" ${currentNode.properties.align.string}"/>
+<c:set var="align" value=" ${fn:escapeXml(currentNode.properties.align.string)}"/>
 <c:set var="fade" value="${currentNode.properties.fade.boolean}"/>
 <c:set var="useListNameAsAnchor" value="${currentNode.properties.useListNameAsAnchor.boolean}"/>
 <c:set var="alphabet" value="abcdefghijklmnopqrstuvwxyz"/>
@@ -46,7 +46,7 @@
     <c:set var="navItems">
         ${navItems}
         <li class="nav-item" role="presentation">
-            <button class="nav-link ${status.first?' active':''}" id="tab-btn-${anchorName}" aria-selected="${status.first ? 'true' : 'false'}" tabindex="${status.first ? '0' : '-1'}" data-bs-toggle="tab" data-bs-target="#${anchorName}" role="tab" aria-controls="${anchorName}">${droppableContent.displayableName}</button>
+            <button class="nav-link ${status.first?' active':''}" id="tab-btn-${anchorName}" aria-selected="${status.first ? 'true' : 'false'}" tabindex="${status.first ? '0' : '-1'}" data-bs-toggle="tab" data-bs-target="#${anchorName}" role="tab" aria-controls="${anchorName}">${fn:escapeXml(droppableContent.displayableName)}</button>
         </li>
     </c:set>
     <c:set var="tabPanes">

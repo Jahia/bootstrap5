@@ -30,7 +30,7 @@
 </c:if>
 
 <c:if test="${jcr:isNodeType(currentNode,'bootstrap5mix:advancedBreadcrumb' )}">
-    <c:set var="cssClass" value=" ${currentNode.properties.cssClass.string}"/>
+    <c:set var="cssClass" value=" ${fn:escapeXml(currentNode.properties.cssClass.string)}"/>
 </c:if>
 <c:choose>
     <c:when test="${fn:length(pageNodes) > 1}">

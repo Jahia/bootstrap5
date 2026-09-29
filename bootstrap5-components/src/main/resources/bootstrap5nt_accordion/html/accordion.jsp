@@ -29,7 +29,7 @@
                 data-bs-target="#collapse-${currentNode.identifier}"
                 aria-expanded="${show eq ' show' ? 'true' : 'false'}"
                 aria-controls="collapse-${currentNode.identifier}">
-            ${title}
+            ${fn:escapeXml(title)}
         </button>
     </h2>
     <div id="collapse-${currentNode.identifier}" class="accordion-collapse collapse ${show}" aria-labelledby="accordion-${currentNode.identifier}" data-bs-parent="#accordion-${currentNode.parent.identifier}">

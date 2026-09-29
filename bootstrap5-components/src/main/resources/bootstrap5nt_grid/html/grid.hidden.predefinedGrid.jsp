@@ -13,7 +13,7 @@
                 ? currentNode.name.concat('-') : ''}"/>
 
 <%-- Grid pattern (e.g. '4_8', '3_6_3', '12') --%>
-<c:set var="grid" value="${currentNode.properties.grid.string}"/>
+<c:set var="grid" value="${fn:escapeXml(currentNode.properties.grid.string)}"/>
 <c:set var="parts" value="${fn:split(grid,'_')}"/>
 <c:set var="count" value="${fn:length(parts)}"/>
 
@@ -21,7 +21,7 @@
      moduleType="absoluteArea" so child pages inherit content from this level instead of defining their own --%>
 <c:set var="createAbsoluteAreas" value="${jcr:isNodeType(currentNode, 'bootstrap5mix:createAbsoluteAreas')}"/>
 <c:set var="moduleType" value="${createAbsoluteAreas ? 'absoluteArea' : 'area'}"/>
-<c:set var="level" value="${createAbsoluteAreas ? currentNode.properties.level.string : '0'}"/>
+<c:set var="level" value="${createAbsoluteAreas ? fn:escapeXml(currentNode.properties.level.string) : '0'}"/>
 
 <%-- listLimit (default -1) --%>
 <c:set var="hasListLimit" value="${jcr:isNodeType(currentNode, 'bootstrap5mix:listLimit')}"/>

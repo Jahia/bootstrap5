@@ -26,7 +26,7 @@
     <c:set var="fade" value="${currentNode.properties.fade.boolean}"/>
     <c:set var="useIndicators" value="${currentNode.properties.useIndicators.boolean}"/>
     <c:set var="useLeftAndRightControls" value="${currentNode.properties.useLeftAndRightControls.boolean}"/>
-    <c:set var="carouselClass" value=" ${currentNode.properties.carouselClass.string}"/>
+    <c:set var="carouselClass" value=" ${fn:escapeXml(currentNode.properties.carouselClass.string)}"/>
     <c:set var="variant" value="${currentNode.properties.variant.string eq 'dark' ? ' carousel-dark' : ''}"/>
 </c:if>
 <c:if test="${empty useIndicators}">

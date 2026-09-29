@@ -113,10 +113,10 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                             <a class="${fn:escapeXml(navLinkClass)}${' '}dropdown-toggle ${page1Active? ' active' :''}" href="#"
                                id="navbarDropdownMen-${currentNode.identifier}-${level1Page.identifier}"
                              data-bs-toggle="dropdown" aria-expanded="false">
-                                    ${page1Title}
+                                    ${fn:escapeXml(page1Title)}
                             </a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="${page1Url}">${page1Title}</a>
+                                <a class="dropdown-item" href="${fn:escapeXml(page1Url)}">${fn:escapeXml(page1Title)}</a>
                                 <div class="dropdown-divider"></div>
                                 <c:forEach items="${level2Pages}" var="level2Page" varStatus="status">
                                     <c:set var="displayLevel2Page" value="true"/>
@@ -165,10 +165,10 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                                             <c:when test="${hasLevel3Pages}">
                                                 <li class="dropend">
                                                     <a class="dropdown-item dropdown-toggle${page2Active ? ' active' : ''}"
-                                                       href="${page2Url}"
+                                                       href="${fn:escapeXml(page2Url)}"
                                                        data-bs-toggle="dropdown"
                                                        aria-expanded="false"
-                                                       id="dropend-${currentNode.identifier}-${level2Page.identifier}">${page2Title}</a>
+                                                       id="dropend-${currentNode.identifier}-${level2Page.identifier}">${fn:escapeXml(page2Title)}</a>
                                                     <ul class="dropdown-menu submenu"
                                                         aria-labelledby="dropend-${currentNode.identifier}-${level2Page.identifier}">
                                                         <c:forEach items="${level3Pages}" var="level3Page">
@@ -198,7 +198,7 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                                                             </c:choose>
                                                             <li>
                                                                 <a class="dropdown-item${page3Active ? ' active' : ''}"
-                                                                   href="${page3Url}"${page3Active ? ' aria-current="page"' : ''}>${page3Title}</a>
+                                                                   href="${fn:escapeXml(page3Url)}"${page3Active ? ' aria-current="page"' : ''}>${fn:escapeXml(page3Title)}</a>
                                                             </li>
                                                             <c:remove var="page3Active"/>
                                                             <c:remove var="page3Url"/>
@@ -209,7 +209,7 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                                             </c:when>
                                             <c:otherwise>
                                                 <a class="dropdown-item${page2Active ? ' active' : ''}"
-                                                   href="${page2Url}"${page2Active ? ' aria-current="page"' : ''}>${page2Title}</a>
+                                                   href="${fn:escapeXml(page2Url)}"${page2Active ? ' aria-current="page"' : ''}>${fn:escapeXml(page2Title)}</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </c:if>
@@ -224,7 +224,7 @@ THIS IS A DEPRECATED VIEW. BETTER USE THE basenav-multilevel that supports the l
                     </c:when>
                     <c:otherwise>
                         <li class="${fn:escapeXml(liClass)}${page1Active? ' active' :''}">
-                            <a class="${fn:escapeXml(navLinkClass)}" href="${page1Url}"${page1Active ? ' aria-current="page"' : ''}>${page1Title}</a>
+                            <a class="${fn:escapeXml(navLinkClass)}" href="${fn:escapeXml(page1Url)}"${page1Active ? ' aria-current="page"' : ''}>${fn:escapeXml(page1Title)}</a>
                         </li>
                     </c:otherwise>
                 </c:choose>

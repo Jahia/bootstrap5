@@ -19,10 +19,12 @@
 <template:addResources type="css" resources="bootstrap.min.css"/>
 <c:set var="title" value="${currentNode.properties['jcr:title'].string}"/>
 <c:set var="headerSize" value="${currentNode.properties.headerSize.string}"/>
-<c:if test="${headerSize == 'default'}">
+<%-- headerSize is used as a tag name, so only the values offered by the choicelist are accepted --%>
+<c:set var="headerSizeToken" value=",${headerSize},"/>
+<c:if test="${not fn:contains(',h1,h2,h3,h4,h5,', headerSizeToken)}">
     <c:set var="headerSize" value="div"/>
 </c:if>
-<c:set var="textAlign" value=" ${currentNode.properties.textAlign.string}"/>
+<c:set var="textAlign" value=" ${fn:escapeXml(currentNode.properties.textAlign.string)}"/>
 <c:if test="${textAlign == ' text-start'}">
     <c:remove var="textAlign"/>
 </c:if>
@@ -30,12 +32,12 @@
 <c:set var="footer" value="${currentNode.properties.footer.string}"/>
 
 <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:colors')}">
-    <c:set var="backgroundColor" value=" bg-${currentNode.properties.backgroundColor.string}"/>
+    <c:set var="backgroundColor" value=" bg-${fn:escapeXml(currentNode.properties.backgroundColor.string)}"/>
     <c:if test="${backgroundColor eq ' bg-default'}">
         <c:remove var="backgroundColor"/>
     </c:if>
-    <c:set var="textColor" value=" text-${currentNode.properties.textColor.string}"/>
-    <c:set var="borderColor" value=" border-${currentNode.properties.borderColor.string}"/>
+    <c:set var="textColor" value=" text-${fn:escapeXml(currentNode.properties.textColor.string)}"/>
+    <c:set var="borderColor" value=" border-${fn:escapeXml(currentNode.properties.borderColor.string)}"/>
     <c:if test="${borderColor eq ' border-default'}">
         <c:remove var="borderColor"/>
     </c:if>
@@ -65,7 +67,7 @@
         </template:include>
     </c:if>
     <c:if test="${! empty title}">
-        <${headerSize} class="${fn:escapeXml(cardHeaderCssClass)}">${title}</${headerSize}>
+        <${headerSize} class="${fn:escapeXml(cardHeaderCssClass)}">${fn:escapeXml(title)}</${headerSize}>
     </c:if>
     <div class="${fn:escapeXml(cardBodyCssClass)}">
         <c:forEach items="${jcr:getChildrenOfType(currentNode, 'jmix:droppableContent')}" var="droppableContent">
@@ -79,7 +81,7 @@
     </div>
     <c:if test="${not empty footer || freeFooter}">
         <div class="card-footer ${textColor}">
-                ${footer}
+                ${fn:escapeXml(footer)}
             <c:if test="${freeFooter}">
                 <template:area path="cardFooter" areaAsSubNode="true"/>
             </c:if>

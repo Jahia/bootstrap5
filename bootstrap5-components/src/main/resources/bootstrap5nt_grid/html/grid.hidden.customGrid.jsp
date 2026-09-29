@@ -14,7 +14,7 @@
 
 <c:set var="createAbsoluteAreas" value="${jcr:isNodeType(currentNode, 'bootstrap5mix:createAbsoluteAreas')}"/>
 <c:set var="moduleType" value="${createAbsoluteAreas ? 'absoluteArea' : 'area'}"/>
-<c:set var="level" value="${createAbsoluteAreas ? currentNode.properties.level.string : '0'}"/>
+<c:set var="level" value="${createAbsoluteAreas ? fn:escapeXml(currentNode.properties.level.string) : '0'}"/>
 
 <c:set var="listLimit"
        value="${(jcr:isNodeType(currentNode, 'bootstrap5mix:listLimit') and not empty currentNode.properties.listLimit.string)
@@ -40,7 +40,7 @@
 <c:choose>
     <c:when test="${not empty columns}">
         <c:forTokens items="${columns}" delims="," varStatus="status" var="col">
-            <div class="${fn:trim(col)}">${displayAbsoluteArea}
+            <div class="${fn:escapeXml(fn:trim(col))}">${displayAbsoluteArea}
                 <template:area path="${colNamePrefix}col${status.index}"
                                areaAsSubNode="true"
                                moduleType="${moduleType}"
@@ -56,7 +56,7 @@
                 <strong><fmt:message key="bootstrap5nt_grid.warning"/></strong>
                 <span>
                     <fmt:message key="bootstrap5nt_grid.couldNotDisplayGrid">
-                        <fmt:param value="${columns}"/>
+                        <fmt:param value="${fn:escapeXml(columns)}"/>
                     </fmt:message>
                 </span>
             </div>
