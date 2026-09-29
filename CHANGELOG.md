@@ -15,6 +15,10 @@ Version numbers follow `major.minor.patch`: `2.x.x` targets Jahia 8, `1.x.x` tar
 - **Navbar login** — the logged-in username in the login menu is now escaped
 - **Carousel** — without `bootstrap5mix:carouselAdvancedSettings`, the carousel rendered `data-bs-wrap="false"` and stopped at the last slide: the `wrap` default was set under a `${empty ride}` test instead of `${empty wrap}`. It now wraps, which is the Bootstrap default. Carousels that set `wrap` explicitly are unchanged
 
+### Added
+
+- **Tests** — JUnit 5 tests for `bootstrap5-components`, run by `mvn package`: the `b5:` EL functions, the choicelist initializers, and the consistency between `definitions.cnd`, `bootstrap5-components.tld` and the Java classes they name (`FunctionsTest`, `ChoiceInitializersTest`, `ModuleDescriptorsTest`)
+
 ---
 
 ## [2.4.6] — 2026-09-29
