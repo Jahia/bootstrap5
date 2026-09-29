@@ -21,7 +21,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-item nav-link dropdown-toggle me-md-2" href="#" id="list-${currentNode.identifier}"
                  data-bs-toggle="dropdown" aria-expanded="false" role="button">
-                        ${currentUser.username}
+                        ${fn:escapeXml(currentUser.username)}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                                     <%-- Workspace-switching links are suppressed on remote publication servers and on live-originated nodes. --%>
