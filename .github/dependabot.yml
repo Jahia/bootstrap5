@@ -8,3 +8,22 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+
+  # 2_X maintenance branch (Jahia 8, 2.x.x releases): non-major version updates only.
+  # Dependabot security updates only run on the default branch, not on 2_X.
+  - package-ecosystem: "maven"
+    directory: "/"
+    target-branch: "2_X"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: "npm"
+    directory: "/bootstrap5-core"
+    target-branch: "2_X"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
