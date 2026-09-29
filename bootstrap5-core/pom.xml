@@ -34,8 +34,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
   </properties>
   <build>
     <plugins>
-      <!-- Download Node/npm locally and run npm install, which triggers copy-bootstrap.js
-           via the "postinstall" script to populate src/main/resources/css and javascript. -->
+      <!-- Download Node/npm locally and run npm ci, which triggers copy-bootstrap.js
+           via the "postinstall" script to populate src/main/resources/css and javascript.
+           npm ci installs exactly what package-lock.json pins and fails if it is out of sync. -->
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
@@ -51,11 +52,11 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
             <phase>generate-resources</phase>
           </execution>
           <execution>
-            <id>npm-install</id>
+            <id>npm-ci</id>
             <goals><goal>npm</goal></goals>
             <phase>generate-resources</phase>
             <configuration>
-              <arguments>install</arguments>
+              <arguments>ci</arguments>
             </configuration>
           </execution>
         </executions>

@@ -2,8 +2,8 @@
  * Copies Bootstrap dist assets from node_modules into the Jahia resource directories
  * and generates a JSP fragment exposing the Bootstrap version as an EL variable.
  *
- * Called automatically by npm via the "postinstall" script after `npm install`.
- * The Maven build (frontend-maven-plugin) triggers `npm install`, which in turn
+ * Called automatically by npm via the "postinstall" script after `npm ci`.
+ * The Maven build (frontend-maven-plugin) triggers `npm ci`, which in turn
  * runs this script so the files are present before the OSGi bundle is assembled.
  *
  * Source:      node_modules/bootstrap/dist/css/  ->  src/main/resources/css/
