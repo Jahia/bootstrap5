@@ -20,6 +20,11 @@
 <%-- SECTION attributes --%>
 <c:if test="${createSection}">
     <c:set var="sectionType"  value="${currentNode.properties.sectionElement.string}"/>
+    <%-- sectionType is used as a tag name, so only the values offered by the choicelist are accepted --%>
+    <c:set var="sectionTypeToken" value=",${sectionType},"/>
+    <c:if test="${not fn:contains(',section,article,aside,hgroup,header,footer,nav,div,figure,figcaption,main,', sectionTypeToken)}">
+        <c:set var="sectionType" value="div"/>
+    </c:if>
     <c:set var="sectionId"    value="${currentNode.properties.sectionId.string}"/>
     <c:set var="sectionClass" value="${currentNode.properties.sectionCssClass.string}"/>
     <c:set var="sectionStyle" value="${currentNode.properties.sectionStyle.string}"/>

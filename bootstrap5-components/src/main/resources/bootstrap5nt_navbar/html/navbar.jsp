@@ -65,7 +65,7 @@
 <c:set var="expand" value="lg"/>
 <c:forEach items="${fn:split(navClass, ' ')}" var="currentClass">
     <c:if test="${fn:startsWith(currentClass, 'navbar-expand-')}">
-        <c:set var="expand" value="${fn:replace(currentClass, 'navbar-expand-', '')}"/>
+        <c:set var="expand" value="${fn:escapeXml(fn:replace(currentClass, 'navbar-expand-', ''))}"/>
     </c:if>
 </c:forEach>
 <c:if test="${empty addContainerWithinTheNavbar}">
@@ -150,7 +150,7 @@
                 </c:otherwise>
             </c:choose>
         </c:if>
-        ${brandText}
+        ${fn:escapeXml(brandText)}
     </a>
 
     <button class="${fn:escapeXml(togglerClass)}" type="button" data-bs-toggle="collapse"

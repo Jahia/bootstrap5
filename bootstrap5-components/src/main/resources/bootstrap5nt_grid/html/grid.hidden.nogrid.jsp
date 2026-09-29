@@ -8,7 +8,7 @@
 
 <c:set var="createAbsoluteAreas" value="${jcr:isNodeType(currentNode, 'bootstrap5mix:createAbsoluteAreas')}"/>
 <c:set var="moduleType" value="${createAbsoluteAreas ? 'absoluteArea' : 'area'}"/>
-<c:set var="level" value="${createAbsoluteAreas ? currentNode.properties.level.string : '0'}"/>
+<c:set var="level" value="${createAbsoluteAreas ? fn:escapeXml(currentNode.properties.level.string) : '0'}"/>
 
 <c:set var="hasListLimitMixin" value="${jcr:isNodeType(currentNode, 'bootstrap5mix:listLimit')}"/>
 <c:set var="listLimit" value="${hasListLimitMixin and not empty currentNode.properties.listLimit.string

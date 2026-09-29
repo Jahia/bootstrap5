@@ -2,6 +2,7 @@
 <%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
 <%@ taglib prefix="b5" uri="http://www.jahia.org/b5" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 
 <c:set var="language" value="${renderContext.mainResourceLocale.language}"/>
@@ -10,7 +11,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>${renderContext.mainResource.node.displayableName}</title>
+    <title>${fn:escapeXml(renderContext.mainResource.node.displayableName)}</title>
     <template:addResources type="css" resources="bootstrap.min.css"/>
     <c:if test="${renderContext.editMode}">
         <template:addResources type="css" resources="starter-edit.css"/>

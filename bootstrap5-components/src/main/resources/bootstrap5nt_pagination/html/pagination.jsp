@@ -63,11 +63,11 @@
         <c:set var="nbOfPages" value="10"/>
         <c:if test="${jcr:isNodeType(currentNode, 'bootstrap5mix:advancedPagination')}">
             <c:set var="nbOfPages" value="${currentNode.properties.nbOfPages.long}"/>
-            <c:set var="layout" value="${currentNode.properties.layout.string}"/>
+            <c:set var="layout" value="${fn:escapeXml(currentNode.properties.layout.string)}"/>
             <c:if test="${layout eq 'default'}">
                 <c:remove var="layout"/>
             </c:if>
-            <c:set var="align" value=" ${currentNode.properties.align.string}"/>
+            <c:set var="align" value=" ${fn:escapeXml(currentNode.properties.align.string)}"/>
             <c:if test="${align eq ' justify-content-start'}">
                 <c:remove var="align"/>
             </c:if>

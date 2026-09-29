@@ -11,7 +11,7 @@
 <%-- Set alignment class only if mixin present; otherwise empty string --%>
 <c:set var="captionAlignment"
        value="${jcr:isNodeType(currentNode, 'bootstrap5mix:figureAdvancedSettings')
-               ? currentNode.properties.captionAlignment.string : ''}"/>
+               ? fn:escapeXml(currentNode.properties.captionAlignment.string) : ''}"/>
 
 <figure class="figure">
     <%-- Delegates <img> rendering to the image mixin view; the image tag is NOT produced here.
