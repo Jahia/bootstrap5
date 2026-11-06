@@ -4,10 +4,51 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      maven-dependencies:
+        patterns:
+          - "*"
+    ignore:
+      # Jahia parent / platform artifacts define the target Jahia version: bumped manually.
+      - dependency-name: "org.jahia.*"
+      # frontend-maven-plugin 2.x requires a Java 17 Maven runtime.
+      - dependency-name: "com.github.eirslett:frontend-maven-plugin"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
+    ignore:
+      # Libraries provided by / shared with the Jahia JavaScript modules runtime.
+      - dependency-name: "@jahia/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "i18next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-i18next"
+        update-types: ["version-update:semver-major"]
+      # Shipped front-end library: a major changes the Bootstrap version delivered by this module.
+      - dependency-name: "react-bootstrap"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: "npm"
+    directory: "/bootstrap5-core"
+    schedule:
+      interval: "weekly"
+    groups:
+      npm-core-dependencies:
+        patterns:
+          - "*"
+    ignore:
+      # This module packages Bootstrap 5: never take a Bootstrap major.
+      - dependency-name: "bootstrap"
+        update-types: ["version-update:semver-major"]
 
   # 2_X maintenance branch (Jahia 8, 2.x.x releases): non-major version updates only.
   # Dependabot security updates only run on the default branch, not on 2_X.
@@ -19,6 +60,7 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "org.jahia.*"
   - package-ecosystem: "npm"
     directory: "/bootstrap5-core"
     target-branch: "2_X"
