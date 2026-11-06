@@ -40,7 +40,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.15.0</version>
+        <version>1.15.4</version>
         <configuration>
           <workingDirectory>${project.basedir}</workingDirectory>
           <nodeVersion>v18.20.4</nodeVersion>
