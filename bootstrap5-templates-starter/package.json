@@ -25,7 +25,7 @@
     "@jahia/javascript-modules-library": "^1.0.0",
     "@jahia/vite-plugin": "^1.0.0",
     "@types/react": "^19.0.0",
-    "typescript": "^5.0.0",
+    "typescript": "^6.0.3",
     "vite": "^8.3.1"
   },
   "engines": {
