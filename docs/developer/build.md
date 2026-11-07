@@ -4,7 +4,7 @@
 
 | Tool | Version | Role |
 |------|---------|------|
-| Node.js | v22.12.0 (via Maven) | JavaScript runtime |
+| Node.js | v22.23.2 (via Maven) | JavaScript runtime |
 | Yarn | 4.x (via corepack) | Package management (day-to-day dev) |
 | npm | bundled with Node | Package management (Maven build) |
 | Vite + `@jahia/vite-plugin` | latest | TSX → CommonJS compilation |
@@ -12,7 +12,7 @@
 | react-bootstrap | ^2.10.0 | React component library |
 | Maven | 3.x | Orchestrates JS builds, packages the reactor |
 
-The repository root is a **Yarn 4 workspace** (`package.json` with `"workspaces": ["bootstrap5-components", "bootstrap5-templates-starter"]`). For day-to-day development use Yarn; Maven builds use a locally-installed Node (`frontend-maven-plugin` downloads Node v22.12.0 to `.node/` inside each JS module on first build).
+The repository root is a **Yarn 4 workspace** (`package.json` with `"workspaces": ["bootstrap5-components", "bootstrap5-templates-starter"]`). For day-to-day development use Yarn; Maven builds use a locally-installed Node (`frontend-maven-plugin` downloads Node v22.23.2 to `.node/` inside each JS module on first build).
 
 ## Build commands
 
@@ -44,7 +44,7 @@ mvn clean install
 mvn clean install -pl bootstrap5-core,bootstrap5-package -am
 ```
 
-The `frontend-maven-plugin` in each JS module's `pom.xml` installs Node v22.12.0 to `.node/` (on first run) and invokes `npm run build:maven` during the Maven `compile` phase.
+The `frontend-maven-plugin` in each JS module's `pom.xml` installs Node v22.23.2 to `.node/` (on first run) and invokes `npm run build:maven` during the Maven `compile` phase.
 
 ## TGZ contents
 
@@ -93,7 +93,7 @@ curl -X POST http://localhost:8080/modules/api/provisioning \
 
 ## Node version constraint
 
-Maven builds download **Node v22.12.0** to `.node/` inside each JS module (via `frontend-maven-plugin`). This happens automatically on `mvn compile` or `mvn install`.
+Maven builds download **Node v22.23.2** to `.node/` inside each JS module (via `frontend-maven-plugin`). This happens automatically on `mvn compile` or `mvn install`.
 
 For Yarn-based dev, the system Node must be ≥ 18. Yarn 4 is managed via `corepack` — run `corepack enable` once to activate it.
 

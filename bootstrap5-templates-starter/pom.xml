@@ -31,7 +31,7 @@
         <version>1.15.4</version>
         <configuration>
           <workingDirectory>${project.basedir}</workingDirectory>
-          <nodeVersion>v22.12.0</nodeVersion>
+          <nodeVersion>v22.23.2</nodeVersion>
           <installDirectory>${project.basedir}/.node</installDirectory>
         </configuration>
         <executions>
