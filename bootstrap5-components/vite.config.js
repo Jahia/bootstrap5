@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import jahia from "@jahia/vite-plugin";
+import sbom from "rollup-plugin-sbom";
 import { readFileSync } from "fs";
 
 const { version } = JSON.parse(readFileSync("./package.json", "utf8"));
@@ -38,7 +39,7 @@ export default defineConfig({
   define: {
     __PACKAGE_VERSION__: JSON.stringify(version),
   },
-  plugins: [jahia(), fixJsxRuntimeDefaultImport],
+  plugins: [sbom({ specVersion: "1.4" }), jahia(), fixJsxRuntimeDefaultImport],
   build: {
     rollupOptions: {
       onwarn(warning, warn) {

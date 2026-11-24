@@ -7,6 +7,10 @@
     "bootstrap": "5.3.8"
   },
   "scripts": {
-    "postinstall": "node copy-bootstrap.js"
+    "postinstall": "node copy-bootstrap.js",
+    "sbom": "cyclonedx-npm --omit dev --spec-version 1.4 --output-file target/classes/javascript/cyclonedx/bom.json"
+  },
+  "devDependencies": {
+    "@cyclonedx/cyclonedx-npm": "^2.1.0"
   }
 }
