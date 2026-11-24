@@ -61,6 +61,14 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
               <arguments>install</arguments>
             </configuration>
           </execution>
+          <execution>
+            <id>npm-sbom</id>
+            <goals><goal>npm</goal></goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <arguments>run sbom</arguments>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
