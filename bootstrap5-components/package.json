@@ -50,9 +50,13 @@
   },
   "jahia": {
     "name": "Bootstrap5 Components",
+    "maven": {
+      "groupId": "org.jahiacommunity.modules"
+    },
     "module-dependencies": "bootstrap5-core",
     "module-type": "module",
     "server": "dist/server/index.js",
-    "static-resources": "/dist/client,/dist/assets,/img"
+    "static-resources": "/dist/client,/dist/assets,/img",
+    "required-version": "8.2.3.0"
   }
 }
