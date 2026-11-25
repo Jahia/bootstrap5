@@ -11,6 +11,6 @@
     "sbom": "cyclonedx-npm --omit dev --spec-version 1.4 --output-file target/classes/javascript/cyclonedx/bom.json"
   },
   "devDependencies": {
-    "@cyclonedx/cyclonedx-npm": "^2.1.0"
+    "@cyclonedx/cyclonedx-npm": "^7.0.1"
   }
 }
