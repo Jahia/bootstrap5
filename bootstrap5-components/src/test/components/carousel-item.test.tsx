@@ -24,9 +24,11 @@ function makeCarouselItemCtx(overrides: {
       if (type === 'bootstrap5mix:advancedCarouselItem') return overrides._hasAdvanced ?? false;
       return false;
     },
+    // Like JCR: hasProperty() tells whether it is set, getProperty() throws when it is not
+    hasProperty: (name: string) => name === 'image' && !!imageNode,
     getProperty: (name: string) => {
-      if (name === 'image') return imageNode ? { getNode: () => imageNode } : null;
-      return null;
+      if (name === 'image' && imageNode) return { getNode: () => imageNode };
+      throw new Error(`PathNotFoundException: ${name}`);
     },
     getPropertyAsString: (name: string) => {
       return overrides.advancedProps?.[name] ?? '';
@@ -100,7 +102,8 @@ describe('bootstrap5nt:carouselItem (default standalone view)', () => {
     const currentNode: any = {
       getIdentifier: () => 'second',
       isNodeType: (t: string) => t === 'bootstrap5nt:carouselItem',
-      getProperty: () => null,
+      hasProperty: () => false,
+      getProperty: (name: string) => { throw new Error(`PathNotFoundException: ${name}`); },
       getPropertyAsString: () => '',
       _children: [],
     };

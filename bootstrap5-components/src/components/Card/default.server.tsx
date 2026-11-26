@@ -8,7 +8,8 @@
  * Droppable children exclude the reserved "cardFooter" subnode name.
  */
 import {
-  Area,
+  AbsoluteArea,
+  AddContentButtons,
   getChildNodes,
   jahiaComponent,
   Render,
@@ -102,13 +103,15 @@ jahiaComponent(
           {bodyChildren.map((child) => (
             <Render key={child.getIdentifier()} node={child} />
           ))}
-          {/* Edit-mode drop zone for new droppable content */}
-          {renderContext.isEditMode() && <Area name="content" />}
+          {/* Edit mode: add droppable content as a direct child of the card, where 2.x stores it */}
+          {renderContext.isEditMode() && <AddContentButtons />}
         </Card.Body>
         {(footer || freeFooter) && (
           <Card.Footer bsPrefix="card-footer" className={textColorClass}>
-            {footer && <span dangerouslySetInnerHTML={{ __html: footer }} />}
-            {freeFooter && <Area name="cardFooter" />}
+            {/* footer is a plain string: rendered as text, as 2.x escaped it */}
+            {footer}
+            {/* 2.x template:area areaAsSubNode="true": the free footer lives under the card node */}
+            {freeFooter && <AbsoluteArea parent={currentNode} name="cardFooter" />}
           </Card.Footer>
         )}
       </Card>

@@ -9,7 +9,8 @@
  * its outer wrapper correctly in GraalVM SSR).
  */
 import {
-  Area,
+  AddContentButtons,
+  AddResources,
   buildNodeUrl,
   getChildNodes,
   jahiaComponent,
@@ -17,6 +18,18 @@ import {
 } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { BootstrapJS } from "../../utils/bootstrap-resources.js";
+import { getReferencedNode } from "../../utils/node.js";
+
+/** Pause/play toggle of the carousel-pause-btn buttons (WCAG 2.2.2, as in 2.x). */
+const PAUSE_BUTTON_SCRIPT = `<script>document.addEventListener("click", function (e) {
+  var b = e.target.closest && e.target.closest(".carousel-pause-btn");
+  if (!b) return;
+  var c = bootstrap.Carousel.getOrCreateInstance(document.querySelector(b.getAttribute("data-bs-target")));
+  var paused = b.getAttribute("data-paused") === "true";
+  if (paused) { c.cycle(); } else { c.pause(); }
+  b.setAttribute("data-paused", paused ? "false" : "true");
+  b.setAttribute("aria-label", paused ? "Pause slideshow" : "Play slideshow");
+});</script>`;
 
 jahiaComponent(
   {
@@ -31,6 +44,7 @@ jahiaComponent(
 
     // ── Advanced settings ──────────────────────────────────────────────────
     let interval: number | undefined;
+    let ride = true;
     let keyboard = true;
     let pause = false;
     let wrap = true;
@@ -44,6 +58,7 @@ jahiaComponent(
       const p = currentNode;
       const iv = parseInt(p.getPropertyAsString("interval") ?? "", 10);
       if (!isNaN(iv)) interval = iv;
+      ride = p.getPropertyAsString("ride") !== "false";
       keyboard = p.getPropertyAsString("keyboard") !== "false";
       pause = p.getPropertyAsString("pause") === "true";
       wrap = p.getPropertyAsString("wrap") !== "false";
@@ -68,8 +83,7 @@ jahiaComponent(
             {items.map((item) => {
               const title = item.getPropertyAsString("jcr:title") ?? "";
               const caption = item.getPropertyAsString("caption") ?? "";
-              const imageProp = item.getProperty("image");
-              const imageNode = imageProp ? imageProp.getNode() as JCRNodeWrapper : undefined;
+              const imageNode = getReferencedNode(item, "image");
               const imageUrl = imageNode ? buildNodeUrl(imageNode) : "";
 
               let titleColor = "";
@@ -94,7 +108,8 @@ jahiaComponent(
               );
             })}
           </div>
-          <Area name="slides" />
+          {/* New slides are direct children of the carousel, as in 2.x */}
+          <AddContentButtons nodeTypes={["bootstrap5nt:carouselItem"]} />
         </>
       );
     }
@@ -117,11 +132,14 @@ jahiaComponent(
       <div
         id={carouselId}
         className={carouselClasses}
-        data-bs-ride="carousel"
+        aria-roledescription="carousel"
+        aria-label={currentNode.getDisplayableName()}
+        // As in 2.x, only the options that differ from Bootstrap's defaults are written
+        data-bs-ride={ride ? "carousel" : undefined}
         data-bs-interval={interval !== undefined && interval !== 5000 ? interval : undefined}
-        data-bs-keyboard={keyboard ? "true" : "false"}
-        data-bs-pause={pause ? "hover" : "false"}
-        data-bs-wrap={wrap ? "true" : "false"}
+        data-bs-keyboard={keyboard ? undefined : "false"}
+        data-bs-pause={pause ? "hover" : undefined}
+        data-bs-wrap={wrap ? undefined : "false"}
       >
         {/* Indicators */}
         {useIndicators && (
@@ -140,13 +158,27 @@ jahiaComponent(
           </div>
         )}
 
+        {/* An auto-playing carousel must be pausable (WCAG 2.2.2) */}
+        {ride && (
+          <>
+            <button
+              type="button"
+              className="carousel-pause-btn visually-hidden-focusable"
+              aria-label="Pause slideshow"
+              data-bs-target={`#${carouselId}`}
+            >
+              Pause
+            </button>
+            <AddResources type="inline" inlineResource={PAUSE_BUTTON_SCRIPT} />
+          </>
+        )}
+
         {/* Slides */}
         <div className="carousel-inner">
         {items.map((item, i) => {
           const title = item.getPropertyAsString("jcr:title") ?? "";
           const caption = item.getPropertyAsString("caption") ?? "";
-          const imageProp = item.getProperty("image");
-          const imageNode = imageProp ? imageProp.getNode() as JCRNodeWrapper : undefined;
+          const imageNode = getReferencedNode(item, "image");
           const imageUrl = imageNode ? buildNodeUrl(imageNode) : "";
 
           let titleColor = "";

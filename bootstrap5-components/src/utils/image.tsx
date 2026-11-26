@@ -55,9 +55,11 @@ export function ImageTag({ node, imageNode, callerClass = "", callerStyle, calle
     const imageID = node.getPropertyAsString("imageID");
     if (imageID) elemId = imageID;
 
-    responsive = node.getProperty("responsive")?.getBoolean() ?? true;
+    // Neither property is autocreated and getProperty() throws when one is not set, which made the
+    // whole figure fail to render: read them as strings, defaults responsive=true, thumbnails=false.
+    responsive = node.getPropertyAsString("responsive") !== "false";
 
-    if (node.getProperty("thumbnails")?.getBoolean()) {
+    if (node.getPropertyAsString("thumbnails") === "true") {
       cssClass = `${cssClass} img-thumbnail`.trim();
     }
 

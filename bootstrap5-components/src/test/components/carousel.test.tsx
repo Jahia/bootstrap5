@@ -9,9 +9,11 @@ function makeCarouselItem(id: string, props: any = {}): any {
     _id: id,
     _nodeTypes: ['bootstrap5nt:carouselItem'],
     _nodeName: id,
+    // Like JCR: hasProperty() tells whether it is set, getProperty() throws when it is not
+    hasProperty: (name: string) => name === 'image' && !!imageNode,
     getProperty: (name: string) => {
-      if (name === 'image') return imageNode ? { getNode: () => imageNode } : null;
-      return null;
+      if (name === 'image' && imageNode) return { getNode: () => imageNode };
+      throw new Error(`PathNotFoundException: ${name}`);
     },
     getPropertyAsString: (name: string) => {
       return props[name] ?? '';
@@ -252,10 +254,11 @@ describe('bootstrap5nt:carousel (default view)', () => {
     expect(container.querySelector('.carousel-control-next')).toBeInTheDocument();
   });
 
-  test('edit mode → Area drop zone rendered', () => {
+  test('edit mode → "Add content" buttons for new slides, no page-level Area', () => {
     const ctx = makeCarouselCtx({ _id: 'car-19' }, { _editMode: true });
     const fn = getCarouselFn();
     const { container } = renderFn(fn, {}, ctx);
-    expect(container.querySelector('[data-testid="area"]')).toBeInTheDocument();
+    expect(container.querySelector('[data-testid="add-content-buttons"]')).toBeInTheDocument();
+    expect(container.querySelector('[data-testid="area"]')).not.toBeInTheDocument();
   });
 });

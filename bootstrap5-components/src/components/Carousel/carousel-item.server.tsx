@@ -9,6 +9,7 @@
  */
 import { buildNodeUrl, getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { getReferencedNode } from "../../utils/node.js";
 
 interface CarouselItemProps {
   "jcr:title"?: string;
@@ -34,8 +35,7 @@ jahiaComponent(
       siblings[0].getIdentifier() === currentNode.getIdentifier();
 
     // ⚠️ image weakref
-    const carouselImageProp = currentNode.getProperty("image");
-    const imageNode = carouselImageProp ? carouselImageProp.getNode() as JCRNodeWrapper : undefined;
+    const imageNode = getReferencedNode(currentNode as JCRNodeWrapper, "image");
     const imageUrl = imageNode ? buildNodeUrl(imageNode) : "";
 
     // bootstrap5mix:advancedCarouselItem
