@@ -1,4 +1,4 @@
-import {createTestPage, publishPage, deleteTestPage, pageUrl} from '../support/bootstrap5'
+import { createTestPage, publishPage, deleteTestPage, pageUrl } from '../support/bootstrap5'
 
 const siteKey = 'bootstrap5test'
 
@@ -11,11 +11,11 @@ const createPage = (parentPath: string, name: string, title: string) => {
             name,
             primaryNodeType: 'jnt:page',
             properties: [
-                {name: 'jcr:title', value: title, language: 'en'},
-                {name: 'j:templateName', value: 'starter'}
+                { name: 'jcr:title', value: title, language: 'en' },
+                { name: 'j:templateName', value: 'starter' },
             ],
-            children: [{name: 'pagecontent', primaryNodeType: 'jnt:contentList'}]
-        }
+            children: [{ name: 'pagecontent', primaryNodeType: 'jnt:contentList' }],
+        },
     })
 }
 
@@ -44,10 +44,10 @@ describe('Bootstrap5 — Navbar', () => {
                 primaryNodeType: 'bootstrap5nt:navbar',
                 mixins: ['bootstrap5mix:navbarGlobalSettings'],
                 properties: [
-                    {name: 'root', value: 'homePage'},
-                    {name: 'maxlevel', value: '3'}
-                ]
-            }
+                    { name: 'root', value: 'homePage' },
+                    { name: 'maxlevel', value: '3' },
+                ],
+            },
         })
         publishPage('navbar-test')
         // Publish the nav pages so they appear in live rendering
@@ -57,8 +57,8 @@ describe('Bootstrap5 — Navbar', () => {
                 pathOrId: `/sites/${siteKey}/home/nav-section-a`,
                 languages: ['en'],
                 publishSubNodes: true,
-                includeSubTree: true
-            }
+                includeSubTree: true,
+            },
         })
         // Explicitly publish the level-3 subtree so it reaches the live workspace
         // before the first page visit caches the navbar Groovy output
@@ -68,8 +68,8 @@ describe('Bootstrap5 — Navbar', () => {
                 pathOrId: `/sites/${siteKey}/home/nav-section-a/nav-page-a2`,
                 languages: ['en'],
                 publishSubNodes: true,
-                includeSubTree: true
-            }
+                includeSubTree: true,
+            },
         })
         cy.apollo({
             mutationFile: 'graphql/jcr/mutation/publishNode.graphql',
@@ -77,8 +77,8 @@ describe('Bootstrap5 — Navbar', () => {
                 pathOrId: `/sites/${siteKey}/home/nav-section-b`,
                 languages: ['en'],
                 publishSubNodes: true,
-                includeSubTree: true
-            }
+                includeSubTree: true,
+            },
         })
         cy.wait(4000)
     })
@@ -88,11 +88,11 @@ describe('Bootstrap5 — Navbar', () => {
         deleteTestPage('navbar-test')
         cy.apollo({
             mutationFile: 'graphql/jcr/mutation/deleteNode.graphql',
-            variables: {pathOrId: `/sites/${siteKey}/home/nav-section-a`, workspace: 'EDIT'}
+            variables: { pathOrId: `/sites/${siteKey}/home/nav-section-a`, workspace: 'EDIT' },
         })
         cy.apollo({
             mutationFile: 'graphql/jcr/mutation/deleteNode.graphql',
-            variables: {pathOrId: `/sites/${siteKey}/home/nav-section-b`, workspace: 'EDIT'}
+            variables: { pathOrId: `/sites/${siteKey}/home/nav-section-b`, workspace: 'EDIT' },
         })
     })
 
@@ -167,10 +167,10 @@ describe('Bootstrap5 — Navbar', () => {
                     primaryNodeType: 'bootstrap5nt:navbar',
                     mixins: ['bootstrap5mix:customizeNavbar'],
                     properties: [
-                        {name: 'root', value: 'homePage'},
-                        {name: 'navClass', value: 'navbar navbar-expand-lg navbar-dark bg-dark'}
-                    ]
-                }
+                        { name: 'root', value: 'homePage' },
+                        { name: 'navClass', value: 'navbar navbar-expand-lg navbar-dark bg-dark' },
+                    ],
+                },
             })
             publishPage('navbar-test')
         })
@@ -198,12 +198,12 @@ describe('Bootstrap5 — Navbar', () => {
                     primaryNodeType: 'bootstrap5nt:navbar',
                     mixins: ['bootstrap5mix:navbarGlobalSettings'],
                     properties: [
-                        {name: 'root', value: 'homePage'},
-                        {name: 'addContainerWithinTheNavbar', value: 'true', type: 'BOOLEAN'},
-                        {name: 'addLoginButton', value: 'false', type: 'BOOLEAN'},
-                        {name: 'addLanguageButton', value: 'false', type: 'BOOLEAN'}
-                    ]
-                }
+                        { name: 'root', value: 'homePage' },
+                        { name: 'addContainerWithinTheNavbar', value: 'true', type: 'BOOLEAN' },
+                        { name: 'addLoginButton', value: 'false', type: 'BOOLEAN' },
+                        { name: 'addLanguageButton', value: 'false', type: 'BOOLEAN' },
+                    ],
+                },
             })
             // addContainerWithinTheNavbar=false (JSP default) → no .container child
             cy.apollo({
@@ -214,12 +214,12 @@ describe('Bootstrap5 — Navbar', () => {
                     primaryNodeType: 'bootstrap5nt:navbar',
                     mixins: ['bootstrap5mix:navbarGlobalSettings'],
                     properties: [
-                        {name: 'root', value: 'homePage'},
-                        {name: 'addContainerWithinTheNavbar', value: 'false', type: 'BOOLEAN'},
-                        {name: 'addLoginButton', value: 'false', type: 'BOOLEAN'},
-                        {name: 'addLanguageButton', value: 'false', type: 'BOOLEAN'}
-                    ]
-                }
+                        { name: 'root', value: 'homePage' },
+                        { name: 'addContainerWithinTheNavbar', value: 'false', type: 'BOOLEAN' },
+                        { name: 'addLoginButton', value: 'false', type: 'BOOLEAN' },
+                        { name: 'addLanguageButton', value: 'false', type: 'BOOLEAN' },
+                    ],
+                },
             })
             publishPage('navbar-test')
         })
@@ -232,9 +232,40 @@ describe('Bootstrap5 — Navbar', () => {
         it('addContainerWithinTheNavbar=false omits .container', () => {
             cy.visit(pageUrl('navbar-test'))
             // navbar-nocontainer is the last navbar added — it must not contain a .container
-            cy.get('.navbar').last().within(() => {
-                cy.get('.container').should('not.exist')
-            })
+            cy.get('.navbar')
+                .last()
+                .within(() => {
+                    cy.get('.container').should('not.exist')
+                })
+        })
+    })
+
+    // The login modal must really sign a visitor in (3.0.x posted the form to "#")
+    context('Login form', () => {
+        const openLoginModal = () => {
+            cy.visit(pageUrl('navbar-test'))
+            cy.get('.navbar .login').first().click()
+            cy.get('.modal.show form[name="loginForm"]').should('be.visible')
+            // Bootstrap focuses the dialog once it is fully shown: typing earlier loses keystrokes
+            cy.focused().should('have.class', 'modal')
+        }
+
+        it('signs a visitor in from the navbar', () => {
+            openLoginModal()
+            cy.get('.modal.show input[name="username"]').type('root')
+            cy.get('.modal.show input[name="password"]').type(Cypress.env('SUPER_USER_PASSWORD'), { log: false })
+            cy.get('.modal.show button[name="loginButton"]').click()
+            cy.location('pathname').should('contain', 'navbar-test')
+            cy.contains('.navbar .dropdown-toggle', 'root').should('exist')
+            cy.get('.navbar a.logout').should('exist')
+        })
+
+        it('shows the error of a failed login', () => {
+            openLoginModal()
+            cy.get('.modal.show input[name="username"]').type('root')
+            cy.get('.modal.show input[name="password"]').type('not-the-password', { log: false })
+            cy.get('.modal.show button[name="loginButton"]').click()
+            cy.get('.modal.show .alert-danger').should('be.visible')
         })
     })
 })
