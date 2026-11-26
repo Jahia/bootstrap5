@@ -11,6 +11,7 @@
  */
 import { AddResources, buildNodeUrl, getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { useTranslation } from "react-i18next";
 import { safeUrl } from "../../utils/safe-url.js";
 import { BootstrapJS } from "../../utils/bootstrap-resources.js";
 import { getReferencedNode } from "../../utils/node.js";
@@ -82,6 +83,7 @@ jahiaComponent(
   },
   (_props: Record<string, unknown>) => {
     const { currentNode, renderContext, mainNode } = useServerContext();
+    const { t } = useTranslation();
     const isEditMode = renderContext.isEditMode();
     const navbarId = `navbar-${currentNode.getIdentifier()}`;
 
@@ -102,7 +104,8 @@ jahiaComponent(
     }
 
     // ── Global settings ────────────────────────────────────────────────────
-    let addContainerWithinTheNavbar = true;
+    // Without bootstrap5mix:navbarGlobalSettings 2.x rendered no container (login and languages on)
+    let addContainerWithinTheNavbar = false;
     let addLoginButton = true;
     let addLanguageButton = true;
     let maxlevel = 2;
@@ -218,6 +221,21 @@ jahiaComponent(
     const previewUrl: string = urlGen ? String(urlGen.getPreview()) : "#";
     const editUrl: string = urlGen ? String(urlGen.getEdit()) : "#";
     const loginNodeId = `login-${currentNode.getIdentifier()}`;
+    // ui:loginArea equivalent: POST to Jahia's login servlet, back to this page on success or failure
+    const request = renderContext.getRequest();
+    const loginAction = `${request.getContextPath()}/cms/login`;
+    const siteKey = siteNode ? String((siteNode as any).getSiteKey()) : "";
+    const currentPageUrl = buildNodeUrl(mainNode);
+    // Jahia's login valve sends back a failed login with ?loginError=bad_password / account_locked
+    const loginError = String(request.getParameter("loginError") ?? "");
+    // Workspace links, as 2.x: not on a remote publication server nor on content published from live
+    const settings: any = renderContext.getSettings();
+    const showWorkspaceLinks = !settings?.isDistantPublicationServerMode?.()
+      && mainNode.getPropertyAsString("j:originWS") !== "live"
+      && !(mainNode.getResolveSite() as any)?.isNodeType?.("jmix:remotelyPublished");
+    const canUseJContent = mainNode.hasPermission("jContentAccess");
+    const canContribute = mainNode.hasPermission("contributeModeAccess");
+    const contributeUrl: string = urlGen ? String(urlGen.getContribute()) : "#";
 
     // ── Inner content (brand + toggler + collapse area) ───────────────────
     const NavInner = (
@@ -253,7 +271,7 @@ jahiaComponent(
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon" />
+          <span className="navbar-toggler-icon" aria-hidden="true" />
         </button>
 
         {/* Collapsible nav area */}
@@ -397,7 +415,7 @@ jahiaComponent(
             </ul>
           )}
 
-          {/* Login button */}
+          {/* Login button / user menu: same structure, labels and permission checks as the 2.x login view */}
           {addLoginButton && (
             <>
               {isLoggedIn ? (
@@ -417,33 +435,42 @@ jahiaComponent(
                       className="dropdown-menu dropdown-menu-end"
                       aria-labelledby={`list-${currentNode.getIdentifier()}`}
                     >
-                      {/* ⚠️ Workspace switching links: jcr:hasPermission has no JS equivalent.
-                          Rendered unconditionally — validate permission-gating API. */}
-                      {!isEditMode && (
-                        <li>
-                          <a href={liveUrl} className="dropdown-item text-primary">
-                            Live
-                          </a>
-                        </li>
-                      )}
-                      {!renderContext.isPreviewMode() && (
-                        <li>
-                          <a href={previewUrl} className="dropdown-item text-secondary">
-                            Preview
-                          </a>
-                        </li>
-                      )}
-                      {!isEditMode && (
-                        <li>
-                          <a href={editUrl} className="dropdown-item text-success">
-                            Edit
-                          </a>
-                        </li>
+                      {showWorkspaceLinks && (
+                        <>
+                          {!renderContext.isLiveMode() && (
+                            <li>
+                              <a href={liveUrl} className="dropdown-item text-primary">
+                                {t("bootstrap5nt_navbar.label.live")}
+                              </a>
+                            </li>
+                          )}
+                          {!renderContext.isPreviewMode() && canUseJContent && (
+                            <li>
+                              <a href={previewUrl} className="dropdown-item text-secondary">
+                                {t("bootstrap5nt_navbar.label.preview")}
+                              </a>
+                            </li>
+                          )}
+                          {!isEditMode && canUseJContent && (
+                            <li>
+                              <a href={editUrl} className="dropdown-item text-success">
+                                {t("bootstrap5nt_navbar.label.edit")}
+                              </a>
+                            </li>
+                          )}
+                          {!isEditMode && !canUseJContent && canContribute && (
+                            <li>
+                              <a href={contributeUrl} className="dropdown-item">
+                                {t("bootstrap5nt_navbar.label.contribute")}
+                              </a>
+                            </li>
+                          )}
+                        </>
                       )}
                       <li><hr className="dropdown-divider" /></li>
                       <li>
                         <a className="dropdown-item logout" href={logoutUrl}>
-                          Logout
+                          {t("bootstrap5nt_navbar.label.logout")}
                         </a>
                       </li>
                     </ul>
@@ -453,20 +480,16 @@ jahiaComponent(
                 <>
                   <ul className={loginMenuULClass}>
                     <li className="nav-item">
-                      <a
-                        className="nav-link py-2 login"
-                        href="#"
-                        role="button"
+                      <button
+                        className="nav-link py-2 login btn btn-link"
+                        type="button"
                         data-bs-toggle="modal"
                         data-bs-target={`#${loginNodeId}`}
                       >
-                        Login
-                      </a>
+                        {t("bootstrap5nt_navbar.label.login")}
+                      </button>
                     </li>
                   </ul>
-                  {/* Login modal
-                      ⚠️ ui:loginArea (form action URL for Jahia login) has no JS equivalent.
-                      The form action is rendered as "#" — validate login URL accessor. */}
                   <div
                     className="modal fade"
                     id={loginNodeId}
@@ -474,72 +497,89 @@ jahiaComponent(
                     aria-labelledby={`${loginNodeId}-label`}
                     aria-hidden="true"
                   >
-                    <div className="modal-dialog modal-sm modal-dialog-centered">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <h5 className="modal-title" id={`${loginNodeId}-label`}>
-                            Please log in
-                          </h5>
-                          <button
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                          />
-                        </div>
-                        {/* ⚠️ form action should be the Jahia login URL — validate */}
-                        <form action="#" method="post">
+                    {/* What ui:loginArea rendered: Jahia's login servlet, the site, and where to go back */}
+                    <form action={loginAction} method="post" name="loginForm">
+                      <input type="hidden" name="site" value={siteKey} />
+                      <input type="hidden" name="redirect" value={currentPageUrl} />
+                      <input type="hidden" name="failureRedirect" value={currentPageUrl} />
+                      <div className="modal-dialog modal-sm modal-dialog-centered">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h5 className="modal-title" id={`${loginNodeId}-label`}>
+                              {t("bootstrap5nt_navbar.label.pleaselogin")}
+                            </h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+                          </div>
                           <div className="modal-body">
+                            {loginError && (
+                              <div className="alert alert-danger" role="alert">
+                                {t(loginError === "account_locked" ? "message.accountLocked" : "message.invalidUsernamePassword")}
+                              </div>
+                            )}
+                            <label htmlFor={`username-${currentNode.getIdentifier()}`} className="visually-hidden">
+                              {t("label.username")}
+                            </label>
                             <div className="input-group mb-3">
-                              <span className="input-group-text" id="username">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                              <span className="input-group-text" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-fill" viewBox="0 0 16 16">
                                   <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                                 </svg>
                               </span>
                               <input
                                 type="text"
                                 className="form-control"
+                                id={`username-${currentNode.getIdentifier()}`}
                                 name="username"
-                                placeholder="Username"
+                                placeholder={t("label.username")}
                                 required
                                 autoFocus
-                                aria-describedby="username"
                               />
                             </div>
+                            <label htmlFor={`password-${currentNode.getIdentifier()}`} className="visually-hidden">
+                              {t("label.password")}
+                            </label>
                             <div className="input-group mb-3">
-                              <span className="input-group-text" id="password">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                              <span className="input-group-text" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-key-fill" viewBox="0 0 16 16">
                                   <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2zM2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
                                 </svg>
                               </span>
                               <input
                                 type="password"
                                 className="form-control"
+                                id={`password-${currentNode.getIdentifier()}`}
                                 name="password"
-                                placeholder="Password"
+                                placeholder={t("label.password")}
                                 required
-                                aria-describedby="password"
                               />
                             </div>
                             <div className="form-check">
-                              <input className="form-check-input" type="checkbox" id="useCookie" name="useCookie" />
-                              <label className="form-check-label" htmlFor="useCookie">
-                                Remember me
+                              <input className="form-check-input" type="checkbox" id={`useCookie-${currentNode.getIdentifier()}`} name="useCookie" />
+                              <label className="form-check-label" htmlFor={`useCookie-${currentNode.getIdentifier()}`}>
+                                {t("loginForm.rememberMe.label")}
                               </label>
                             </div>
                           </div>
                           <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                              Close
+                              {t("bootstrap5nt_navbar.label.close")}
                             </button>
                             <button type="submit" name="loginButton" className="btn btn-primary">
-                              Login
+                              {t("bootstrap5nt_navbar.label.login")}
                             </button>
                           </div>
-                        </form>
+                        </div>
                       </div>
-                    </div>
+                    </form>
                   </div>
+                  {/* After a failed login, open the modal again so the error is visible (as 2.x) */}
+                  {loginError && (
+                    <AddResources
+                      type="inline"
+                      targetTag={isEditMode ? "head" : "body"}
+                      inlineResource={`<script>window.addEventListener("load", function () { var m = document.getElementById(${JSON.stringify(loginNodeId)}); if (m && window.bootstrap) { new bootstrap.Modal(m, { keyboard: false }).show(); } });</script>`}
+                    />
+                  )}
                 </>
               )}
             </>

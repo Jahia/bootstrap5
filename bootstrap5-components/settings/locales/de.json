@@ -2,5 +2,18 @@
   "bootstrap5nt_button.close": "Schließen",
   "bootstrap5nt_button.noLink": "Für diese Schaltfläche konnte kein funktionierender Link gefunden werden.",
   "bootstrap5nt_button.noUrl": "Für diese Schaltfläche konnte keine URL gefunden werden.",
-  "bootstrap5nt_button.readMore": "Mehr lesen"
+  "bootstrap5nt_button.readMore": "Mehr lesen",
+  "bootstrap5nt_navbar.label.close": "Schließen",
+  "bootstrap5nt_navbar.label.contribute": "Beitragen",
+  "bootstrap5nt_navbar.label.edit": "Bearbeiten",
+  "bootstrap5nt_navbar.label.live": "Live",
+  "bootstrap5nt_navbar.label.login": "Anmelden",
+  "bootstrap5nt_navbar.label.logout": "Abmelden",
+  "bootstrap5nt_navbar.label.pleaselogin": "Bitte anmelden",
+  "bootstrap5nt_navbar.label.preview": "Vorschau",
+  "label.password": "Passwort",
+  "label.username": "Benutzername",
+  "loginForm.rememberMe.label": "Angemeldet bleiben",
+  "message.accountLocked": "Ihre Benutzerkonto ist derzeit gesperrt. Bitte wenden Sie sich an den Systemadministrator um die Sperre aufzuheben.",
+  "message.invalidUsernamePassword": "Benutzername oder Passwort sind ungültig"
 }

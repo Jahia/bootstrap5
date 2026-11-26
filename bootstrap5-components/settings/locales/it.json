@@ -2,5 +2,18 @@
   "bootstrap5nt_button.close": "Chiudi",
   "bootstrap5nt_button.noLink": "Impossibile trovare un collegamento funzionante per questo pulsante.",
   "bootstrap5nt_button.noUrl": "Impossibile trovare un URL per questo pulsante.",
-  "bootstrap5nt_button.readMore": "Leggi di più"
+  "bootstrap5nt_button.readMore": "Leggi di più",
+  "bootstrap5nt_navbar.label.close": "Chiudi",
+  "bootstrap5nt_navbar.label.contribute": "Contribuisci",
+  "bootstrap5nt_navbar.label.edit": "Modifica",
+  "bootstrap5nt_navbar.label.live": "Live",
+  "bootstrap5nt_navbar.label.login": "Accedi",
+  "bootstrap5nt_navbar.label.logout": "Esci",
+  "bootstrap5nt_navbar.label.pleaselogin": "Effettua l'accesso",
+  "bootstrap5nt_navbar.label.preview": "Anteprima",
+  "label.password": "Password",
+  "label.username": "Nome utente",
+  "loginForm.rememberMe.label": "Ricordami",
+  "message.accountLocked": "Utente è bloccato. Si prega di contattare l'amministratore di sistema per resettarlo.",
+  "message.invalidUsernamePassword": "Nomeutente/password non validi"
 }

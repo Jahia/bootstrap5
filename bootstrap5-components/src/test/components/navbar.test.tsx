@@ -21,6 +21,8 @@ function makeNavPage(id: string, overrides: any = {}): any {
     },
     getParent: () => overrides._parent ?? makeNode({ _id: 'parent' }),
     getAncestors: () => overrides._ancestors ?? [],
+    hasPermission: (perm: string) => (overrides._permissions ?? []).includes(perm),
+    getResolveSite: () => null,
     _children: overrides._children ?? [],
   };
 }
@@ -31,6 +33,7 @@ function makeSiteNode(overrides: any = {}): any {
     getIdentifier: () => 'site-node',
     getDisplayableName: () => 'Test Site',
     getName: () => 'testsite',
+    getSiteKey: () => 'testsite',
     getPath: () => '/sites/test',
     isNodeType: (t: string) => (overrides._nodeTypes ?? []).includes(t),
     hasProperty: (name: string) => (overrides._properties ?? {})[name] !== undefined,
@@ -195,6 +198,55 @@ describe('bootstrap5nt:navbar (default view)', () => {
     const fn = getNavbarFn();
     const { container } = renderFn(fn, {}, ctx);
     expect(container.querySelector('.login')).toBeInTheDocument();
+  });
+
+  test('login form posts to Jahia login with site and redirects (2.x ui:loginArea)', () => {
+    const ctx = makeNavbarCtx({}, { _site: makeSiteNode(), _contextPath: '/ctx' });
+    const fn = getNavbarFn();
+    const { container } = renderFn(fn, {}, ctx);
+    const form = container.querySelector('form[name="loginForm"]');
+    expect(form).toHaveAttribute('action', '/ctx/cms/login');
+    expect(form?.querySelector('input[name="site"]')).toHaveAttribute('value', 'testsite');
+    expect(form?.querySelector('input[name="redirect"]')?.getAttribute('value')).toBeTruthy();
+    expect(form?.querySelector('input[name="failureRedirect"]')?.getAttribute('value')).toBeTruthy();
+    // inputs are labelled, and ids are unique per navbar
+    expect(container.querySelector('label[for="username-navbar-1"]')).toBeInTheDocument();
+    expect(container.querySelector('#password-navbar-1')).toBeInTheDocument();
+  });
+
+  test('failed login (?loginError=) → error alert in the modal', () => {
+    const ctx = makeNavbarCtx({}, { _site: makeSiteNode(), _params: { loginError: 'bad_password' } });
+    const fn = getNavbarFn();
+    const { container } = renderFn(fn, {}, ctx);
+    expect(container.querySelector('.modal .alert-danger')).toBeInTheDocument();
+  });
+
+  test('logged in without jContentAccess → no Preview/Edit links, Logout only', () => {
+    const user = { getUsername: () => 'visitor' };
+    const ctx = {
+      currentNode: makeNode({ _id: 'navbar-perm', _nodeName: 'nav' }),
+      renderContext: makeRenderContext({ _loggedIn: true, _user: user, _urlGen: makeUrlGen() }),
+      mainNode: makeNavPage('home', { _path: '/sites/test/home', _permissions: [] }),
+    };
+    _setContext(ctx);
+    const fn = getNavbarFn();
+    const { container } = renderFn(fn, {}, ctx);
+    expect(container.querySelector('a[href="/cms/edit"]')).not.toBeInTheDocument();
+    expect(container.querySelector('a[href="/cms/preview"]')).not.toBeInTheDocument();
+    expect(container.querySelector('a.logout')).toBeInTheDocument();
+  });
+
+  test('logged in with jContentAccess → Edit link', () => {
+    const user = { getUsername: () => 'editor' };
+    const ctx = {
+      currentNode: makeNode({ _id: 'navbar-perm2', _nodeName: 'nav' }),
+      renderContext: makeRenderContext({ _loggedIn: true, _user: user, _urlGen: makeUrlGen() }),
+      mainNode: makeNavPage('home', { _path: '/sites/test/home', _permissions: ['jContentAccess'] }),
+    };
+    _setContext(ctx);
+    const fn = getNavbarFn();
+    const { container } = renderFn(fn, {}, ctx);
+    expect(container.querySelector('a[href="/cms/edit"]')).toBeInTheDocument();
   });
 
   test('addLoginButton + isLoggedIn=true → Logout link present', () => {

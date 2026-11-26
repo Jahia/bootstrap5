@@ -2,5 +2,18 @@
   "bootstrap5nt_button.close": "Cerrar",
   "bootstrap5nt_button.noLink": "No se encontró un enlace válido para este botón.",
   "bootstrap5nt_button.noUrl": "No se encontró una URL para este botón.",
-  "bootstrap5nt_button.readMore": "Leer más"
+  "bootstrap5nt_button.readMore": "Leer más",
+  "bootstrap5nt_navbar.label.close": "Cerrar",
+  "bootstrap5nt_navbar.label.contribute": "Contribuir",
+  "bootstrap5nt_navbar.label.edit": "Editar",
+  "bootstrap5nt_navbar.label.live": "En vivo",
+  "bootstrap5nt_navbar.label.login": "Iniciar sesión",
+  "bootstrap5nt_navbar.label.logout": "Cerrar sesión",
+  "bootstrap5nt_navbar.label.pleaselogin": "Por favor, inicie sesión",
+  "bootstrap5nt_navbar.label.preview": "Vista previa",
+  "label.password": "Contraseña",
+  "label.username": "Nombre de usuario",
+  "loginForm.rememberMe.label": "Recordarme",
+  "message.accountLocked": "Su cuenta de usuario está bloqueada actualmente. Póngase en contacto con el administrador del sistema para reiniciarlo.",
+  "message.invalidUsernamePassword": "El nombre de usuario o la contraseña no son válidos"
 }
