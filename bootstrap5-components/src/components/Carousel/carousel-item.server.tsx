@@ -74,11 +74,13 @@ jahiaComponent(
     return (
       <div
         className={`carousel-item${isFirst ? " active" : ""}${itemClass}`}
+        aria-roledescription="slide"
+        aria-label={title ?? ""}
         {...bsProps}
       >
         {imageUrl && <img src={imageUrl} className="d-block w-100" alt="" />}
         {(title || caption) && (
-          <div className="carousel-caption d-none d-md-block">
+          <div className="carousel-caption d-md-block">
             {title && <h3 className={titleColor || undefined}>{title}</h3>}
             {caption && <p className={captionColor || undefined}>{caption}</p>}
           </div>

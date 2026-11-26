@@ -207,11 +207,15 @@ jahiaComponent(
             <div
               key={item.getIdentifier()}
               className={itemClasses}
+              // As in 2.x: each slide is announced as a slide, named by its title (WCAG 4.1.2)
+              aria-roledescription="slide"
+              aria-label={title}
               data-bs-interval={itemInterval ?? undefined}
             >
               {imageUrl && <img src={imageUrl} className="d-block w-100" alt="" />}
+              {/* Captions show on every screen size, as in 2.x (d-none hid them on phones) */}
               {(title || caption) && (
-                <div className="carousel-caption d-none d-md-block">
+                <div className="carousel-caption d-md-block">
                   {title && <h3 className={titleColor || undefined}>{title}</h3>}
                   {caption && <p className={captionColor || undefined}>{caption}</p>}
                 </div>

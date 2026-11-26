@@ -177,6 +177,7 @@ jahiaComponent(
                   id={id}
                   data-bs-toggle="modal"
                   data-bs-target={`#${modalId}`}
+                  aria-haspopup="dialog"
                   {...bsProps}
                 >
                   {label}
@@ -187,6 +188,7 @@ jahiaComponent(
                   className={customClass(props)}
                   data-bs-toggle="modal"
                   data-bs-target={`#${modalId}`}
+                  aria-haspopup="dialog"
                   id={id}
                 >
                   {label}
@@ -361,10 +363,14 @@ jahiaComponent(
             <div
               className={`offcanvas offcanvas-${props.placement ?? "start"}`}
               data-bs-scroll={props.enableBodyScrolling ? "true" : "false"}
-              data-bs-backdrop={props.enableBackdrop !== false ? "true" : "false"}
+              // As in 2.x: no backdrop unless enabled (the property is not autocreated)
+              data-bs-backdrop={props.enableBackdrop === true ? "true" : "false"}
               tabIndex={-1}
               id={offcanvasId}
-              aria-labelledby={`${offcanvasId}Label`}
+              // The panel is labelled by its title, or by the button text when it has none (as in 2.x)
+              {...(props.OffcanvasTitle
+                ? { "aria-labelledby": `${offcanvasId}Label` }
+                : { "aria-label": title ?? "" })}
             >
               {props.OffcanvasTitle && (
                 <div className="offcanvas-header">

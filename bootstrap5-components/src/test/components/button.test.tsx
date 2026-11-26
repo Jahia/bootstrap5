@@ -464,13 +464,31 @@ describe('bootstrap5nt:button — Offcanvas type', () => {
     expect(offcanvas).toHaveAttribute('data-bs-backdrop', 'false');
   });
 
-  test('enableBackdrop default (undefined) → data-bs-backdrop="true"', () => {
+  test('enableBackdrop unset → data-bs-backdrop="false" (2.x read the unset flag as false)', () => {
     const ctx = makeCtx({ _id: 'btn-oc-9' });
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'Offcanvas' }, ctx);
     const offcanvas = container.querySelector('.offcanvas');
-    expect(offcanvas).toHaveAttribute('data-bs-backdrop', 'true');
+    expect(offcanvas).toHaveAttribute('data-bs-backdrop', 'false');
+  });
+
+  test('offcanvas without a title is labelled by the button text', () => {
+    const ctx = makeCtx({ _id: 'btn-oc-10' });
+    _setContext(ctx);
+    const fn = getButtonFn();
+    const { container } = renderFn(fn, { buttonType: 'Offcanvas', 'jcr:title': 'Open Panel' }, ctx);
+    const offcanvas = container.querySelector('.offcanvas');
+    expect(offcanvas).toHaveAttribute('aria-label', 'Open Panel');
+    expect(offcanvas).not.toHaveAttribute('aria-labelledby');
+  });
+
+  test('modal trigger announces a dialog', () => {
+    const ctx = makeCtx({ _id: 'btn-md-a11y' });
+    _setContext(ctx);
+    const fn = getButtonFn();
+    const { container } = renderFn(fn, { buttonType: 'modal', 'jcr:title': 'Open' }, ctx);
+    expect(container.querySelector('[data-bs-toggle="modal"]')).toHaveAttribute('aria-haspopup', 'dialog');
   });
 });
 
