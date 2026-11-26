@@ -161,6 +161,13 @@ describe('bootstrap5nt:navbar (default view)', () => {
     expect(brandLink?.textContent).toContain('My Brand');
   });
 
+  test('no brand settings → empty brand link, the site name is not shown (as 2.x)', () => {
+    const ctx = makeNavbarCtx({}, { _site: makeSiteNode() });
+    const fn = getNavbarFn();
+    const { container } = renderFn(fn, {}, ctx);
+    expect(container.querySelector('.navbar-brand')?.textContent?.trim()).toBe('');
+  });
+
   test('addLoginButton=false → no login elements', () => {
     const ctx = makeNavbarCtx({
       _nodeTypes: ['bootstrap5mix:navbarGlobalSettings'],

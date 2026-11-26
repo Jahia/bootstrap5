@@ -13,6 +13,7 @@ import { AddResources, buildNodeUrl, getChildNodes, jahiaComponent, useServerCon
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { safeUrl } from "../../utils/safe-url.js";
 import { BootstrapJS } from "../../utils/bootstrap-resources.js";
+import { getReferencedNode } from "../../utils/node.js";
 
 // ─── Nav item URL/title resolution ─────────────────────────────────────────
 
@@ -91,12 +92,12 @@ jahiaComponent(
     let brandText = "";
 
     if (siteNode?.isNodeType("bootstrap5mix:siteBrand")) {
-      brandImage = siteNode.hasProperty("brandImage") ? siteNode.getProperty("brandImage").getNode() as JCRNodeWrapper : undefined;
-      brandImageMobile = siteNode.hasProperty("brandImageMobile") ? siteNode.getProperty("brandImageMobile").getNode() as JCRNodeWrapper : undefined;
+      brandImage = getReferencedNode(siteNode, "brandImage");
+      brandImageMobile = getReferencedNode(siteNode, "brandImageMobile");
       brandText = siteNode.getPropertyAsString("brandText") ?? "";
     } else if (currentNode.isNodeType("bootstrap5mix:brand")) {
-      brandImage = currentNode.hasProperty("brandImage") ? currentNode.getProperty("brandImage").getNode() as JCRNodeWrapper : undefined;
-      brandImageMobile = currentNode.hasProperty("brandImageMobile") ? currentNode.getProperty("brandImageMobile").getNode() as JCRNodeWrapper : undefined;
+      brandImage = getReferencedNode(currentNode, "brandImage");
+      brandImageMobile = getReferencedNode(currentNode, "brandImageMobile");
       brandText = currentNode.getPropertyAsString("brandText") ?? "";
     }
 
@@ -224,21 +225,22 @@ jahiaComponent(
         {/* Brand link */}
         <a className={brandLinkClass} href={rootNodeUrl}>
           {brandImage && (() => {
+            // As in 2.x: a logo without brand text is the link's only content, so it carries the site name
+            const alt = brandText ? "" : (siteNode?.getDisplayableName() ?? "");
             const desktopUrl = buildNodeUrl(brandImage);
             if (brandImageMobile) {
               const mobileUrl = buildNodeUrl(brandImageMobile);
               return (
                 <>
-                  <img src={desktopUrl} className={`align-top d-none d-${expand}-inline-block`} alt="" />
-                  <img src={mobileUrl} className={`align-top d-inline-block d-${expand}-none`} alt="" />
+                  <img src={desktopUrl} className={`align-top d-none d-${expand}-inline-block`} alt={alt} />
+                  <img src={mobileUrl} className={`align-top d-inline-block d-${expand}-none`} alt={alt} />
                 </>
               );
             }
-            return <img src={desktopUrl} className="d-inline-block align-top" alt="" />;
+            return <img src={desktopUrl} className="d-inline-block align-top" alt={alt} />;
           })()}
-          {!siteNode?.isNodeType("bootstrap5mix:siteBrand") && !currentNode.isNodeType("bootstrap5mix:brand")
-            ? (siteNode?.getDisplayableName() ?? "")
-            : brandText}
+          {/* Only the configured brand text, as in 2.x: no brand settings, no text */}
+          {brandText}
         </a>
 
         {/* Mobile toggler */}
