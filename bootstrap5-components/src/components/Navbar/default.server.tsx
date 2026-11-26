@@ -9,8 +9,10 @@
  * Language switch URLs use the approximated "{pagePath}.{lang}.html" pattern;
  * login form action and workspace permission gating need validation with Jahia JS engine team.
  */
-import { buildNodeUrl, getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { AddResources, buildNodeUrl, getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { safeUrl } from "../../utils/safe-url.js";
+import { BootstrapJS } from "../../utils/bootstrap-resources.js";
 
 // ─── Nav item URL/title resolution ─────────────────────────────────────────
 
@@ -34,7 +36,8 @@ function resolveNavItem(
   if (page.isNodeType("jnt:navMenuText")) {
     url = "#";
   } else if (page.isNodeType("jnt:externalLink")) {
-    url = page.getPropertyAsString("j:url") ?? "#";
+    // safeUrl: an editor-set javascript:/data: URL becomes "#" (as in 2.x)
+    url = safeUrl(page.getPropertyAsString("j:url"));
   } else if (page.isNodeType("jnt:page")) {
     url = buildNodeUrl(page);
     title = page.getDisplayableName();
@@ -286,9 +289,12 @@ jahiaComponent(
                       >
                         {item1.title}
                       </a>
-                      <div className="dropdown-menu" aria-labelledby={dropId}>
-                        <a className="dropdown-item" href={item1.url}>{item1.title}</a>
-                        <div className="dropdown-divider" />
+                      {/* Same structure as 2.x (ul/li, .dropend, .submenu) so multilevel-nav.css/js and site CSS apply */}
+                      <ul className="dropdown-menu" aria-labelledby={dropId}>
+                        <li>
+                          <a className="dropdown-item" href={item1.url}>{item1.title}</a>
+                        </li>
+                        <li className="dropdown-divider" />
                         {level2Pages.map((l2) => {
                           if (!isDisplayedInMenu(l2, navbarName)) return null;
                           const item2 = resolveNavItem(l2, mainResourcePath);
@@ -300,67 +306,70 @@ jahiaComponent(
                           const hasSubDropdown = level3Pages.length > 0;
 
                           if (hasSubDropdown) {
-                            const dropId3 = `navbarDropdownMen-${currentNode.getIdentifier()}-${l2.getIdentifier()}`;
+                            const dropId3 = `dropend-${l2.getIdentifier()}`;
                             return (
-                              <div key={l2.getIdentifier()} className="dropend">
+                              <li key={l2.getIdentifier()} className="dropend">
                                 <a
                                   className={`dropdown-item dropdown-toggle${(item2.isActive || item2.isInPath) ? " active" : ""}`}
-                                  href="#"
+                                  href={item2.url}
                                   id={dropId3}
                                   data-bs-toggle="dropdown"
-                                  aria-haspopup="true"
                                   aria-expanded="false"
                                   {...(item2.isActive ? { "aria-current": "page" } : {})}
                                 >
                                   {item2.title}
                                 </a>
-                                <div className="dropdown-menu" aria-labelledby={dropId3}>
-                                  <a
-                                    className={`dropdown-item${item2.isActive ? " active" : ""}`}
-                                    href={item2.url}
-                                    {...(item2.isActive ? { "aria-current": "page" } : {})}
-                                  >
-                                    {item2.title}
-                                  </a>
-                                  <div className="dropdown-divider" />
+                                <ul className="submenu dropdown-menu" aria-labelledby={dropId3}>
+                                  <li>
+                                    <a
+                                      className={`dropdown-item${item2.isActive ? " active" : ""}`}
+                                      href={item2.url}
+                                      {...(item2.isActive ? { "aria-current": "page" } : {})}
+                                    >
+                                      {item2.title}
+                                    </a>
+                                  </li>
+                                  <li className="dropdown-divider" />
                                   {level3Pages.map((l3) => {
                                     if (!isDisplayedInMenu(l3, navbarName)) return null;
                                     const item3 = resolveNavItem(l3, mainResourcePath);
                                     if (!item3) return null;
                                     return (
-                                      <a
-                                        key={l3.getIdentifier()}
-                                        className={`dropdown-item${item3.isActive ? " active" : ""}`}
-                                        href={item3.url}
-                                        {...(item3.isActive ? { "aria-current": "page" } : {})}
-                                      >
-                                        {item3.title}
-                                        {item3.isActive && (
-                                          <span className="visually-hidden">(current)</span>
-                                        )}
-                                      </a>
+                                      <li key={l3.getIdentifier()}>
+                                        <a
+                                          className={`dropdown-item${item3.isActive ? " active" : ""}`}
+                                          href={item3.url}
+                                          {...(item3.isActive ? { "aria-current": "page" } : {})}
+                                        >
+                                          {item3.title}
+                                          {item3.isActive && (
+                                            <span className="visually-hidden">(current)</span>
+                                          )}
+                                        </a>
+                                      </li>
                                     );
                                   })}
-                                </div>
-                              </div>
+                                </ul>
+                              </li>
                             );
                           }
 
                           return (
-                            <a
-                              key={l2.getIdentifier()}
-                              className={`dropdown-item${item2.isActive ? " active" : ""}`}
-                              href={item2.url}
-                              {...(item2.isActive ? { "aria-current": "page" } : {})}
-                            >
-                              {item2.title}
-                              {item2.isActive && (
-                                <span className="visually-hidden">(current)</span>
-                              )}
-                            </a>
+                            <li key={l2.getIdentifier()}>
+                              <a
+                                className={`dropdown-item${item2.isActive ? " active" : ""}`}
+                                href={item2.url}
+                                {...(item2.isActive ? { "aria-current": "page" } : {})}
+                              >
+                                {item2.title}
+                                {item2.isActive && (
+                                  <span className="visually-hidden">(current)</span>
+                                )}
+                              </a>
+                            </li>
                           );
                         })}
-                      </div>
+                      </ul>
                     </li>
                   );
                 }
@@ -580,13 +589,24 @@ jahiaComponent(
 
     // ── Optional container wrapper ─────────────────────────────────────────
     return (
-      <nav className={navClass}>
-        {addContainerWithinTheNavbar ? (
-          <div className="container">{NavInner}</div>
-        ) : (
-          NavInner
+      <>
+        {/* Dropdowns need Bootstrap's JS; Jahia sends each resource once per page */}
+        <BootstrapJS />
+        {recursive && (
+          // Multi-level menus: submenu positioning and touch support, as the 2.x multilevel resources
+          <>
+            <AddResources type="css" resources="multilevel-nav.css" />
+            <AddResources type="javascript" resources="multilevel-nav.js" targetTag={isEditMode ? "head" : "body"} />
+          </>
         )}
-      </nav>
+        <nav className={navClass}>
+          {addContainerWithinTheNavbar ? (
+            <div className="container">{NavInner}</div>
+          ) : (
+            NavInner
+          )}
+        </nav>
+      </>
     );
   },
 );
