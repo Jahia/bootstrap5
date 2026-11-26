@@ -29,6 +29,19 @@ describe('bootstrap5nt:tabs — toAnchor function (via rendered output)', () => 
     return ctx;
   }
 
+  test('tabs are named and tied to their panels (2.x WCAG attributes)', () => {
+    const lists = [makeContentList('list-1', 'one'), makeContentList('list-2', 'two')];
+    const ctx = makeTabsCtx(lists);
+    const fn = getTabsFn();
+    const { container } = renderFn(fn, { useListNameAsAnchor: true }, ctx);
+    expect(container.querySelector('ul[role="tablist"]')).toHaveAttribute('aria-label');
+    const [first, second] = Array.from(container.querySelectorAll('button[role="tab"]'));
+    expect(first).toHaveAttribute('aria-controls', 'one');
+    expect(first).toHaveAttribute('tabindex', '0');
+    expect(second).toHaveAttribute('tabindex', '-1');
+    expect(container.querySelector('#one')).toHaveAttribute('aria-labelledby', first.id);
+  });
+
   test('toAnchor("my tab") → "my-tab" (spaces → hyphens)', () => {
     const list = makeContentList('list-1', 'my tab');
     const ctx = makeTabsCtx([list]);
