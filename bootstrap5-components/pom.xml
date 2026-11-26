@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.jahiacommunity.modules</groupId>
     <artifactId>bootstrap5-modules</artifactId>
-    <version>3.0.2</version>
+    <version>3.0.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>bootstrap5-components</artifactId>
