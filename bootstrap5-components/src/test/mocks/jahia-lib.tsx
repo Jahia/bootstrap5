@@ -30,6 +30,9 @@ export function useServerContext() { return _ctx; }
 export function Area({ name, nodeType }: { name?: string; nodeType?: string }) {
   return <div data-testid="area" data-area-name={name} data-nodetype={nodeType} />;
 }
+export function AbsoluteArea({ name, parent, nodeType }: { name?: string; parent?: any; nodeType?: string }) {
+  return <div data-testid="area" data-area-name={name} data-area-parent={parent?.getIdentifier?.()} data-nodetype={nodeType} />;
+}
 export function RenderChildren({ filter }: { filter?: string } = {}) {
   return <div data-testid="render-children" data-filter={filter} />;
 }

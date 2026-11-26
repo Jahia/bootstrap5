@@ -165,15 +165,32 @@ describe('bootstrap5nt:button — externalLink type', () => {
     expect(container.querySelector('.badge-warning')).toBeInTheDocument();
   });
 
-  test('no URL + live mode → renders <a href=""> (not null)', () => {
+  test('no URL + live mode → disabled button, no link (as 2.x)', () => {
     const ctx = makeCtx({ _id: 'btn-el-3' }, { _editMode: false });
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'externalLink', externalLink: '' }, ctx);
-    // externalLink '' is blank but not edit mode → should NOT show warning, should show <a>
-    const a = container.querySelector('a');
-    expect(a).toBeInTheDocument();
-    expect(a).toHaveAttribute('href', '');
+    expect(container.querySelector('a')).not.toBeInTheDocument();
+    expect(container.querySelector('button')).toBeDisabled();
+  });
+
+  test('javascript: URL + live mode → disabled button, the URL is never rendered', () => {
+    const ctx = makeCtx({ _id: 'btn-el-js' }, { _editMode: false });
+    _setContext(ctx);
+    const fn = getButtonFn();
+    const { container } = renderFn(fn, { buttonType: 'externalLink', externalLink: 'javascript:alert(1)', 'jcr:title': 'JS' }, ctx);
+    expect(container.querySelector('a')).not.toBeInTheDocument();
+    expect(container.querySelector('button')).toBeDisabled();
+    expect(container.innerHTML).not.toContain('javascript:');
+  });
+
+  test('size "btn-lg" (stored choicelist value) → btn-lg class', () => {
+    const ctx = makeCtx({ _id: 'btn-el-lg' }, { _editMode: false });
+    _setContext(ctx);
+    const fn = getButtonFn();
+    const { container } = renderFn(fn, { buttonType: 'externalLink', externalLink: 'https://example.com', size: 'btn-lg' }, ctx);
+    expect(container.querySelector('a')).toHaveClass('btn-lg');
+    expect(container.querySelector('a')?.className).not.toContain('btn-btn');
   });
 
   test('http:// as URL → treated as blank, edit mode → warning', () => {

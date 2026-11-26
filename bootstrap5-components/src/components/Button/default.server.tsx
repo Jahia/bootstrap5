@@ -13,14 +13,15 @@
  */
 import {
   AddResources,
-  Area,
   buildNodeUrl,
   jahiaComponent,
+  RenderChildren,
 } from "@jahia/javascript-modules-library";
 import { useTranslation } from "react-i18next";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { Button } from "react-bootstrap";
 import { BootstrapJS } from "../../utils/bootstrap-resources.js";
+import { safeUrl } from "../../utils/safe-url.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -77,9 +78,9 @@ function buttonProps(props: ButtonBaseProps) {
   if (style === "custom") return null;
 
   const variant = props.outline ? `outline-${style}` : style;
-  const size = props.size && props.size !== "default"
-    ? (props.size as "sm" | "lg")
-    : undefined;
+  // The stored values are "btn-lg" / "btn-sm" (2.x choicelist); react-bootstrap wants "lg" / "sm".
+  const storedSize = props.size?.replace(/^btn-/, "");
+  const size: "lg" | "sm" | undefined = storedSize === "lg" || storedSize === "sm" ? storedSize : undefined;
   const active = props.state === "active";
   const disabled = props.state === "disabled";
   const extraClass = [
@@ -138,11 +139,18 @@ jahiaComponent(
 
       // ── External link ──────────────────────────────────────────────────
       case "externalLink": {
-        const href = props.externalLink ?? "";
+        // safeUrl turns javascript:, data: and other non-http(s)/mailto/tel schemes into "#" (as in 2.x)
+        const href = safeUrl(props.externalLink);
         const label = title || t("bootstrap5nt_button.readMore");
-        const isBlank = !href || href === "http://";
+        const isBlank = href === "#" || href === "http://";
         if (isBlank && renderContext.isEditMode()) {
           return <span className="badge badge-warning">{t("bootstrap5nt_button.noUrl")}</span>;
+        }
+        if (isBlank) {
+          // No usable URL in live: a disabled button rather than a link that goes nowhere
+          return bsProps
+            ? <Button id={id} {...bsProps} disabled>{label}</Button>
+            : <button type="button" className={customClass(props)} id={id} disabled>{label}</button>;
         }
         return bsProps
           ? <Button as="a" href={href} role="button" id={id} {...bsProps}>{label}</Button>
@@ -215,7 +223,8 @@ jahiaComponent(
                     </div>
                   )}
                   <div className="modal-body">
-                    <Area name="modal-body" />
+                    {/* The droppable content is the button's direct children, as in 2.x; "Add content" in edit mode */}
+                    <RenderChildren filter="jmix:droppableContent" />
                   </div>
                   <div className="modal-footer">
                     <button
@@ -268,7 +277,8 @@ jahiaComponent(
                 </button>
               )}
             <div className={`collapse${props.show ? " show" : ""}`} id={collapseId}>
-              <Area name="collapse-body" />
+              {/* The droppable content is the button's direct children, as in 2.x; "Add content" in edit mode */}
+              <RenderChildren filter="jmix:droppableContent" />
             </div>
           </>
         );
@@ -370,7 +380,8 @@ jahiaComponent(
                 </div>
               )}
               <div className="offcanvas-body">
-                <Area name="offcanvas-body" />
+                {/* The droppable content is the button's direct children, as in 2.x; "Add content" in edit mode */}
+                <RenderChildren filter="jmix:droppableContent" />
               </div>
             </div>
           </>

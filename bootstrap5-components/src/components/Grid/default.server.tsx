@@ -8,7 +8,7 @@
  * CSS classes), and nogrid (single area). Area absoluteArea support needs validation
  * with the Jahia JS engine team.
  */
-import { AbsoluteArea, Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { AbsoluteArea, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 
 // ─── Predefined grid helpers ────────────────────────────────────────────────
 
@@ -135,15 +135,13 @@ jahiaComponent(
     // ── Grid columns content ───────────────────────────────────────────────
     const SectionTag = (sectionElement ?? "section") as ('section' | 'div');
 
-    // Mirrors JSP: Area for regular grids, AbsoluteArea when bootstrap5mix:createAbsoluteAreas
-    // is active. Parent is currentNode (the grid node itself), so column areas are stored at
-    // {gridPath}/main, {gridPath}/side, etc. — a fixed absolute path that does not change per
-    // page. This is correct when the grid lives inside a template AbsoluteArea: the grid node
-    // is stored once under the home/root page and inherited; anchoring to it makes the column
-    // content shared across all inheriting pages.
-    const renderCol = createAbsoluteAreas
-      ? (areaPath: string) => <AbsoluteArea parent={currentNode} name={areaPath} />
-      : (areaPath: string) => <Area name={areaPath} />;
+    // The JSP views rendered every column with template:area areaAsSubNode="true": the column
+    // content lives under the grid node itself ({gridPath}/main, {gridPath}/side, {gridPath}/col0…),
+    // and 2.x sites hold their content there. <Area> resolves its name against the page instead,
+    // and the engine has no areaAsSubNode option, so an AbsoluteArea anchored on the grid node is
+    // what reaches the same path. With bootstrap5mix:createAbsoluteAreas the grid usually lives in
+    // a template area, so the same anchoring shares the column content across inheriting pages.
+    const renderCol = (areaPath: string) => <AbsoluteArea parent={currentNode} name={areaPath} />;
 
     const GridColumns = () => {
       if (isPredefined) {

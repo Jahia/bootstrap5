@@ -48,6 +48,14 @@ describe('bootstrap5nt:grid (default view)', () => {
     expect(areaNames).toContain('side');
   });
 
+  test('column areas are stored under the grid node, as 2.x areaAsSubNode did', () => {
+    const ctx = makeGridCtx({ _nodeTypes: ['bootstrap5mix:predefinedGrid'] });
+    const fn = getGridFn();
+    const { container } = renderFn(fn, { grid: '6_6' }, ctx);
+    const parents = Array.from(container.querySelectorAll('[data-testid="area"]')).map(a => a.getAttribute('data-area-parent'));
+    expect(parents).toEqual([ctx.currentNode.getIdentifier(), ctx.currentNode.getIdentifier()]);
+  });
+
   test('predefinedGrid "4_8" → smaller first → areas "side","main"', () => {
     const ctx = makeGridCtx({ _nodeTypes: ['bootstrap5mix:predefinedGrid'] });
     const fn = getGridFn();

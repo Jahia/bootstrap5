@@ -20,6 +20,9 @@ jahiaComponent(
     componentType: "view",
     name: "default",
     displayName: "List",
+    // Accordions, tabs, carousel... are jmix:list too, and the engine ranks applicable views by priority,
+    // module and name only: at equal priority this generic view could replace their own "default" view.
+    priority: -1,
   },
   () => {
     const { currentNode, renderContext } = useServerContext();
