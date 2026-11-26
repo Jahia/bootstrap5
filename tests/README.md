@@ -51,6 +51,29 @@ yarn install
 
 ---
 
+## Running the whole suite in Docker
+
+`ci.build.sh` stages the modules to test in `assets/` and writes `assets/provisioning.yml`, which installs
+them in dependency order (`bootstrap5-core`, `bootstrap5-components`, `bootstrap5-templates-starter`, with the
+`javascript-modules-engine` before the first JavaScript module). `ci.startup.sh` starts Jahia, provisions it
+and runs the suite.
+
+```bash
+mvn clean install                         # from the repository root
+cd tests
+bash ci.build.sh && bash ci.startup.sh    # the license comes from JAHIA_LICENSE or /tmp/license.xml
+```
+
+By default the modules come from this checkout's build (`../<module>/target`). To test released modules instead,
+put them in a folder and point `BOOTSTRAP5_ARTIFACTS` to it: the 2.x jars and the 3.x jar + `.tgz` files are
+both supported, so the same specs can compare two versions.
+
+```bash
+BOOTSTRAP5_ARTIFACTS=/path/to/bootstrap5-3.0.1 bash ci.build.sh && bash ci.startup.sh
+```
+
+---
+
 ## Running the tests
 
 Before running, export the environment variables from your `.env` file:
