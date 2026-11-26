@@ -20,8 +20,12 @@ import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { BootstrapJS } from "../../utils/bootstrap-resources.js";
 import { getReferencedNode } from "../../utils/node.js";
 
-/** Pause/play toggle of the carousel-pause-btn buttons (WCAG 2.2.2, as in 2.x). */
-const PAUSE_BUTTON_SCRIPT = `<script>document.addEventListener("click", function (e) {
+/**
+ * Pause/play toggle of the carousel-pause-btn buttons (WCAG 2.2.2, as in 2.x). Each carousel adds it,
+ * so it registers its listener once per page: two listeners would undo each other's toggle.
+ */
+const PAUSE_BUTTON_SCRIPT = `<script>if (!window.__bs5CarouselPause) { window.__bs5CarouselPause = true;
+document.addEventListener("click", function (e) {
   var b = e.target.closest && e.target.closest(".carousel-pause-btn");
   if (!b) return;
   var c = bootstrap.Carousel.getOrCreateInstance(document.querySelector(b.getAttribute("data-bs-target")));
@@ -29,7 +33,7 @@ const PAUSE_BUTTON_SCRIPT = `<script>document.addEventListener("click", function
   if (paused) { c.cycle(); } else { c.pause(); }
   b.setAttribute("data-paused", paused ? "false" : "true");
   b.setAttribute("aria-label", paused ? "Pause slideshow" : "Play slideshow");
-});</script>`;
+}); }</script>`;
 
 jahiaComponent(
   {

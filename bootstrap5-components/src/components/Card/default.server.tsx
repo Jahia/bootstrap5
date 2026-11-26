@@ -104,7 +104,7 @@ jahiaComponent(
             <Render key={child.getIdentifier()} node={child} />
           ))}
           {/* Edit mode: add droppable content as a direct child of the card, where 2.x stores it */}
-          {renderContext.isEditMode() && <AddContentButtons />}
+          {renderContext.isEditMode() && <AddContentButtons nodeTypes={["jmix:droppableContent"]} />}
         </Card.Body>
         {(footer || freeFooter) && (
           <Card.Footer bsPrefix="card-footer" className={textColorClass}>
