@@ -114,6 +114,15 @@ describe('bootstrap5nt:carousel (default view)', () => {
     expect(img).toHaveAttribute('src', '/images/slide.jpg');
   });
 
+  test('slide image alt is the slide title (2.x, WCAG 1.1.1)', () => {
+    const imageNode = makeNode({ _url: '/images/slide.jpg' });
+    const item = makeCarouselItem('slide-alt', { imageNode, 'jcr:title': 'Spring sale' });
+    const ctx = makeCarouselCtx({ _id: 'car-alt', _children: [item] }, { _editMode: false });
+    const fn = getCarouselFn();
+    const { container } = renderFn(fn, {}, ctx);
+    expect(container.querySelector('.carousel-item img')).toHaveAttribute('alt', 'Spring sale');
+  });
+
   test('slide with title + caption → carousel-caption h3 + p', () => {
     const item = makeCarouselItem('slide-cap', {
       'jcr:title': 'My Slide Title',

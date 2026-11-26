@@ -212,7 +212,8 @@ jahiaComponent(
               aria-label={title}
               data-bs-interval={itemInterval ?? undefined}
             >
-              {imageUrl && <img src={imageUrl} className="d-block w-100" alt="" />}
+              {/* The slide title describes its image, as in 2.x (WCAG 1.1.1) */}
+              {imageUrl && <img src={imageUrl} className="d-block w-100" alt={title ?? ""} />}
               {/* Captions show on every screen size, as in 2.x (d-none hid them on phones) */}
               {(title || caption) && (
                 <div className="carousel-caption d-md-block">

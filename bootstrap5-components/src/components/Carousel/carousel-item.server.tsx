@@ -78,7 +78,8 @@ jahiaComponent(
         aria-label={title ?? ""}
         {...bsProps}
       >
-        {imageUrl && <img src={imageUrl} className="d-block w-100" alt="" />}
+        {/* The slide title describes its image, as in 2.x (WCAG 1.1.1) */}
+        {imageUrl && <img src={imageUrl} className="d-block w-100" alt={title ?? ""} />}
         {(title || caption) && (
           <div className="carousel-caption d-md-block">
             {title && <h3 className={titleColor || undefined}>{title}</h3>}
