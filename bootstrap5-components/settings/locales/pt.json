@@ -1,0 +1,19 @@
+{
+  "bootstrap5nt_button.close": "Fechar",
+  "bootstrap5nt_button.noLink": "Não foi possível encontrar uma ligação válida para este botão.",
+  "bootstrap5nt_button.noUrl": "Não foi possível encontrar um URL para este botão.",
+  "bootstrap5nt_button.readMore": "Ler mais",
+  "bootstrap5nt_navbar.label.close": "Fechar",
+  "bootstrap5nt_navbar.label.contribute": "Contribuir",
+  "bootstrap5nt_navbar.label.edit": "Editar",
+  "bootstrap5nt_navbar.label.live": "Em direto",
+  "bootstrap5nt_navbar.label.login": "Iniciar sessão",
+  "bootstrap5nt_navbar.label.logout": "Terminar sessão",
+  "bootstrap5nt_navbar.label.pleaselogin": "Por favor, inicie sessão",
+  "bootstrap5nt_navbar.label.preview": "Pré-visualizar",
+  "label.password": "Senha",
+  "label.username": "Nome do usuário",
+  "loginForm.rememberMe.label": "Lembrar-me",
+  "message.accountLocked": "Sua conta de usuário está bloqueada no momento. Entre em contato com o administrador do sistema para a repor.",
+  "message.invalidUsernamePassword": "Nome de usuário ou senha inválido(a)"
+}

@@ -1,0 +1,19 @@
+{
+  "bootstrap5nt_button.close": "Close",
+  "bootstrap5nt_button.noLink": "Could not find a working link for this button.",
+  "bootstrap5nt_button.noUrl": "Could not find a URL for this button.",
+  "bootstrap5nt_button.readMore": "Read more",
+  "bootstrap5nt_navbar.label.close": "Close",
+  "bootstrap5nt_navbar.label.contribute": "Contribute",
+  "bootstrap5nt_navbar.label.edit": "Edit",
+  "bootstrap5nt_navbar.label.live": "Live",
+  "bootstrap5nt_navbar.label.login": "Sign in",
+  "bootstrap5nt_navbar.label.logout": "Sign out",
+  "bootstrap5nt_navbar.label.pleaselogin": "Please sign in",
+  "bootstrap5nt_navbar.label.preview": "Preview",
+  "label.password": "Password",
+  "label.username": "Username",
+  "loginForm.rememberMe.label": "Remember Me",
+  "message.accountLocked": "Your user account is currently locked out. Please contact the system administrator to reset it.",
+  "message.invalidUsernamePassword": "Invalid username/password"
+}

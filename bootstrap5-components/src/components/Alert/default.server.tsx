@@ -23,6 +23,8 @@ jahiaComponent(
     name: "skins.alert",
     componentType: "view",
     displayName: "Alert",
+    // A skin: listed in the skin choice of jmix:skinnable content, adding the alert settings (2.x)
+    properties: { type: "skin", addMixin: "bootstrap5mix:alert" },
   },
   ({ backgroundColor = "primary", addDismissButton = false }: AlertProps) => {
     const alertClass = [

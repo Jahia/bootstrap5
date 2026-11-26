@@ -7,7 +7,30 @@ Version numbers follow `major.minor.patch`: `3.x.x` is the JavaScript/React rewr
 
 ---
 
-## [3.0.0] — Unreleased
+## [3.0.2] — Unreleased
+
+_Restores the 2.x (2.4.7) behaviour for content created with 2.x; measured with the 2.4.7 end-to-end suite on Jahia 8.2.3.7._
+
+### Fixed
+- **Rendering** — the JavaScript modules are built with Vite 7 again: Vite 8 bundled a `node:module` import that Jahia's GraalVM engine cannot load, so 3.0.0 and 3.0.1 rendered nothing
+- **Accordion, Tabs, Carousel** — render with their own view again (the generic list view replaced them: no accordion wrapper, no tabs, no carousel)
+- **Content created with 2.x** — accordion panels, modal/collapse/offcanvas buttons, grid columns and the card free footer display their existing content again
+- **Navbar** — the login form signs visitors in again (it posted to `#`) and shows login errors; Preview/Edit links require the jContent permissions; 2.x multi-level submenus and markup; no site name when no brand text is set
+- **Cache** — the 2.x cache keys are declared again (navbar per page and per user, breadcrumb and grid per page, pagination and list parameters): one cached navbar could be served on every page and to other users
+- **Security** — the card footer is escaped again; editor-provided `javascript:`/`data:` links become `#` (button, navbar)
+- **Labels** — translated in the 6 languages (`settings/locales`); visitors saw keys such as `bootstrap5nt_button.close`
+- **Page title** — the page title instead of the template name ("base") in `<title>`
+- **Carousel** — options written as configured (ride, wrap, keyboard, pause), pause button, captions on phones, image alt text
+- **Accessibility** — 2.4.5 attributes restored on tabs, slides, modals and offcanvas
+- **Robustness** — a slide without image, a figure without optional settings or an empty text no longer fail the component
+- **Alert skin** — offered again in the skin choice of skinnable content
+
+## [3.0.1] — 2026-11-25
+
+### Fixed
+- **Jahia Store** — JavaScript modules declare the metadata the Store requires
+
+## [3.0.0] — 2026-11-25
 
 _Requires Jahia 8.2.3.0 — complete rewrite as JavaScript/React (TSX) rendering stack._
 

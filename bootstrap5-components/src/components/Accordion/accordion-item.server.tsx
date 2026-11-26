@@ -13,7 +13,7 @@
  * It renders a self-contained Bootstrap 5 accordion item that relies on
  * Bootstrap.js data-bs-* attributes for the collapse toggle.
  */
-import { Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { jahiaComponent, RenderChildren, useServerContext } from "@jahia/javascript-modules-library";
 
 interface AccordionItemProps {
   /** Panel header — jcr:title via mix:title, falls back to node displayable name */
@@ -62,8 +62,9 @@ jahiaComponent(
         >
           <div className="accordion-body">
             {text && <div dangerouslySetInnerHTML={{ __html: text }} />}
-            {/* Droppable content area inside the panel body */}
-            <Area name="content" nodeType="jmix:droppableContent" numberOfItems={0} />
+            {/* The panel's droppable content is its direct children, as in 2.x (a "content" list
+                created by 3.0.x is droppable too, so it still renders); "Add content" in edit mode */}
+            <RenderChildren filter="jmix:droppableContent" />
           </div>
         </div>
       </div>

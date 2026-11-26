@@ -27,6 +27,8 @@ jahiaComponent(
     componentType: "view",
     name: "default",
     displayName: "Pagination",
+    // The current page comes from the request (2.x pagination.properties)
+    properties: { "cache.requestParameters": "*" },
   },
   ({
     displayPager = false,

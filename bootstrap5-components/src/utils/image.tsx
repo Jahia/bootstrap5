@@ -55,9 +55,12 @@ export function ImageTag({ node, imageNode, callerClass = "", callerStyle, calle
     const imageID = node.getPropertyAsString("imageID");
     if (imageID) elemId = imageID;
 
-    responsive = node.getProperty("responsive")?.getBoolean() ?? true;
+    // Neither property is autocreated and getProperty() throws when one is not set, which made the
+    // whole figure fail to render: read them as strings. As in 2.x, once the advanced settings are
+    // on, responsive is the stored flag (unset → not fluid); thumbnails defaults to false.
+    responsive = node.getPropertyAsString("responsive") === "true";
 
-    if (node.getProperty("thumbnails")?.getBoolean()) {
+    if (node.getPropertyAsString("thumbnails") === "true") {
       cssClass = `${cssClass} img-thumbnail`.trim();
     }
 

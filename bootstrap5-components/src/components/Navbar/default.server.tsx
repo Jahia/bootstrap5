@@ -9,8 +9,12 @@
  * Language switch URLs use the approximated "{pagePath}.{lang}.html" pattern;
  * login form action and workspace permission gating need validation with Jahia JS engine team.
  */
-import { buildNodeUrl, getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { AddResources, buildNodeUrl, getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { useTranslation } from "react-i18next";
+import { safeUrl } from "../../utils/safe-url.js";
+import { BootstrapJS } from "../../utils/bootstrap-resources.js";
+import { getReferencedNode } from "../../utils/node.js";
 
 // ─── Nav item URL/title resolution ─────────────────────────────────────────
 
@@ -34,7 +38,8 @@ function resolveNavItem(
   if (page.isNodeType("jnt:navMenuText")) {
     url = "#";
   } else if (page.isNodeType("jnt:externalLink")) {
-    url = page.getPropertyAsString("j:url") ?? "#";
+    // safeUrl: an editor-set javascript:/data: URL becomes "#" (as in 2.x)
+    url = safeUrl(page.getPropertyAsString("j:url"));
   } else if (page.isNodeType("jnt:page")) {
     url = buildNodeUrl(page);
     title = page.getDisplayableName();
@@ -60,6 +65,31 @@ function resolveNavItem(
  * JSP: j:displayInMenuName is a multi-value property; page is shown when
  * the property is empty OR when the current navbar name is in the list.
  */
+/**
+ * Whether this server only receives publications (remote publication target). SettingsBean is a Java
+ * host object: GraalVM refuses optional-chained calls on it ("execute ... Message not supported"),
+ * so the method is called plainly; if it cannot be read, the server is treated as an authoring one
+ * (the links stay gated by the jContentAccess / contributeModeAccess permissions anyway).
+ */
+function isDistantPublicationServer(renderContext: { getSettings(): unknown }): boolean {
+  try {
+    const settings = renderContext.getSettings() as { isDistantPublicationServerMode(): boolean };
+    return Boolean(settings.isDistantPublicationServerMode());
+  } catch {
+    return false;
+  }
+}
+
+/** Whether the page's site is a remote publication copy (jmix:remotelyPublished), called plainly (see above). */
+function isRemotelyPublished(page: JCRNodeWrapper): boolean {
+  try {
+    const site = page.getResolveSite();
+    return site !== null && site !== undefined && site.isNodeType("jmix:remotelyPublished");
+  } catch {
+    return false;
+  }
+}
+
 function isDisplayedInMenu(page: JCRNodeWrapper, navbarName: string): boolean {
   if (!page.hasProperty("j:displayInMenuName")) return true;
   const values = (page.getProperty("j:displayInMenuName") as any).getValues() as { getString: () => string }[];
@@ -75,9 +105,17 @@ jahiaComponent(
     componentType: "view",
     name: "default",
     displayName: "Navbar",
+    // Same cache keys as the 2.x navbar views: the active item depends on the page, the user menu on the
+    // user, the login modal on a failed login (without them one cached navbar served every page/user)
+    properties: {
+      "cache.mainResource": "true",
+      "cache.perUser": "true",
+      "cache.requestParameters": "loginError,username",
+    },
   },
   (_props: Record<string, unknown>) => {
     const { currentNode, renderContext, mainNode } = useServerContext();
+    const { t } = useTranslation();
     const isEditMode = renderContext.isEditMode();
     const navbarId = `navbar-${currentNode.getIdentifier()}`;
 
@@ -88,17 +126,18 @@ jahiaComponent(
     let brandText = "";
 
     if (siteNode?.isNodeType("bootstrap5mix:siteBrand")) {
-      brandImage = siteNode.hasProperty("brandImage") ? siteNode.getProperty("brandImage").getNode() as JCRNodeWrapper : undefined;
-      brandImageMobile = siteNode.hasProperty("brandImageMobile") ? siteNode.getProperty("brandImageMobile").getNode() as JCRNodeWrapper : undefined;
+      brandImage = getReferencedNode(siteNode, "brandImage");
+      brandImageMobile = getReferencedNode(siteNode, "brandImageMobile");
       brandText = siteNode.getPropertyAsString("brandText") ?? "";
     } else if (currentNode.isNodeType("bootstrap5mix:brand")) {
-      brandImage = currentNode.hasProperty("brandImage") ? currentNode.getProperty("brandImage").getNode() as JCRNodeWrapper : undefined;
-      brandImageMobile = currentNode.hasProperty("brandImageMobile") ? currentNode.getProperty("brandImageMobile").getNode() as JCRNodeWrapper : undefined;
+      brandImage = getReferencedNode(currentNode, "brandImage");
+      brandImageMobile = getReferencedNode(currentNode, "brandImageMobile");
       brandText = currentNode.getPropertyAsString("brandText") ?? "";
     }
 
     // ── Global settings ────────────────────────────────────────────────────
-    let addContainerWithinTheNavbar = true;
+    // Without bootstrap5mix:navbarGlobalSettings 2.x rendered no container (login and languages on)
+    let addContainerWithinTheNavbar = false;
     let addLoginButton = true;
     let addLanguageButton = true;
     let maxlevel = 2;
@@ -214,6 +253,20 @@ jahiaComponent(
     const previewUrl: string = urlGen ? String(urlGen.getPreview()) : "#";
     const editUrl: string = urlGen ? String(urlGen.getEdit()) : "#";
     const loginNodeId = `login-${currentNode.getIdentifier()}`;
+    // ui:loginArea equivalent: POST to Jahia's login servlet, back to this page on success or failure
+    const request = renderContext.getRequest();
+    const loginAction = `${request.getContextPath()}/cms/login`;
+    const siteKey = siteNode ? String((siteNode as any).getSiteKey()) : "";
+    const currentPageUrl = buildNodeUrl(mainNode);
+    // Jahia's login valve sends back a failed login with ?loginError=bad_password / account_locked
+    const loginError = String(request.getParameter("loginError") ?? "");
+    // Workspace links, as 2.x: not on a remote publication server nor on content published from live
+    const showWorkspaceLinks = !isDistantPublicationServer(renderContext)
+      && mainNode.getPropertyAsString("j:originWS") !== "live"
+      && !isRemotelyPublished(mainNode);
+    const canUseJContent = mainNode.hasPermission("jContentAccess");
+    const canContribute = mainNode.hasPermission("contributeModeAccess");
+    const contributeUrl: string = urlGen ? String(urlGen.getContribute()) : "#";
 
     // ── Inner content (brand + toggler + collapse area) ───────────────────
     const NavInner = (
@@ -221,21 +274,22 @@ jahiaComponent(
         {/* Brand link */}
         <a className={brandLinkClass} href={rootNodeUrl}>
           {brandImage && (() => {
+            // As in 2.x: a logo without brand text is the link's only content, so it carries the site name
+            const alt = brandText ? "" : (siteNode?.getDisplayableName() ?? "");
             const desktopUrl = buildNodeUrl(brandImage);
             if (brandImageMobile) {
               const mobileUrl = buildNodeUrl(brandImageMobile);
               return (
                 <>
-                  <img src={desktopUrl} className={`align-top d-none d-${expand}-inline-block`} alt="" />
-                  <img src={mobileUrl} className={`align-top d-inline-block d-${expand}-none`} alt="" />
+                  <img src={desktopUrl} className={`align-top d-none d-${expand}-inline-block`} alt={alt} />
+                  <img src={mobileUrl} className={`align-top d-inline-block d-${expand}-none`} alt={alt} />
                 </>
               );
             }
-            return <img src={desktopUrl} className="d-inline-block align-top" alt="" />;
+            return <img src={desktopUrl} className="d-inline-block align-top" alt={alt} />;
           })()}
-          {!siteNode?.isNodeType("bootstrap5mix:siteBrand") && !currentNode.isNodeType("bootstrap5mix:brand")
-            ? (siteNode?.getDisplayableName() ?? "")
-            : brandText}
+          {/* Only the configured brand text, as in 2.x: no brand settings, no text */}
+          {brandText}
         </a>
 
         {/* Mobile toggler */}
@@ -248,7 +302,7 @@ jahiaComponent(
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon" />
+          <span className="navbar-toggler-icon" aria-hidden="true" />
         </button>
 
         {/* Collapsible nav area */}
@@ -286,9 +340,12 @@ jahiaComponent(
                       >
                         {item1.title}
                       </a>
-                      <div className="dropdown-menu" aria-labelledby={dropId}>
-                        <a className="dropdown-item" href={item1.url}>{item1.title}</a>
-                        <div className="dropdown-divider" />
+                      {/* Same structure as 2.x (ul/li, .dropend, .submenu) so multilevel-nav.css/js and site CSS apply */}
+                      <ul className="dropdown-menu" aria-labelledby={dropId}>
+                        <li>
+                          <a className="dropdown-item" href={item1.url}>{item1.title}</a>
+                        </li>
+                        <li className="dropdown-divider" />
                         {level2Pages.map((l2) => {
                           if (!isDisplayedInMenu(l2, navbarName)) return null;
                           const item2 = resolveNavItem(l2, mainResourcePath);
@@ -300,67 +357,70 @@ jahiaComponent(
                           const hasSubDropdown = level3Pages.length > 0;
 
                           if (hasSubDropdown) {
-                            const dropId3 = `navbarDropdownMen-${currentNode.getIdentifier()}-${l2.getIdentifier()}`;
+                            const dropId3 = `dropend-${l2.getIdentifier()}`;
                             return (
-                              <div key={l2.getIdentifier()} className="dropend">
+                              <li key={l2.getIdentifier()} className="dropend">
                                 <a
                                   className={`dropdown-item dropdown-toggle${(item2.isActive || item2.isInPath) ? " active" : ""}`}
-                                  href="#"
+                                  href={item2.url}
                                   id={dropId3}
                                   data-bs-toggle="dropdown"
-                                  aria-haspopup="true"
                                   aria-expanded="false"
                                   {...(item2.isActive ? { "aria-current": "page" } : {})}
                                 >
                                   {item2.title}
                                 </a>
-                                <div className="dropdown-menu" aria-labelledby={dropId3}>
-                                  <a
-                                    className={`dropdown-item${item2.isActive ? " active" : ""}`}
-                                    href={item2.url}
-                                    {...(item2.isActive ? { "aria-current": "page" } : {})}
-                                  >
-                                    {item2.title}
-                                  </a>
-                                  <div className="dropdown-divider" />
+                                <ul className="submenu dropdown-menu" aria-labelledby={dropId3}>
+                                  <li>
+                                    <a
+                                      className={`dropdown-item${item2.isActive ? " active" : ""}`}
+                                      href={item2.url}
+                                      {...(item2.isActive ? { "aria-current": "page" } : {})}
+                                    >
+                                      {item2.title}
+                                    </a>
+                                  </li>
+                                  <li className="dropdown-divider" />
                                   {level3Pages.map((l3) => {
                                     if (!isDisplayedInMenu(l3, navbarName)) return null;
                                     const item3 = resolveNavItem(l3, mainResourcePath);
                                     if (!item3) return null;
                                     return (
-                                      <a
-                                        key={l3.getIdentifier()}
-                                        className={`dropdown-item${item3.isActive ? " active" : ""}`}
-                                        href={item3.url}
-                                        {...(item3.isActive ? { "aria-current": "page" } : {})}
-                                      >
-                                        {item3.title}
-                                        {item3.isActive && (
-                                          <span className="visually-hidden">(current)</span>
-                                        )}
-                                      </a>
+                                      <li key={l3.getIdentifier()}>
+                                        <a
+                                          className={`dropdown-item${item3.isActive ? " active" : ""}`}
+                                          href={item3.url}
+                                          {...(item3.isActive ? { "aria-current": "page" } : {})}
+                                        >
+                                          {item3.title}
+                                          {item3.isActive && (
+                                            <span className="visually-hidden">(current)</span>
+                                          )}
+                                        </a>
+                                      </li>
                                     );
                                   })}
-                                </div>
-                              </div>
+                                </ul>
+                              </li>
                             );
                           }
 
                           return (
-                            <a
-                              key={l2.getIdentifier()}
-                              className={`dropdown-item${item2.isActive ? " active" : ""}`}
-                              href={item2.url}
-                              {...(item2.isActive ? { "aria-current": "page" } : {})}
-                            >
-                              {item2.title}
-                              {item2.isActive && (
-                                <span className="visually-hidden">(current)</span>
-                              )}
-                            </a>
+                            <li key={l2.getIdentifier()}>
+                              <a
+                                className={`dropdown-item${item2.isActive ? " active" : ""}`}
+                                href={item2.url}
+                                {...(item2.isActive ? { "aria-current": "page" } : {})}
+                              >
+                                {item2.title}
+                                {item2.isActive && (
+                                  <span className="visually-hidden">(current)</span>
+                                )}
+                              </a>
+                            </li>
                           );
                         })}
-                      </div>
+                      </ul>
                     </li>
                   );
                 }
@@ -386,7 +446,7 @@ jahiaComponent(
             </ul>
           )}
 
-          {/* Login button */}
+          {/* Login button / user menu: same structure, labels and permission checks as the 2.x login view */}
           {addLoginButton && (
             <>
               {isLoggedIn ? (
@@ -406,33 +466,42 @@ jahiaComponent(
                       className="dropdown-menu dropdown-menu-end"
                       aria-labelledby={`list-${currentNode.getIdentifier()}`}
                     >
-                      {/* ⚠️ Workspace switching links: jcr:hasPermission has no JS equivalent.
-                          Rendered unconditionally — validate permission-gating API. */}
-                      {!isEditMode && (
-                        <li>
-                          <a href={liveUrl} className="dropdown-item text-primary">
-                            Live
-                          </a>
-                        </li>
-                      )}
-                      {!renderContext.isPreviewMode() && (
-                        <li>
-                          <a href={previewUrl} className="dropdown-item text-secondary">
-                            Preview
-                          </a>
-                        </li>
-                      )}
-                      {!isEditMode && (
-                        <li>
-                          <a href={editUrl} className="dropdown-item text-success">
-                            Edit
-                          </a>
-                        </li>
+                      {showWorkspaceLinks && (
+                        <>
+                          {!renderContext.isLiveMode() && (
+                            <li>
+                              <a href={liveUrl} className="dropdown-item text-primary">
+                                {t("bootstrap5nt_navbar.label.live")}
+                              </a>
+                            </li>
+                          )}
+                          {!renderContext.isPreviewMode() && canUseJContent && (
+                            <li>
+                              <a href={previewUrl} className="dropdown-item text-secondary">
+                                {t("bootstrap5nt_navbar.label.preview")}
+                              </a>
+                            </li>
+                          )}
+                          {!isEditMode && canUseJContent && (
+                            <li>
+                              <a href={editUrl} className="dropdown-item text-success">
+                                {t("bootstrap5nt_navbar.label.edit")}
+                              </a>
+                            </li>
+                          )}
+                          {!isEditMode && !canUseJContent && canContribute && (
+                            <li>
+                              <a href={contributeUrl} className="dropdown-item">
+                                {t("bootstrap5nt_navbar.label.contribute")}
+                              </a>
+                            </li>
+                          )}
+                        </>
                       )}
                       <li><hr className="dropdown-divider" /></li>
                       <li>
                         <a className="dropdown-item logout" href={logoutUrl}>
-                          Logout
+                          {t("bootstrap5nt_navbar.label.logout")}
                         </a>
                       </li>
                     </ul>
@@ -442,20 +511,16 @@ jahiaComponent(
                 <>
                   <ul className={loginMenuULClass}>
                     <li className="nav-item">
-                      <a
-                        className="nav-link py-2 login"
-                        href="#"
-                        role="button"
+                      <button
+                        className="nav-link py-2 login btn btn-link"
+                        type="button"
                         data-bs-toggle="modal"
                         data-bs-target={`#${loginNodeId}`}
                       >
-                        Login
-                      </a>
+                        {t("bootstrap5nt_navbar.label.login")}
+                      </button>
                     </li>
                   </ul>
-                  {/* Login modal
-                      ⚠️ ui:loginArea (form action URL for Jahia login) has no JS equivalent.
-                      The form action is rendered as "#" — validate login URL accessor. */}
                   <div
                     className="modal fade"
                     id={loginNodeId}
@@ -463,72 +528,89 @@ jahiaComponent(
                     aria-labelledby={`${loginNodeId}-label`}
                     aria-hidden="true"
                   >
-                    <div className="modal-dialog modal-sm modal-dialog-centered">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <h5 className="modal-title" id={`${loginNodeId}-label`}>
-                            Please log in
-                          </h5>
-                          <button
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                          />
-                        </div>
-                        {/* ⚠️ form action should be the Jahia login URL — validate */}
-                        <form action="#" method="post">
+                    {/* What ui:loginArea rendered: Jahia's login servlet, the site, and where to go back */}
+                    <form action={loginAction} method="post" name="loginForm">
+                      <input type="hidden" name="site" value={siteKey} />
+                      <input type="hidden" name="redirect" value={currentPageUrl} />
+                      <input type="hidden" name="failureRedirect" value={currentPageUrl} />
+                      <div className="modal-dialog modal-sm modal-dialog-centered">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h5 className="modal-title" id={`${loginNodeId}-label`}>
+                              {t("bootstrap5nt_navbar.label.pleaselogin")}
+                            </h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+                          </div>
                           <div className="modal-body">
+                            {loginError && (
+                              <div className="alert alert-danger" role="alert">
+                                {t(loginError === "account_locked" ? "message.accountLocked" : "message.invalidUsernamePassword")}
+                              </div>
+                            )}
+                            <label htmlFor={`username-${currentNode.getIdentifier()}`} className="visually-hidden">
+                              {t("label.username")}
+                            </label>
                             <div className="input-group mb-3">
-                              <span className="input-group-text" id="username">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                              <span className="input-group-text" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-fill" viewBox="0 0 16 16">
                                   <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                                 </svg>
                               </span>
                               <input
                                 type="text"
                                 className="form-control"
+                                id={`username-${currentNode.getIdentifier()}`}
                                 name="username"
-                                placeholder="Username"
+                                placeholder={t("label.username")}
                                 required
                                 autoFocus
-                                aria-describedby="username"
                               />
                             </div>
+                            <label htmlFor={`password-${currentNode.getIdentifier()}`} className="visually-hidden">
+                              {t("label.password")}
+                            </label>
                             <div className="input-group mb-3">
-                              <span className="input-group-text" id="password">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                              <span className="input-group-text" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-key-fill" viewBox="0 0 16 16">
                                   <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2zM2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
                                 </svg>
                               </span>
                               <input
                                 type="password"
                                 className="form-control"
+                                id={`password-${currentNode.getIdentifier()}`}
                                 name="password"
-                                placeholder="Password"
+                                placeholder={t("label.password")}
                                 required
-                                aria-describedby="password"
                               />
                             </div>
                             <div className="form-check">
-                              <input className="form-check-input" type="checkbox" id="useCookie" name="useCookie" />
-                              <label className="form-check-label" htmlFor="useCookie">
-                                Remember me
+                              <input className="form-check-input" type="checkbox" id={`useCookie-${currentNode.getIdentifier()}`} name="useCookie" />
+                              <label className="form-check-label" htmlFor={`useCookie-${currentNode.getIdentifier()}`}>
+                                {t("loginForm.rememberMe.label")}
                               </label>
                             </div>
                           </div>
                           <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                              Close
+                              {t("bootstrap5nt_navbar.label.close")}
                             </button>
                             <button type="submit" name="loginButton" className="btn btn-primary">
-                              Login
+                              {t("bootstrap5nt_navbar.label.login")}
                             </button>
                           </div>
-                        </form>
+                        </div>
                       </div>
-                    </div>
+                    </form>
                   </div>
+                  {/* After a failed login, open the modal again so the error is visible (as 2.x) */}
+                  {loginError && (
+                    <AddResources
+                      type="inline"
+                      targetTag={isEditMode ? "head" : "body"}
+                      inlineResource={`<script>window.addEventListener("load", function () { var m = document.getElementById(${JSON.stringify(loginNodeId)}); if (m && window.bootstrap) { new bootstrap.Modal(m, { keyboard: false }).show(); } });</script>`}
+                    />
+                  )}
                 </>
               )}
             </>
@@ -580,13 +662,24 @@ jahiaComponent(
 
     // ── Optional container wrapper ─────────────────────────────────────────
     return (
-      <nav className={navClass}>
-        {addContainerWithinTheNavbar ? (
-          <div className="container">{NavInner}</div>
-        ) : (
-          NavInner
+      <>
+        {/* Dropdowns need Bootstrap's JS; Jahia sends each resource once per page */}
+        <BootstrapJS />
+        {recursive && (
+          // Multi-level menus: submenu positioning and touch support, as the 2.x multilevel resources
+          <>
+            <AddResources type="css" resources="multilevel-nav.css" />
+            <AddResources type="javascript" resources="multilevel-nav.js" targetTag={isEditMode ? "head" : "body"} />
+          </>
         )}
-      </nav>
+        <nav className={navClass}>
+          {addContainerWithinTheNavbar ? (
+            <div className="container">{NavInner}</div>
+          ) : (
+            NavInner
+          )}
+        </nav>
+      </>
     );
   },
 );

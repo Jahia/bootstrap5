@@ -9,6 +9,7 @@
  */
 import { buildNodeUrl, getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { getReferencedNode } from "../../utils/node.js";
 
 interface CarouselItemProps {
   "jcr:title"?: string;
@@ -34,8 +35,7 @@ jahiaComponent(
       siblings[0].getIdentifier() === currentNode.getIdentifier();
 
     // ⚠️ image weakref
-    const carouselImageProp = currentNode.getProperty("image");
-    const imageNode = carouselImageProp ? carouselImageProp.getNode() as JCRNodeWrapper : undefined;
+    const imageNode = getReferencedNode(currentNode as JCRNodeWrapper, "image");
     const imageUrl = imageNode ? buildNodeUrl(imageNode) : "";
 
     // bootstrap5mix:advancedCarouselItem
@@ -74,11 +74,14 @@ jahiaComponent(
     return (
       <div
         className={`carousel-item${isFirst ? " active" : ""}${itemClass}`}
+        aria-roledescription="slide"
+        aria-label={title ?? ""}
         {...bsProps}
       >
-        {imageUrl && <img src={imageUrl} className="d-block w-100" alt="" />}
+        {/* The slide title describes its image, as in 2.x (WCAG 1.1.1) */}
+        {imageUrl && <img src={imageUrl} className="d-block w-100" alt={title ?? ""} />}
         {(title || caption) && (
-          <div className="carousel-caption d-none d-md-block">
+          <div className="carousel-caption d-md-block">
             {title && <h3 className={titleColor || undefined}>{title}</h3>}
             {caption && <p className={captionColor || undefined}>{caption}</p>}
           </div>

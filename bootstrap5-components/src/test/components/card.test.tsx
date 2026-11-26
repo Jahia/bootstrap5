@@ -142,13 +142,12 @@ describe('bootstrap5nt:card (default view)', () => {
     expect(rendered.length).toBe(2);
   });
 
-  test('edit mode → Area in card body', () => {
+  test('edit mode → "Add content" buttons in card body (children of the card, as 2.x)', () => {
     const ctx = makeCardCtx({}, { _editMode: true });
     const fn = getCardFn();
     const { container } = renderFn(fn, {}, ctx);
     const body = container.querySelector('.card-body');
-    const area = body?.querySelector('[data-testid="area"]');
-    expect(area).toBeInTheDocument();
+    expect(body?.querySelector('[data-testid="add-content-buttons"]')).toBeInTheDocument();
   });
 
   test('live mode → no Area in card body', () => {

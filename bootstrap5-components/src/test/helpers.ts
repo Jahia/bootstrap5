@@ -44,6 +44,8 @@ export function makeNode(overrides: NodeOverrides = {}): any {
     getAncestors: () => overrides._ancestors ?? [],
     isNodeType: (type: string) => nodeTypes.has(type),
     hasProperty: (name: string) => properties.has(name),
+    hasPermission: (perm: string) => (overrides._permissions ?? []).includes(perm),
+    getResolveSite: () => overrides._site ?? null,
     getProperty: (name: string) => {
       const v = properties.get(name);
       return v !== undefined ? makeProp(v) : null;
@@ -74,6 +76,9 @@ export interface RcOverrides {
   _user?: any;
   _urlGen?: any;
   _editModeConfig?: string;
+  _liveMode?: boolean;
+  _params?: Record<string, string>;
+  _contextPath?: string;
   [key: string]: any;
 }
 
@@ -87,6 +92,12 @@ export function makeRenderContext(overrides: RcOverrides = {}): any {
     getUser: () => overrides._user ?? null,
     getURLGenerator: () => overrides._urlGen ?? null,
     getEditModeConfigName: () => overrides._editModeConfig ?? '',
+    isLiveMode: () => overrides._liveMode ?? !(overrides._editMode || overrides._previewMode),
+    getRequest: () => ({
+      getContextPath: () => overrides._contextPath ?? '',
+      getParameter: (name: string) => overrides._params?.[name] ?? null,
+    }),
+    getSettings: () => ({ isDistantPublicationServerMode: () => false }),
   };
 }
 
@@ -100,6 +111,7 @@ export function makeUrlGen(overrides: Record<string, string> = {}) {
     getLive: () => overrides.live ?? '/sites/test',
     getPreview: () => overrides.preview ?? '/cms/preview',
     getEdit: () => overrides.edit ?? '/cms/edit',
+    getContribute: () => overrides.contribute ?? '/cms/contribute',
   };
 }
 

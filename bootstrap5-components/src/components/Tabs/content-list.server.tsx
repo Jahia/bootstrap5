@@ -25,6 +25,8 @@ jahiaComponent(
     componentType: "view",
     name: "default",
     displayName: "Content list",
+    // Generic view: must never win over the "default" view of a more specific type (see List/default).
+    priority: -1,
   },
   () => {
     const { currentNode } = useServerContext();

@@ -165,15 +165,32 @@ describe('bootstrap5nt:button — externalLink type', () => {
     expect(container.querySelector('.badge-warning')).toBeInTheDocument();
   });
 
-  test('no URL + live mode → renders <a href=""> (not null)', () => {
+  test('no URL + live mode → disabled button, no link (as 2.x)', () => {
     const ctx = makeCtx({ _id: 'btn-el-3' }, { _editMode: false });
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'externalLink', externalLink: '' }, ctx);
-    // externalLink '' is blank but not edit mode → should NOT show warning, should show <a>
-    const a = container.querySelector('a');
-    expect(a).toBeInTheDocument();
-    expect(a).toHaveAttribute('href', '');
+    expect(container.querySelector('a')).not.toBeInTheDocument();
+    expect(container.querySelector('button')).toBeDisabled();
+  });
+
+  test('javascript: URL + live mode → disabled button, the URL is never rendered', () => {
+    const ctx = makeCtx({ _id: 'btn-el-js' }, { _editMode: false });
+    _setContext(ctx);
+    const fn = getButtonFn();
+    const { container } = renderFn(fn, { buttonType: 'externalLink', externalLink: 'javascript:alert(1)', 'jcr:title': 'JS' }, ctx);
+    expect(container.querySelector('a')).not.toBeInTheDocument();
+    expect(container.querySelector('button')).toBeDisabled();
+    expect(container.innerHTML).not.toContain('javascript:');
+  });
+
+  test('size "btn-lg" (stored choicelist value) → btn-lg class', () => {
+    const ctx = makeCtx({ _id: 'btn-el-lg' }, { _editMode: false });
+    _setContext(ctx);
+    const fn = getButtonFn();
+    const { container } = renderFn(fn, { buttonType: 'externalLink', externalLink: 'https://example.com', size: 'btn-lg' }, ctx);
+    expect(container.querySelector('a')).toHaveClass('btn-lg');
+    expect(container.querySelector('a')?.className).not.toContain('btn-btn');
   });
 
   test('http:// as URL → treated as blank, edit mode → warning', () => {
@@ -447,13 +464,31 @@ describe('bootstrap5nt:button — Offcanvas type', () => {
     expect(offcanvas).toHaveAttribute('data-bs-backdrop', 'false');
   });
 
-  test('enableBackdrop default (undefined) → data-bs-backdrop="true"', () => {
+  test('enableBackdrop unset → data-bs-backdrop="false" (2.x read the unset flag as false)', () => {
     const ctx = makeCtx({ _id: 'btn-oc-9' });
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'Offcanvas' }, ctx);
     const offcanvas = container.querySelector('.offcanvas');
-    expect(offcanvas).toHaveAttribute('data-bs-backdrop', 'true');
+    expect(offcanvas).toHaveAttribute('data-bs-backdrop', 'false');
+  });
+
+  test('offcanvas without a title is labelled by the button text', () => {
+    const ctx = makeCtx({ _id: 'btn-oc-10' });
+    _setContext(ctx);
+    const fn = getButtonFn();
+    const { container } = renderFn(fn, { buttonType: 'Offcanvas', 'jcr:title': 'Open Panel' }, ctx);
+    const offcanvas = container.querySelector('.offcanvas');
+    expect(offcanvas).toHaveAttribute('aria-label', 'Open Panel');
+    expect(offcanvas).not.toHaveAttribute('aria-labelledby');
+  });
+
+  test('modal trigger announces a dialog', () => {
+    const ctx = makeCtx({ _id: 'btn-md-a11y' });
+    _setContext(ctx);
+    const fn = getButtonFn();
+    const { container } = renderFn(fn, { buttonType: 'modal', 'jcr:title': 'Open' }, ctx);
+    expect(container.querySelector('[data-bs-toggle="modal"]')).toHaveAttribute('aria-haspopup', 'dialog');
   });
 });
 

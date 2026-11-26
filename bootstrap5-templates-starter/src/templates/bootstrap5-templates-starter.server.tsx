@@ -20,7 +20,8 @@ jahiaComponent(
     componentType: "view",
   },
   function TemplateStarterView() {
-    const { renderContext, currentNode } = useServerContext();
+    // In a template, currentNode is the template itself ("base"): the page being rendered is mainNode
+    const { renderContext, mainNode } = useServerContext();
     const isEditMode: boolean = renderContext.isEditMode() as unknown as boolean;
     const locale = renderContext.getMainResourceLocale();
     const language: string = locale ? String(locale.getLanguage()) : "en";
@@ -36,7 +37,7 @@ jahiaComponent(
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>{currentNode.getDisplayableName()}</title>
+          <title>{mainNode.getDisplayableName()}</title>
           <AddResources type="css" resources="bootstrap.min.css" />
           {isEditMode && (
             <AddResources type="css" resources="starter-edit.css" />

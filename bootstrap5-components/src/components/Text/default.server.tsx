@@ -17,7 +17,8 @@ jahiaComponent(
   },
   () => {
     const { currentNode } = useServerContext();
-    const html = currentNode.getProperty("text")?.getString() ?? "";
+    // getProperty() throws when the text is not set yet (an empty text block): read it as a string
+    const html = currentNode.getPropertyAsString("text") ?? "";
 
     if (!html) return null;
 

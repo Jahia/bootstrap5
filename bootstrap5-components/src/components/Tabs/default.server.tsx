@@ -69,7 +69,13 @@ jahiaComponent(
     return (
       <>
         <BootstrapJS />
-        <ul className={navClass} role="tablist">
+        {/* Tab roles, ids and labels as in 2.x (WCAG 4.1.2: tabs are named and tied to their panels) */}
+        <ul
+          className={navClass}
+          id={`tabs-${currentNode.getIdentifier()}`}
+          role="tablist"
+          aria-label={currentNode.getDisplayableName()}
+        >
           {subLists.map((listNode, index) => {
             const anchorName = useListNameAsAnchor
               ? toAnchor(listNode.getName())
@@ -80,9 +86,13 @@ jahiaComponent(
                 <button
                   type="button"
                   className={["nav-link", isFirst ? "active" : undefined].filter(Boolean).join(" ")}
+                  id={`tab-btn-${anchorName}`}
+                  role="tab"
+                  aria-controls={anchorName}
+                  aria-selected={isFirst ? "true" : "false"}
+                  tabIndex={isFirst ? 0 : -1}
                   data-bs-toggle="tab"
                   data-bs-target={`#${anchorName}`}
-                  aria-selected={isFirst ? "true" : "false"}
                 >
                   {listNode.getDisplayableName()}
                 </button>
@@ -109,6 +119,8 @@ jahiaComponent(
                 className={paneClasses}
                 id={anchorName}
                 role="tabpanel"
+                aria-labelledby={`tab-btn-${anchorName}`}
+                tabIndex={0}
               >
                 <Render node={listNode} />
               </div>

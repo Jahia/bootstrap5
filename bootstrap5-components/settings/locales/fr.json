@@ -1,0 +1,19 @@
+{
+  "bootstrap5nt_button.close": "Fermer",
+  "bootstrap5nt_button.noLink": "Impossible de trouver un lien fonctionnel pour ce bouton.",
+  "bootstrap5nt_button.noUrl": "Impossible de trouver une URL pour ce bouton.",
+  "bootstrap5nt_button.readMore": "Lire la suite",
+  "bootstrap5nt_navbar.label.close": "Fermer",
+  "bootstrap5nt_navbar.label.contribute": "Contribuer",
+  "bootstrap5nt_navbar.label.edit": "Modifier",
+  "bootstrap5nt_navbar.label.live": "En ligne",
+  "bootstrap5nt_navbar.label.login": "Se connecter",
+  "bootstrap5nt_navbar.label.logout": "Se déconnecter",
+  "bootstrap5nt_navbar.label.pleaselogin": "Veuillez vous connecter",
+  "bootstrap5nt_navbar.label.preview": "Prévisualiser",
+  "label.password": "Mot de passe",
+  "label.username": "Nom d'utilisateur",
+  "loginForm.rememberMe.label": "Se souvenir de moi",
+  "message.accountLocked": "Votre compte utilisateur est actuellement bloqué. Contactez votre administrateur système pour le faire débloquer.",
+  "message.invalidUsernamePassword": "Nom d'utilisateur/mot de passe invalide"
+}
