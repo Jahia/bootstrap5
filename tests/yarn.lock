@@ -5956,9 +5956,9 @@ sync-rpc@^1.2.1:
     get-port "^3.1.0"
 
 systeminformation@^5.31.1:
-  version "5.31.6"
-  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.31.6.tgz#2da4979a7262974fd068a3a306ded30aed6127c0"
-  integrity sha512-Uv2b2uGGM6ns+26czgW2cYRabYdnswM0ddSOOlryHOaelzsmDSet1iM/NT7VOYxW8x/BW+HkY+b1Ve2pLTSGSA==
+  version "5.33.26"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.33.26.tgz#9c519b3fcfca9ebeb96dba27889f147441ea4611"
+  integrity sha512-/AfmkcUh5/Zgul9vJgTzRqdyeeAkkZM857cXkN1CLzdj3gVvdij9EICcNcl3/nMGsr3A2uRvPmpCy2YX1A9uiQ==
 
 tapable@^2.3.0, tapable@^2.3.3:
   version "2.3.3"
