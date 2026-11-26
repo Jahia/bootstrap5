@@ -7,7 +7,7 @@ Version numbers follow `major.minor.patch`: `3.x.x` is the JavaScript/React rewr
 
 ---
 
-## [3.0.2] — Unreleased
+## [3.0.2] — 2026-11-26
 
 _Restores the 2.x (2.4.7) behaviour for content created with 2.x; measured with the 2.4.7 end-to-end suite on Jahia 8.2.3.7._
 
