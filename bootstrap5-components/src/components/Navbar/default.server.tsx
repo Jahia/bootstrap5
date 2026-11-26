@@ -65,6 +65,31 @@ function resolveNavItem(
  * JSP: j:displayInMenuName is a multi-value property; page is shown when
  * the property is empty OR when the current navbar name is in the list.
  */
+/**
+ * Whether this server only receives publications (remote publication target). SettingsBean is a Java
+ * host object: GraalVM refuses optional-chained calls on it ("execute ... Message not supported"),
+ * so the method is called plainly; if it cannot be read, the server is treated as an authoring one
+ * (the links stay gated by the jContentAccess / contributeModeAccess permissions anyway).
+ */
+function isDistantPublicationServer(renderContext: { getSettings(): unknown }): boolean {
+  try {
+    const settings = renderContext.getSettings() as { isDistantPublicationServerMode(): boolean };
+    return Boolean(settings.isDistantPublicationServerMode());
+  } catch {
+    return false;
+  }
+}
+
+/** Whether the page's site is a remote publication copy (jmix:remotelyPublished), called plainly (see above). */
+function isRemotelyPublished(page: JCRNodeWrapper): boolean {
+  try {
+    const site = page.getResolveSite();
+    return site !== null && site !== undefined && site.isNodeType("jmix:remotelyPublished");
+  } catch {
+    return false;
+  }
+}
+
 function isDisplayedInMenu(page: JCRNodeWrapper, navbarName: string): boolean {
   if (!page.hasProperty("j:displayInMenuName")) return true;
   const values = (page.getProperty("j:displayInMenuName") as any).getValues() as { getString: () => string }[];
@@ -80,6 +105,13 @@ jahiaComponent(
     componentType: "view",
     name: "default",
     displayName: "Navbar",
+    // Same cache keys as the 2.x navbar views: the active item depends on the page, the user menu on the
+    // user, the login modal on a failed login (without them one cached navbar served every page/user)
+    properties: {
+      "cache.mainResource": "true",
+      "cache.perUser": "true",
+      "cache.requestParameters": "loginError,username",
+    },
   },
   (_props: Record<string, unknown>) => {
     const { currentNode, renderContext, mainNode } = useServerContext();
@@ -229,10 +261,9 @@ jahiaComponent(
     // Jahia's login valve sends back a failed login with ?loginError=bad_password / account_locked
     const loginError = String(request.getParameter("loginError") ?? "");
     // Workspace links, as 2.x: not on a remote publication server nor on content published from live
-    const settings: any = renderContext.getSettings();
-    const showWorkspaceLinks = !settings?.isDistantPublicationServerMode?.()
+    const showWorkspaceLinks = !isDistantPublicationServer(renderContext)
       && mainNode.getPropertyAsString("j:originWS") !== "live"
-      && !(mainNode.getResolveSite() as any)?.isNodeType?.("jmix:remotelyPublished");
+      && !isRemotelyPublished(mainNode);
     const canUseJContent = mainNode.hasPermission("jContentAccess");
     const canContribute = mainNode.hasPermission("contributeModeAccess");
     const contributeUrl: string = urlGen ? String(urlGen.getContribute()) : "#";
