@@ -71,6 +71,8 @@ jahiaComponent(
     componentType: "view",
     name: "default",
     displayName: "Grid",
+    // Column areas may resolve per page (2.x grid.properties)
+    properties: { "cache.mainResource": "true" },
   },
   ({
     sectionElement,

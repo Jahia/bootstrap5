@@ -24,6 +24,8 @@ jahiaComponent(
     componentType: "view",
     name: "default",
     displayName: "Breadcrumb",
+    // The path depends on the page being rendered (2.x breadcrumb.properties)
+    properties: { "cache.mainResource": "true" },
   },
   () => {
     const { currentNode, renderContext, mainNode } = useServerContext();
