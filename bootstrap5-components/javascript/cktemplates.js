@@ -6,7 +6,7 @@
 
     // A Bootstrap alert of the given color. Only the Primary, Secondary and Success ones have no trailing line break.
     function alertTemplate(color, image, description, article, trailingBreak) {
-        var name = color.toLowerCase();
+        const name = color.toLowerCase();
         return template(
             'Alert ' + color,
             image,

@@ -47,7 +47,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
                    branches of a c:choose, only one is rendered
           The ignores are limited to the component views and to the privacy settings modal.
         -->
-        <sonar.issue.ignore.multicriteria>b5a,b5b,b5c,b5d,b5e,b5f</sonar.issue.ignore.multicriteria>
+        <sonar.issue.ignore.multicriteria>b5a,b5b,b5c,b5d,b5e,b5f,b5g,b5h</sonar.issue.ignore.multicriteria>
         <sonar.issue.ignore.multicriteria.b5a.ruleKey>typescript:S6819</sonar.issue.ignore.multicriteria.b5a.ruleKey>
         <sonar.issue.ignore.multicriteria.b5a.resourceKey>**/src/components/**/*.tsx</sonar.issue.ignore.multicriteria.b5a.resourceKey>
         <sonar.issue.ignore.multicriteria.b5b.ruleKey>typescript:S6842</sonar.issue.ignore.multicriteria.b5b.ruleKey>
@@ -60,6 +60,14 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         <sonar.issue.ignore.multicriteria.b5e.resourceKey>**/wemnt_privacySettingsModal/**/*.jsp</sonar.issue.ignore.multicriteria.b5e.resourceKey>
         <sonar.issue.ignore.multicriteria.b5f.ruleKey>Web:S7930</sonar.issue.ignore.multicriteria.b5f.ruleKey>
         <sonar.issue.ignore.multicriteria.b5f.resourceKey>**/wemnt_privacySettingsModal/**/*.jsp</sonar.issue.ignore.multicriteria.b5f.resourceKey>
+        <!-- S6844 "href requires a valid value": the navbar drop-down toggles are <a href="#" role="button"
+             data-bs-toggle="dropdown">, the markup the Bootstrap 5.3 navbar documentation uses (checked by axe-core) -->
+        <sonar.issue.ignore.multicriteria.b5g.ruleKey>typescript:S6844</sonar.issue.ignore.multicriteria.b5g.ruleKey>
+        <sonar.issue.ignore.multicriteria.b5g.resourceKey>**/src/components/Navbar/default.server.tsx</sonar.issue.ignore.multicriteria.b5g.resourceKey>
+        <!-- S6767 "prop defined but never used": the button view hands its props to one render function per
+             button type, which the rule does not follow -->
+        <sonar.issue.ignore.multicriteria.b5h.ruleKey>typescript:S6767</sonar.issue.ignore.multicriteria.b5h.ruleKey>
+        <sonar.issue.ignore.multicriteria.b5h.resourceKey>**/src/components/Button/default.server.tsx</sonar.issue.ignore.multicriteria.b5h.resourceKey>
     </properties>
     <scm>
         <connection>scm:git:git@github.com:Jahia/bootstrap5.git</connection>
