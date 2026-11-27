@@ -20,7 +20,7 @@ Three modules must be running to get a fully functional Bootstrap 5 JS site. A f
 
 ## Minimum Jahia version
 
-Jahia **8.2.3.0** or later. The JS rendering engine is required and available from this version.
+Jahia **8.2.3.x** (the only supported line) and **javascript-modules-engine 1.3.1**. Jahia 8.2.3 ships an older engine: `bootstrap5-package` installs 1.3.1 for you; when you deploy the modules one by one, install `mvn:org.jahia.modules/javascript-modules-engine/1.3.1` first.
 
 > GraalVM has been replaced by OpenJDK in Jahia 8.2.3+ Docker images. No code changes are required — all `?.()` optional-call syntax has been removed from these modules.
 

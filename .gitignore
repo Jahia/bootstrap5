@@ -25,4 +25,5 @@ bootstrap5-core/src/main/resources/javascript/*
 # …except the hand-written multi-level navbar support
 !bootstrap5-core/src/main/resources/css/multilevel-nav.css
 !bootstrap5-core/src/main/resources/javascript/multilevel-nav.js
+!bootstrap5-core/src/main/resources/javascript/apps/
 bootstrap5-core/src/main/resources/bootstrap5nt_version/html/_bootstrap-version.jspf

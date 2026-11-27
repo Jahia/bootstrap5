@@ -87,10 +87,12 @@ public class Bootstrap5PackageActivator implements BundleActivator {
         }
 
         String version;
+        String engineVersion;
         try (InputStream is = getClass().getResourceAsStream("/bootstrap5-package.properties")) {
             Properties props = new Properties();
             props.load(is);
             version = props.getProperty("bootstrap5.version");
+            engineVersion = props.getProperty("javascript.modules.engine.version");
         } catch (Exception e) {
             logger.error("Bootstrap5 package: could not read version properties", e);
             return;
@@ -116,6 +118,13 @@ public class Bootstrap5PackageActivator implements BundleActivator {
                 logger.error("Bootstrap5 package: failed to install {}", resource.getFilename(), e);
                 return;
             }
+        }
+
+        // The JavaScript modules need the engine they were built and tested with. Jahia ships an
+        // engine of its own, possibly older: the embedded one is installed unless the engine
+        // already running is at least as recent.
+        if (!ensureJavascriptEngine(moduleManager, engineVersion)) {
+            return;
         }
 
         // .tgz modules: installed via "js:file://" URL.
@@ -171,6 +180,52 @@ public class Bootstrap5PackageActivator implements BundleActivator {
                 logger.error("Bootstrap5 package: failed to install/update {}", filename, e);
                 return;
             }
+        }
+    }
+
+    private static final String ENGINE_SYMBOLIC_NAME = "javascript-modules-engine";
+
+    /**
+     * Installs the embedded javascript-modules-engine when the running one is missing or older.
+     *
+     * @return false when the engine could not be installed
+     */
+    private boolean ensureJavascriptEngine(ModuleManager moduleManager, String engineVersion) {
+        Bundle running = findBySymbolicName(ENGINE_SYMBOLIC_NAME);
+        if (running != null && isAtLeast(running.getVersion(), engineVersion)) {
+            logger.info("Bootstrap5 package: {} {} is already installed", ENGINE_SYMBOLIC_NAME, running.getVersion());
+            return true;
+        }
+        String path = "/jahia-packages/" + ENGINE_SYMBOLIC_NAME + "-" + engineVersion + ".jar";
+        URL url = getClass().getResource(path);
+        if (url == null) {
+            logger.error("Bootstrap5 package: embedded module not found: {}", path);
+            return false;
+        }
+        try {
+            logger.info("Bootstrap5 package: installing {} {} (running: {})...", ENGINE_SYMBOLIC_NAME, engineVersion,
+                    running != null ? running.getVersion() : "none");
+            moduleManager.install(Collections.singletonList(new UrlResource(url)), null, true, true);
+            logger.info("Bootstrap5 package: installed {} {}", ENGINE_SYMBOLIC_NAME, engineVersion);
+            return true;
+        } catch (Exception e) {
+            logger.error("Bootstrap5 package: failed to install {} {}", ENGINE_SYMBOLIC_NAME, engineVersion, e);
+            return false;
+        }
+    }
+
+    /** Compares major.minor.micro only: 1.3.1-SNAPSHOT counts as 1.3.1. */
+    static boolean isAtLeast(org.osgi.framework.Version running, String required) {
+        try {
+            String[] parts = required.split("[.\\-]");
+            org.osgi.framework.Version minimum = new org.osgi.framework.Version(
+                    Integer.parseInt(parts[0]),
+                    parts.length > 1 ? Integer.parseInt(parts[1]) : 0,
+                    parts.length > 2 ? Integer.parseInt(parts[2]) : 0);
+            return new org.osgi.framework.Version(running.getMajor(), running.getMinor(), running.getMicro())
+                    .compareTo(minimum) >= 0;
+        } catch (RuntimeException e) {
+            return false;
         }
     }
 

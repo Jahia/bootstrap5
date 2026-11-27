@@ -1,0 +1,9 @@
+{
+  "name": "bootstrap5-core",
+  "description": "Bootstrap 5 for Jahia: CKEditor 5 configuration of the rich text fields",
+  "jahia": {
+    "apps": {
+      "jahia": "javascript/apps/bootstrap5-ckeditor5.js"
+    }
+  }
+}
