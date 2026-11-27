@@ -99,6 +99,28 @@ curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
 
 ---
 
+## Rich text editor (CKEditor 5)
+
+The rich text fields (the [Text](../content-editor/components/text.md) component) use CKEditor 4 by default. CKEditor 5 is provided by the Jahia module `richtext-ckeditor5`. Once that module is installed, enable it for each site in its configuration, `org.jahia.modules.richtextCKEditor5.cfg`:
+
+```properties
+# Enable CKEditor 5 for the listed sites (one line per site key)
+includeSites[0]=YOUR_SITE_KEY
+includeSites[1]=ANOTHER_SITE_KEY
+
+# or enable it for every site
+enabledByDefault=true
+```
+
+- `includeSites[n]=<siteKey>` enables CKEditor 5 for one site.
+- `enabledByDefault=true` enables it for all sites.
+
+Sites that are not enabled keep CKEditor 4.
+
+`bootstrap5-core` registers the Bootstrap styles (lead, colours, alerts, badges, tables) in the CKEditor 5 configurations of the Jahia UI, under the same option as CKEditor 4, so the same field definition serves both editors. Nothing happens when `richtext-ckeditor5` is not installed.
+
+---
+
 ## Updating modules
 
 ### Updating via bootstrap5-package

@@ -1,16 +1,12 @@
 # Bootstrap 5 for Jahia
 
-> ⚠️ **This branch (`main`) is under active development.**
+> **Version 3.x** is the JavaScript/React version of this module stack. It replaces the Groovy/JSP stack of 2.x: module names, content definitions and the rendering pipeline changed.
 >
-> It is being migrated to a full JavaScript/React rendering stack. **Do not use this branch in production.**
->
-> **Breaking changes** — the module names, CND definitions, and rendering pipeline have all changed significantly from the previous version.
->
-> For stable, production-ready code use the **[`2_X` branch](https://github.com/Jahia/bootstrap5/tree/2_X)**.
+> The 2.x code is on the **[`2_X` branch](https://github.com/Jahia/bootstrap5/tree/2_X)**.
 
 ---
 
-A Bootstrap 5 implementation for the [Jahia Digital Experience Platform](https://www.jahia.com), being rewritten as a JavaScript module stack.
+A Bootstrap 5 implementation for [Jahia](https://www.jahia.com), built as a JavaScript module stack.
 
 [![Jahia 8.2.3+](https://img.shields.io/badge/Jahia-8.2.3%2B-blue)](https://www.jahia.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -41,7 +37,9 @@ Four modules make up the full stack:
 
 ## Components
 
-[Accordion](docs/content-editor/components/accordion.md) · [Alert](docs/content-editor/components/alert.md) · [Breadcrumb](docs/content-editor/components/breadcrumb.md) · [Button](docs/content-editor/components/button.md) · [Card](docs/content-editor/components/card.md) · [Carousel](docs/content-editor/components/carousel.md) · [Figure](docs/content-editor/components/figure.md) · [Grid & Layout](docs/content-editor/components/grid.md) · [Navbar](docs/content-editor/components/navbar.md) · [Pagination](docs/content-editor/components/pagination.md) · [Tabs](docs/content-editor/components/tabs.md) · [Text](docs/content-editor/components/text.md)
+[Accordion](docs/content-editor/components/accordion.md) · [Alert](docs/content-editor/components/alert.md) · [Breadcrumb](docs/content-editor/components/breadcrumb.md) · [Button](docs/content-editor/components/button.md) · [Button group](docs/content-editor/components/button-group.md) · [Card](docs/content-editor/components/card.md) · [Carousel](docs/content-editor/components/carousel.md) · [Figure](docs/content-editor/components/figure.md) · [Grid & Layout](docs/content-editor/components/grid.md) · [Navbar](docs/content-editor/components/navbar.md) · [Pagination](docs/content-editor/components/pagination.md) · [Progress bar](docs/content-editor/components/progress.md) · [Tabs](docs/content-editor/components/tabs.md) · [Text](docs/content-editor/components/text.md)
+
+Site-wide: [Colour mode](docs/content-editor/color-mode.md) · [Right-to-left languages](docs/content-editor/right-to-left.md)
 
 ## Reference
 

@@ -1,64 +1,85 @@
 # Navbar
 
-The Navbar renders the site navigation header, including the brand logo/name, the page menu tree, an optional login button, and an optional language switcher.
+The Navbar renders the site navigation header: the brand logo or name, the page menu, and optionally a sign-in button, a language switcher and a colour mode switcher.
 
 ![Navbar](../../../images/navigation.png)
 
 ## Properties
 
-### Navigation root
+### Navigation starting point
 
 | Field | Description |
 |-------|-------------|
-| Root page | `Home page`, `Current page`, `Parent of current page`, or `Custom root page` |
-| Custom root page | (shown when root = Custom) Picker to select the root page |
-| Max levels | Number of menu levels to display (1–5) |
+| Navigation starting point | `Home page` (the whole site), `Current page` (the pages under the page displayed), `Parent page` (the pages at the same level as the page displayed) or `Custom page` |
+| Starting page | (shown when the starting point is `Custom page`) Picker to select the page whose sub-pages make the menu |
 
 ### Brand
+
+The group is titled **Customize brand**.
 
 | Field | Description |
 |-------|-------------|
 | Brand text | The site name displayed next to the logo |
-| Brand image | Logo image (desktop) |
-| Brand image (mobile) | Logo image for small screens |
+| Brand logo (desktop) | Logo image |
+| Brand logo (mobile / small screens) | Optional. Shown instead of the desktop logo while the menu is folded |
 
-> **Note:** Brand settings can also be configured at the **site level** (via the site properties in the administration). Site-level brand overrides the component-level setting.
+> **Note:** A brand can also be set at the **site level** (group **Brand** in the site settings). A site-level brand replaces the brand set on each navbar.
 
-### Options
+### Global settings
 
 ![Navbar options](../../../images/navigation-options.png)
-![Login button](../../../images/navigation-signin.png)
+![Sign-in button](../../../images/navigation-signin.png)
 ![Language switcher](../../../images/navigation-language.png)
 
 | Field | Description |
 |-------|-------------|
-| Add login button | Display a login/logout button in the navbar |
-| Add language button | Display a language switcher dropdown |
-| Add container inside navbar | Wrap the navbar content in a `.container` div |
+| Show sign-in button | Adds a "Sign in" button. Once signed in, it becomes a menu with the user name and "Sign out" |
+| Show language switcher | Adds a menu to read the page in another language. Shown only when the site has at least two languages |
+| Show the colour mode switcher (light / dark / auto) | Adds a menu that lets visitors choose a light or dark display, or follow the setting of their device. See [Colour mode](../color-mode.md) |
+| Navigation depth (levels) | `1` to `5`. 1 shows the first level of pages only; 2 adds their sub-pages in drop-down menus; 3 and more add nested sub-menus |
+| Wrap the navbar in a container | Lines the content of the bar up with the content of the page. Untick for a bar whose content spans the whole width |
 
-### Appearance (Advanced)
+### Customize CSS classes
+
+For integrators. Empty fields use the Bootstrap defaults.
 
 | Field | Description |
 |-------|-------------|
-| Nav CSS class | Classes on the `<nav>` element |
-| Div CSS class | Classes on the inner div |
-| Toggler CSS class | Classes on the mobile hamburger button |
-| Brand link CSS class | Classes on the brand `<a>` |
-| Brand image CSS class | Classes on the brand `<img>` |
-| UL CSS class | Classes on the `<ul class="navbar-nav">` |
-| LI CSS class | Classes on each `<li>` nav item |
-| Nav link CSS class | Classes on each `<a class="nav-link">` |
-| Login menu UL CSS class | Classes on the login dropdown `<ul>` |
+| Class(es) on the `<nav>` element | Colours and the screen size from which the menu is displayed in full. `navbar-expand-lg` unfolds it on large screens; `bg-body-tertiary` follows the dark mode |
+| Class(es) on the mobile toggle button | The hamburger button |
+| Class(es) on the brand text link | The brand name |
+| Class(es) on the brand image link | The brand logo |
+| Class(es) on the collapsible section | The part that folds on small screens |
+| Class(es) on the navigation list | The `<ul>` of the menu |
+| Class(es) on each list item | Each menu entry |
+| Class(es) on each navigation link | Each link |
+| Class(es) on the sign-in / language list | The list holding the sign-in, colour mode and language menus |
 
 ## Notes
 
-- The menu tree is built automatically from the page hierarchy starting at the selected root.
+- The menu is built automatically from the page hierarchy, starting at the chosen starting point.
 - Only pages with **Display in menu** enabled appear in the navbar.
-- The active page and its ancestors receive the `active` CSS class.
-- On mobile, the menu collapses and is revealed by a hamburger button.
+- The current page receives the `active` CSS class, and its ancestors receive `inpath`.
+- In a drop-down menu, the parent page is listed first, above a divider, so that visitors can still open it. Pages of the third level open in a side sub-menu. Sub-menus can be opened with the keyboard.
+- The language menu lists the other languages by their own name (for example "français").
 
-![Navbar in edit mode](../../../images/navigation-edit.png)
-![Rendered navigation view](../../../images/navigation-view.png)
+### Colour mode switcher
+
+The switcher is a half-filled circle button. Its menu offers Light, Dark and Auto, and shows a check mark next to the mode in use.
+
+![Colour mode switcher](../../../images/color-mode-switcher.png)
+
+### Signed-in menu
+
+In edit mode and for signed-in users, the user name opens a menu with the modes available to the user (for example Preview and Edit) and "Sign out".
+
+![Signed-in user menu](../../../images/navigation-edit.png)
+
+### On small screens
+
+The menu collapses and is revealed by a hamburger button. The sign-in, colour mode and language menus then appear in the folded list, under the pages.
+
+![Navbar on a small screen](../../../images/navigation-mobile.png)
 ![Toggleable navbar](../../../images/navigation-toggleable.png)
 ![Mobile toggler](../../../images/navigation-toggler.png)
 ![Recursive navigation](../../../images/navigation-recursive.png)
