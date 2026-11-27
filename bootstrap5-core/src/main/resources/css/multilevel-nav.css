@@ -1,6 +1,8 @@
+/* Bootstrap's own variables, so the item follows the colour mode; the fixed colours are the
+   fallback for a stylesheet without them */
 .dropdown-item.inpath {
-    background-color: #f8f9fa;
-    color: #1e2125
+    background-color: var(--bs-tertiary-bg, #f8f9fa);
+    color: var(--bs-emphasis-color, #1e2125)
 }
 
 @media (min-width: 992px) {
@@ -16,6 +18,15 @@
         top: -7px
     }
     .dropdown-menu > li:hover > .submenu {
+        display: block
+    }
+    /* Right-to-left pages: sub-menus open to the left of their parent item */
+    [dir="rtl"] .nav-item .submenu {
+        left: auto !important;
+        right: 100% !important
+    }
+    /* Opened from the keyboard (Bootstrap adds .show): the rule hiding sub-menus must not win */
+    .nav-item .submenu.show {
         display: block
     }
 }

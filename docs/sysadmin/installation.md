@@ -2,7 +2,8 @@
 
 ## Prerequisites
 
-- Jahia 8.2.3.0 or later
+- Jahia 8.2.3.x
+- javascript-modules-engine 1.3.1 (installed by `bootstrap5-package`; to install by hand: `mvn:org.jahia.modules/javascript-modules-engine/1.3.1`)
 - The `default` module must be running (it is shipped with Jahia)
 
 ---

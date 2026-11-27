@@ -27,6 +27,19 @@
       <version>8.2.0</version>
       <scope>runtime</scope>
     </dependency>
+    <!-- The JavaScript modules run on this engine version: Jahia 8.2.3.x ships an older one -->
+    <dependency>
+      <groupId>org.jahia.modules</groupId>
+      <artifactId>javascript-modules-engine</artifactId>
+      <version>${javascript-modules-engine.version}</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <dependency>
       <groupId>org.jahiacommunity.modules</groupId>
       <artifactId>bootstrap5-core</artifactId>
