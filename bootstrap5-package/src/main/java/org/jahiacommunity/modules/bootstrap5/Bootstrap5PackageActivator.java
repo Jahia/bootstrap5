@@ -70,14 +70,8 @@ public class Bootstrap5PackageActivator implements BundleActivator {
     }
 
     private void installModules() {
-        // Wait for Jahia's Spring context to be fully initialized
-        int attempts = 0;
-        while (!SpringContextSingleton.getInstance().isInitialized() && attempts < 60) {
-            try { Thread.sleep(1000); } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return;
-            }
-            attempts++;
+        if (!waitForSpringContext()) {
+            return;
         }
 
         ModuleManager moduleManager = (ModuleManager) SpringContextSingleton.getBean("ModuleManager");
@@ -98,7 +92,50 @@ public class Bootstrap5PackageActivator implements BundleActivator {
             return;
         }
 
-        // .jar modules installed via ModuleManager (handles JCR state / Jahia module registry)
+        // The JavaScript modules need the engine they were built and tested with. Jahia ships an
+        // engine of its own, possibly older: the embedded one is installed unless the engine
+        // already running is at least as recent.
+        if (!installJarModules(moduleManager, version) || !ensureJavascriptEngine(moduleManager, engineVersion)) {
+            return;
+        }
+
+        String[] tgzModules = {
+            "/jahia-packages/bootstrap5-components-" + version + ".tgz",
+            "/jahia-packages/bootstrap5-templates-starter-" + version + ".tgz"
+        };
+        for (String path : tgzModules) {
+            if (!installTgzModule(path, version)) {
+                return;
+            }
+        }
+    }
+
+    /**
+     * Waits for Jahia's Spring context to be fully initialized, for one minute at most.
+     *
+     * @return false when the thread was interrupted while waiting
+     */
+    private boolean waitForSpringContext() {
+        int attempts = 0;
+        while (!SpringContextSingleton.getInstance().isInitialized() && attempts < 60) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
+            attempts++;
+        }
+        return true;
+    }
+
+    /**
+     * Installs the .jar modules through the ModuleManager, which handles the JCR state and the
+     * Jahia module registry.
+     *
+     * @return false when a module is missing or could not be installed
+     */
+    private boolean installJarModules(ModuleManager moduleManager, String version) {
         String[] jarModules = {
             "/jahia-packages/skins-8.2.0.jar",
             "/jahia-packages/bootstrap5-core-" + version + ".jar"
@@ -107,7 +144,7 @@ public class Bootstrap5PackageActivator implements BundleActivator {
             URL url = getClass().getResource(path);
             if (url == null) {
                 logger.error("Bootstrap5 package: embedded module not found: {}", path);
-                return;
+                return false;
             }
             Resource resource = new UrlResource(url);
             try {
@@ -116,70 +153,66 @@ public class Bootstrap5PackageActivator implements BundleActivator {
                 logger.info("Bootstrap5 package: installed {}", resource.getFilename());
             } catch (Exception e) {
                 logger.error("Bootstrap5 package: failed to install {}", resource.getFilename(), e);
-                return;
+                return false;
             }
         }
+        return true;
+    }
 
-        // The JavaScript modules need the engine they were built and tested with. Jahia ships an
-        // engine of its own, possibly older: the embedded one is installed unless the engine
-        // already running is at least as recent.
-        if (!ensureJavascriptEngine(moduleManager, engineVersion)) {
-            return;
-        }
-
-        // .tgz modules: installed via "js:file://" URL.
-        // JavascriptProtocolStreamHandler converts the tgz to an OSGi bundle JAR on the fly.
-        // We write to bundleContext.getDataFile() so the location is stable within this
-        // package instance. We look up existing bundles by symbolic name to handle the case
-        // where the bundle was previously installed by the UI or another mechanism.
-        String[] tgzModules = {
-            "/jahia-packages/bootstrap5-components-" + version + ".tgz",
-            "/jahia-packages/bootstrap5-templates-starter-" + version + ".tgz"
-        };
-        for (String path : tgzModules) {
-            String filename = path.substring(path.lastIndexOf('/') + 1);
-            // Derive symbolic name by stripping "-VERSION.tgz"
-            String symbolicName = filename.replace("-" + version + ".tgz", "");
-            try {
-                // Write tgz to data dir (content may have changed on redeploy)
-                File dataFile = bundleContext.getDataFile(filename);
-                try (InputStream in = getClass().getResourceAsStream(path);
-                     FileOutputStream out = new FileOutputStream(dataFile)) {
-                    byte[] buf = new byte[8192];
-                    int n;
-                    while ((n = in.read(buf)) != -1) out.write(buf, 0, n);
+    /**
+     * Installs or updates a .tgz module through a "js:file://" URL:
+     * JavascriptProtocolStreamHandler converts the tgz to an OSGi bundle JAR on the fly.
+     * The tgz is written to bundleContext.getDataFile() so the location is stable within this
+     * package instance. An existing bundle is looked up by symbolic name, to handle the case
+     * where it was previously installed by the UI or another mechanism.
+     *
+     * @return false when the module could not be installed or updated
+     */
+    private boolean installTgzModule(String path, String version) {
+        String filename = path.substring(path.lastIndexOf('/') + 1);
+        // Derive symbolic name by stripping "-VERSION.tgz"
+        String symbolicName = filename.replace("-" + version + ".tgz", "");
+        try {
+            // Write tgz to data dir (content may have changed on redeploy)
+            File dataFile = bundleContext.getDataFile(filename);
+            try (InputStream in = getClass().getResourceAsStream(path);
+                 FileOutputStream out = new FileOutputStream(dataFile)) {
+                byte[] buf = new byte[8192];
+                int n;
+                while ((n = in.read(buf)) != -1) {
+                    out.write(buf, 0, n);
                 }
-
-                String jsUrl = "js:" + dataFile.toURI().toString();
-
-                // Check if a bundle with this symbolic name is already running
-                // (could be from a previous install by us, by the UI, or by Fileinstall)
-                Bundle existing = findBySymbolicName(symbolicName);
-
-                Bundle bundle;
-                if (existing != null) {
-                    logger.info("Bootstrap5 package: updating {} (id={})...", symbolicName, existing.getBundleId());
-                    // Update with fresh content via the js: URL handler
-                    try (InputStream stream = new URL(jsUrl).openStream()) {
-                        existing.update(stream);
-                    }
-                    if (existing.getState() != Bundle.ACTIVE) {
-                        existing.start();
-                    }
-                    bundle = existing;
-                    logger.info("Bootstrap5 package: updated {}", symbolicName);
-                } else {
-                    logger.info("Bootstrap5 package: installing {}...", filename);
-                    bundle = bundleContext.installBundle(jsUrl);
-                    bundle.start();
-                    logger.info("Bootstrap5 package: installed {}", filename);
-                }
-                tgzBundleIds.add(bundle.getBundleId());
-
-            } catch (Exception e) {
-                logger.error("Bootstrap5 package: failed to install/update {}", filename, e);
-                return;
             }
+
+            String jsUrl = "js:" + dataFile.toURI().toString();
+
+            // Check if a bundle with this symbolic name is already running
+            // (could be from a previous install by us, by the UI, or by Fileinstall)
+            Bundle existing = findBySymbolicName(symbolicName);
+
+            Bundle bundle;
+            if (existing != null) {
+                logger.info("Bootstrap5 package: updating {} (id={})...", symbolicName, existing.getBundleId());
+                // Update with fresh content via the js: URL handler
+                try (InputStream stream = new URL(jsUrl).openStream()) {
+                    existing.update(stream);
+                }
+                if (existing.getState() != Bundle.ACTIVE) {
+                    existing.start();
+                }
+                bundle = existing;
+                logger.info("Bootstrap5 package: updated {}", symbolicName);
+            } else {
+                logger.info("Bootstrap5 package: installing {}...", filename);
+                bundle = bundleContext.installBundle(jsUrl);
+                bundle.start();
+                logger.info("Bootstrap5 package: installed {}", filename);
+            }
+            tgzBundleIds.add(bundle.getBundleId());
+            return true;
+        } catch (Exception e) {
+            logger.error("Bootstrap5 package: failed to install/update {}", filename, e);
+            return false;
         }
     }
 

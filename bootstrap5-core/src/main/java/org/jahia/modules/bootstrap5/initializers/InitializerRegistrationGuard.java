@@ -78,24 +78,32 @@ public class InitializerRegistrationGuard implements BundleListener {
         for (ServiceReference<?> reference : references) {
             Object service = context.getService(reference);
             try {
-                if (service instanceof ModuleChoiceListInitializer) {
-                    ModuleChoiceListInitializer initializer = (ModuleChoiceListInitializer) service;
-                    if (initializers != null && !initializers.containsKey(initializer.getKey())) {
-                        initializers.put(initializer.getKey(), initializer);
-                        logger.info("Bootstrap5: choice list initializer '{}' registered again", initializer.getKey());
-                    }
-                }
-                if (service instanceof ModuleChoiceListRenderer) {
-                    ModuleChoiceListRenderer renderer = (ModuleChoiceListRenderer) service;
-                    if (renderers != null && !renderers.containsKey(renderer.getKey())) {
-                        renderers.put(renderer.getKey(), renderer);
-                    }
-                }
+                restoreInitializer(service, initializers);
+                restoreRenderer(service, renderers);
             } finally {
                 if (service != null) {
                     context.ungetService(reference);
                 }
             }
         }
+    }
+
+    private static void restoreInitializer(Object service, Map<String, ChoiceListInitializer> initializers) {
+        if (initializers == null || !(service instanceof ModuleChoiceListInitializer)) {
+            return;
+        }
+        ModuleChoiceListInitializer initializer = (ModuleChoiceListInitializer) service;
+        if (!initializers.containsKey(initializer.getKey())) {
+            initializers.put(initializer.getKey(), initializer);
+            logger.info("Bootstrap5: choice list initializer '{}' registered again", initializer.getKey());
+        }
+    }
+
+    private static void restoreRenderer(Object service, Map<String, ChoiceListRenderer> renderers) {
+        if (renderers == null || !(service instanceof ModuleChoiceListRenderer)) {
+            return;
+        }
+        ModuleChoiceListRenderer renderer = (ModuleChoiceListRenderer) service;
+        renderers.computeIfAbsent(renderer.getKey(), key -> renderer);
     }
 }
