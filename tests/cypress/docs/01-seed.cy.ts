@@ -352,6 +352,12 @@ describe('Documentation screenshots: demo site', () => {
         pager(content, 'pagination-1', 'default');
         bind(content, ['pagination', 'pagination-1']);
 
+        // The same list without any pager (animation "before pagination")
+        content = demoPage('pagination-none', 'List without pagination');
+        addNode(content, 'departures', 'jnt:contentList');
+        ['15 June: Tour du Mont Blanc', '22 June: Haute Route', '29 June: Alta Via 1', '6 July: Tour du Mont Blanc', '13 July: Tour of Monte Rosa', '20 July: Haute Route', '27 July: Alta Via 1']
+            .forEach((departure, i) => addText(`${content}/departures`, `departure-${i + 1}`, `<p>${departure}</p>`));
+
         content = demoPage('pagination-size', 'Pagination sizes');
         pagedList(content);
         pager(content, 'large', 'pagination-lg');
@@ -371,6 +377,9 @@ describe('Documentation screenshots: demo site', () => {
         addText(`${content}/tabs/itinerary`, 'text', '<p class="mt-3">Day 1: Les Houches to Les Contamines, over the Col de Voza. Day 2: up to the Col du Bonhomme and down to Les Chapieux.</p>');
         addText(`${content}/tabs/equipment`, 'text', '<p class="mt-3">Walking boots, waterproof jacket, a 30-litre rucksack and a sheet sleeping bag for the huts.</p>');
         addText(`${content}/tabs/dates-and-prices`, 'text', '<p class="mt-3">Departures every Sunday from 15 June to 14 September, from € 1,250 per person.</p>');
+
+        // An empty page, where the animation "adding a tab" creates the tabs
+        demoPage('tabs-new', 'New tabs');
 
         // Text
         content = demoPage('text', 'Text');
@@ -420,6 +429,17 @@ describe('Documentation screenshots: demo site', () => {
         addText(`${content}/grid/main`, 'text', `<p>${lorem.montBlanc}</p>`);
         // A grid as it is created, before any option is switched on (content editor image)
         addNode(content, 'new-grid', 'bootstrap5nt:grid');
+
+        // Two items at most per column: the first column has reached the limit, the second one has room (edit mode image)
+        content = demoPage('grid-limit', 'Grid limit');
+        addNode(content, 'grid', 'bootstrap5nt:grid', [
+            {name: 'typeOfGrid', value: 'predefinedGrid'}, {name: 'grid', value: '6_6'}, {name: 'listLimit', value: '2'}
+        ], ['bootstrap5mix:createRow', 'bootstrap5mix:predefinedGrid', 'bootstrap5mix:listLimit']);
+        addNode(`${content}/grid`, 'main', 'jnt:contentList');
+        addText(`${content}/grid/main`, 'text-1', '<p>Guided hikes and alpine crossings in small groups.</p>');
+        addText(`${content}/grid/main`, 'text-2', '<p>Led by certified mountain guides.</p>');
+        addNode(`${content}/grid`, 'side', 'jnt:contentList');
+        addText(`${content}/grid/side`, 'text-1', '<p>Departures every Sunday.</p>');
     });
 
     it('a right-to-left site', () => {
