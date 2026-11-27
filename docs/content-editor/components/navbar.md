@@ -23,7 +23,7 @@ The group is titled **Customize brand**.
 | Brand logo (desktop) | Logo image |
 | Brand logo (mobile / small screens) | Optional. Shown instead of the desktop logo while the menu is folded |
 
-> **Note:** A brand can also be set at the **site level** (group **Brand** in the site settings). A site-level brand replaces the brand set on each navbar.
+> **Note:** A brand can also be set at the **site level** (edit the site node in the content editor and switch on the optional group **Brand** in the **Content** section). A site-level brand replaces the brand set on each navbar.
 
 ### Global settings
 

@@ -18,8 +18,8 @@ A site can be displayed in a light or a dark colour mode. The mode changes the c
 
 The default mode is what visitors get when they have not chosen one themselves.
 
-1. Open the settings of the site.
-2. In the group **Colour mode**, choose a value for **Default colour mode of the site**:
+1. Edit the site itself (the site node) in the content editor.
+2. In the **Content** section, switch on the optional group **Colour mode**, then choose a value for **Default colour mode of the site**:
    - `Light`
    - `Dark`
    - `Automatic (follows the visitor's system setting)`
