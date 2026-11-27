@@ -370,7 +370,10 @@ jahiaComponent(
     const currentPageUrl = buildNodeUrl(mainNode);
     // Jahia's login valve sends back a failed login with ?loginError=bad_password / account_locked
     const loginError = String(request.getParameter("loginError") ?? "");
-    const loginErrorAttribute = loginError ? { "aria-describedby": `${loginNodeId}-error` } : {};
+    // data-b5-login-error marks the modal the constant script below reopens
+    const loginErrorAttribute = loginError
+      ? { "aria-describedby": `${loginNodeId}-error`, "data-b5-login-error": "true" }
+      : {};
     // Workspace links, as 2.x: not on a remote publication server nor on content published from live
     const showWorkspaceLinks = !isDistantPublicationServer(renderContext)
       && mainNode.getPropertyAsString("j:originWS") !== "live"
@@ -601,7 +604,7 @@ jahiaComponent(
                     <AddResources
                       type="inline"
                       targetTag={isEditMode ? "head" : "body"}
-                      inlineResource={`<script>window.addEventListener("load", function () { var m = document.getElementById(${JSON.stringify(loginNodeId)}); if (m && window.bootstrap) { new bootstrap.Modal(m, { keyboard: false }).show(); } });</script>`}
+                      inlineResource={`<script>window.addEventListener("load", function () { var m = document.querySelector('[data-b5-login-error]'); if (m && window.bootstrap) { new bootstrap.Modal(m, { keyboard: false }).show(); } });</script>`}
                     />
                   )}
                 </>

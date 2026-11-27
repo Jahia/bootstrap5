@@ -230,6 +230,30 @@ describe('bootstrap5nt:navbar (default view)', () => {
     expect(container.querySelector('.modal .alert-danger')).toBeInTheDocument();
   });
 
+  test('failed login → modal carries the reopen marker and the script has no node identifier', () => {
+    const ctx = makeNavbarCtx({}, { _site: makeSiteNode(), _params: { loginError: 'bad_password' } });
+    const { container } = renderFn(getNavbarFn(), {}, ctx);
+    const modal = container.querySelector('.modal');
+    expect(modal).toHaveAttribute('data-b5-login-error', 'true');
+    const scripts = Array.from(container.querySelectorAll('[data-testid="add-resources"]'))
+      .map((el) => el.getAttribute('data-inline') ?? '')
+      .filter((code) => code.includes('bootstrap.Modal'));
+    expect(scripts).toHaveLength(1);
+    expect(scripts[0]).toContain("document.querySelector('[data-b5-login-error]')");
+    expect(scripts[0]).not.toContain(modal?.id ?? 'login-');
+    expect(scripts[0]).not.toContain('${');
+  });
+
+  test('no login error → no reopen marker and no reopen script', () => {
+    const ctx = makeNavbarCtx({}, { _site: makeSiteNode() });
+    const { container } = renderFn(getNavbarFn(), {}, ctx);
+    expect(container.querySelector('.modal')).not.toHaveAttribute('data-b5-login-error');
+    expect(container.querySelector('[data-b5-login-error]')).toBeNull();
+    const reopen = Array.from(container.querySelectorAll('[data-testid="add-resources"]'))
+      .filter((el) => (el.getAttribute('data-inline') ?? '').includes('bootstrap.Modal'));
+    expect(reopen).toHaveLength(0);
+  });
+
   test('logged in without jContentAccess → no Preview/Edit links, Logout only', () => {
     const user = { getUsername: () => 'visitor' };
     const ctx = {
