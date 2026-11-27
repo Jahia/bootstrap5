@@ -32,6 +32,42 @@ interface CardProps {
   footer?: string;
 }
 
+interface ColorClasses {
+  bgClass?: string;
+  textColorClass?: string;
+  borderClass?: string;
+}
+
+/** bootstrap5mix:colors — all three properties present when mixin is applied */
+function resolveColorClasses(currentNode: JCRNodeWrapper): ColorClasses {
+  const classes: ColorClasses = {};
+  if (currentNode.isNodeType("bootstrap5mix:colors")) {
+    const bg = currentNode.getPropertyAsString("backgroundColor") ?? "";
+    if (bg && bg !== "default") classes.bgClass = `bg-${bg}`;
+    const tc = currentNode.getPropertyAsString("textColor") ?? "";
+    // text-muted is deprecated since 5.3: its replacement follows the colour mode
+    if (tc) classes.textColorClass = tc === "muted" ? "text-body-secondary" : `text-${tc}`;
+    const bc = currentNode.getPropertyAsString("borderColor") ?? "";
+    if (bc && bc !== "default") classes.borderClass = `border-${bc}`;
+  }
+  return classes;
+}
+
+/** bootstrap5mix:cardAdvancedSettings */
+function resolveAdvancedSettings(currentNode: JCRNodeWrapper) {
+  let cardBsPrefix = "card";
+  let cardBodyBsPrefix = "card-body";
+  let cardHeaderBsPrefix = "card-header";
+  let freeFooter = false;
+  if (currentNode.isNodeType("bootstrap5mix:cardAdvancedSettings")) {
+    cardBsPrefix = currentNode.getPropertyAsString("cssClass") || "card";
+    cardBodyBsPrefix = currentNode.getPropertyAsString("cardBodyCssClass") || "card-body";
+    cardHeaderBsPrefix = currentNode.getPropertyAsString("cardHeaderCssClass") || "card-header";
+    freeFooter = currentNode.getPropertyAsString("freeFooter") === "true";
+  }
+  return { cardBsPrefix, cardBodyBsPrefix, cardHeaderBsPrefix, freeFooter };
+}
+
 jahiaComponent(
   {
     nodeType: "bootstrap5nt:card",
@@ -56,31 +92,9 @@ jahiaComponent(
     // textAlign: "text-start" is default — omit to match JSP behaviour
     const alignClass = textAlign && textAlign !== "text-start" ? textAlign : undefined;
 
-    // bootstrap5mix:colors — all three properties present when mixin is applied
-    let bgClass: string | undefined;
-    let textColorClass: string | undefined;
-    let borderClass: string | undefined;
-    if (currentNode.isNodeType("bootstrap5mix:colors")) {
-      const bg = currentNode.getPropertyAsString("backgroundColor") ?? "";
-      if (bg && bg !== "default") bgClass = `bg-${bg}`;
-      const tc = currentNode.getPropertyAsString("textColor") ?? "";
-      // text-muted is deprecated since 5.3: its replacement follows the colour mode
-      if (tc) textColorClass = tc === "muted" ? "text-body-secondary" : `text-${tc}`;
-      const bc = currentNode.getPropertyAsString("borderColor") ?? "";
-      if (bc && bc !== "default") borderClass = `border-${bc}`;
-    }
+    const { bgClass, textColorClass, borderClass } = resolveColorClasses(currentNode);
 
-    // bootstrap5mix:cardAdvancedSettings
-    let cardBsPrefix = "card";
-    let cardBodyBsPrefix = "card-body";
-    let cardHeaderBsPrefix = "card-header";
-    let freeFooter = false;
-    if (currentNode.isNodeType("bootstrap5mix:cardAdvancedSettings")) {
-      cardBsPrefix = currentNode.getPropertyAsString("cssClass") || "card";
-      cardBodyBsPrefix = currentNode.getPropertyAsString("cardBodyCssClass") || "card-body";
-      cardHeaderBsPrefix = currentNode.getPropertyAsString("cardHeaderCssClass") || "card-header";
-      freeFooter = currentNode.getPropertyAsString("freeFooter") === "true";
-    }
+    const { cardBsPrefix, cardBodyBsPrefix, cardHeaderBsPrefix, freeFooter } = resolveAdvancedSettings(currentNode);
 
     // Droppable children: jmix:droppableContent children, excluding the "cardFooter" subnode
     const bodyChildren = getChildNodes(currentNode, 50).filter(

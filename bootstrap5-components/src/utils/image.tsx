@@ -42,64 +42,93 @@ export function borderRadiusClass(shape: string | null | undefined, size: string
   return `${shape}-${level}`;
 }
 
+/** Appends a class after the existing ones. */
+function appendClass(cssClass: string, extra: string): string {
+  return `${cssClass} ${extra}`.trim();
+}
+
+/** The classes of the alignment chosen by the editor. */
+function alignmentClass(align: string): string {
+  if (align === "start") return "float-start";
+  if (align === "end") return "float-end";
+  if (align === "center") return "mx-auto d-block";
+  return "";
+}
+
+/** Merges the style of the image after the style of the caller. */
+function mergeStyles(styleStr: string, imageStyle: string): string {
+  if (!imageStyle) return styleStr;
+  if (!styleStr) return imageStyle;
+  return `${styleStr}${styleStr.endsWith(";") ? "" : ";"}${imageStyle}`;
+}
+
+/** Ensure img-fluid is present (or absent) based on responsive flag. */
+function applyResponsive(cssClass: string, responsive: boolean): string {
+  if (!responsive) return cssClass.replace("img-fluid", "").trim();
+  return cssClass.includes("img-fluid") ? cssClass : appendClass(cssClass, "img-fluid");
+}
+
+interface ImageAttributes {
+  cssClass: string;
+  styleStr: string;
+  elemId: string;
+  alt: string;
+  responsive: boolean;
+}
+
+/** Applies bootstrap5mix:imageAdvancedSettings on top of the attributes of the caller. */
+function applyAdvancedSettings(node: JCRNodeWrapper, base: ImageAttributes): ImageAttributes {
+  let cssClass = base.cssClass;
+  // Append imageClass after caller's class
+  const imageClass = node.getPropertyAsString("imageClass");
+  if (imageClass) cssClass = appendClass(cssClass, imageClass);
+
+  // Merge styles
+  const styleStr = mergeStyles(base.styleStr, node.getPropertyAsString("imageStyle"));
+
+  // Advanced id wins over caller id
+  const elemId = node.getPropertyAsString("imageID") || base.elemId;
+
+  // Neither property is autocreated and getProperty() throws when one is not set, which made the
+  // whole figure fail to render: read them as strings. As in 2.x, once the advanced settings are
+  // on, responsive is the stored flag (unset → not fluid); thumbnails defaults to false.
+  const responsive = node.getPropertyAsString("responsive") === "true";
+
+  if (node.getPropertyAsString("thumbnails") === "true") {
+    cssClass = appendClass(cssClass, "img-thumbnail");
+  }
+
+  const radiusClass = borderRadiusClass(node.getPropertyAsString("borderRadius"), node.getPropertyAsString("borderRadiusSize"));
+  if (radiusClass) cssClass = appendClass(cssClass, radiusClass);
+
+  // Alignment
+  const alignClass = alignmentClass(node.getPropertyAsString("align"));
+  if (alignClass) cssClass = appendClass(cssClass, alignClass);
+
+  // Custom alt text
+  const alt = node.getPropertyAsString("alt") || base.alt;
+
+  return { cssClass, styleStr, elemId, alt, responsive };
+}
+
 export function ImageTag({ node, imageNode, callerClass = "", callerStyle, callerId }: Readonly<ImageTagProps>) {
   if (!imageNode) return null;
 
-  let cssClass = callerClass;
-  let styleStr = callerStyle ?? "";
-  let elemId = callerId ?? "";
-  // Default alt: image node display name
-  let alt = imageNode.getDisplayableName();
-  let responsive = true;
+  let attributes: ImageAttributes = {
+    cssClass: callerClass,
+    styleStr: callerStyle ?? "",
+    elemId: callerId ?? "",
+    // Default alt: image node display name
+    alt: imageNode.getDisplayableName(),
+    responsive: true,
+  };
 
   if (node.isNodeType("bootstrap5mix:imageAdvancedSettings")) {
-    // Append imageClass after caller's class
-    const imageClass = node.getPropertyAsString("imageClass");
-    if (imageClass) cssClass = `${cssClass} ${imageClass}`.trim();
-
-    // Merge styles
-    const imageStyle = node.getPropertyAsString("imageStyle");
-    if (imageStyle) {
-      if (styleStr) {
-        styleStr = `${styleStr}${styleStr.endsWith(";") ? "" : ";"}${imageStyle}`;
-      } else {
-        styleStr = imageStyle;
-      }
-    }
-
-    // Advanced id wins over caller id
-    const imageID = node.getPropertyAsString("imageID");
-    if (imageID) elemId = imageID;
-
-    // Neither property is autocreated and getProperty() throws when one is not set, which made the
-    // whole figure fail to render: read them as strings. As in 2.x, once the advanced settings are
-    // on, responsive is the stored flag (unset → not fluid); thumbnails defaults to false.
-    responsive = node.getPropertyAsString("responsive") === "true";
-
-    if (node.getPropertyAsString("thumbnails") === "true") {
-      cssClass = `${cssClass} img-thumbnail`.trim();
-    }
-
-    const radiusClass = borderRadiusClass(node.getPropertyAsString("borderRadius"), node.getPropertyAsString("borderRadiusSize"));
-    if (radiusClass) cssClass = `${cssClass} ${radiusClass}`.trim();
-
-    // Alignment
-    const align = node.getPropertyAsString("align");
-    if (align === "start") cssClass = `${cssClass} float-start`.trim();
-    else if (align === "end") cssClass = `${cssClass} float-end`.trim();
-    else if (align === "center") cssClass = `${cssClass} mx-auto d-block`.trim();
-
-    // Custom alt text
-    const altStr = node.getPropertyAsString("alt");
-    if (altStr) alt = altStr;
+    attributes = applyAdvancedSettings(node, attributes);
   }
 
-  // Ensure img-fluid is present (or absent) based on responsive flag
-  if (!responsive) {
-    cssClass = cssClass.replace("img-fluid", "").trim();
-  } else if (!cssClass.includes("img-fluid")) {
-    cssClass = `${cssClass} img-fluid`.trim();
-  }
+  const { styleStr, elemId, alt } = attributes;
+  const cssClass = applyResponsive(attributes.cssClass, attributes.responsive);
 
   const src = buildNodeUrl(imageNode);
   // React only takes a style object: a string makes the whole view throw

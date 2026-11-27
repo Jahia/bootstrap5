@@ -96,6 +96,208 @@ interface GridProps {
   listLimit?: string;
 }
 
+type ServerContext = ReturnType<typeof useServerContext>;
+
+/** Everything the grid rendering helpers need, computed once at the top of the view. */
+interface GridContext {
+  currentNode: ServerContext["currentNode"];
+  renderContext: ServerContext["renderContext"];
+  mainNode: ServerContext["mainNode"];
+  t: (key: string, options?: Record<string, string>) => string;
+  props: GridProps;
+  createContainer: boolean;
+  createRow: boolean;
+  createAbsoluteAreas: boolean;
+  isPredefined: boolean;
+  isCustom: boolean;
+  isModulesPath: boolean;
+  isStudioMode: boolean;
+  colNamePrefix: string;
+  numberOfItems: number | undefined;
+  absoluteLevel: number;
+  anchor: JCRNodeWrapper | undefined;
+  showAbsoluteAreaHelp: boolean;
+}
+
+/** List limit (bootstrap5mix:listLimit). */
+function resolveNumberOfItems(currentNode: JCRNodeWrapper, listLimit: string | undefined): number | undefined {
+  const hasListLimit = currentNode.isNodeType("bootstrap5mix:listLimit");
+  const parsedListLimit = hasListLimit && listLimit ? Number.parseInt(listLimit, 10) : -1;
+  return !Number.isNaN(parsedListLimit) && parsedListLimit > 0 ? parsedListLimit : undefined;
+}
+
+/** Container class: dedup containerType from extra classes. */
+function resolveContainerClass(containerType: string | undefined, containerCssClass: string | undefined): string {
+  let containerClass = containerType ?? "container";
+  if (containerCssClass) {
+    const extra = containerCssClass.replace(containerClass, "").trim();
+    if (extra) containerClass = `${containerClass} ${extra}`;
+  }
+  return containerClass;
+}
+
+/** An alignment or gutter value: "default" stands for none. */
+function nonDefault(value: string | undefined): string {
+  return value === "default" ? "" : (value ?? "");
+}
+
+/** Row full class. */
+function resolveRowClass(props: GridProps): string {
+  return [
+    "row",
+    props.rowCssClass,
+    nonDefault(props.rowVerticalAlignment),
+    nonDefault(props.rowHorizontalAlignment),
+    nonDefault(props.horizontalGutters),
+    nonDefault(props.verticalGutters),
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
+
+/** The area of a column: a sub node of the grid, or an absolute area under an ancestor page. */
+function renderCol(ctx: GridContext, areaPath: string) {
+  const { t, mainNode, numberOfItems, absoluteLevel, anchor, showAbsoluteAreaHelp } = ctx;
+  if (!ctx.createAbsoluteAreas) {
+    return <SubNodeArea name={areaPath} numberOfItems={numberOfItems} />;
+  }
+  return (
+    <>
+      {showAbsoluteAreaHelp && (
+        <div className="card text-white bg-danger mb-3">
+          <div className="card-header">{t("bootstrap5nt_grid.absolute.area.title")}</div>
+          <div className="card-body">
+            <p className="card-text">
+              {t("bootstrap5nt_grid.absolute.area.desc", { 0: String(absoluteLevel) })}
+            </p>
+          </div>
+        </div>
+      )}
+      {anchor && (
+        <AbsoluteArea
+          parent={anchor}
+          name={areaPath}
+          readOnly={mainNode.getPath() !== anchor.getPath()}
+          {...limitProps(numberOfItems)}
+        />
+      )}
+    </>
+  );
+}
+
+/** The warning shown in edit mode when the grid cannot be displayed (nothing in live). */
+function renderGridWarning(ctx: GridContext, wrapperClass: string, grid: string) {
+  const { t, renderContext } = ctx;
+  return renderContext.isEditMode() ? (
+    <div className={wrapperClass}>
+      <div className="alert alert-warning alert-dismissible fade show" role="alert">
+        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label={t("bootstrap5nt_button.close")} />
+        <strong>{t("bootstrap5nt_grid.warning")}</strong>{" "}
+        {t("bootstrap5nt_grid.couldNotDisplayGrid", { 0: grid })}
+      </div>
+    </div>
+  ) : <></>;
+}
+
+function renderPredefinedColumns(ctx: GridContext) {
+  const { grid } = ctx.props;
+  // predefinedGrid — split "4_8" → [4, 8], compute area names
+  const parts = (grid ?? "12").split("_").filter((part) => part !== "");
+  if (parts.length < 1 || parts.length > 4) {
+    return renderGridWarning(ctx, "col", grid ?? "");
+  }
+  const areaNames = predefinedAreaNames(parts);
+  return (
+    <>
+      {parts.map((span, i) => {
+        const colClass = span === "12" ? "col" : `col-md-${span}`;
+        const areaPath = `${ctx.colNamePrefix}${areaNames[i]}`;
+        return (
+          <div key={areaPath} className={colClass}>
+            {renderCol(ctx, areaPath)}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+function renderCustomColumns(ctx: GridContext) {
+  const { gridClasses } = ctx.props;
+  // customGrid — comma-separated CSS classes, area names col0, col1, …
+  const columns = gridClasses ? gridClasses.split(",").map((c) => c.trim()) : [];
+  if (columns.length === 0) {
+    return renderGridWarning(ctx, "col-md-12", "");
+  }
+  return (
+    <>
+      {columns.map((colClass, i) => {
+        const areaPath = `${ctx.colNamePrefix}col${i}`;
+        return (
+          <div key={areaPath} className={colClass}>
+            {renderCol(ctx, areaPath)}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+function renderSingleColumn(ctx: GridContext) {
+  const { currentNode, renderContext, createContainer, createRow, isModulesPath, isStudioMode } = ctx;
+  // nogrid — single area node; name is "main" normally, or node name in /modules
+  const colName = isModulesPath || isStudioMode ? currentNode.getName() : "main";
+  return (
+    <>
+      {renderContext.isEditMode() && !createContainer && !createRow &&
+        !isModulesPath && !isStudioMode && (
+          <span className="text-body-secondary">#{currentNode.getName()}</span>
+        )}
+      {renderCol(ctx, colName)}
+    </>
+  );
+}
+
+function renderGridColumns(ctx: GridContext) {
+  if (ctx.isPredefined) return renderPredefinedColumns(ctx);
+  if (ctx.isCustom) return renderCustomColumns(ctx);
+  return renderSingleColumn(ctx);
+}
+
+/** The columns, inside the row when there is one. */
+function renderRow(ctx: GridContext, rowFullClass: string) {
+  const { rowId } = ctx.props;
+  const rowIdAttribute = rowId ? { id: rowId } : {};
+  return (
+    <>
+      {ctx.createRow ? (
+        <div
+          {...rowIdAttribute}
+          className={rowFullClass}
+        >
+          {renderGridColumns(ctx)}
+        </div>
+      ) : (
+        renderGridColumns(ctx)
+      )}
+    </>
+  );
+}
+
+/** Attributes of the section wrapper. */
+function buildSectionProps(props: GridProps): Record<string, string | CSSProperties> {
+  const { sectionId, sectionCssClass, sectionRole, sectionStyle, sectionAria } = props;
+  const sectionProps: Record<string, string | CSSProperties> = {};
+  if (sectionId) sectionProps.id = sectionId;
+  if (sectionCssClass) sectionProps.className = sectionCssClass.trim();
+  if (sectionRole) sectionProps.role = sectionRole;
+  // React only takes a style object: a string makes the whole view throw
+  const style = parseInlineStyle(sectionStyle);
+  if (style) sectionProps.style = style;
+  if (sectionAria) sectionProps["aria-label"] = sectionAria;
+  return sectionProps;
+}
+
 jahiaComponent(
   {
     nodeType: "bootstrap5nt:grid",
@@ -105,27 +307,7 @@ jahiaComponent(
     // Column areas may resolve per page (2.x grid.properties)
     properties: { "cache.mainResource": "true" },
   },
-  ({
-    sectionElement,
-    sectionId,
-    sectionCssClass,
-    sectionStyle,
-    sectionRole,
-    sectionAria,
-    containerId,
-    containerType,
-    containerCssClass,
-    rowId,
-    rowCssClass,
-    rowVerticalAlignment,
-    rowHorizontalAlignment,
-    horizontalGutters,
-    verticalGutters,
-    grid,
-    gridClasses,
-    level,
-    listLimit,
-  }: GridProps) => {
+  (props: GridProps) => {
     const { currentNode, renderContext, mainNode } = useServerContext();
     const { t } = useTranslation();
 
@@ -134,41 +316,12 @@ jahiaComponent(
     const createContainer = currentNode.isNodeType("bootstrap5mix:createContainer");
     const createRow = currentNode.isNodeType("bootstrap5mix:createRow");
 
-    // ── Grid type ──────────────────────────────────────────────────────────
-    const isPredefined = currentNode.isNodeType("bootstrap5mix:predefinedGrid");
-    const isCustom = currentNode.isNodeType("bootstrap5mix:customGrid");
-
     // ── Absolute areas ─────────────────────────────────────────────────────
     const createAbsoluteAreas = currentNode.isNodeType("bootstrap5mix:createAbsoluteAreas");
-
-    // ── List limit ─────────────────────────────────────────────────────────
-    const hasListLimit = currentNode.isNodeType("bootstrap5mix:listLimit");
-    const parsedListLimit = hasListLimit && listLimit ? Number.parseInt(listLimit, 10) : -1;
-    const numberOfItems = !Number.isNaN(parsedListLimit) && parsedListLimit > 0 ? parsedListLimit : undefined;
 
     // ── Column name prefix for /modules paths or studiomode ────────────────
     const isModulesPath = currentNode.getPath().startsWith("/modules");
     const isStudioMode = renderContext.getEditModeConfigName() === "studiomode";
-    const colNamePrefix = isModulesPath || isStudioMode ? `${currentNode.getName()}-` : "";
-
-    // ── Container class: dedup containerType from extra classes ────────────
-    let containerClass = containerType ?? "container";
-    if (containerCssClass) {
-      const extra = containerCssClass.replace(containerClass, "").trim();
-      if (extra) containerClass = `${containerClass} ${extra}`;
-    }
-
-    // ── Row full class ─────────────────────────────────────────────────────
-    const vAlign = rowVerticalAlignment === "default" ? "" : (rowVerticalAlignment ?? "");
-    const hAlign = rowHorizontalAlignment === "default" ? "" : (rowHorizontalAlignment ?? "");
-    const gX = horizontalGutters === "default" ? "" : (horizontalGutters ?? "");
-    const gY = verticalGutters === "default" ? "" : (verticalGutters ?? "");
-    const rowFullClass = ["row", rowCssClass, vAlign, hAlign, gX, gY]
-      .filter(Boolean)
-      .join(" ");
-
-    // ── Grid columns content ───────────────────────────────────────────────
-    const SectionTag = (sectionElement && SECTION_ELEMENTS.has(sectionElement) ? sectionElement : "div") as "section" | "div";
 
     // 2.x rendered every column with <template:area areaAsSubNode="true">: the column content lives
     // under the grid node ({gridPath}/main, {gridPath}/side, {gridPath}/col0…), or under the page
@@ -176,147 +329,47 @@ jahiaComponent(
     // With bootstrap5mix:createAbsoluteAreas it used moduleType="absoluteArea" and the chosen level:
     // the content lives under the ancestor page of that level ({ancestorPath}/main…), is shared by
     // every page below it, and can only be edited on that ancestor page.
-    const absoluteLevel = Number.parseInt(level ?? "0", 10) || 0;
-    const anchor = createAbsoluteAreas ? absoluteAreaAnchor(mainNode, absoluteLevel) : undefined;
-    const showAbsoluteAreaHelp = createAbsoluteAreas && isStudioMode;
+    const absoluteLevel = Number.parseInt(props.level ?? "0", 10) || 0;
 
-    const renderCol = (areaPath: string) => {
-      if (!createAbsoluteAreas) {
-        return <SubNodeArea name={areaPath} numberOfItems={numberOfItems} />;
-      }
-      return (
-        <>
-          {showAbsoluteAreaHelp && (
-            <div className="card text-white bg-danger mb-3">
-              <div className="card-header">{t("bootstrap5nt_grid.absolute.area.title")}</div>
-              <div className="card-body">
-                <p className="card-text">
-                  {t("bootstrap5nt_grid.absolute.area.desc", { 0: String(absoluteLevel) })}
-                </p>
-              </div>
-            </div>
-          )}
-          {anchor && (
-            <AbsoluteArea
-              parent={anchor}
-              name={areaPath}
-              readOnly={mainNode.getPath() !== anchor.getPath()}
-              {...limitProps(numberOfItems)}
-            />
-          )}
-        </>
-      );
-    };
-
-    const GridColumns = () => {
-      if (isPredefined) {
-        // predefinedGrid — split "4_8" → [4, 8], compute area names
-        const parts = (grid ?? "12").split("_").filter((part) => part !== "");
-        if (parts.length < 1 || parts.length > 4) {
-          return renderContext.isEditMode() ? (
-            <div className="col">
-              <div className="alert alert-warning alert-dismissible fade show" role="alert">
-                <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label={t("bootstrap5nt_button.close")} />
-                <strong>{t("bootstrap5nt_grid.warning")}</strong>{" "}
-                {t("bootstrap5nt_grid.couldNotDisplayGrid", { 0: grid ?? "" })}
-              </div>
-            </div>
-          ) : <></>;
-        }
-        const areaNames = predefinedAreaNames(parts);
-        return (
-          <>
-            {parts.map((span, i) => {
-              const colClass = span === "12" ? "col" : `col-md-${span}`;
-              const areaPath = `${colNamePrefix}${areaNames[i]}`;
-              return (
-                <div key={areaPath} className={colClass}>
-                  {renderCol(areaPath)}
-                </div>
-              );
-            })}
-          </>
-        );
-      }
-
-      if (isCustom) {
-        // customGrid — comma-separated CSS classes, area names col0, col1, …
-        const columns = gridClasses ? gridClasses.split(",").map((c) => c.trim()) : [];
-        if (columns.length === 0) {
-          return renderContext.isEditMode() ? (
-            <div className="col-md-12">
-              <div className="alert alert-warning alert-dismissible fade show" role="alert">
-                <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label={t("bootstrap5nt_button.close")} />
-                <strong>{t("bootstrap5nt_grid.warning")}</strong>{" "}
-                {t("bootstrap5nt_grid.couldNotDisplayGrid", { 0: "" })}
-              </div>
-            </div>
-          ) : <></>;
-        }
-        return (
-          <>
-            {columns.map((colClass, i) => {
-              const areaPath = `${colNamePrefix}col${i}`;
-              return (
-                <div key={areaPath} className={colClass}>
-                  {renderCol(areaPath)}
-                </div>
-              );
-            })}
-          </>
-        );
-      }
-
-      // nogrid — single area node; name is "main" normally, or node name in /modules
-      const colName = isModulesPath || isStudioMode ? currentNode.getName() : "main";
-      return (
-        <>
-          {renderContext.isEditMode() && !createContainer && !createRow &&
-            !isModulesPath && !isStudioMode && (
-              <span className="text-body-secondary">#{currentNode.getName()}</span>
-            )}
-          {renderCol(colName)}
-        </>
-      );
+    const ctx: GridContext = {
+      currentNode,
+      renderContext,
+      mainNode,
+      t,
+      props,
+      createContainer,
+      createRow,
+      createAbsoluteAreas,
+      // ── Grid type ────────────────────────────────────────────────────────
+      isPredefined: currentNode.isNodeType("bootstrap5mix:predefinedGrid"),
+      isCustom: currentNode.isNodeType("bootstrap5mix:customGrid"),
+      isModulesPath,
+      isStudioMode,
+      colNamePrefix: isModulesPath || isStudioMode ? `${currentNode.getName()}-` : "",
+      numberOfItems: resolveNumberOfItems(currentNode, props.listLimit),
+      absoluteLevel,
+      anchor: createAbsoluteAreas ? absoluteAreaAnchor(mainNode, absoluteLevel) : undefined,
+      showAbsoluteAreaHelp: createAbsoluteAreas && isStudioMode,
     };
 
     // ── Assemble wrapper layers ────────────────────────────────────────────
-    const rowIdAttribute = rowId ? { id: rowId } : {};
-    const containerIdAttribute = containerId ? { id: containerId } : {};
-    const inner = (
-      <>
-        {createRow ? (
-          <div
-            {...rowIdAttribute}
-            className={rowFullClass}
-          >
-            <GridColumns />
-          </div>
-        ) : (
-          <GridColumns />
-        )}
-      </>
-    );
+    const inner = renderRow(ctx, resolveRowClass(props));
+    const containerIdAttribute = props.containerId ? { id: props.containerId } : {};
 
     const withContainer = createContainer ? (
       <div
         {...containerIdAttribute}
-        className={containerClass}
+        className={resolveContainerClass(props.containerType, props.containerCssClass)}
       >
         {inner}
       </div>
     ) : inner;
 
     if (createSection) {
-      const sectionProps: Record<string, string | CSSProperties> = {};
-      if (sectionId) sectionProps.id = sectionId;
-      if (sectionCssClass) sectionProps.className = sectionCssClass.trim();
-      if (sectionRole) sectionProps.role = sectionRole;
-      // React only takes a style object: a string makes the whole view throw
-      const style = parseInlineStyle(sectionStyle);
-      if (style) sectionProps.style = style;
-      if (sectionAria) sectionProps["aria-label"] = sectionAria;
-      return <SectionTag {...sectionProps}>{withContainer}</SectionTag>;
+      // ── Grid columns content ─────────────────────────────────────────────
+      const { sectionElement } = props;
+      const SectionTag = (sectionElement && SECTION_ELEMENTS.has(sectionElement) ? sectionElement : "div") as "section" | "div";
+      return <SectionTag {...buildSectionProps(props)}>{withContainer}</SectionTag>;
     }
 
     return withContainer;
