@@ -1,9 +1,8 @@
-## How to contribute to Bootstrap 5 for DX
+## How to contribute to Bootstrap 5 for Jahia
 
 #### **Did you find a bug?**
 
-* **Do not open up a GitHub issue if the bug is a security vulnerability
-  in DX**, and instead to refer to the [DX support](support@jahia.com).
+* **Do not open up a GitHub issue if the bug is a security vulnerability**: report it as described in [SECURITY.md](SECURITY.md).
 
 * **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/Jahia/bootstrap5/issues).
 
@@ -20,4 +19,4 @@
 
 Thanks! :heart: :heart: :heart:
 
-The Bootstrap 5 for DX Team
+The Bootstrap 5 for Jahia Team

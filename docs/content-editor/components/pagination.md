@@ -25,6 +25,7 @@ The Pagination component renders a Bootstrap pagination bar bound to a content l
 - The Pagination component must be **bound** to a content list on the same page using the Jahia binding mechanism. The bound list controls which content is paginated; Pagination only renders the navigation bar.
 - Place the pager **before** the list it pages, as in 2.x. This is how the first page is limited without any parameter in the address of the page.
 - Visitors move between pages with the links of the bar; the bar writes the position and the page size in the address of the page.
+- A page size given in the address is capped at 100 items, or at the page size set on the component when it is larger, so that a visitor cannot make the page display the whole list.
 - The bar is a labelled navigation block, and disabled entries are not links.
 
 ![Pagination initial setup](../../../images/pagination-init.png)
