@@ -27,3 +27,6 @@ bootstrap5-core/src/main/resources/javascript/*
 !bootstrap5-core/src/main/resources/javascript/multilevel-nav.js
 !bootstrap5-core/src/main/resources/javascript/apps/
 bootstrap5-core/src/main/resources/bootstrap5nt_version/html/_bootstrap-version.jspf
+
+# macOS Finder metadata
+.DS_Store
