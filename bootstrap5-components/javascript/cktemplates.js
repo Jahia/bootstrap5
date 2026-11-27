@@ -61,7 +61,7 @@ CKEDITOR.addTemplates('default', {
             title: 'Alert Light',
             image: 'alert-light.png',
             description: 'A light alert for subtle notifications or messages',
-            html: '<div class="alert" role="alert">\n' +
+            html: '<div class="alert alert-light" role="alert">\n' +
                 '  This is a light alert—check it out!\n' +
                 '</div>\n'
         },
@@ -125,26 +125,30 @@ CKEDITOR.addTemplates('default', {
             title: 'Blockquote',
             image: 'blockquote.png',
             description: 'A blockquote with a citation and a source title',
-            html: '<blockquote class="blockquote">\n' +
-                '  <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>\n' +
-                '  <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>\n' +
-                '</blockquote>'
+            html: '<figure>\n' +
+                '  <blockquote class="blockquote">\n' +
+                '    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>\n' +
+                '  </blockquote>\n' +
+                '  <figcaption class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></figcaption>\n' +
+                '</figure>'
         },
         {
             title: 'Blockquote Right',
             image: 'blockquote-right.png',
             description: 'A right-aligned blockquote with a citation and a source title',
-            html: '<blockquote class="blockquote text-right">\n' +
-                '  <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>\n' +
-                '  <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>\n' +
-                '</blockquote>'
+            html: '<figure class="text-end">\n' +
+                '  <blockquote class="blockquote">\n' +
+                '    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>\n' +
+                '  </blockquote>\n' +
+                '  <figcaption class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></figcaption>\n' +
+                '</figure>'
         },
         {
             title: 'Jumbotron',
             image: 'jumbotron.png',
             description: 'A large container for showcasing hero content or information',
-            html: '<div class="jumbotron">\n' +
-                '  <h1 class="display-3">Hello, world!</h1>\n' +
+            html: '<div class="p-5 mb-4 bg-body-tertiary rounded-3">\n' +
+                '  <h1 class="display-5 fw-bold">Hello, world!</h1>\n' +
                 '  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>\n' +
                 '  <hr class="my-4">\n' +
                 '  <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>\n' +

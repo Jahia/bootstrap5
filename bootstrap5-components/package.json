@@ -27,7 +27,7 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "@jahia/javascript-modules-library": "^1.0.0",
+    "@jahia/javascript-modules-library": "^1.3.1",
     "@jahia/vite-plugin": "^1.0.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.1",
@@ -56,7 +56,7 @@
     "module-dependencies": "bootstrap5-core",
     "module-type": "module",
     "server": "dist/server/index.js",
-    "static-resources": "/dist/client,/dist/assets,/img",
+    "static-resources": "/dist/client,/dist/assets,/img,/javascript",
     "required-version": "8.2.3.0"
   }
 }

@@ -57,6 +57,8 @@ jahiaComponent(
         <div
           id={collapseId}
           className={`accordion-collapse collapse${show ? " show" : ""}`}
+          // The panel is a region named by its header: aria-labelledby needs a role to apply to
+          role="region"
           aria-labelledby={headerId}
           data-bs-parent={`#accordion-${parentId}`}
         >

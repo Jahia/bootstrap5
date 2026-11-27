@@ -12,6 +12,7 @@
  */
 import { buildNodeUrl } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { parseInlineStyle } from "./inline-style.js";
 
 interface ImageTagProps {
   /** Component node — carries the image property and optional advanced-settings mixin */
@@ -24,6 +25,21 @@ interface ImageTagProps {
   callerStyle?: string;
   /** id attribute from the caller */
   callerId?: string;
+}
+
+/**
+ * The rounded-corner class for a shape and a size chosen by the editor.
+ * Two classes ("rounded-top rounded-3") do not combine: the size class rounds the four corners.
+ * Bootstrap has one class per case: rounded-3 (all corners), rounded-top-3 (one side).
+ * A circle or a pill has no size; "rounded-0" means no rounding.
+ */
+export function borderRadiusClass(shape: string | null | undefined, size: string | null | undefined): string {
+  if (shape === "rounded-0") return "";
+  const level = /^rounded-([0-5])$/.exec(size ?? "")?.[1];
+  // A size on its own rounds the four corners at that size
+  if (!shape) return level ? `rounded-${level}` : "";
+  if (!level || shape === "rounded-circle" || shape === "rounded-pill") return shape;
+  return `${shape}-${level}`;
 }
 
 export function ImageTag({ node, imageNode, callerClass = "", callerStyle, callerId }: ImageTagProps) {
@@ -64,17 +80,8 @@ export function ImageTag({ node, imageNode, callerClass = "", callerStyle, calle
       cssClass = `${cssClass} img-thumbnail`.trim();
     }
 
-    // Border radius — skip "rounded-0" (no-op)
-    const borderRadius = node.getPropertyAsString("borderRadius");
-    if (borderRadius && borderRadius !== "rounded-0") {
-      cssClass = `${cssClass} ${borderRadius}`.trim();
-    }
-
-    // Border radius size — skip "default"
-    const borderRadiusSize = node.getPropertyAsString("borderRadiusSize");
-    if (borderRadiusSize && borderRadiusSize !== "default") {
-      cssClass = `${cssClass} ${borderRadiusSize}`.trim();
-    }
+    const radiusClass = borderRadiusClass(node.getPropertyAsString("borderRadius"), node.getPropertyAsString("borderRadiusSize"));
+    if (radiusClass) cssClass = `${cssClass} ${radiusClass}`.trim();
 
     // Alignment
     const align = node.getPropertyAsString("align");
@@ -95,13 +102,15 @@ export function ImageTag({ node, imageNode, callerClass = "", callerStyle, calle
   }
 
   const src = buildNodeUrl(imageNode);
+  // React only takes a style object: a string makes the whole view throw
+  const style = parseInlineStyle(styleStr);
 
   return (
     <img
       src={src}
       alt={alt}
       {...(cssClass ? { className: cssClass } : {})}
-      {...(styleStr ? { style: styleStr as unknown as React.CSSProperties } : {})}
+      {...(style ? { style } : {})}
       {...(elemId ? { id: elemId } : {})}
     />
   );

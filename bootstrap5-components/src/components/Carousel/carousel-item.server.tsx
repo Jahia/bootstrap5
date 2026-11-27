@@ -10,6 +10,7 @@
 import { buildNodeUrl, getChildNodes, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { getReferencedNode } from "../../utils/node.js";
+import { textColorClass } from "../../utils/colors.js";
 
 interface CarouselItemProps {
   "jcr:title"?: string;
@@ -34,7 +35,6 @@ jahiaComponent(
       siblings.length > 0 &&
       siblings[0].getIdentifier() === currentNode.getIdentifier();
 
-    // ⚠️ image weakref
     const imageNode = getReferencedNode(currentNode as JCRNodeWrapper, "image");
     const imageUrl = imageNode ? buildNodeUrl(imageNode) : "";
 
@@ -45,9 +45,9 @@ jahiaComponent(
     let itemInterval: number | undefined;
     if (currentNode.isNodeType("bootstrap5mix:advancedCarouselItem")) {
       const tc = currentNode.getPropertyAsString("titleColor") ?? "";
-      if (tc) titleColor = `text-${tc}`;
+      if (tc) titleColor = textColorClass(tc);
       const cc = currentNode.getPropertyAsString("captionColor") ?? "";
-      if (cc) captionColor = `text-${cc}`;
+      if (cc) captionColor = textColorClass(cc);
       const ic = currentNode.getPropertyAsString("carouselItemClass") ?? "";
       if (ic.trim()) itemClass = ` ${ic.trim()}`;
       const ii = parseInt(currentNode.getPropertyAsString("interval") ?? "", 10);
@@ -74,8 +74,9 @@ jahiaComponent(
     return (
       <div
         className={`carousel-item${isFirst ? " active" : ""}${itemClass}`}
+        role="group"
         aria-roledescription="slide"
-        aria-label={title ?? ""}
+        aria-label={title || `${siblings.findIndex((n) => n.getIdentifier() === currentNode.getIdentifier()) + 1} / ${siblings.length}`}
         {...bsProps}
       >
         {/* The slide title describes its image, as in 2.x (WCAG 1.1.1) */}

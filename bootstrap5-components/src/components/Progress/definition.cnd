@@ -1,0 +1,8 @@
+[bootstrap5nt:progress] > jnt:content, bootstrap5mix:component, mix:title
+  - value (long) = '0' autocreated mandatory indexed=no
+  - max (long) = '100' autocreated mandatory indexed=no
+  - label (string) i18n indexed=no
+  - color (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no
+    < 'default', 'success', 'info', 'warning', 'danger'
+  - striped (boolean) = 'false' indexed=no
+  - showValue (boolean) = 'false' indexed=no

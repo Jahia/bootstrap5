@@ -8,8 +8,9 @@
  * is always pinned to the bottom of the viewport regardless of content height.
  */
 import { AbsoluteArea, AddResources, Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
-import type { JCRNodeWrapper } from "org.jahia.services.content";
-import type { JCRSiteNode } from "org.jahia.services.content.decorator";
+import { useTranslation } from "react-i18next";
+import { COLOR_MODE_SCRIPT, getSiteColorMode } from "../utils/color-mode";
+import { getSharedAreasPage, isSharedAreasPage } from "../utils/home";
 import { isRtlLanguage } from "../utils/rtl";
 
 jahiaComponent(
@@ -22,16 +23,22 @@ jahiaComponent(
   function TemplateStickyFooterView() {
     // In a template, currentNode is the template itself ("base"): the page being rendered is mainNode
     const { renderContext, mainNode } = useServerContext();
+    const { t } = useTranslation();
     const isEditMode: boolean = renderContext.isEditMode() as unknown as boolean;
     const locale = renderContext.getMainResourceLocale();
     const language: string = locale ? String(locale.getLanguage()) : "en";
     const isRtl = isRtlLanguage(language);
-    const siteNode = renderContext.getSite() as JCRSiteNode;
-    const homeNode = siteNode.getHome();
+    const colorMode = getSiteColorMode(renderContext.getSite() as never);
+    // Header and footer are held by the home page, shown on every page and edited on the home page
+    const sharedPage = getSharedAreasPage(renderContext, mainNode);
+    const sharedReadOnly = sharedPage ? !isSharedAreasPage(sharedPage, mainNode) : true;
 
     return (
       <html
         lang={language}
+        // Default colour mode of the site; "auto" and the visitor's own choice are resolved by the script
+        data-bs-theme={colorMode === "dark" ? "dark" : "light"}
+        data-b5-color-mode-default={colorMode}
         className="h-100"
         {...(isRtl ? { dir: "rtl" } : {})}
       >
@@ -39,7 +46,10 @@ jahiaComponent(
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <title>{mainNode.getDisplayableName()}</title>
-          <AddResources type="css" resources="bootstrap.min.css" />
+          {/* One stylesheet only: the right-to-left build for right-to-left languages */}
+          <AddResources type="css" resources={isRtl ? "bootstrap.rtl.min.css" : "bootstrap.min.css"} />
+          {/* Colour mode: applied before the page is painted (the visitor's choice, or the site default) */}
+          <AddResources type="inline" targetTag="head" inlineResource={COLOR_MODE_SCRIPT} />
           {isEditMode && (
             <AddResources type="css" resources="starter-edit.css" />
           )}
@@ -59,12 +69,14 @@ jahiaComponent(
               targetTag="body"
             />
           )}
-          <AbsoluteArea name="header" parent={homeNode} numberOfItems={0} />
-          <main className="flex-shrink-0">
+          {/* First focusable element of the page: lets keyboard users jump over the header */}
+          <a className="visually-hidden-focusable" href="#main">{t("bootstrap5_templates_starter.skipToContent")}</a>
+          {sharedPage && <AbsoluteArea name="header" parent={sharedPage} readOnly={sharedReadOnly} numberOfItems={0} />}
+          <main id="main" tabIndex={-1} className="flex-shrink-0">
             <Area name="pagecontent" numberOfItems={0} />
           </main>
           <footer className="mt-auto">
-            <AbsoluteArea name="footer" parent={homeNode} numberOfItems={0} />
+            {sharedPage && <AbsoluteArea name="footer" parent={sharedPage} readOnly={sharedReadOnly} numberOfItems={0} />}
           </footer>
         </body>
       </html>

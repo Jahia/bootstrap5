@@ -3,12 +3,21 @@
  */
 
 /**
- * bootstrap5nt:pagination — Bootstrap pagination markup layer.
- * Bound component resolution (uiComponents:getBindedComponent / template:initPager)
- * has no JS equivalent yet; the component renders an edit-mode placeholder until
- * the Jahia JS engine exposes a bound component API.
+ * bootstrap5nt:pagination — pager for the list the component is bound to (j:bindedComponent).
+ *
+ * Port of the 2.x JSP view. The pager and the list agree on three URL parameters, the ones of
+ * Jahia's JSP pager: begin{listId}, end{listId} and pagesize{listId}. As in 2.x, place the pager
+ * before its list for the first page to be limited without any parameter in the URL.
  */
-import { jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { buildNodeUrl, jahiaComponent, server, useServerContext } from "@jahia/javascript-modules-library";
+import type { JCRNodeWrapper } from "org.jahia.services.content";
+import { useTranslation } from "react-i18next";
+import {
+  beginParam, endParam, getListItems, pageSizeParam, pagerAttribute, toCount,
+} from "../../utils/pager.js";
+
+/** GraalVM host access: Java.type("java.util.HashMap") returns the Java class. */
+declare const Java: { type(className: string): new () => { put(key: string, value: unknown): unknown } };
 
 interface PaginationProps {
   /** Whether to render the pager UI (from displayPager property) */
@@ -19,6 +28,36 @@ interface PaginationProps {
   nbOfPagesInEdit?: number;
   layout?: string;
   align?: string;
+}
+
+/** The list the pager is bound to, or undefined when it is bound to nothing or to something else. */
+function getBoundList(node: JCRNodeWrapper, renderContext: unknown): JCRNodeWrapper | undefined {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const bound = server.render.getBoundNode(node, renderContext as any) as JCRNodeWrapper | null;
+    return bound && bound.isNodeType("jmix:list") ? bound : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** The current request parameters, without the ones the pager rebuilds itself. */
+function otherParameters(request: unknown, excluded: string[]): [string, string][] {
+  const result: [string, string][] = [];
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const req = request as any;
+    const names = req.getParameterNames();
+    while (names.hasMoreElements()) {
+      const name = String(names.nextElement());
+      if (excluded.includes(name)) continue;
+      const value = req.getParameter(name);
+      if (value !== null && value !== undefined) result.push([name, String(value)]);
+    }
+  } catch {
+    // no extra parameter can be read: the links only carry the paging ones
+  }
+  return result;
 }
 
 jahiaComponent(
@@ -32,110 +71,147 @@ jahiaComponent(
   },
   ({
     displayPager = false,
-    pageSize = 10,
-    nbOfPages = 10,
-    nbOfPagesInEdit = 100,
+    pageSize: configuredPageSize,
+    nbOfPages: configuredNbOfPages,
+    nbOfPagesInEdit: configuredNbOfPagesInEdit,
     layout,
     align,
   }: PaginationProps) => {
-    const { currentNode, renderContext } = useServerContext();
+    const { currentNode, renderContext, mainNode } = useServerContext();
+    const { t } = useTranslation();
+    const isEditMode = renderContext.isEditMode();
 
-    // ── Bound component resolution ─────────────────────────────────────────
-    // ⚠️ uiComponents:getBindedComponent() has no JS equivalent yet.
-    // Until resolved, render an informative edit-mode placeholder.
-    const hasBoundComponent = false; // TODO: resolve via JS API when available
+    const placeholder = isEditMode ? (
+      <small>
+        <strong>{currentNode.getName()}</strong>{" "}
+        ({t("bootstrap5nt_pagination.label.empty")})
+      </small>
+    ) : null;
 
-    if (!hasBoundComponent) {
-      if (renderContext.isEditMode()) {
-        return (
-          <small>
-            <strong>{currentNode.getName()}</strong>{" "}
-            (Pagination: no bound component — pending JS engine bound component API)
-          </small>
-        );
-      }
-      return null;
+    const boundList = getBoundList(currentNode, renderContext);
+    if (!boundList) return placeholder;
+
+    // The pager changes with the list content
+    try {
+      server.render.addCacheDependency({ node: boundList }, renderContext);
+    } catch {
+      // the dependency is an optimisation of cache flushing only
     }
 
-    // ── Below: HTML rendering layer — wired up once bound component is resolved ──
-
     const advancedPagination = currentNode.isNodeType("bootstrap5mix:advancedPagination");
+    const request = renderContext.getRequest();
+    const listId = boundList.getIdentifier();
 
-    // layout/align "default" → omit
-    const layoutClass =
-      advancedPagination && layout && layout !== "default" ? ` ${layout}` : "";
-    const alignClass =
-      advancedPagination && align && align !== "justify-content-start" ? ` ${align}` : "";
+    // Page size: the URL parameter of this list, then the search one, then the configured value
+    // (the edit-mode value in edit mode, so editors see the whole list)
+    const defaultPageSize = advancedPagination ? Number(configuredPageSize ?? 10) : 10;
+    const editPageSize = advancedPagination ? Number(configuredNbOfPagesInEdit ?? 100) : 100;
+    const pageSize = toCount(request.getParameter(pageSizeParam(listId)))
+      || toCount(request.getParameter("src_itemsPerPage"))
+      || (isEditMode ? editPageSize : defaultPageSize)
+      || 10;
+    const begin = toCount(request.getParameter(beginParam(listId))) ?? 0;
 
-    // ── Pager state (placeholders — to be populated from bound component) ──
-    // These would come from the JS equivalent of moduleMap after template:initPager
-    const currentPage = 1; // TODO: from request param begin{id} / pageSize
-    const nbPages = 1;     // TODO: from bound component listTotalSize / pageSize
+    // Tell the list, when it renders after the pager, how many items a page holds: through this
+    // module's own request attribute, and through "pagerLimits", the map Jahia's JSP list views
+    // read (a list of another module bound to this pager is then limited the same way as in 2.x)
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const req = request as any;
+      req.setAttribute(pagerAttribute(listId), String(pageSize));
+      let pagerLimits = req.getAttribute("pagerLimits");
+      if (pagerLimits === null || pagerLimits === undefined) {
+        pagerLimits = new (Java.type("java.util.HashMap"))();
+        req.setAttribute("pagerLimits", pagerLimits);
+      }
+      pagerLimits.put(listId, begin + pageSize - 1);
+    } catch {
+      // the list then only follows the URL parameters
+    }
 
-    const paginationBegin =
-      nbOfPages > 1
-        ? Math.max(1, currentPage < nbOfPages ? 1 : currentPage - (nbOfPages - 1))
-        : currentPage;
-    const paginationEnd =
-      nbOfPages > 1
-        ? Math.min(nbPages, paginationBegin + (nbOfPages - 1))
-        : currentPage;
+    const total = getListItems(boundList).length;
+    const nbPages = Math.ceil(total / pageSize);
+    const currentPage = Math.min(Math.max(1, Math.floor(begin / pageSize) + 1), Math.max(1, nbPages));
 
-    // URL builder placeholder — depends on bound component URL base
-    const buildPageUrl = (_page: number): string => "#"; // TODO: construct real URL
+    if (!displayPager || total === 0 || nbPages === 0) return placeholder;
 
-    const previousUrl = buildPageUrl(currentPage - 1);
-    const nextUrl = buildPageUrl(currentPage + 1);
+    const nbOfPages = advancedPagination ? Number(configuredNbOfPages ?? 10) : 10;
+    const layoutClass = advancedPagination && layout && layout !== "default" ? ` ${layout}` : "";
+    const alignClass = advancedPagination && align && align !== "justify-content-start" ? ` ${align}` : "";
 
-    if (!displayPager) return null;
+    const paginationBegin = nbOfPages > 1
+      ? (currentPage < nbOfPages ? 1 : currentPage - (nbOfPages - 1))
+      : currentPage;
+    const paginationEnd = nbOfPages > 1
+      ? Math.min(nbPages, paginationBegin + (nbOfPages - 1))
+      : currentPage;
+
+    // Links keep the other parameters of the request (search terms, filters)
+    const extraParameters = otherParameters(request, [beginParam(listId), endParam(listId), pageSizeParam(listId)]);
+    const baseUrl = buildNodeUrl(mainNode);
+    const buildPageUrl = (page: number): string => {
+      const parameters: [string, string][] = [
+        [beginParam(listId), String((page - 1) * pageSize)],
+        [endParam(listId), String(page * pageSize - 1)],
+        [pageSizeParam(listId), String(pageSize)],
+        ...extraParameters,
+      ];
+      const query = parameters
+        .map(([name, value]) => `${encodeURIComponent(name)}=${encodeURIComponent(value)}`)
+        .join("&");
+      return `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}${query}`;
+    };
+
+    const previousLabel = t("bootstrap5mix_advancedPagination.previous");
+    const nextLabel = t("bootstrap5mix_advancedPagination.next");
+    const hasPrevious = currentPage > 1;
+    const hasNext = currentPage < nbPages;
 
     return (
-      <ul className={`pagination${layoutClass}${alignClass}`}>
-        {/* Previous button */}
-        <li className={`page-item${currentPage <= 1 ? " disabled" : ""}`}>
-          <a
-            className="page-link"
-            tabIndex={-1}
-            href={currentPage <= 1 ? "#" : previousUrl}
-            aria-label="Previous"
-          >
-            <span aria-hidden="true">&laquo;</span>
-            <span className="visually-hidden">Previous</span>
-          </a>
-        </li>
+      <nav aria-label={t("bootstrap5nt_pagination")}>
+        <ul className={`pagination${layoutClass}${alignClass}`}>
+          <li className={`page-item${hasPrevious ? "" : " disabled"}`}>
+            {hasPrevious ? (
+              <a className="page-link" href={buildPageUrl(currentPage - 1)} rel="prev">
+                <span aria-hidden="true">&laquo;</span>
+                <span className="visually-hidden">{previousLabel}</span>
+              </a>
+            ) : (
+              <span className="page-link">
+                <span aria-hidden="true">&laquo;</span>
+                <span className="visually-hidden">{previousLabel}</span>
+              </span>
+            )}
+          </li>
 
-        {/* Page number items */}
-        {Array.from({ length: paginationEnd - paginationBegin + 1 }, (_, i) => {
-          const page = paginationBegin + i;
-          if (page === currentPage) {
-            return (
-              <li key={page} className="page-item active">
-                <span className="page-link">
-                  {page}
-                  <span className="visually-hidden">(current)</span>
-                </span>
+          {Array.from({ length: Math.max(0, paginationEnd - paginationBegin + 1) }, (_, i) => {
+            const page = paginationBegin + i;
+            return page === currentPage ? (
+              <li key={page} className="page-item active" aria-current="page">
+                <span className="page-link">{page}</span>
+              </li>
+            ) : (
+              <li key={page} className="page-item">
+                <a className="page-link" href={buildPageUrl(page)}>{page}</a>
               </li>
             );
-          }
-          return (
-            <li key={page} className="page-item">
-              <a className="page-link" href={buildPageUrl(page)}>{page}</a>
-            </li>
-          );
-        })}
+          })}
 
-        {/* Next button */}
-        <li className={`page-item${currentPage >= nbPages ? " disabled" : ""}`}>
-          <a
-            className="page-link"
-            href={currentPage >= nbPages ? "#" : nextUrl}
-            aria-label="Next"
-          >
-            <span aria-hidden="true">&raquo;</span>
-            <span className="visually-hidden">Next</span>
-          </a>
-        </li>
-      </ul>
+          <li className={`page-item${hasNext ? "" : " disabled"}`}>
+            {hasNext ? (
+              <a className="page-link" href={buildPageUrl(currentPage + 1)} rel="next">
+                <span aria-hidden="true">&raquo;</span>
+                <span className="visually-hidden">{nextLabel}</span>
+              </a>
+            ) : (
+              <span className="page-link">
+                <span aria-hidden="true">&raquo;</span>
+                <span className="visually-hidden">{nextLabel}</span>
+              </span>
+            )}
+          </li>
+        </ul>
+      </nav>
     );
   },
 );

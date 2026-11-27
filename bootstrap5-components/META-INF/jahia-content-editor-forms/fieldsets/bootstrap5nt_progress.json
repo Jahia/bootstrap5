@@ -1,0 +1,34 @@
+{
+  "name": "bootstrap5nt:progress",
+  "priority": 1.0,
+  "fields": [
+    {
+      "name": "jcr:title",
+      "hide": true
+    },
+    {
+      "name": "value",
+      "rank": 1.0
+    },
+    {
+      "name": "max",
+      "rank": 2.0
+    },
+    {
+      "name": "showValue",
+      "rank": 3.0
+    },
+    {
+      "name": "label",
+      "rank": 4.0
+    },
+    {
+      "name": "color",
+      "rank": 5.0
+    },
+    {
+      "name": "striped",
+      "rank": 6.0
+    }
+  ]
+}

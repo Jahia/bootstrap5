@@ -5,10 +5,15 @@
 /**
  * bootstrap5nt:grid — layout grid with optional section, container, and row wrappers.
  * Supports three column modes: predefinedGrid ("4_8" notation), customGrid (comma-separated
- * CSS classes), and nogrid (single area). Area absoluteArea support needs validation
- * with the Jahia JS engine team.
+ * CSS classes), and nogrid (single area). Columns are areas stored under the grid node, or, with
+ * bootstrap5mix:createAbsoluteAreas, areas stored under the ancestor page of the chosen level.
  */
+import type { CSSProperties } from "react";
+import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { AbsoluteArea, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { useTranslation } from "react-i18next";
+import { parseInlineStyle } from "../../utils/inline-style.js";
+import { limitProps, SubNodeArea } from "../../utils/sub-node-area.js";
 
 // ─── Predefined grid helpers ────────────────────────────────────────────────
 
@@ -19,7 +24,10 @@ import { AbsoluteArea, jahiaComponent, useServerContext } from "@jahia/javascrip
  *   3 cols → centre strictly largest → ["side","main","extra"], else ["main","side","extra"]
  *   4+ cols → ["main","side","extra","extra2"]
  */
-function predefinedAreaNames(parts: number[]): string[] {
+export function predefinedAreaNames(parts: string[]): string[] {
+  // The spans are compared as strings, as the 2.x JSP did (fn:split returns strings, so "lt" was a
+  // lexicographic comparison): "2" < "10" is false, hence 2_10 → main,side and 10_2 → side,main.
+  // The area names are where existing sites hold their column content, so this must not change.
   switch (parts.length) {
     case 1:
       return ["main"];
@@ -31,6 +39,29 @@ function predefinedAreaNames(parts: number[]): string[] {
         : ["main", "side", "extra"];
     default:
       return ["main", "side", "extra", "extra2"];
+  }
+}
+
+/** Tag names offered by the sectionElement choicelist; anything else renders a div (as in 2.x). */
+const SECTION_ELEMENTS = new Set([
+  "section", "article", "aside", "hgroup", "header", "footer", "nav", "div", "figure", "figcaption", "main",
+]);
+
+/**
+ * The page an absolute area of the given level is stored under: level 0 is the home page
+ * (/sites/{site}/home, depth 3), level 1 its child on the path to the page displayed, and so on.
+ * Undefined when the page displayed is above that level: 2.x rendered nothing there.
+ */
+function absoluteAreaAnchor(mainNode: JCRNodeWrapper, level: number): JCRNodeWrapper | undefined {
+  try {
+    const depth = level + 3;
+    // getDepth / getAncestor are javax.jcr.Item methods the library typings do not declare
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const item = mainNode as any;
+    if (Number(item.getDepth()) < depth) return undefined;
+    return (item.getAncestor(depth) as JCRNodeWrapper) ?? undefined;
+  } catch {
+    return undefined;
   }
 }
 
@@ -95,7 +126,8 @@ jahiaComponent(
     level,
     listLimit,
   }: GridProps) => {
-    const { currentNode, renderContext } = useServerContext();
+    const { currentNode, renderContext, mainNode } = useServerContext();
+    const { t } = useTranslation();
 
     // ── Wrapper flags ──────────────────────────────────────────────────────
     const createSection = currentNode.isNodeType("bootstrap5mix:createSection");
@@ -111,7 +143,8 @@ jahiaComponent(
 
     // ── List limit ─────────────────────────────────────────────────────────
     const hasListLimit = currentNode.isNodeType("bootstrap5mix:listLimit");
-    const resolvedListLimit = hasListLimit && listLimit ? listLimit : "-1";
+    const parsedListLimit = hasListLimit && listLimit ? parseInt(listLimit, 10) : -1;
+    const numberOfItems = !isNaN(parsedListLimit) && parsedListLimit > 0 ? parsedListLimit : undefined;
 
     // ── Column name prefix for /modules paths or studiomode ────────────────
     const isModulesPath = currentNode.getPath().startsWith("/modules");
@@ -135,26 +168,57 @@ jahiaComponent(
       .join(" ");
 
     // ── Grid columns content ───────────────────────────────────────────────
-    const SectionTag = (sectionElement ?? "section") as ('section' | 'div');
+    const SectionTag = (sectionElement && SECTION_ELEMENTS.has(sectionElement) ? sectionElement : "div") as "section" | "div";
 
-    // The JSP views rendered every column with template:area areaAsSubNode="true": the column
-    // content lives under the grid node itself ({gridPath}/main, {gridPath}/side, {gridPath}/col0…),
-    // and 2.x sites hold their content there. <Area> resolves its name against the page instead,
-    // and the engine has no areaAsSubNode option, so an AbsoluteArea anchored on the grid node is
-    // what reaches the same path. With bootstrap5mix:createAbsoluteAreas the grid usually lives in
-    // a template area, so the same anchoring shares the column content across inheriting pages.
-    const renderCol = (areaPath: string) => <AbsoluteArea parent={currentNode} name={areaPath} />;
+    // 2.x rendered every column with <template:area areaAsSubNode="true">: the column content lives
+    // under the grid node ({gridPath}/main, {gridPath}/side, {gridPath}/col0…), or under the page
+    // displayed when the grid comes from a page template.
+    // With bootstrap5mix:createAbsoluteAreas it used moduleType="absoluteArea" and the chosen level:
+    // the content lives under the ancestor page of that level ({ancestorPath}/main…), is shared by
+    // every page below it, and can only be edited on that ancestor page.
+    const absoluteLevel = parseInt(level ?? "0", 10) || 0;
+    const anchor = createAbsoluteAreas ? absoluteAreaAnchor(mainNode, absoluteLevel) : undefined;
+    const showAbsoluteAreaHelp = createAbsoluteAreas && isStudioMode;
+
+    const renderCol = (areaPath: string) => {
+      if (!createAbsoluteAreas) {
+        return <SubNodeArea name={areaPath} numberOfItems={numberOfItems} />;
+      }
+      return (
+        <>
+          {showAbsoluteAreaHelp && (
+            <div className="card text-white bg-danger mb-3">
+              <div className="card-header">{t("bootstrap5nt_grid.absolute.area.title")}</div>
+              <div className="card-body">
+                <p className="card-text">
+                  {t("bootstrap5nt_grid.absolute.area.desc", { 0: String(absoluteLevel) })}
+                </p>
+              </div>
+            </div>
+          )}
+          {anchor && (
+            <AbsoluteArea
+              parent={anchor}
+              name={areaPath}
+              readOnly={mainNode.getPath() !== anchor.getPath()}
+              {...limitProps(numberOfItems)}
+            />
+          )}
+        </>
+      );
+    };
 
     const GridColumns = () => {
       if (isPredefined) {
         // predefinedGrid — split "4_8" → [4, 8], compute area names
-        const parts = (grid ?? "12").split("_").map(Number);
+        const parts = (grid ?? "12").split("_").filter((part) => part !== "");
         if (parts.length < 1 || parts.length > 4) {
           return renderContext.isEditMode() ? (
             <div className="col">
               <div className="alert alert-warning alert-dismissible fade show" role="alert">
-                <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close" />
-                <strong>Warning</strong> Could not display grid: {grid}
+                <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label={t("bootstrap5nt_button.close")} />
+                <strong>{t("bootstrap5nt_grid.warning")}</strong>{" "}
+                {t("bootstrap5nt_grid.couldNotDisplayGrid", { 0: grid ?? "" })}
               </div>
             </div>
           ) : <></>;
@@ -163,7 +227,7 @@ jahiaComponent(
         return (
           <>
             {parts.map((span, i) => {
-              const colClass = span === 12 ? "col" : `col-md-${span}`;
+              const colClass = span === "12" ? "col" : `col-md-${span}`;
               const areaPath = `${colNamePrefix}${areaNames[i]}`;
               return (
                 <div key={areaPath} className={colClass}>
@@ -182,8 +246,9 @@ jahiaComponent(
           return renderContext.isEditMode() ? (
             <div className="col-md-12">
               <div className="alert alert-warning alert-dismissible fade show" role="alert">
-                <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close" />
-                <strong>Warning</strong> Could not display grid: gridClasses is empty
+                <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label={t("bootstrap5nt_button.close")} />
+                <strong>{t("bootstrap5nt_grid.warning")}</strong>{" "}
+                {t("bootstrap5nt_grid.couldNotDisplayGrid", { 0: "" })}
               </div>
             </div>
           ) : <></>;
@@ -208,7 +273,7 @@ jahiaComponent(
         <>
           {renderContext.isEditMode() && !createContainer && !createRow &&
             !isModulesPath && !isStudioMode && (
-              <span className="text-muted">#{currentNode.getName()}</span>
+              <span className="text-body-secondary">#{currentNode.getName()}</span>
             )}
           {renderCol(colName)}
         </>
@@ -241,11 +306,13 @@ jahiaComponent(
     ) : inner;
 
     if (createSection) {
-      const sectionProps: Record<string, string> = {};
+      const sectionProps: Record<string, string | CSSProperties> = {};
       if (sectionId) sectionProps.id = sectionId;
       if (sectionCssClass) sectionProps.className = sectionCssClass.trim();
       if (sectionRole) sectionProps.role = sectionRole;
-      if (sectionStyle) sectionProps.style = sectionStyle;
+      // React only takes a style object: a string makes the whole view throw
+      const style = parseInlineStyle(sectionStyle);
+      if (style) sectionProps.style = style;
       if (sectionAria) sectionProps["aria-label"] = sectionAria;
       return <SectionTag {...sectionProps}>{withContainer}</SectionTag>;
     }

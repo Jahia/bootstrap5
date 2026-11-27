@@ -7,6 +7,7 @@
   itemtype = content
   - addLoginButton              (boolean) = 'true'  autocreated indexed=no
   - addLanguageButton           (boolean) = 'true'  autocreated indexed=no
+  - addColorModeButton          (boolean) = 'false' indexed=no
   - maxlevel (string, choicelist[resourceBundle]) = '2' autocreated indexed=no
     < '1', '2', '3', '4', '5'
   - addContainerWithinTheNavbar (boolean) = 'true' autocreated indexed=no
@@ -14,8 +15,8 @@
 [bootstrap5mix:customizeNavbar] mixin
   extends = bootstrap5nt:navbar
   itemtype = content
-  - navClass        (string) = 'navbar navbar-expand-lg navbar-light bg-light' autocreated indexed=no
-  - togglerClass    (string) = 'navbar-toggler navbar-toggler-right' indexed=no
+  - navClass        (string) = 'navbar navbar-expand-lg bg-body-tertiary' autocreated indexed=no
+  - togglerClass    (string) = 'navbar-toggler' indexed=no
   - brandLinkClass  (string) = 'navbar-brand' autocreated indexed=no
   - brandImageClass (string) = 'navbar-brand' autocreated indexed=no
   - divClass        (string) = 'collapse navbar-collapse' autocreated indexed=no
@@ -36,6 +37,12 @@
   - brandText        (string) i18n
   - brandImage       (weakreference, picker[type='image']) < 'jmix:image'
   - brandImageMobile (weakreference, picker[type='image']) < 'jmix:image'
+
+[bootstrap5mix:siteColorMode] mixin
+  extends = jnt:virtualsite
+  itemtype = content
+  - colorMode (string, choicelist[resourceBundle]) = 'light' autocreated indexed=no
+    < 'light', 'dark', 'auto'
 
 [bootstrap5mix:customRootPage] > jmix:templateMixin mixin
   extends = bootstrap5nt:navbar

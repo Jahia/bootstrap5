@@ -4,10 +4,10 @@
 
 /**
  * bootstrap5nt:breadcrumb — walks the JCR ancestor tree to render a Bootstrap breadcrumb.
- * Non-displayable node detection approximates jcr:findDisplayableNode by checking jnt:page type.
- * The url.base prefix is approximated as an empty string; validate with Jahia JS engine team.
+ * An ancestor that cannot be displayed itself (a menu label, a link…) is plain text, as in 2.x.
  */
-import { buildNodeUrl, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
+import { buildNodeUrl, jahiaComponent, server, useServerContext } from "@jahia/javascript-modules-library";
+import { useTranslation } from "react-i18next";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { Breadcrumb } from "react-bootstrap";
 
@@ -29,6 +29,18 @@ jahiaComponent(
   },
   () => {
     const { currentNode, renderContext, mainNode } = useServerContext();
+    const { t } = useTranslation();
+    const label = t("bootstrap5nt_breadcrumb");
+
+    /** 2.x jcr:findDisplayableNode(node) ne node: the node has no page of its own to link to. */
+    const isDisplayable = (node: JCRNodeWrapper): boolean => {
+      try {
+        const displayable = server.render.findDisplayableNode(node, renderContext, null);
+        return Boolean(displayable) && displayable.getPath() === node.getPath();
+      } catch {
+        return node.isNodeType("jnt:page");
+      }
+    };
 
     // ── Collect ancestor page nodes ────────────────────────────────────────
     let pageNodes = (currentNode.getAncestors() as unknown as JCRNodeWrapper[])
@@ -55,7 +67,7 @@ jahiaComponent(
     // ── Too short: only render placeholder in edit mode ────────────────────
     if (pageNodes.length <= 1) {
       return renderContext.isEditMode() ? (
-        <Breadcrumb listProps={{ className: extraClass || undefined }}>
+        <Breadcrumb label={label} listProps={{ className: extraClass || undefined }}>
           <Breadcrumb.Item active>Breadcrumb too small...</Breadcrumb.Item>
         </Breadcrumb>
       ) : null;
@@ -64,7 +76,7 @@ jahiaComponent(
     // ── Build items ────────────────────────────────────────────────────────
     const mainResourcePath = mainNode.getPath();
     return (
-      <Breadcrumb listProps={{ className: extraClass || undefined }}>
+      <Breadcrumb label={label} listProps={{ className: extraClass || undefined }}>
         {pageNodes.map((pageNode) => {
           const isCurrentPage = pageNode.getPath() === mainResourcePath;
 
@@ -76,18 +88,27 @@ jahiaComponent(
             );
           }
 
-          const href = pageNode.isNodeType("jnt:page") ? buildNodeUrl(pageNode) : "#";
+          if (!isDisplayable(pageNode)) {
+            // Nothing to link to: plain text, not a link to "#"
+            return (
+              <li key={pageNode.getIdentifier()} className="breadcrumb-item">
+                <span>{pageNode.getDisplayableName()}</span>
+              </li>
+            );
+          }
 
           return (
-            <Breadcrumb.Item key={pageNode.getIdentifier()} href={href}>
+            <Breadcrumb.Item key={pageNode.getIdentifier()} href={buildNodeUrl(pageNode)}>
               {pageNode.getDisplayableName()}
             </Breadcrumb.Item>
           );
         })}
 
-        {/* When mainResource is not a page, append a final item for the resource itself */}
+        {/* When mainResource is not a page, append a final item for the resource itself: it is
+            the current location, so it is not a link and carries aria-current (2.x linked it to
+            itself) */}
         {!mainNode.isNodeType("jnt:page") && (
-          <Breadcrumb.Item href={buildNodeUrl(mainNode)}>
+          <Breadcrumb.Item active>
             {abbreviate(mainNode.getDisplayableName(), 15, 30, "...")}
           </Breadcrumb.Item>
         )}
