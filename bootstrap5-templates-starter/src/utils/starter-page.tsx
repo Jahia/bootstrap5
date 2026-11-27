@@ -9,7 +9,7 @@
  */
 import type { ReactNode } from "react";
 import { AddResources } from "@jahia/javascript-modules-library";
-import { COLOR_MODE_SCRIPT, type ColorMode } from "../../../shared/color-mode";
+import { COLOR_MODE_SCRIPT, type ColorMode } from "../../../bootstrap5-components/src/utils/color-mode";
 
 interface StarterPageProps {
   language: string;

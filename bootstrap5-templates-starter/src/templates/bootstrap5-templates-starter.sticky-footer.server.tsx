@@ -9,7 +9,7 @@
  */
 import { AbsoluteArea, Area, jahiaComponent, useServerContext } from "@jahia/javascript-modules-library";
 import { useTranslation } from "react-i18next";
-import { getSiteColorMode } from "../../../shared/color-mode";
+import { getSiteColorMode } from "../../../bootstrap5-components/src/utils/color-mode";
 import { getSharedAreasPage, isSharedAreasPage } from "../utils/home";
 import { isRtlLanguage } from "../utils/rtl";
 import { StarterPage } from "../utils/starter-page";

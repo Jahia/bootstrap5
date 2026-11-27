@@ -13,7 +13,7 @@ import { AddResources, buildNodeUrl, getChildNodes, jahiaComponent, useServerCon
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { COLOR_MODE_SCRIPT, COLOR_MODES, getSiteColorMode } from "../../../../shared/color-mode.js";
+import { COLOR_MODE_SCRIPT, COLOR_MODES, getSiteColorMode } from "../../utils/color-mode.js";
 import { getInvalidLanguages, getSiteLanguages } from "../../utils/languages.js";
 import { safeUrl } from "../../utils/safe-url.js";
 import { BootstrapJS } from "../../utils/bootstrap-resources.js";

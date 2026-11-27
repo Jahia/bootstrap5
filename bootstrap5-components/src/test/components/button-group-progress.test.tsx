@@ -1,6 +1,6 @@
 import { _setContext, _getComponent } from '@jahia/javascript-modules-library';
 import { makeNode, makeCtx, makeRenderContext, renderFn } from '../helpers';
-import { getSiteColorMode } from '../../../../shared/color-mode';
+import { getSiteColorMode } from '../../utils/color-mode';
 
 import '../../components/Button/default.server';
 import '../../components/ButtonGroup/default.server';

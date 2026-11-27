@@ -32,7 +32,7 @@
 
   <properties>
     <!-- SonarQube: the sources of a JavaScript module are not in src/main -->
-    <sonar.sources>pom.xml,src,javascript,../shared</sonar.sources>
+    <sonar.sources>pom.xml,src,javascript</sonar.sources>
     <sonar.tests>src/test</sonar.tests>
     <sonar.exclusions>src/test/**</sonar.exclusions>
     <!-- Written by "npm run test:coverage" -->
