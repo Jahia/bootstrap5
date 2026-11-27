@@ -31,6 +31,24 @@ export function toCount(value: unknown): number | undefined {
   return Number.isNaN(parsed) || parsed < 0 ? undefined : parsed;
 }
 
+/**
+ * Largest page size accepted from a request parameter (pagesize{listId}, src_itemsPerPage), so that
+ * a visitor cannot make a list render all its items, nor create an unbounded number of cache
+ * entries, by editing the URL. The size the editor configured is not subject to this cap.
+ */
+export const MAX_REQUEST_PAGE_SIZE = 100;
+
+/**
+ * Reads a page size from a request value: a value above the cap is reduced to the cap, while 0,
+ * negative and unparsable values are ignored (undefined). The cap is MAX_REQUEST_PAGE_SIZE, or the
+ * configured page size when the editor set a larger one.
+ */
+export function toRequestPageSize(value: unknown, configuredPageSize = 0): number | undefined {
+  const size = toCount(value);
+  if (size === undefined || size <= 0) return undefined;
+  return Math.min(size, Math.max(MAX_REQUEST_PAGE_SIZE, configuredPageSize));
+}
+
 interface SortCriterion {
   field: string;
   descending: boolean;
@@ -118,7 +136,8 @@ export function getPageItems(listNode: JCRNodeWrapper, request: PagingRequest): 
   const listId = listNode.getIdentifier();
   const items = getListItems(listNode);
   const begin = toCount(request.getParameter(beginParam(listId))) ?? 0;
-  const pageSize = toCount(request.getParameter(pageSizeParam(listId)))
+  // The URL value is capped; the attribute is set by the pager, which already applied its own cap
+  const pageSize = toRequestPageSize(request.getParameter(pageSizeParam(listId)))
     ?? toCount(request.getAttribute(pagerAttribute(listId)));
   if (pageSize !== undefined && pageSize > 0) return items.slice(begin, begin + pageSize);
   return begin > 0 ? items.slice(begin) : items;

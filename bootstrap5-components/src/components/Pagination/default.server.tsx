@@ -13,7 +13,7 @@ import { buildNodeUrl, jahiaComponent, server, useServerContext } from "@jahia/j
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { useTranslation } from "react-i18next";
 import {
-  beginParam, endParam, getListItems, pageSizeParam, pagerAttribute, toCount,
+  beginParam, endParam, getListItems, pageSizeParam, pagerAttribute, toCount, toRequestPageSize,
 } from "../../utils/pager.js";
 
 /** GraalVM host access: Java.type("java.util.HashMap") returns the Java class. */
@@ -106,8 +106,11 @@ jahiaComponent(
     // (the edit-mode value in edit mode, so editors see the whole list)
     const defaultPageSize = advancedPagination ? Number(configuredPageSize ?? 10) : 10;
     const editPageSize = advancedPagination ? Number(configuredNbOfPagesInEdit ?? 100) : 100;
-    const pageSize = toCount(request.getParameter(pageSizeParam(listId)))
-      || toCount(request.getParameter("src_itemsPerPage"))
+    // Request values are capped (the configured sizes are not): a larger configured size also
+    // raises the cap, so the links the pager itself builds keep working
+    const requestCap = Math.max(defaultPageSize, editPageSize);
+    const pageSize = toRequestPageSize(request.getParameter(pageSizeParam(listId)), requestCap)
+      || toRequestPageSize(request.getParameter("src_itemsPerPage"), requestCap)
       || (isEditMode ? editPageSize : defaultPageSize)
       || 10;
     const begin = toCount(request.getParameter(beginParam(listId))) ?? 0;
