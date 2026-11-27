@@ -36,9 +36,12 @@ jnt:templatesFolder  (rootTemplate=base, defaultTemplate=starter)
     <!-- bootstrap.bundle.min.js in head in edit mode -->
   </head>
   <body>
-    <Area name="header" />
-    <Area name="pagecontent" />
-    <Area name="footer" />
+    <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+    <!-- header area, held by the home page -->
+    <main id="main" tabindex="-1">
+      <Area name="pagecontent" />
+    </main>
+    <!-- footer area, held by the home page -->
     <!-- bootstrap.bundle.min.js at end of body in live mode -->
   </body>
 </html>
@@ -48,17 +51,17 @@ jnt:templatesFolder  (rootTemplate=base, defaultTemplate=starter)
 
 | Area name | Purpose |
 |-----------|---------|
-| `header` | Site-wide header (Navbar, etc.) |
-| `pagecontent` | Main page content |
-| `footer` | Site-wide footer |
+| `header` | Site-wide header (Navbar, etc.). Held by the home page, editable there only |
+| `pagecontent` | Main page content, inside `<main id="main">` |
+| `footer` | Site-wide footer. Held by the home page, editable there only |
 
 ### Bootstrap assets
 
-- `bootstrap.min.css` is always included in the `<head>`.
+- `bootstrap.min.css` (`bootstrap.rtl.min.css` for right-to-left languages) is always included in the `<head>`.
 - `bootstrap.bundle.min.js` is included:
   - In `<head>` in **edit mode** (required by the Jahia page composer toolbars)
   - At the end of `<body>` in **live mode** (best practice for performance)
-- `starter-edit.css` is included in **edit mode only** (minor edit-mode toolbar fixes).
+- `starter-edit.css` is included in **edit mode only** (a small edit-mode fix for the navbar).
 
 ### RTL support
 
@@ -70,7 +73,7 @@ The template detects RTL languages (Arabic, Hebrew, Persian, Urdu, etc.) and set
 
 **Registered as:** `{ nodeType: "jnt:template", name: "bootstrap5-templates-starter.sticky-footer", componentType: "view" }`
 
-Identical structure to the standard template, but uses a flexbox-based layout that pushes the footer to the bottom of the viewport even when the page content is shorter than the viewport height. No custom CSS is required — this is achieved with `d-flex flex-column min-vh-100` on `<body>` and `mt-auto` on the footer area.
+Identical structure to the standard template, but uses a flexbox-based layout that pushes the footer to the bottom of the viewport even when the page content is shorter than the viewport height. No custom CSS is required — this is achieved with `h-100` on `<html>`, `d-flex flex-column h-100` on `<body>`, `flex-shrink-0` on `<main>` and `mt-auto` on the `<footer>` element that wraps the footer area.
 
 ## Changing the default template for new pages
 

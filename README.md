@@ -53,7 +53,7 @@ Site-wide: [Colour mode](docs/content-editor/color-mode.md) · [Right-to-left la
 
 **From GitHub:** download the [latest release](https://github.com/Jahia/bootstrap5/releases/latest), then either:
 - Deploy the single `bootstrap5-package` JAR — it auto-installs everything, or
-- Deploy individually in order: `bootstrap5-core` (JAR) → `bootstrap5-components` (TGZ) → `bootstrap5-templates-starter` (TGZ)
+- Deploy individually in order: `skins` (the Alert skin needs it), `bootstrap5-core` (JAR) → `bootstrap5-components` (TGZ) → `bootstrap5-templates-starter` (TGZ)
 
 > Requires **Jahia 8.2.3.0** or later. The modules run on the `javascript-modules-engine` shipped with Jahia (1.2.0 or later). Upgrading a 2.x site: see [Upgrading from 2.x](docs/sysadmin/installation.md#upgrading-from-2x).
 

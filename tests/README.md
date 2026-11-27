@@ -10,7 +10,7 @@ JavaScript behaviour for every shipped component.
 
 | Tool | Minimum version | Notes |
 |------|----------------|-------|
-| Node.js | **18.x** | 20.x also supported |
+| Node.js | **20.x** | See `.nvmrc` |
 | Yarn | 1.22.x | Classic (v1) |
 | Jahia | 8.2.3.0 | EE, with `bootstrap5-components` deployed |
 
@@ -54,7 +54,7 @@ yarn install
 ## Running the whole suite in Docker
 
 `ci.build.sh` stages the modules to test in `assets/` and writes `assets/provisioning.yml`, which installs
-them in dependency order (`bootstrap5-core`, `bootstrap5-components`, `bootstrap5-templates-starter`). The JavaScript modules run on the
+`skins` and `richtext-ckeditor5` (from Maven), then the three modules in dependency order (`bootstrap5-core`, `bootstrap5-components`, `bootstrap5-templates-starter`). The JavaScript modules run on the
 `javascript-modules-engine` shipped with Jahia; set `JS_ENGINE_VERSION` to install another version before
 them. `ci.startup.sh` starts Jahia, provisions it and runs the suite.
 
@@ -150,13 +150,20 @@ Reports, screenshots and videos are written to `./results/`.
 tests/
 ├── cypress/
 │   ├── e2e/              # Spec files (numbered, run in order)
+│   ├── migration/        # 2.x to 3.x migration specs (run by ci.migration.sh)
+│   ├── docs/             # Documentation screenshot specs (run by ci.screenshots.sh)
 │   ├── fixtures/
 │   │   ├── graphql/      # GraphQL mutation / query files
+│   │   ├── groovy/       # Groovy scripts (admin tasks)
 │   │   └── images/       # Binary fixtures (placeholder.png for image tests)
 │   ├── plugins/          # Cypress plugin registration
 │   └── support/
-│       ├── bootstrap5.ts # Shared helpers (createTestPage, addComponent, …)
-│       └── index.ts      # cy.login() and @jahia/cypress setup
+│       ├── bootstrap5.ts # Shared helpers (createTestPage, addNode, …)
+│       ├── a11y.ts       # axe-core helper
+│       ├── docs.ts       # Helpers of the documentation screenshots
+│       ├── migration.ts  # Helpers of the migration specs
+│       ├── commands.js   # Cypress commands
+│       └── e2e.js        # Support file loaded by every spec
 ├── cypress.config.ts
 ├── .env.example
 └── reporter-config.json
@@ -241,7 +248,7 @@ Covers `bootstrap5nt:grid` with predefined, custom and section layout variants.
 - Predefined 6/6 split renders two `.col-md-6` columns inside `.row` within `.container`
 - Each column renders its droppable child content (distinct text per column)
 - Custom grid (`gridClasses=col-8,col-4`) renders matching column classes with child content
-- Section wrapper (`bootstrap5mix:sectionWrapper`) renders `<section>` element with configured `id`
+- Section wrapper (`bootstrap5mix:createSection`) renders `<section>` element with configured `id`
 
 ### 08 — Navbar (`08-navbar.cy.ts`)
 Covers `bootstrap5nt:navbar`.
@@ -265,8 +272,8 @@ Covers `bootstrap5nt:text` (rich-text / WYSIWYG component).
 ### 10 — Breadcrumb (`10-breadcrumb.cy.ts`)
 Covers `bootstrap5nt:breadcrumb`.
 
-> The breadcrumb JSP only renders when the page is at depth ≥ 3 under the site root (the
-> `fn:length(pageNodes) > 1` condition). Tests use a 3-level hierarchy:
+> The breadcrumb only renders when the page is at depth ≥ 3 under the site root (the view needs
+> more than one page in the path). Tests use a 3-level hierarchy:
 > `/home/breadcrumb-l1/breadcrumb-l2/breadcrumb-test`.
 
 - `<nav aria-label="…">` wraps `ol.breadcrumb` (WCAG 4.1.2 — landmark with accessible name)
@@ -304,6 +311,20 @@ Link schemes, carousel defaults, and escaping in views that `12-escaping` does n
 - Page `<title>` in the sticky-footer template
 
 > Choicelist properties with a value constraint (for example figure `captionAlignment`) are rejected by the JCR when set to an arbitrary value, so they are not exercised with payloads.
+
+### 14 to 23 — Parity and cross-cutting specs
+| Spec | Covers |
+|------|--------|
+| `14-grid-parity.cy.ts` | Grid (2.x parity) |
+| `15-pagination.cy.ts` | Pagination |
+| `16-navbar-parity.cy.ts` | Navbar (2.x parity): levels, root of the menu |
+| `17-skin-tabs-accordion-parity.cy.ts` | Alert skin, tabs deep links and accordion (2.x parity) |
+| `18-grid-areas.cy.ts` | Where a grid stores its column content: on a page, in shared content, in a page template; `listLimit` |
+| `19-languages.cy.ts` | Navbar language switcher on a multilingual site |
+| `20-richtext-editors.cy.ts` | Rich text editing with CKEditor 4 and CKEditor 5 |
+| `21-edit-mode.cy.ts` | Edit mode |
+| `22-accessibility.cy.ts` | WCAG 2.2 A/AA rules of axe-core, in live and edit mode |
+| `23-new-components.cy.ts` | Button group, progress bar, tooltip, colour mode, right-to-left, Bootstrap styles in CKEditor 5 |
 
 ### 99 — Teardown (`99-teardown.cy.ts`)
 Deletes the `bootstrap5test` site to leave the Jahia instance in a clean state.

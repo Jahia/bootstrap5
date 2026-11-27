@@ -68,13 +68,9 @@ jahiaComponent(
 );
 ```
 
-## Step 4 — Register the export
+## Step 4 — Registration
 
-Edit `bootstrap5-components/src/index.ts` (or wherever the barrel file is) to import the new file:
-
-```ts
-import "./components/MyComponent/default.server";
-```
+Nothing to register: the `@jahia/vite-plugin` collects every `src/**/*.server.{jsx,tsx}` file into `dist/server/index.js`, so the new view file is picked up by the next build.
 
 ## Step 5 — (Optional) Add a Content Editor form
 
@@ -82,10 +78,8 @@ Create `bootstrap5-components/META-INF/jahia-content-editor-forms/fieldsets/boot
 
 ```json
 {
-  "type": "fieldset",
   "name": "bootstrap5nt:myComponent",
   "priority": 1.0,
-  "rank": -1.0,
   "fields": [
     { "name": "title", "rank": 1 },
     { "name": "variant", "rank": 2 }
@@ -97,7 +91,7 @@ Create `bootstrap5-components/META-INF/jahia-content-editor-forms/fieldsets/boot
 
 ```bash
 cd bootstrap5-components
-node/node node/node_modules/.bin/npm run build:maven
+yarn build:maven
 
 curl -X POST http://localhost:8080/modules/api/provisioning \
   -u root:1234 \
@@ -129,7 +123,7 @@ const bgColor = hasColors ? currentNode.getPropertyAsString("backgroundColor") :
 const isEdit = renderContext.isEditMode() as unknown as boolean;
 
 // Child nodes
-const items = getChildNodes(currentNode, nodeType: "bootstrap5nt:myItem");
+const items = getChildNodes(currentNode, undefined, 0, (n) => n.isNodeType("bootstrap5nt:myItem"));
 ```
 
 ## Adding child components (orderable list pattern)

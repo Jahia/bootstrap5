@@ -21,7 +21,7 @@ Compile your custom CSS and serve it from your template. You can either:
 
 ## Adding static assets to the template module
 
-Static resources (fonts, images, additional CSS/JS) go in the `settings/` folder or in a dedicated folder listed in `files` in `package.json`.
+Static resources (fonts, images, additional CSS/JS) go in a dedicated folder listed in `files` in `package.json` (the starter uses `css/`).
 
 Then declare the folder path in `static-resources`:
 
@@ -31,15 +31,12 @@ Then declare the folder path in `static-resources`:
 }
 ```
 
-Reference them in TSX using the `useUrlBuilder` hook:
+Reference them in TSX with `AddResources`, by file name, as the starter does for `starter-edit.css`:
 
 ```tsx
-import { useUrlBuilder } from "@jahia/javascript-modules-library";
+import { AddResources } from "@jahia/javascript-modules-library";
 
-const { buildStaticUrl } = useUrlBuilder();
-const cssUrl = buildStaticUrl({ assetPath: "css/my-theme.css" });
-
-<AddResources type="css" resources={cssUrl} />
+<AddResources type="css" resources="my-theme.css" />
 ```
 
 ## Adding edit-mode only CSS
@@ -50,7 +47,7 @@ const cssUrl = buildStaticUrl({ assetPath: "css/my-theme.css" });
 const { renderContext } = useServerContext();
 const isEdit = renderContext.isEditMode() as unknown as boolean;
 
-{isEdit && <AddResources type="css" resources={buildStaticUrl({ assetPath: "css/starter-edit.css" })} />}
+{isEdit && <AddResources type="css" resources="starter-edit.css" />}
 ```
 
 Use the same pattern for any edit-mode-only resource.
@@ -66,7 +63,7 @@ To create a branded template set:
 5. Add your custom CSS/JS
 6. Deploy as a TGZ
 
-Your module's views will take priority over `bootstrap5-templates-starter` for `jnt:template` rendering because it declares a dependency on `bootstrap5-core`, making it higher priority.
+A module that declares `"module-dependencies": "bootstrap5-templates-starter"` has a higher priority than the starter (rule described in [Architecture](../developer/architecture.md#module-priority-and-view-resolution)).
 
 ## Overriding a component view
 

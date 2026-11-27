@@ -70,7 +70,7 @@ _Closes the remaining gaps with 2.4.7: what a 2.x site relied on works the same 
   - **Privacy settings modal** — Bootstrap 5 attributes and classes (`data-bs-*`, `btn-close`, `btn-secondary`)
   - **Editing interface** — warning badges use `text-bg-warning`
 - **New choices** — offcanvas from the top; image corner sizes 4 and 5
-- **Requirements** — Jahia 8.2.3.x and `javascript-modules-engine` 1.3.1 (the latest release, which `bootstrap5-package` now installs when Jahia runs an older engine)
+- **Requirements** — Jahia 8.2.3.0 or later and the `javascript-modules-engine` shipped with it (1.2.0 or later), which the package neither embeds nor installs
 - **Accessibility, templates** — the starter templates wrap the page content in a `main` landmark and start with a translated "skip to main content" link
 - **Accessibility, components** — the breadcrumb entry of a content that is not a page is the current location (not a link to itself); carousel slides and their indicators are labelled and translated; sub-menus open from the keyboard; changing tab no longer moves the focus out of the tab list
 - **Accessibility** — pagination in a labelled `nav`, disabled entries are not links; the "(current)" texts are gone (`aria-current` carries the state); username and password fields declare `autocomplete`

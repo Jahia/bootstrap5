@@ -13,10 +13,11 @@ This documentation covers the Bootstrap 5 JS rendering stack for Jahia. It is or
 
 ## Module stack
 
-The Bootstrap 5 rendering stack consists of three modules:
+The Bootstrap 5 rendering stack consists of three modules, and a fourth one, `bootstrap5-package`, that installs them:
 
 | Module | Type | Role |
 |--------|------|------|
 | `bootstrap5-core` | Java OSGi bundle | Bootstrap 5 CSS/JS assets + Java choicelist initializers |
 | `bootstrap5-components` | JS module | Component CND definitions, TSX views, Content Editor forms, i18n |
 | `bootstrap5-templates-starter` | JS templatesSet | Page templates (standard + sticky-footer), site import structure |
+| `bootstrap5-package` | Java OSGi bundle | Embeds and installs the three modules above and `skins` |

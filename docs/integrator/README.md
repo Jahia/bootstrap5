@@ -30,7 +30,8 @@ Request
 
 ```
 bootstrap5-templates-starter
-  └─ bootstrap5-core  (Bootstrap CSS/JS assets, choicelist initializers)
+  ├─ bootstrap5-core        (Bootstrap CSS/JS assets, choicelist initializers)
+  └─ bootstrap5-components
 
 bootstrap5-components
   └─ bootstrap5-core
