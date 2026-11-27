@@ -8,7 +8,7 @@ The Tabs component displays content in labelled panels. Only one panel is visibl
 
 1. Add a **Tabs** component
 2. Inside it, add **Content Lists** — one per tab panel
-3. Name each Content List: the name becomes the tab label (and the URL anchor)
+3. Give each Content List a title: the title becomes the tab label (its name is used for the URL anchor)
 4. Add content components inside each Content List
 
 ## Properties
