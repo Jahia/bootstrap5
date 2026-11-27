@@ -4,7 +4,7 @@
 
 **Symptom:**
 ```
-ModuleManagementException: BundleException: Bundle symbolic name and version are not unique: bootstrap5-components:3.0.3.SNAPSHOT
+ModuleManagementException: BundleException: Bundle symbolic name and version are not unique: bootstrap5-components:3.1.0
 ```
 
 **Cause:** The Jahia admin UI upload path does not support replacing a bundle that is already running with the same symbolic name and version. This error only occurs when using **Administration → Modules → Upload module**; it never occurs via the provisioning API.
@@ -14,8 +14,8 @@ ModuleManagementException: BundleException: Bundle symbolic name and version are
 ```bash
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -u root:YOUR_ROOT_PASSWORD \
-  --form-string 'script=[{"installOrUpgradeBundle":"bootstrap5-components-3.0.3.tgz","autoStart":true,"uninstallPreviousVersion":true,"forceUpdate":true}]' \
-  -F 'file=@bootstrap5-components-3.0.3.tgz'
+  --form-string 'script=[{"installOrUpgradeBundle":"bootstrap5-components-3.1.0.tgz","autoStart":true,"uninstallPreviousVersion":true,"forceUpdate":true}]' \
+  -F 'file=@bootstrap5-components-3.1.0.tgz'
 ```
 
 `forceUpdate` replaces a module of the same version (a SNAPSHOT rebuilt, for example).
