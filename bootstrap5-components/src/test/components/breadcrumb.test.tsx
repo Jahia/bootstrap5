@@ -76,7 +76,7 @@ describe('bootstrap5nt:breadcrumb (default view)', () => {
     expect(links[0]).toHaveAttribute('href', '/sites/test/home.html');
   });
 
-  test('non-page ancestor (fallback path) → href="#"', () => {
+  test('non-displayable ancestor (fallback path) → plain text, no link', () => {
     // The href="#" branch is triggered by the fallback path: when currentNode has NO jnt:page
     // ancestors, the component falls back to mainNode.getAncestors() filtered by jmix:navMenuItem.
     // Those navMenuItem nodes are rendered with href="#" because isNodeType("jnt:page") === false.
@@ -94,9 +94,10 @@ describe('bootstrap5nt:breadcrumb (default view)', () => {
     _setContext(ctx);
     const fn = getBreadcrumbFn();
     const { container } = renderFn(fn, {}, ctx);
-    // navText and navText2 are jmix:navMenuItem but not jnt:page → href="#"
-    const nonPageLinks = container.querySelectorAll('.breadcrumb-item:not(.active) a[href="#"]');
-    expect(nonPageLinks.length).toBeGreaterThan(0);
+    // navText and navText2 cannot be displayed themselves: plain text, no link to "#" (as 2.x)
+    expect(container.querySelectorAll('a[href="#"]').length).toBe(0);
+    const plain = container.querySelectorAll('.breadcrumb-item:not(.active) > span');
+    expect(Array.from(plain).map((item) => item.textContent)).toEqual(['Nav Text', 'Nav Text 2']);
   });
 
   test('mainNode not a page → appended item, long names truncated', () => {
@@ -121,6 +122,10 @@ describe('bootstrap5nt:breadcrumb (default view)', () => {
     const text = lastItem.textContent ?? '';
     expect(text).toContain('...');
     expect(text.length).toBeLessThan('This Is A Very Long Resource Name That Should Be Truncated'.length);
+    // It is the current location: marked as such, and not a link to itself
+    expect(lastItem).toHaveClass('active');
+    expect(lastItem).toHaveAttribute('aria-current', 'page');
+    expect(lastItem.querySelector('a')).not.toBeInTheDocument();
   });
 
   test('advancedBreadcrumb cssClass → appended to breadcrumb class', () => {

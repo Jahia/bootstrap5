@@ -8,9 +8,10 @@
  * uses its own view (accordion-item.server.tsx) with Bootstrap.js data-bs-* attributes.
  */
 import {
-  Area,
+  getChildNodes,
   jahiaComponent,
-  RenderChildren,
+  Render,
+  AddContentButtons,
   useServerContext,
 } from "@jahia/javascript-modules-library";
 import { BootstrapJS } from "../../utils/bootstrap-resources.js";
@@ -28,8 +29,9 @@ jahiaComponent(
     displayName: "Accordion",
   },
   ({ flush }: AccordionsProps) => {
-    const { currentNode } = useServerContext();
+    const { currentNode, renderContext } = useServerContext();
     const id = currentNode.getIdentifier();
+    const panels = getChildNodes(currentNode, -1, 0, (n) => n.isNodeType("bootstrap5nt:accordion"));
 
     return (
       <>
@@ -38,11 +40,14 @@ jahiaComponent(
           id={`accordion-${id}`}
           className={["accordion", flush ? "accordion-flush" : undefined].filter(Boolean).join(" ")}
         >
-          <RenderChildren filter="bootstrap5nt:accordion" />
+          {panels.map((panel) => (
+            <Render key={panel.getIdentifier()} node={panel} />
+          ))}
         </div>
 
-        {/* Edit-mode drop zone for new panels */}
-        <Area name="panels" />
+        {/* Edit mode: button to add a panel, below the accordion as in 2.x (no extra area: 3.0.x
+            rendered a stray "panels" area here, in every mode) */}
+        {renderContext.isEditMode() && <AddContentButtons nodeTypes={["bootstrap5nt:accordion"]} />}
       </>
     );
   },

@@ -51,10 +51,11 @@ describe('bootstrap5nt:button — buildButtonClass via rendered output', () => {
     expect(a?.className).not.toContain('default');
   });
 
-  test('block=true → includes "btn-block"', () => {
+  test('block=true → full-width utilities (btn-block was removed in Bootstrap 5)', () => {
     const { container } = renderInternalLink({ block: true });
     const a = container.querySelector('a');
-    expect(a?.className).toContain('btn-block');
+    expect(a?.className).toContain('d-block w-100');
+    expect(a?.className).not.toContain('btn-block');
   });
 
   test('state="active" → includes "active"', () => {
@@ -127,7 +128,7 @@ describe('bootstrap5nt:button — internalLink type', () => {
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'internalLink' }, ctx);
-    const badge = container.querySelector('.badge-warning');
+    const badge = container.querySelector('.badge.text-bg-warning');
     expect(badge).toBeInTheDocument();
   });
 
@@ -162,7 +163,7 @@ describe('bootstrap5nt:button — externalLink type', () => {
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'externalLink', externalLink: '' }, ctx);
-    expect(container.querySelector('.badge-warning')).toBeInTheDocument();
+    expect(container.querySelector('.badge.text-bg-warning')).toBeInTheDocument();
   });
 
   test('no URL + live mode → disabled button, no link (as 2.x)', () => {
@@ -198,7 +199,7 @@ describe('bootstrap5nt:button — externalLink type', () => {
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'externalLink', externalLink: 'http://' }, ctx);
-    expect(container.querySelector('.badge-warning')).toBeInTheDocument();
+    expect(container.querySelector('.badge.text-bg-warning')).toBeInTheDocument();
   });
 });
 
@@ -334,13 +335,18 @@ describe('bootstrap5nt:button — popover type', () => {
     expect(container.querySelector('[data-bs-toggle="popover"]')).toBeInTheDocument();
   });
 
-  test('popoverTitle set → title attribute', () => {
+  test('popoverTitle set → data-bs-title (a title attribute would add a native tooltip)', () => {
     const ctx = makeCtx({ _id: 'btn-pop-2' });
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'popover', popoverTitle: 'My Popover' }, ctx);
     const btn = container.querySelector('[data-bs-toggle="popover"]');
-    expect(btn).toHaveAttribute('title', 'My Popover');
+    expect(btn).toHaveAttribute('data-bs-title', 'My Popover');
+    expect(btn).not.toHaveAttribute('title');
+    // Dismissed on the next click: must be a focusable <a>, not a <button> (Bootstrap docs)
+    expect(btn?.tagName).toBe('A');
+    expect(btn).toHaveAttribute('tabindex', '0');
+    expect(btn).toHaveAttribute('role', 'button');
   });
 
   test('popoverContent set → data-bs-content attribute', () => {
@@ -429,12 +435,13 @@ describe('bootstrap5nt:button — Offcanvas type', () => {
     expect(container.querySelector('.offcanvas-title')?.textContent).toBe('My Offcanvas');
   });
 
-  test('OffcanvasTitle absent → no header', () => {
+  test('OffcanvasTitle absent → header with the close button only', () => {
     const ctx = makeCtx({ _id: 'btn-oc-5' });
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'Offcanvas' }, ctx);
-    expect(container.querySelector('.offcanvas-header')).not.toBeInTheDocument();
+    expect(container.querySelector('.offcanvas-header .btn-close')).toBeInTheDocument();
+    expect(container.querySelector('.offcanvas-title')).not.toBeInTheDocument();
   });
 
   test('enableBodyScrolling=true → data-bs-scroll="true"', () => {
@@ -502,7 +509,7 @@ describe('bootstrap5nt:button — default (unknown type)', () => {
     _setContext(ctx);
     const fn = getButtonFn();
     const { container } = renderFn(fn, { buttonType: 'unknownType' }, ctx);
-    expect(container.querySelector('.badge-warning')).toBeInTheDocument();
+    expect(container.querySelector('.badge.text-bg-warning')).toBeInTheDocument();
   });
 
   test('unknown buttonType + live mode → null', () => {

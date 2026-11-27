@@ -16,6 +16,9 @@
   - cssClass            (string) indexed=no
   - disableTextWrapping (boolean) = 'false' indexed=no
   - stretchedLink       (boolean) = 'false' indexed=no
+  - tooltip             (string) i18n indexed=no
+  - tooltipPlacement (string, choicelist[resourceBundle]) = 'top' indexed=no
+    < 'top', 'bottom', 'left', 'right'
 
 [bootstrap5mix:collapse] > jmix:templateMixin, jmix:browsableInEditorialPicker mixin orderable
   extends = bootstrap5nt:button
@@ -52,7 +55,7 @@
   extends = bootstrap5nt:button
   - OffcanvasTitle      (string) i18n
   - placement (string, choicelist[resourceBundle]) = 'start' autocreated indexed=no
-    < 'start', 'end', 'bottom'
+    < 'start', 'end', 'top', 'bottom'
   - enableBackdrop      (boolean) = 'true'  indexed=no
   - enableBodyScrolling (boolean) = 'false' indexed=no
   + * (jmix:droppableContent) = jmix:droppableContent

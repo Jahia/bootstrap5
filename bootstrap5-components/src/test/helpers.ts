@@ -42,7 +42,11 @@ export function makeNode(overrides: NodeOverrides = {}): any {
     getUrl: () => overrides._url ?? '/files/image.png',
     getParent: () => overrides._parent ?? makeNode({ _id: 'parent-abc' }),
     getAncestors: () => overrides._ancestors ?? [],
+    // javax.jcr.Item: depth 0 is the root, /sites/test/home is 3
+    getDepth: () => (overrides._path ?? '/sites/test/home').split('/').filter(Boolean).length,
+    getAncestor: (depth: number) => (overrides._ancestorsByDepth ?? {})[depth] ?? null,
     isNodeType: (type: string) => nodeTypes.has(type),
+    hasNode: (name: string) => (overrides._childNames ?? []).includes(name),
     hasProperty: (name: string) => properties.has(name),
     hasPermission: (perm: string) => (overrides._permissions ?? []).includes(perm),
     getResolveSite: () => overrides._site ?? null,
@@ -79,10 +83,13 @@ export interface RcOverrides {
   _liveMode?: boolean;
   _params?: Record<string, string>;
   _contextPath?: string;
+  /** Request attributes (e.g. wrappedContent) */
+  _attributes?: Record<string, any>;
   [key: string]: any;
 }
 
 export function makeRenderContext(overrides: RcOverrides = {}): any {
+  const attributes: Record<string, any> = { ...(overrides._attributes ?? {}) };
   return {
     isEditMode: () => overrides._editMode ?? false,
     isPreviewMode: () => overrides._previewMode ?? false,
@@ -96,6 +103,13 @@ export function makeRenderContext(overrides: RcOverrides = {}): any {
     getRequest: () => ({
       getContextPath: () => overrides._contextPath ?? '',
       getParameter: (name: string) => overrides._params?.[name] ?? null,
+      getParameterNames: () => {
+        const names = Object.keys(overrides._params ?? {});
+        let index = 0;
+        return { hasMoreElements: () => index < names.length, nextElement: () => names[index++] };
+      },
+      getAttribute: (name: string) => attributes[name] ?? null,
+      setAttribute: (name: string, value: any) => { attributes[name] = value; },
     }),
     getSettings: () => ({ isDistantPublicationServerMode: () => false }),
   };

@@ -8,13 +8,13 @@
  * Droppable children exclude the reserved "cardFooter" subnode name.
  */
 import {
-  AbsoluteArea,
   AddContentButtons,
   getChildNodes,
   jahiaComponent,
   Render,
   useServerContext,
 } from "@jahia/javascript-modules-library";
+import { SubNodeArea } from "../../utils/sub-node-area.js";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { Card } from "react-bootstrap";
 import { ImageTag } from "../../utils/image.js";
@@ -43,7 +43,8 @@ jahiaComponent(
     const { currentNode, renderContext } = useServerContext();
 
     // headerSize: "default" → render as <div>
-    const HeaderTag = (!headerSize || headerSize === "default" ? "div" : headerSize) as
+    // Used as a tag name: only the values of the choicelist are accepted, anything else is a div (2.x)
+    const HeaderTag = (headerSize && ["h1", "h2", "h3", "h4", "h5"].includes(headerSize) ? headerSize : "div") as
       | "div"
       | "h1"
       | "h2"
@@ -63,7 +64,8 @@ jahiaComponent(
       const bg = currentNode.getPropertyAsString("backgroundColor") ?? "";
       if (bg && bg !== "default") bgClass = `bg-${bg}`;
       const tc = currentNode.getPropertyAsString("textColor") ?? "";
-      if (tc) textColorClass = `text-${tc}`;
+      // text-muted is deprecated since 5.3: its replacement follows the colour mode
+      if (tc) textColorClass = tc === "muted" ? "text-body-secondary" : `text-${tc}`;
       const bc = currentNode.getPropertyAsString("borderColor") ?? "";
       if (bc && bc !== "default") borderClass = `border-${bc}`;
     }
@@ -111,7 +113,7 @@ jahiaComponent(
             {/* footer is a plain string: rendered as text, as 2.x escaped it */}
             {footer}
             {/* 2.x template:area areaAsSubNode="true": the free footer lives under the card node */}
-            {freeFooter && <AbsoluteArea parent={currentNode} name="cardFooter" />}
+            {freeFooter && <SubNodeArea name="cardFooter" />}
           </Card.Footer>
         )}
       </Card>

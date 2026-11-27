@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import { ImageTag } from '../../utils/image';
+import { ImageTag, borderRadiusClass } from '../../utils/image';
 import { makeNode } from '../helpers';
 
 describe('ImageTag utility', () => {
@@ -156,19 +156,17 @@ describe('ImageTag utility', () => {
     expect(img?.className).toContain('base-class');
   });
 
-  // imageStyle passes a CSS string as React's `style` prop (as unknown as React.CSSProperties).
-  // React 19's DOM renderer throws on this; the behavior is Jahia-engine-specific where the
-  // JS engine outputs HTML directly. This test is skipped in the React/jsdom context.
-  test.skip('imageStyle from prop → added as style attribute (Jahia-engine only)', () => {
+  test('imageStyle → style attribute on img (CSS string turned into an object)', () => {
     const { container } = renderImageTag(
       {
         _nodeTypes: ['bootstrap5mix:imageAdvancedSettings'],
-        _properties: { imageStyle: 'border: 1px solid red' },
+        _properties: { imageStyle: 'border: 1px solid red; max-width: 50%' },
       },
       {}
     );
-    const img = container.querySelector('img');
-    expect(img).toHaveAttribute('style');
+    const img = container.querySelector('img') as HTMLImageElement;
+    expect(img.style.border).toBe('1px solid red');
+    expect(img.style.maxWidth).toBe('50%');
   });
 
   test('imageID → id attribute on img', () => {
@@ -220,5 +218,25 @@ describe('ImageTag utility', () => {
     // Should have img-fluid but not duplicated
     const occurrences = classStr.split('img-fluid').length - 1;
     expect(occurrences).toBe(1);
+  });
+
+  // One class per case, as Bootstrap documents (rounded-top-3), never a shape and a size side by side
+  describe('borderRadiusClass', () => {
+    test.each([
+      ['rounded', 'rounded-3', 'rounded-3'],
+      ['rounded-top', 'rounded-3', 'rounded-top-3'],
+      ['rounded-start', 'rounded-1', 'rounded-start-1'],
+      ['rounded-top', 'default', 'rounded-top'],
+      ['rounded-top', '', 'rounded-top'],
+      ['rounded-circle', 'rounded-3', 'rounded-circle'],
+      ['rounded-pill', 'rounded-2', 'rounded-pill'],
+      ['rounded-0', 'rounded-3', ''],
+      ['', 'rounded-2', 'rounded-2'],
+      ['', 'default', ''],
+      ['rounded', 'rounded-5', 'rounded-5'],
+      ['rounded-top', 'x" onload="y', 'rounded-top'],
+    ])('shape "%s" + size "%s" → "%s"', (shape, size, expected) => {
+      expect(borderRadiusClass(shape, size)).toBe(expected);
+    });
   });
 });

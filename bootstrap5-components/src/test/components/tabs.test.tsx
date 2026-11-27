@@ -215,14 +215,29 @@ describe('bootstrap5nt:tabs (default view)', () => {
     expect(container.querySelector('[data-testid="add-resources"]')).toBeInTheDocument();
   });
 
-  test('Area for new tab panels always rendered', () => {
+  test('live mode → no stray area, no add button', () => {
     const ctx = makeTabsCtx([]);
-    const fn = getTabsFn();
-    const { container } = renderFn(fn, {}, ctx);
-    const area = container.querySelector('[data-testid="area"]');
-    expect(area).toBeInTheDocument();
-    expect(area).toHaveAttribute('data-area-name', 'tabs');
+    const { container } = renderFn(getTabsFn(), {}, ctx);
+    expect(container.querySelector('[data-testid="area"]')).not.toBeInTheDocument();
+    expect(container.querySelector('[data-testid="add-content-buttons"]')).not.toBeInTheDocument();
   });
+
+  test('edit mode → button to add a tab (a content list)', () => {
+    const ctx = makeTabsCtx([], { _editMode: true });
+    const { container } = renderFn(getTabsFn(), {}, ctx);
+    expect(container.querySelector('[data-testid="add-content-buttons"]'))
+      .toHaveAttribute('data-node-types', 'jnt:contentList');
+  });
+
+  test('deep-link script opens the tab named by the URL fragment and keeps it in sync', () => {
+    const ctx = makeTabsCtx([]);
+    const { container } = renderFn(getTabsFn(), {}, ctx);
+    const script = container.querySelector('[data-testid="add-resources"][data-type="inline"]')?.getAttribute('data-inline') ?? '';
+    expect(script).toContain('window.location.hash');
+    expect(script).toContain('shown.bs.tab');
+    expect(script).toContain('Tab.getOrCreateInstance');
+  });
+
 
   test('tab pane id matches anchor', () => {
     const list = makeContentList('l-panel', 'panelname');

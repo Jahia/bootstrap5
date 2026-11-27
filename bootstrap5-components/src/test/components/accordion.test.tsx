@@ -40,25 +40,33 @@ describe('bootstrap5nt:accordions (default view)', () => {
     expect(div).toBeInTheDocument();
   });
 
-  test('renders RenderChildren with filter bootstrap5nt:accordion', () => {
-    const ctx = makeCtx({ _id: 'acc-3' });
+  test('renders each bootstrap5nt:accordion child as a module', () => {
+    const panel = makeNode({ _id: 'panel-1', _nodeTypes: ['bootstrap5nt:accordion'] });
+    const other = makeNode({ _id: 'other-1', _nodeTypes: ['jnt:text'] });
+    const ctx = makeCtx({ _id: 'acc-3', _children: [panel, other] });
     _setContext(ctx);
-    const fn = getAccordionFn();
-    const { container } = renderFn(fn, {}, ctx);
-    const rc = container.querySelector('[data-testid="render-children"]');
-    expect(rc).toBeInTheDocument();
-    expect(rc).toHaveAttribute('data-filter', 'bootstrap5nt:accordion');
+    const { container } = renderFn(getAccordionFn(), {}, ctx);
+    const rendered = container.querySelectorAll('.accordion [data-testid="render-node"]');
+    expect(rendered.length).toBe(1);
+    expect(rendered[0]).toHaveAttribute('data-node-id', 'panel-1');
   });
 
-  test('renders Area for edit-mode drop zone', () => {
+  test('live mode → no area and no add button after the accordion (2.x)', () => {
     const ctx = makeCtx({ _id: 'acc-4' });
     _setContext(ctx);
-    const fn = getAccordionFn();
-    const { container } = renderFn(fn, {}, ctx);
-    const area = container.querySelector('[data-testid="area"]');
-    expect(area).toBeInTheDocument();
-    expect(area).toHaveAttribute('data-area-name', 'panels');
+    const { container } = renderFn(getAccordionFn(), {}, ctx);
+    expect(container.querySelector('[data-testid="area"]')).not.toBeInTheDocument();
+    expect(container.querySelector('[data-testid="add-content-buttons"]')).not.toBeInTheDocument();
   });
+
+  test('edit mode → button to add a panel', () => {
+    const ctx = makeCtx({ _id: 'acc-5' }, { _editMode: true });
+    _setContext(ctx);
+    const { container } = renderFn(getAccordionFn(), {}, ctx);
+    expect(container.querySelector('[data-testid="add-content-buttons"]'))
+      .toHaveAttribute('data-node-types', 'bootstrap5nt:accordion');
+  });
+
 });
 
 describe('bootstrap5nt:accordion (default view)', () => {

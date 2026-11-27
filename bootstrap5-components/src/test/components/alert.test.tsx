@@ -71,10 +71,19 @@ describe('jmix:skinnable skins.alert view', () => {
     expect(div).toHaveAttribute('role', 'alert');
   });
 
-  test('renders RenderChildren inside alert', () => {
+  test('renders the wrapped content handed by Jahia (2.x ${wrappedContent})', () => {
+    const ctx = makeCtx({}, { _attributes: { wrappedContent: '<p class="wrapped">Skinned content</p>' } });
+    _setContext(ctx);
+    const { container } = renderFn(getAlertFn(), {}, ctx);
+    const wrapped = container.querySelector('.alert .wrapped');
+    expect(wrapped).toBeInTheDocument();
+    expect(wrapped?.textContent).toBe('Skinned content');
+  });
+
+  test('no wrapped content → empty alert, no error', () => {
     const ctx = makeAlertCtx();
-    const fn = getAlertFn();
-    const { container } = renderFn(fn, {}, ctx);
-    expect(container.querySelector('[data-testid="render-children"]')).toBeInTheDocument();
+    const { container } = renderFn(getAlertFn(), {}, ctx);
+    expect(container.querySelector('.alert')).toBeInTheDocument();
+    expect(container.querySelector('.alert jsm-raw-html')).not.toBeInTheDocument();
   });
 });

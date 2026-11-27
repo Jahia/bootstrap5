@@ -1,0 +1,6 @@
+[bootstrap5nt:buttonGroup] > jnt:content, bootstrap5mix:component, mix:title, jmix:list,
+                             jmix:browsableInEditorialPicker orderable
+  - size (string, choicelist[resourceBundle]) = 'default' autocreated indexed=no
+    < 'default', 'btn-group-sm', 'btn-group-lg'
+  - vertical (boolean) = 'false' indexed=no
+  + * (bootstrap5nt:button)

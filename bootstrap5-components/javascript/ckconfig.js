@@ -32,7 +32,7 @@ CKEDITOR.editorConfig = (config) => {
 
         // Text styles
         { name: 'Lead', element: 'p', attributes: { class: 'lead' } },
-        { name: 'Highlighted Text', element: 'span', attributes: { class: 'text-primary' } },
+        { name: 'Highlighted Text', element: 'mark' },
         { name: 'Deleted Text', element: 'del' },
         { name: 'Underlined Text', element: 'span', attributes: { class: 'text-decoration-underline' } },
         { name: 'Bold Text', element: 'strong' },
@@ -63,20 +63,31 @@ CKEDITOR.editorConfig = (config) => {
         { name: 'Background Dark', element: 'span', attributes: { class: 'bg-dark' } },
 
         // Alert styles
+        { name: 'Primary Alert', element: 'div', attributes: { class: 'alert alert-primary' } },
+        { name: 'Secondary Alert', element: 'div', attributes: { class: 'alert alert-secondary' } },
         { name: 'Success Alert', element: 'div', attributes: { class: 'alert alert-success' } },
         { name: 'Info Alert', element: 'div', attributes: { class: 'alert alert-info' } },
         { name: 'Warning Alert', element: 'div', attributes: { class: 'alert alert-warning' } },
         { name: 'Danger Alert', element: 'div', attributes: { class: 'alert alert-danger' } },
+        { name: 'Light Alert', element: 'div', attributes: { class: 'alert alert-light' } },
+        { name: 'Dark Alert', element: 'div', attributes: { class: 'alert alert-dark' } },
 
         // Badge styles
-        { name: 'Primary Badge', element: 'span', attributes: { class: 'badge bg-primary' } },
-        { name: 'Secondary Badge', element: 'span', attributes: { class: 'badge bg-secondary' } },
-        { name: 'Success Badge', element: 'span', attributes: { class: 'badge bg-success' } },
-        { name: 'Info Badge', element: 'span', attributes: { class: 'badge bg-info' } },
-        { name: 'Warning Badge', element: 'span', attributes: { class: 'badge bg-warning' } },
-        { name: 'Danger Badge', element: 'span', attributes: { class: 'badge bg-danger' } },
-        { name: 'Light Badge', element: 'span', attributes: { class: 'badge bg-light text-dark' } },
-        { name: 'Dark Badge', element: 'span', attributes: { class: 'badge bg-dark' } }
+        { name: 'Primary Badge', element: 'span', attributes: { class: 'badge text-bg-primary' } },
+        { name: 'Secondary Badge', element: 'span', attributes: { class: 'badge text-bg-secondary' } },
+        { name: 'Success Badge', element: 'span', attributes: { class: 'badge text-bg-success' } },
+        { name: 'Info Badge', element: 'span', attributes: { class: 'badge text-bg-info' } },
+        { name: 'Warning Badge', element: 'span', attributes: { class: 'badge text-bg-warning' } },
+        { name: 'Danger Badge', element: 'span', attributes: { class: 'badge text-bg-danger' } },
+        { name: 'Light Badge', element: 'span', attributes: { class: 'badge text-bg-light' } },
+        { name: 'Dark Badge', element: 'span', attributes: { class: 'badge text-bg-dark' } },
+
+        // Table styles (apply them to a table inserted with the table tools)
+        { name: 'Table', element: 'table', attributes: { class: 'table' } },
+        { name: 'Striped Table', element: 'table', attributes: { class: 'table table-striped' } },
+        { name: 'Bordered Table', element: 'table', attributes: { class: 'table table-bordered' } },
+        { name: 'Hover Table', element: 'table', attributes: { class: 'table table-hover' } },
+        { name: 'Compact Table', element: 'table', attributes: { class: 'table table-sm' } }
     ];
 
     config.toolbar = 'Tinny';
@@ -85,7 +96,7 @@ CKEDITOR.editorConfig = (config) => {
         { name: 'basicstyles', items: ['Bold', 'Italic'] },
         { name: 'paragraph', items: ['NumberedList', 'BulletedList','Outdent', 'Indent'] },
         { name: 'alignment', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
-        { name: 'inserts', items: ['Link', 'Unlink','Anchor', 'Image','HorizontalRule'] },
+        { name: 'inserts', items: ['Link', 'Unlink','Anchor', 'Image','Table','HorizontalRule'] },
         { name: 'tools', items: ['Maximize','RemoveFormat','Wash'] },
     ];
 
@@ -102,6 +113,26 @@ CKEDITOR.editorConfig = (config) => {
 
         if (combo) {
             combo.setLabel('Inline styles');
+        }
+
+        // Tables: Bootstrap only styles a table that carries the "table" class. Every table of an
+        // editor using this configuration gets it, when the content is loaded (so the editor shows
+        // the table as the page will) and when it is saved. The other table classes (striped,
+        // bordered...) come from the Styles list and are kept.
+        const fromThisModule = (value) => String(value || '').indexOf('/bootstrap5-components/') !== -1;
+        const usesThisConfig = fromThisModule(editor.config.customConfig)
+            || [].concat(editor.config.templates_files || []).some(fromThisModule);
+        if (usesThisConfig && editor.dataProcessor && !editor.bootstrap5TableRules) {
+            editor.bootstrap5TableRules = true;
+            const addTableClass = (element) => {
+                const classes = (element.attributes['class'] || '').split(/\s+/).filter(Boolean);
+                if (classes.indexOf('table') === -1) {
+                    classes.unshift('table');
+                    element.attributes['class'] = classes.join(' ');
+                }
+            };
+            editor.dataProcessor.htmlFilter.addRules({ elements: { table: addTableClass } });
+            editor.dataProcessor.dataFilter.addRules({ elements: { table: addTableClass } });
         }
     });
 

@@ -3,16 +3,20 @@
  */
 
 /**
- * jmix:list — renders all child nodes and an edit-mode drop zone.
- * Pagination, liveOnly AJAX, and emptyListMessage remain pending equivalent JS engine APIs.
+ * jmix:list — renders the items of a list, one page of them when a bootstrap5nt:pagination is
+ * bound to the list, and the "add content" button in edit mode.
+ *
+ * Port of the 2.x jmix:list "list" view. The JSP view also honoured emptyListMessage and liveOnly,
+ * two values other JSP views passed through the moduleMap request variable; that variable does not
+ * exist for JavaScript views, so they are not ported.
  */
 import {
-  Area,
+  AddContentButtons,
   Render,
-  getChildNodes,
   jahiaComponent,
   useServerContext,
 } from "@jahia/javascript-modules-library";
+import { applyAreaLimit, getPageItems, readRenderParameters } from "../../utils/pager.js";
 
 jahiaComponent(
   {
@@ -30,18 +34,28 @@ jahiaComponent(
     },
   },
   () => {
-    const { currentNode, renderContext } = useServerContext();
+    const { currentNode, currentResource, renderContext } = useServerContext();
     const isEditMode = renderContext.isEditMode();
+    let items = getPageItems(currentNode, renderContext.getRequest());
+    // Limit set by the area that displays this list (grid listLimit)
+    items = applyAreaLimit(items, readRenderParameters(currentResource));
+
+    // Optional cap on the number of items (kept from 3.0.x)
     const listLimit = parseInt(currentNode.getPropertyAsString("limit") ?? "", 10);
-    const children = getChildNodes(currentNode, isNaN(listLimit) ? 1000 : listLimit);
+    if (!isNaN(listLimit) && listLimit > 0) items = items.slice(0, listLimit);
+
+    // View chosen by the editor for the items (jmix:renderableList)
+    const subNodesView = currentNode.hasProperty("j:subNodesView")
+      ? currentNode.getPropertyAsString("j:subNodesView")
+      : "";
 
     return (
       <>
-        {children.map((child) => (
-          <Render key={child.getIdentifier()} node={child} />
+        {items.map((child) => (
+          <Render key={child.getIdentifier()} node={child} {...(subNodesView ? { view: subNodesView } : {})} />
         ))}
         {isEditMode && <div className="clearfix" />}
-        {isEditMode && <Area name="content" />}
+        {isEditMode && <AddContentButtons />}
       </>
     );
   },

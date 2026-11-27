@@ -14,11 +14,14 @@ import {
   buildNodeUrl,
   getChildNodes,
   jahiaComponent,
+  Render,
   useServerContext,
 } from "@jahia/javascript-modules-library";
+import { useTranslation } from "react-i18next";
 import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { BootstrapJS } from "../../utils/bootstrap-resources.js";
 import { getReferencedNode } from "../../utils/node.js";
+import { textColorClass } from "../../utils/colors.js";
 
 /**
  * Pause/play toggle of the carousel-pause-btn buttons (WCAG 2.2.2, as in 2.x). Each carousel adds it,
@@ -44,6 +47,7 @@ jahiaComponent(
   },
   (_props: Record<string, unknown>) => {
     const { currentNode, renderContext } = useServerContext();
+    const { t } = useTranslation();
     const isEditMode = renderContext.isEditMode();
 
     // ── Advanced settings ──────────────────────────────────────────────────
@@ -51,6 +55,8 @@ jahiaComponent(
     let ride = true;
     let keyboard = true;
     let pause = false;
+    // Bootstrap pauses on hover by default: only a carousel whose settings say otherwise turns it off
+    let pauseConfigured = false;
     let wrap = true;
     let fade = false;
     let useIndicators = true;
@@ -65,6 +71,7 @@ jahiaComponent(
       ride = p.getPropertyAsString("ride") !== "false";
       keyboard = p.getPropertyAsString("keyboard") !== "false";
       pause = p.getPropertyAsString("pause") === "true";
+      pauseConfigured = p.hasProperty("pause");
       wrap = p.getPropertyAsString("wrap") !== "false";
       fade = p.getPropertyAsString("fade") === "true";
       useIndicators = p.getPropertyAsString("useIndicators") !== "false";
@@ -84,33 +91,13 @@ jahiaComponent(
       return (
         <>
           <div id={carouselId} className="carouseledit">
-            {items.map((item) => {
-              const title = item.getPropertyAsString("jcr:title") ?? "";
-              const caption = item.getPropertyAsString("caption") ?? "";
-              const imageNode = getReferencedNode(item, "image");
-              const imageUrl = imageNode ? buildNodeUrl(imageNode) : "";
-
-              let titleColor = "";
-              let captionColor = "";
-              if (item.isNodeType("bootstrap5mix:advancedCarouselItem")) {
-                const tc = item.getPropertyAsString("titleColor") ?? "";
-                if (tc) titleColor = `text-${tc}`;
-                const cc = item.getPropertyAsString("captionColor") ?? "";
-                if (cc) captionColor = `text-${cc}`;
-              }
-
-              return (
-                <div key={item.getIdentifier()} className="d-flex gap-3 align-items-start">
-                  {imageUrl && (
-                    <img src={imageUrl} style={{ width: 64, flexShrink: 0 }} alt="" />
-                  )}
-                  <div>
-                    {title && <h4 className={titleColor || undefined}>{title}</h4>}
-                    {caption && <p className={captionColor || undefined}>{caption}</p>}
-                  </div>
-                </div>
-              );
-            })}
+            {/* Each slide is rendered as a module, as in 2.x, so that editors can select, edit,
+                move and delete it from the page (its view shows the compact thumbnail in edit mode) */}
+            <div className="carousel-inneredit">
+              {items.map((item) => (
+                <Render key={item.getIdentifier()} node={item} />
+              ))}
+            </div>
           </div>
           {/* New slides are direct children of the carousel, as in 2.x */}
           <AddContentButtons nodeTypes={["bootstrap5nt:carouselItem"]} />
@@ -136,13 +123,18 @@ jahiaComponent(
       <div
         id={carouselId}
         className={carouselClasses}
+        // aria-roledescription and aria-label need a role to apply to
+        role="region"
         aria-roledescription="carousel"
         aria-label={currentNode.getDisplayableName()}
         // As in 2.x, only the options that differ from Bootstrap's defaults are written
         data-bs-ride={ride ? "carousel" : undefined}
         data-bs-interval={interval !== undefined && interval !== 5000 ? interval : undefined}
         data-bs-keyboard={keyboard ? undefined : "false"}
-        data-bs-pause={pause ? "hover" : undefined}
+        // "hover" is Bootstrap's default: unticking the option has to say "false" to have an effect
+        data-bs-pause={pause ? "hover" : (pauseConfigured ? "false" : undefined)}
+        // Dark variant: data-bs-theme (carousel-dark is deprecated since 5.3 and kept for site CSS)
+        data-bs-theme={isDark ? "dark" : undefined}
         data-bs-wrap={wrap ? undefined : "false"}
       >
         {/* Indicators */}
@@ -156,7 +148,7 @@ jahiaComponent(
                 data-bs-slide-to={String(i)}
                 className={i === 0 ? "active" : undefined}
                 aria-current={i === 0 ? "true" : undefined}
-                aria-label={`Slide ${i + 1}`}
+                aria-label={t("bootstrap5nt_carousel.slide", { 0: String(i + 1) })}
               />
             ))}
           </div>
@@ -191,9 +183,9 @@ jahiaComponent(
           let itemInterval: number | undefined;
           if (item.isNodeType("bootstrap5mix:advancedCarouselItem")) {
             const tc = item.getPropertyAsString("titleColor") ?? "";
-            if (tc) titleColor = `text-${tc}`;
+            if (tc) titleColor = textColorClass(tc);
             const cc = item.getPropertyAsString("captionColor") ?? "";
-            if (cc) captionColor = `text-${cc}`;
+            if (cc) captionColor = textColorClass(cc);
             const ic = item.getPropertyAsString("carouselItemClass") ?? "";
             if (ic.trim()) itemClass = ic.trim();
             const ii = parseInt(item.getPropertyAsString("interval") ?? "", 10);
@@ -208,8 +200,9 @@ jahiaComponent(
               key={item.getIdentifier()}
               className={itemClasses}
               // As in 2.x: each slide is announced as a slide, named by its title (WCAG 4.1.2)
+              role="group"
               aria-roledescription="slide"
-              aria-label={title}
+              aria-label={title || `${i + 1} / ${items.length}`}
               data-bs-interval={itemInterval ?? undefined}
             >
               {/* The slide title describes its image, as in 2.x (WCAG 1.1.1) */}
@@ -231,11 +224,11 @@ jahiaComponent(
           <>
             <button className="carousel-control-prev" type="button" data-bs-target={`#${carouselId}`} data-bs-slide="prev">
               <span className="carousel-control-prev-icon" aria-hidden="true" />
-              <span className="visually-hidden">Previous</span>
+              <span className="visually-hidden">{t("bootstrap5nt_carousel.previous")}</span>
             </button>
             <button className="carousel-control-next" type="button" data-bs-target={`#${carouselId}`} data-bs-slide="next">
               <span className="carousel-control-next-icon" aria-hidden="true" />
-              <span className="visually-hidden">Next</span>
+              <span className="visually-hidden">{t("bootstrap5nt_carousel.next")}</span>
             </button>
           </>
         )}
