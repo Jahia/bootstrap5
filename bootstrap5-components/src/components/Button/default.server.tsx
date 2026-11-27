@@ -156,205 +156,228 @@ type ButtonPart = "all" | "trigger" | "panel";
 
 const PANEL_TYPES = new Set(["modal", "collapse", "Offcanvas"]);
 
-const buttonView = (part: ButtonPart | "auto") =>
-  (props: ButtonBaseProps, { renderContext, currentNode }: ServerContext) => {
-    const { t } = useTranslation();
-    const title = props["jcr:title"];
-    const bsProps = buttonProps(props);
-    const id = `button_${currentNode.getIdentifier()}`;
+/** Everything the per-type renderers need (computed once at the top of the view, hooks included). */
+interface ButtonContext {
+  props: ButtonBaseProps;
+  t: (key: string) => string;
+  renderContext: ServerContext["renderContext"];
+  currentNode: ServerContext["currentNode"];
+  title: string | undefined;
+  bsProps: ReturnType<typeof buttonProps>;
+  id: string;
+  showTrigger: boolean;
+  showPanel: boolean;
+}
 
-    // Inside a button group the default view only renders the trigger
-    let resolvedPart: ButtonPart = part === "auto" ? "all" : part;
-    if (part === "auto") {
-      try {
-        if (currentNode.getParent().isNodeType("bootstrap5nt:buttonGroup")) resolvedPart = "trigger";
-      } catch {
-        resolvedPart = "all";
-      }
-    }
-    const showTrigger = resolvedPart !== "panel";
-    const showPanel = resolvedPart !== "trigger";
-    if (!showTrigger && !PANEL_TYPES.has(props.buttonType ?? "")) return null;
-    const hasTooltip = showTrigger && Object.keys(tooltipAttributes(props)).length > 0;
+/** Resolves which part of the button the view renders. */
+function resolvePart(part: ButtonPart | "auto", currentNode: ServerContext["currentNode"]): ButtonPart {
+  // Inside a button group the default view only renders the trigger
+  if (part !== "auto") return part;
+  try {
+    if (currentNode.getParent().isNodeType("bootstrap5nt:buttonGroup")) return "trigger";
+  } catch {
+    return "all";
+  }
+  return "all";
+}
 
-    const renderButton = () => {
-    switch (props.buttonType) {
+// ── Internal link ──────────────────────────────────────────────────
+function renderInternalLink(ctx: ButtonContext) {
+  const { props, t, renderContext, title, bsProps, id } = ctx;
+  const linkNode = props.internalLink;
+  if (!linkNode) {
+    return renderContext.isEditMode() ? (
+      <span className="badge text-bg-warning">{t("bootstrap5nt_button.noLink")}</span>
+    ) : null;
+  }
+  const href = buildNodeUrl(linkNode);
+  const label = title || linkNode.getDisplayableName();
+  return bsProps
+    ? <a href={href} id={id} {...linkProps(bsProps)}>{label}</a>
+    : <a href={href} className={customClass(props)} {...tooltipAttributes(props)} id={id}>{label}</a>;
+}
 
-      // ── Internal link ──────────────────────────────────────────────────
-      case "internalLink": {
-        const linkNode = props.internalLink;
-        if (!linkNode) {
-          return renderContext.isEditMode() ? (
-            <span className="badge text-bg-warning">{t("bootstrap5nt_button.noLink")}</span>
-          ) : null;
-        }
-        const href = buildNodeUrl(linkNode);
-        const label = title || linkNode.getDisplayableName();
-        return bsProps
-          ? <a href={href} id={id} {...linkProps(bsProps)}>{label}</a>
-          : <a href={href} className={customClass(props)} {...tooltipAttributes(props)} id={id}>{label}</a>;
-      }
+// ── External link ──────────────────────────────────────────────────
+function renderExternalLink(ctx: ButtonContext) {
+  const { props, t, renderContext, title, bsProps, id } = ctx;
+  // safeUrl turns javascript:, data: and other non-http(s)/mailto/tel schemes into "#" (as in 2.x)
+  const href = safeUrl(props.externalLink);
+  const label = title || t("bootstrap5nt_button.readMore");
+  const isBlank = href === "#" || href === "http://";
+  if (isBlank && renderContext.isEditMode()) {
+    return <span className="badge text-bg-warning">{t("bootstrap5nt_button.noUrl")}</span>;
+  }
+  if (isBlank) {
+    // No usable URL in live: a disabled button rather than a link that goes nowhere
+    return bsProps
+      ? <Button id={id} {...bsProps} disabled>{label}</Button>
+      : <button type="button" className={customClass(props)} {...tooltipAttributes(props)} id={id} disabled>{label}</button>;
+  }
+  return bsProps
+    ? <a href={href} id={id} {...linkProps(bsProps)}>{label}</a>
+    : <a href={href} className={customClass(props)} {...tooltipAttributes(props)} id={id}>{label}</a>;
+}
 
-      // ── External link ──────────────────────────────────────────────────
-      case "externalLink": {
-        // safeUrl turns javascript:, data: and other non-http(s)/mailto/tel schemes into "#" (as in 2.x)
-        const href = safeUrl(props.externalLink);
-        const label = title || t("bootstrap5nt_button.readMore");
-        const isBlank = href === "#" || href === "http://";
-        if (isBlank && renderContext.isEditMode()) {
-          return <span className="badge text-bg-warning">{t("bootstrap5nt_button.noUrl")}</span>;
-        }
-        if (isBlank) {
-          // No usable URL in live: a disabled button rather than a link that goes nowhere
-          return bsProps
-            ? <Button id={id} {...bsProps} disabled>{label}</Button>
-            : <button type="button" className={customClass(props)} {...tooltipAttributes(props)} id={id} disabled>{label}</button>;
-        }
-        return bsProps
-          ? <a href={href} id={id} {...linkProps(bsProps)}>{label}</a>
-          : <a href={href} className={customClass(props)} {...tooltipAttributes(props)} id={id}>{label}</a>;
-      }
+// ── Modal ──────────────────────────────────────────────────────────
+// Trigger uses react-bootstrap Button; overlay HTML stays as-is for Bootstrap.js.
+// Modal.Header / Modal.Body / Modal.Footer are used for the inner structure.
+function modalTrigger(ctx: ButtonContext, label: string, modalId: string) {
+  const { props, bsProps, id } = ctx;
+  return bsProps
+    ? (
+      <Button
+        id={id}
+        data-bs-toggle="modal"
+        data-bs-target={`#${modalId}`}
+        aria-haspopup="dialog"
+        {...bsProps}
+      >
+        {label}
+      </Button>
+    ) : (
+      <button
+        type="button"
+        className={customClass(props)} {...tooltipAttributes(props)}
+        data-bs-toggle="modal"
+        data-bs-target={`#${modalId}`}
+        aria-haspopup="dialog"
+        id={id}
+      >
+        {label}
+      </button>
+    );
+}
 
-      // ── Modal ──────────────────────────────────────────────────────────
-      // Trigger uses react-bootstrap Button; overlay HTML stays as-is for Bootstrap.js.
-      // Modal.Header / Modal.Body / Modal.Footer are used for the inner structure.
-      case "modal": {
-        const label = title || t("bootstrap5nt_button.readMore");
-        const closeLabel = props.closeText || t("bootstrap5nt_button.close");
-        const sizeClass = props.modalSize && props.modalSize !== "default"
-          ? ` modal-${props.modalSize}` : "";
-        const centeredClass = props.verticallyCentered ? " modal-dialog-centered" : "";
-        const modalId = `modal-${currentNode.getIdentifier()}`;
-        const modalLabelId = `modalLabel_${currentNode.getIdentifier()}`;
-        return (
-          <>
-            <BootstrapJS />
-            {showTrigger && (bsProps
-              ? (
-                <Button
-                  id={id}
-                  data-bs-toggle="modal"
-                  data-bs-target={`#${modalId}`}
-                  aria-haspopup="dialog"
-                  {...bsProps}
-                >
-                  {label}
-                </Button>
-              ) : (
-                <button
-                  type="button"
-                  className={customClass(props)} {...tooltipAttributes(props)}
-                  data-bs-toggle="modal"
-                  data-bs-target={`#${modalId}`}
-                  aria-haspopup="dialog"
-                  id={id}
-                >
-                  {label}
-                </button>
-              ))}
-            {/* Overlay — Bootstrap.js manages show/hide via data-bs-toggle above.
-                In edit mode: shown inline (class "show" + display:block + position:static)
-                so editors can reach the Area inside the modal body. */}
-            {showPanel && (<div
-              className="modal fade"
-              id={modalId}
-              tabIndex={-1}
-              role="dialog"
-              // Named by its title, or by the text of its button when it has no title
-              {...(props.modalTitle ? { "aria-labelledby": modalLabelId } : { "aria-label": label })}
-              aria-hidden="true"
-              {...(props.staticBackdrop
-                ? { "data-bs-backdrop": "static", "data-bs-keyboard": "false" }
-                : {})}
+function modalPanel(ctx: ButtonContext, label: string, modalId: string, modalLabelId: string) {
+  const { props, t, renderContext } = ctx;
+  const closeLabel = props.closeText || t("bootstrap5nt_button.close");
+  const sizeClass = props.modalSize && props.modalSize !== "default"
+    ? ` modal-${props.modalSize}` : "";
+  const centeredClass = props.verticallyCentered ? " modal-dialog-centered" : "";
+  return (
+    <div
+      className="modal fade"
+      id={modalId}
+      tabIndex={-1}
+      role="dialog"
+      // Named by its title, or by the text of its button when it has no title
+      {...(props.modalTitle ? { "aria-labelledby": modalLabelId } : { "aria-label": label })}
+      aria-hidden="true"
+      {...(props.staticBackdrop
+        ? { "data-bs-backdrop": "static", "data-bs-keyboard": "false" }
+        : {})}
+    >
+      <div
+        className={`modal-dialog modal-dialog-scrollable${centeredClass}${sizeClass}`}
+        style={renderContext.isEditMode() ? { margin: "5px" } : undefined}
+      >
+        <div className="modal-content">
+          {props.modalTitle && (
+            <div className="modal-header">
+              <h5 className="modal-title" id={modalLabelId}>{props.modalTitle}</h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label={t("bootstrap5nt_button.close")}
+              />
+            </div>
+          )}
+          <div className="modal-body">
+            {/* The droppable content is the button's direct children, as in 2.x; "Add content" in edit mode */}
+            <RenderChildren filter="jmix:droppableContent" />
+          </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className={`btn btn-${!props.style || props.style === "custom" ? "secondary" : props.style}`}
+              data-bs-dismiss="modal"
             >
-              <div
-                className={`modal-dialog modal-dialog-scrollable${centeredClass}${sizeClass}`}
-                style={renderContext.isEditMode() ? { margin: "5px" } : undefined}
-              >
-                <div className="modal-content">
-                  {props.modalTitle && (
-                    <div className="modal-header">
-                      <h5 className="modal-title" id={modalLabelId}>{props.modalTitle}</h5>
-                      <button
-                        type="button"
-                        className="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label={t("bootstrap5nt_button.close")}
-                      />
-                    </div>
-                  )}
-                  <div className="modal-body">
-                    {/* The droppable content is the button's direct children, as in 2.x; "Add content" in edit mode */}
-                    <RenderChildren filter="jmix:droppableContent" />
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className={`btn btn-${!props.style || props.style === "custom" ? "secondary" : props.style}`}
-                      data-bs-dismiss="modal"
-                    >
-                      {closeLabel}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>)}
-          </>
-        );
-      }
+              {closeLabel}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-      // ── Collapse ───────────────────────────────────────────────────────
-      // Uses <button> (not <a href="#...">) to avoid Jahia edit-frame link interception.
-      case "collapse": {
-        const label = title || t("bootstrap5nt_button.readMore");
-        const collapseId = `collapse-${currentNode.getIdentifier()}`;
-        const isExpanded = props.show ? "true" : "false";
-        return (
-          <>
-            <BootstrapJS />
-            {showTrigger && (bsProps
-              ? (
-                <Button
-                  id={id}
-                  data-bs-toggle="collapse"
-                  data-bs-target={`#${collapseId}`}
-                  aria-expanded={isExpanded}
-                  aria-controls={collapseId}
-                  {...bsProps}
-                >
-                  {label}
-                </Button>
-              ) : (
-                <button
-                  type="button"
-                  id={id}
-                  className={customClass(props)} {...tooltipAttributes(props)}
-                  data-bs-toggle="collapse"
-                  data-bs-target={`#${collapseId}`}
-                  aria-expanded={isExpanded}
-                  aria-controls={collapseId}
-                >
-                  {label}
-                </button>
-              ))}
-            {showPanel && (<div className={`collapse${props.show ? " show" : ""}`} id={collapseId}>
-              {/* The droppable content is the button's direct children, as in 2.x; "Add content" in edit mode */}
-              <RenderChildren filter="jmix:droppableContent" />
-            </div>)}
-          </>
-        );
-      }
+function renderModal(ctx: ButtonContext) {
+  const { t, currentNode, title, showTrigger, showPanel } = ctx;
+  const label = title || t("bootstrap5nt_button.readMore");
+  const modalId = `modal-${currentNode.getIdentifier()}`;
+  const modalLabelId = `modalLabel_${currentNode.getIdentifier()}`;
+  return (
+    <>
+      <BootstrapJS />
+      {showTrigger && modalTrigger(ctx, label, modalId)}
+      {/* Overlay — Bootstrap.js manages show/hide via data-bs-toggle above.
+          In edit mode: shown inline (class "show" + display:block + position:static)
+          so editors can reach the Area inside the modal body. */}
+      {showPanel && modalPanel(ctx, label, modalId, modalLabelId)}
+    </>
+  );
+}
 
-      // ── Popover ────────────────────────────────────────────────────────
-      // Requires Bootstrap.js initialisation — no SSR-compatible react-bootstrap equivalent.
-      // A popover dismissed on the next click (data-bs-trigger="focus") must be an <a> with a
-      // tabindex, not a <button>: browsers do not all give the focus to a clicked button
-      // (Bootstrap docs, Popovers, "Dismiss on next click").
-      case "popover": {
-        const label = title || t("bootstrap5nt_button.readMore");
-        // Popovers are opt-in in Bootstrap. The script may be inserted in the head: wait for the page
-        // and for Bootstrap's script (2.x did the same through jQuery's ready handler).
-        const initScript = `(function () {
+// ── Collapse ───────────────────────────────────────────────────────
+// Uses <button> (not <a href="#...">) to avoid Jahia edit-frame link interception.
+function collapseTrigger(ctx: ButtonContext, label: string, collapseId: string) {
+  const { props, bsProps, id } = ctx;
+  const isExpanded = props.show ? "true" : "false";
+  return bsProps
+    ? (
+      <Button
+        id={id}
+        data-bs-toggle="collapse"
+        data-bs-target={`#${collapseId}`}
+        aria-expanded={isExpanded}
+        aria-controls={collapseId}
+        {...bsProps}
+      >
+        {label}
+      </Button>
+    ) : (
+      <button
+        type="button"
+        id={id}
+        className={customClass(props)} {...tooltipAttributes(props)}
+        data-bs-toggle="collapse"
+        data-bs-target={`#${collapseId}`}
+        aria-expanded={isExpanded}
+        aria-controls={collapseId}
+      >
+        {label}
+      </button>
+    );
+}
+
+function renderCollapse(ctx: ButtonContext) {
+  const { props, t, currentNode, title, showTrigger, showPanel } = ctx;
+  const label = title || t("bootstrap5nt_button.readMore");
+  const collapseId = `collapse-${currentNode.getIdentifier()}`;
+  return (
+    <>
+      <BootstrapJS />
+      {showTrigger && collapseTrigger(ctx, label, collapseId)}
+      {showPanel && (<div className={`collapse${props.show ? " show" : ""}`} id={collapseId}>
+        {/* The droppable content is the button's direct children, as in 2.x; "Add content" in edit mode */}
+        <RenderChildren filter="jmix:droppableContent" />
+      </div>)}
+    </>
+  );
+}
+
+// ── Popover ────────────────────────────────────────────────────────
+// Requires Bootstrap.js initialisation — no SSR-compatible react-bootstrap equivalent.
+// A popover dismissed on the next click (data-bs-trigger="focus") must be an <a> with a
+// tabindex, not a <button>: browsers do not all give the focus to a clicked button
+// (Bootstrap docs, Popovers, "Dismiss on next click").
+function renderPopover(ctx: ButtonContext) {
+  const { props, t, title, bsProps, id } = ctx;
+  const label = title || t("bootstrap5nt_button.readMore");
+  // Popovers are opt-in in Bootstrap. The script may be inserted in the head: wait for the page
+  // and for Bootstrap's script (2.x did the same through jQuery's ready handler).
+  const initScript = `(function () {
   function init() {
     if (!window.bootstrap) { return; }
     document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function (el) {
@@ -363,130 +386,175 @@ const buttonView = (part: ButtonPart | "auto") =>
   }
   if (document.readyState === 'complete') { init(); } else { window.addEventListener('load', init); }
 })();`;
-        const popoverTitle = props.popoverTitle ? { "data-bs-title": props.popoverTitle } : {};
-        const popoverContent = props.popoverContent ? { "data-bs-content": props.popoverContent } : {};
-        const popoverHtml = props.html ? { "data-bs-html": "true" } : {};
-        return (
-          <>
-            <BootstrapJS />
-            {bsProps
-              ? (
-                <a
-                  id={id}
-                  role="button"
-                  tabIndex={0}
-                  data-bs-toggle="popover"
-                  {...popoverTitle}
-                  {...popoverContent}
-                  {...popoverHtml}
-                  data-bs-container="body"
-                  data-bs-placement={props.direction ?? "top"}
-                  data-bs-trigger="focus"
-                  {...linkProps(bsProps)}
-                >
-                  {label}
-                </a>
-              ) : (
-                <a
-                  role="button"
-                  tabIndex={0}
-                  className={customClass(props)}
-                  data-bs-toggle="popover"
-                  {...popoverTitle}
-                  {...popoverContent}
-                  {...popoverHtml}
-                  data-bs-container="body"
-                  data-bs-placement={props.direction ?? "top"}
-                  data-bs-trigger="focus"
-                  id={id}
-                >
-                  {label}
-                </a>
-              )}
-            <AddResources type="inline" inlineResource={`<script>${initScript}</script>`} />
-          </>
-        );
-      }
+  const popoverTitle = props.popoverTitle ? { "data-bs-title": props.popoverTitle } : {};
+  const popoverContent = props.popoverContent ? { "data-bs-content": props.popoverContent } : {};
+  const popoverHtml = props.html ? { "data-bs-html": "true" } : {};
+  return (
+    <>
+      <BootstrapJS />
+      {bsProps
+        ? (
+          <a
+            id={id}
+            role="button"
+            tabIndex={0}
+            data-bs-toggle="popover"
+            {...popoverTitle}
+            {...popoverContent}
+            {...popoverHtml}
+            data-bs-container="body"
+            data-bs-placement={props.direction ?? "top"}
+            data-bs-trigger="focus"
+            {...linkProps(bsProps)}
+          >
+            {label}
+          </a>
+        ) : (
+          <a
+            role="button"
+            tabIndex={0}
+            className={customClass(props)}
+            data-bs-toggle="popover"
+            {...popoverTitle}
+            {...popoverContent}
+            {...popoverHtml}
+            data-bs-container="body"
+            data-bs-placement={props.direction ?? "top"}
+            data-bs-trigger="focus"
+            id={id}
+          >
+            {label}
+          </a>
+        )}
+      <AddResources type="inline" inlineResource={`<script>${initScript}</script>`} />
+    </>
+  );
+}
 
-      // ── Offcanvas ──────────────────────────────────────────────────────
-      // Trigger uses react-bootstrap Button; overlay HTML stays as-is for Bootstrap.js.
-      // Offcanvas.Header / Offcanvas.Body are used for the inner structure.
-      case "Offcanvas": {
-        const offcanvasId = `offcanvas_${currentNode.getIdentifier()}`;
-        return (
-          <>
-            <BootstrapJS />
-            {showTrigger && (bsProps
-              ? (
-                <Button
-                  data-bs-toggle="offcanvas"
-                  data-bs-target={`#${offcanvasId}`}
-                  aria-controls={offcanvasId}
-                  {...bsProps}
-                >
-                  {title}
-                </Button>
-              ) : (
-                <button
-                  type="button"
-                  className={customClass(props)} {...tooltipAttributes(props)}
-                  data-bs-toggle="offcanvas"
-                  data-bs-target={`#${offcanvasId}`}
-                  aria-controls={offcanvasId}
-                >
-                  {title}
-                </button>
-              ))}
-            {/* Overlay — Bootstrap.js manages show/hide */}
-            {showPanel && (<div
-              className={`offcanvas offcanvas-${props.placement ?? "start"}`}
-              data-bs-scroll={props.enableBodyScrolling ? "true" : "false"}
-              // As in 2.x: no backdrop unless enabled (the property is not autocreated)
-              data-bs-backdrop={props.enableBackdrop === true ? "true" : "false"}
-              tabIndex={-1}
-              id={offcanvasId}
-              // The panel is labelled by its title, or by the button text when it has none (as in 2.x)
-              {...(props.OffcanvasTitle
-                ? { "aria-labelledby": `${offcanvasId}Label` }
-                : { "aria-label": title || t("bootstrap5nt_button.readMore") })}
-            >
-              {/* The close button is always there: without it, and without a backdrop, a panel
-                  with no title could only be closed with Escape */}
-              <div className="offcanvas-header">
-                {props.OffcanvasTitle && (
-                  <h5 className="offcanvas-title" id={`${offcanvasId}Label`}>
-                    {props.OffcanvasTitle}
-                  </h5>
-                )}
-                <button
-                  type="button"
-                  className="btn-close ms-auto"
-                  data-bs-dismiss="offcanvas"
-                  aria-label={t("bootstrap5nt_button.close")}
-                />
-              </div>
-              <div className="offcanvas-body">
-                {/* The droppable content is the button's direct children, as in 2.x; "Add content" in edit mode */}
-                <RenderChildren filter="jmix:droppableContent" />
-              </div>
-            </div>)}
-          </>
-        );
-      }
+// ── Offcanvas ──────────────────────────────────────────────────────
+// Trigger uses react-bootstrap Button; overlay HTML stays as-is for Bootstrap.js.
+// Offcanvas.Header / Offcanvas.Body are used for the inner structure.
+function offcanvasTrigger(ctx: ButtonContext, offcanvasId: string) {
+  const { props, title, bsProps } = ctx;
+  return bsProps
+    ? (
+      <Button
+        data-bs-toggle="offcanvas"
+        data-bs-target={`#${offcanvasId}`}
+        aria-controls={offcanvasId}
+        {...bsProps}
+      >
+        {title}
+      </Button>
+    ) : (
+      <button
+        type="button"
+        className={customClass(props)} {...tooltipAttributes(props)}
+        data-bs-toggle="offcanvas"
+        data-bs-target={`#${offcanvasId}`}
+        aria-controls={offcanvasId}
+      >
+        {title}
+      </button>
+    );
+}
 
-      // ── Unknown type ───────────────────────────────────────────────────
-      default:
-        return renderContext.isEditMode() ? (
-          <span className="badge text-bg-warning">
-            Unknown buttonType: {props.buttonType}
-          </span>
-        ) : null;
-    }
+function offcanvasPanel(ctx: ButtonContext, offcanvasId: string) {
+  const { props, t, title } = ctx;
+  return (
+    <div
+      className={`offcanvas offcanvas-${props.placement ?? "start"}`}
+      data-bs-scroll={props.enableBodyScrolling ? "true" : "false"}
+      // As in 2.x: no backdrop unless enabled (the property is not autocreated)
+      data-bs-backdrop={props.enableBackdrop === true ? "true" : "false"}
+      tabIndex={-1}
+      id={offcanvasId}
+      // The panel is labelled by its title, or by the button text when it has none (as in 2.x)
+      {...(props.OffcanvasTitle
+        ? { "aria-labelledby": `${offcanvasId}Label` }
+        : { "aria-label": title || t("bootstrap5nt_button.readMore") })}
+    >
+      {/* The close button is always there: without it, and without a backdrop, a panel
+          with no title could only be closed with Escape */}
+      <div className="offcanvas-header">
+        {props.OffcanvasTitle && (
+          <h5 className="offcanvas-title" id={`${offcanvasId}Label`}>
+            {props.OffcanvasTitle}
+          </h5>
+        )}
+        <button
+          type="button"
+          className="btn-close ms-auto"
+          data-bs-dismiss="offcanvas"
+          aria-label={t("bootstrap5nt_button.close")}
+        />
+      </div>
+      <div className="offcanvas-body">
+        {/* The droppable content is the button's direct children, as in 2.x; "Add content" in edit mode */}
+        <RenderChildren filter="jmix:droppableContent" />
+      </div>
+    </div>
+  );
+}
+
+function renderOffcanvas(ctx: ButtonContext) {
+  const { currentNode, showTrigger, showPanel } = ctx;
+  const offcanvasId = `offcanvas_${currentNode.getIdentifier()}`;
+  return (
+    <>
+      <BootstrapJS />
+      {showTrigger && offcanvasTrigger(ctx, offcanvasId)}
+      {/* Overlay — Bootstrap.js manages show/hide */}
+      {showPanel && offcanvasPanel(ctx, offcanvasId)}
+    </>
+  );
+}
+
+// ── Unknown type ───────────────────────────────────────────────────
+function renderUnknown(ctx: ButtonContext) {
+  return ctx.renderContext.isEditMode() ? (
+    <span className="badge text-bg-warning">
+      Unknown buttonType: {ctx.props.buttonType}
+    </span>
+  ) : null;
+}
+
+/** Renders the button according to its buttonType. */
+function renderButton(ctx: ButtonContext) {
+  switch (ctx.props.buttonType) {
+    case "internalLink": return renderInternalLink(ctx);
+    case "externalLink": return renderExternalLink(ctx);
+    case "modal": return renderModal(ctx);
+    case "collapse": return renderCollapse(ctx);
+    case "popover": return renderPopover(ctx);
+    case "Offcanvas": return renderOffcanvas(ctx);
+    default: return renderUnknown(ctx);
+  }
+}
+
+const buttonView = (part: ButtonPart | "auto") =>
+  (props: ButtonBaseProps, { renderContext, currentNode }: ServerContext) => {
+    const { t } = useTranslation();
+    const resolvedPart = resolvePart(part, currentNode);
+    const showTrigger = resolvedPart !== "panel";
+    const showPanel = resolvedPart !== "trigger";
+    if (!showTrigger && !PANEL_TYPES.has(props.buttonType ?? "")) return null;
+    const hasTooltip = showTrigger && Object.keys(tooltipAttributes(props)).length > 0;
+    const ctx: ButtonContext = {
+      props,
+      t,
+      renderContext,
+      currentNode,
+      title: props["jcr:title"],
+      bsProps: buttonProps(props),
+      id: `button_${currentNode.getIdentifier()}`,
+      showTrigger,
+      showPanel,
     };
 
     return (
       <>
-        {renderButton()}
+        {renderButton(ctx)}
         {hasTooltip && (
           <>
             <BootstrapJS />

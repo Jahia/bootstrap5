@@ -56,6 +56,7 @@ _Closes the remaining gaps with 2.4.7: what a 2.x site relied on works the same 
 - **Tests** — end-to-end specs for pagination, grid area names and absolute areas, navbar levels and roots, the alert skin and tab deep links; unit tests for the new behaviours; the 2.x JUnit tests of `Functions` and of the choicelist initializers
 
 ### Changed
+- **Code structure** — the button, navbar, grid, pagination and card views, the image helper, the colour mode helper, the starter templates and the rich text templates script were restructured into smaller functions and shared code (SonarQube complexity and duplication); the rendered HTML is unchanged
 - **Package, JavaScript engine** — `bootstrap5-package` no longer embeds nor installs `javascript-modules-engine`: the modules run on the engine shipped with Jahia 8.2.3 (1.2.0 or later). When no active engine of that version shows up within a minute, the package logs an error and does not install the two JavaScript modules
 - **Bootstrap** — assets updated from **5.3.8 → 5.3.9**
 - **Rich text editor** — the HTML cleanup button uses DOMPurify 3.5.0 (was 3.0.5), and the sanitizer now runs last, after the removal of empty `<span>` tags

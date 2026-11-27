@@ -19,6 +19,8 @@ import {
 /** GraalVM host access: Java.type("java.util.HashMap") returns the Java class. */
 declare const Java: { type(className: string): new () => { put(key: string, value: unknown): unknown } };
 
+type ServerContext = ReturnType<typeof useServerContext>;
+
 interface PaginationProps {
   /** Whether to render the pager UI (from displayPager property) */
   displayPager?: boolean;
@@ -58,6 +60,114 @@ function otherParameters(request: unknown, excluded: string[]): [string, string]
     // no extra parameter can be read: the links only carry the paging ones
   }
   return result;
+}
+
+/**
+ * Page size: the URL parameter of this list, then the search one, then the configured value
+ * (the edit-mode value in edit mode, so editors see the whole list)
+ */
+function resolvePageSize(
+  request: ReturnType<ServerContext["renderContext"]["getRequest"]>,
+  listId: string,
+  isEditMode: boolean,
+  defaultPageSize: number,
+  editPageSize: number,
+): number {
+  // Request values are capped (the configured sizes are not): a larger configured size also
+  // raises the cap, so the links the pager itself builds keep working
+  const requestCap = Math.max(defaultPageSize, editPageSize);
+  return toRequestPageSize(request.getParameter(pageSizeParam(listId)), requestCap)
+    || toRequestPageSize(request.getParameter("src_itemsPerPage"), requestCap)
+    || (isEditMode ? editPageSize : defaultPageSize)
+    || 10;
+}
+
+/**
+ * Tell the list, when it renders after the pager, how many items a page holds: through this
+ * module's own request attribute, and through "pagerLimits", the map Jahia's JSP list views
+ * read (a list of another module bound to this pager is then limited the same way as in 2.x)
+ */
+function publishPagerLimits(request: unknown, listId: string, pageSize: number, begin: number): void {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const req = request as any;
+    req.setAttribute(pagerAttribute(listId), String(pageSize));
+    let pagerLimits = req.getAttribute("pagerLimits");
+    if (pagerLimits === null || pagerLimits === undefined) {
+      pagerLimits = new (Java.type("java.util.HashMap"))();
+      req.setAttribute("pagerLimits", pagerLimits);
+    }
+    pagerLimits.put(listId, begin + pageSize - 1);
+  } catch {
+    // the list then only follows the URL parameters
+  }
+}
+
+/** The first and last page numbers shown. */
+function paginationWindow(currentPage: number, nbPages: number, nbOfPages: number) {
+  const windowBegin = currentPage < nbOfPages ? 1 : currentPage - (nbOfPages - 1);
+  const paginationBegin = nbOfPages > 1
+    ? windowBegin
+    : currentPage;
+  const paginationEnd = nbOfPages > 1
+    ? Math.min(nbPages, paginationBegin + (nbOfPages - 1))
+    : currentPage;
+  return { paginationBegin, paginationEnd };
+}
+
+/** The URL of a page: the paging parameters, then the other parameters of the request. */
+function pageUrlBuilder(
+  baseUrl: string,
+  listId: string,
+  pageSize: number,
+  extraParameters: [string, string][],
+): (page: number) => string {
+  return (page: number): string => {
+    const parameters: [string, string][] = [
+      [beginParam(listId), String((page - 1) * pageSize)],
+      [endParam(listId), String(page * pageSize - 1)],
+      [pageSizeParam(listId), String(pageSize)],
+      ...extraParameters,
+    ];
+    const query = parameters
+      .map(([name, value]) => `${encodeURIComponent(name)}=${encodeURIComponent(value)}`)
+      .join("&");
+    return `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}${query}`;
+  };
+}
+
+/** The previous / next item: a link when it leads somewhere, a disabled item otherwise. */
+function renderArrowItem(
+  { enabled, href, rel, symbol, label }: { enabled: boolean; href: string; rel: string; symbol: string; label: string },
+) {
+  return (
+    <li className={`page-item${enabled ? "" : " disabled"}`}>
+      {enabled ? (
+        <a className="page-link" href={href} rel={rel}>
+          <span aria-hidden="true">{symbol}</span>
+          <span className="visually-hidden">{label}</span>
+        </a>
+      ) : (
+        <span className="page-link">
+          <span aria-hidden="true">{symbol}</span>
+          <span className="visually-hidden">{label}</span>
+        </span>
+      )}
+    </li>
+  );
+}
+
+/** A numbered page: the current one is not a link. */
+function renderPageItem(page: number, currentPage: number, buildPageUrl: (page: number) => string) {
+  return page === currentPage ? (
+    <li key={page} className="page-item active" aria-current="page">
+      <span className="page-link">{page}</span>
+    </li>
+  ) : (
+    <li key={page} className="page-item">
+      <a className="page-link" href={buildPageUrl(page)}>{page}</a>
+    </li>
+  );
 }
 
 jahiaComponent(
@@ -102,35 +212,12 @@ jahiaComponent(
     const request = renderContext.getRequest();
     const listId = boundList.getIdentifier();
 
-    // Page size: the URL parameter of this list, then the search one, then the configured value
-    // (the edit-mode value in edit mode, so editors see the whole list)
     const defaultPageSize = advancedPagination ? Number(configuredPageSize ?? 10) : 10;
     const editPageSize = advancedPagination ? Number(configuredNbOfPagesInEdit ?? 100) : 100;
-    // Request values are capped (the configured sizes are not): a larger configured size also
-    // raises the cap, so the links the pager itself builds keep working
-    const requestCap = Math.max(defaultPageSize, editPageSize);
-    const pageSize = toRequestPageSize(request.getParameter(pageSizeParam(listId)), requestCap)
-      || toRequestPageSize(request.getParameter("src_itemsPerPage"), requestCap)
-      || (isEditMode ? editPageSize : defaultPageSize)
-      || 10;
+    const pageSize = resolvePageSize(request, listId, isEditMode, defaultPageSize, editPageSize);
     const begin = toCount(request.getParameter(beginParam(listId))) ?? 0;
 
-    // Tell the list, when it renders after the pager, how many items a page holds: through this
-    // module's own request attribute, and through "pagerLimits", the map Jahia's JSP list views
-    // read (a list of another module bound to this pager is then limited the same way as in 2.x)
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const req = request as any;
-      req.setAttribute(pagerAttribute(listId), String(pageSize));
-      let pagerLimits = req.getAttribute("pagerLimits");
-      if (pagerLimits === null || pagerLimits === undefined) {
-        pagerLimits = new (Java.type("java.util.HashMap"))();
-        req.setAttribute("pagerLimits", pagerLimits);
-      }
-      pagerLimits.put(listId, begin + pageSize - 1);
-    } catch {
-      // the list then only follows the URL parameters
-    }
+    publishPagerLimits(request, listId, pageSize, begin);
 
     const total = getListItems(boundList).length;
     const nbPages = Math.ceil(total / pageSize);
@@ -142,78 +229,33 @@ jahiaComponent(
     const layoutClass = advancedPagination && layout && layout !== "default" ? ` ${layout}` : "";
     const alignClass = advancedPagination && align && align !== "justify-content-start" ? ` ${align}` : "";
 
-    const windowBegin = currentPage < nbOfPages ? 1 : currentPage - (nbOfPages - 1);
-    const paginationBegin = nbOfPages > 1
-      ? windowBegin
-      : currentPage;
-    const paginationEnd = nbOfPages > 1
-      ? Math.min(nbPages, paginationBegin + (nbOfPages - 1))
-      : currentPage;
+    const { paginationBegin, paginationEnd } = paginationWindow(currentPage, nbPages, nbOfPages);
 
     // Links keep the other parameters of the request (search terms, filters)
     const extraParameters = otherParameters(request, [beginParam(listId), endParam(listId), pageSizeParam(listId)]);
-    const baseUrl = buildNodeUrl(mainNode);
-    const buildPageUrl = (page: number): string => {
-      const parameters: [string, string][] = [
-        [beginParam(listId), String((page - 1) * pageSize)],
-        [endParam(listId), String(page * pageSize - 1)],
-        [pageSizeParam(listId), String(pageSize)],
-        ...extraParameters,
-      ];
-      const query = parameters
-        .map(([name, value]) => `${encodeURIComponent(name)}=${encodeURIComponent(value)}`)
-        .join("&");
-      return `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}${query}`;
-    };
-
-    const previousLabel = t("bootstrap5mix_advancedPagination.previous");
-    const nextLabel = t("bootstrap5mix_advancedPagination.next");
-    const hasPrevious = currentPage > 1;
-    const hasNext = currentPage < nbPages;
+    const buildPageUrl = pageUrlBuilder(buildNodeUrl(mainNode), listId, pageSize, extraParameters);
 
     return (
       <nav aria-label={t("bootstrap5nt_pagination")}>
         <ul className={`pagination${layoutClass}${alignClass}`}>
-          <li className={`page-item${hasPrevious ? "" : " disabled"}`}>
-            {hasPrevious ? (
-              <a className="page-link" href={buildPageUrl(currentPage - 1)} rel="prev">
-                <span aria-hidden="true">&laquo;</span>
-                <span className="visually-hidden">{previousLabel}</span>
-              </a>
-            ) : (
-              <span className="page-link">
-                <span aria-hidden="true">&laquo;</span>
-                <span className="visually-hidden">{previousLabel}</span>
-              </span>
-            )}
-          </li>
-
-          {Array.from({ length: Math.max(0, paginationEnd - paginationBegin + 1) }, (_, i) => {
-            const page = paginationBegin + i;
-            return page === currentPage ? (
-              <li key={page} className="page-item active" aria-current="page">
-                <span className="page-link">{page}</span>
-              </li>
-            ) : (
-              <li key={page} className="page-item">
-                <a className="page-link" href={buildPageUrl(page)}>{page}</a>
-              </li>
-            );
+          {renderArrowItem({
+            enabled: currentPage > 1,
+            href: buildPageUrl(currentPage - 1),
+            rel: "prev",
+            symbol: "\u00ab",
+            label: t("bootstrap5mix_advancedPagination.previous"),
           })}
 
-          <li className={`page-item${hasNext ? "" : " disabled"}`}>
-            {hasNext ? (
-              <a className="page-link" href={buildPageUrl(currentPage + 1)} rel="next">
-                <span aria-hidden="true">&raquo;</span>
-                <span className="visually-hidden">{nextLabel}</span>
-              </a>
-            ) : (
-              <span className="page-link">
-                <span aria-hidden="true">&raquo;</span>
-                <span className="visually-hidden">{nextLabel}</span>
-              </span>
-            )}
-          </li>
+          {Array.from({ length: Math.max(0, paginationEnd - paginationBegin + 1) }, (_, i) =>
+            renderPageItem(paginationBegin + i, currentPage, buildPageUrl))}
+
+          {renderArrowItem({
+            enabled: currentPage < nbPages,
+            href: buildPageUrl(currentPage + 1),
+            rel: "next",
+            symbol: "\u00bb",
+            label: t("bootstrap5mix_advancedPagination.next"),
+          })}
         </ul>
       </nav>
     );
