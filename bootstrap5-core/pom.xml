@@ -34,6 +34,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     <version.compiler.plugin>3.16.0</version.compiler.plugin>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
+    <!-- SonarQube: the views, scripts and styles written for this module, without the Bootstrap distribution -->
+    <sonar.sources>pom.xml,src/main/java,src/main/resources</sonar.sources>
+    <sonar.exclusions>src/main/resources/css/bootstrap*,src/main/resources/javascript/bootstrap*</sonar.exclusions>
   </properties>
   <dependencies>
     <!-- b5:switchToLanguageLink tag (2.x taglib, kept for project JSPs) -->

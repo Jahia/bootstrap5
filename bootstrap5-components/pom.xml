@@ -30,6 +30,15 @@
   <name>Bootstrap5 Components</name>
   <description>JS/React SSR views for Bootstrap 5 components (Jahia JS module)</description>
 
+  <properties>
+    <!-- SonarQube: the sources of a JavaScript module are not in src/main -->
+    <sonar.sources>pom.xml,src,javascript</sonar.sources>
+    <sonar.tests>src/test</sonar.tests>
+    <sonar.exclusions>src/test/**</sonar.exclusions>
+    <!-- Written by "npm run test:coverage" -->
+    <sonar.javascript.lcov.reportPaths>coverage/lcov.info</sonar.javascript.lcov.reportPaths>
+  </properties>
+
   <build>
     <plugins>
 
