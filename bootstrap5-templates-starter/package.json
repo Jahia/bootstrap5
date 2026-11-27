@@ -27,9 +27,9 @@
     "@types/react": "^19.0.0",
     "i18next": "^26.3.4",
     "react-i18next": "^16.0.0",
-    "rollup-plugin-sbom": "^3.2.3",
+    "rollup-plugin-sbom": "^5.0.3",
     "typescript": "^6.0.3",
-    "vite": "^7.3.8"
+    "vite": "^8.3.8"
   },
   "engines": {
     "node": ">=18.0.0",
