@@ -9,6 +9,11 @@
  * Port of the 2.x jmix:list "list" view. The JSP view also honoured emptyListMessage and liveOnly,
  * two values other JSP views passed through the moduleMap request variable; that variable does not
  * exist for JavaScript views, so they are not ported.
+ *
+ * Ordering constraint, same as 2.x: the pager must be rendered BEFORE its list in the page. The
+ * pager tells the list its page size through a request attribute (2.x: the "pagerLimits" request
+ * map, filled when the pager renders), so a list placed before its pager shows all its items on the
+ * first display, until the URL carries the pagesize parameter. See docs/pagination.md.
  */
 import {
   AddContentButtons,
