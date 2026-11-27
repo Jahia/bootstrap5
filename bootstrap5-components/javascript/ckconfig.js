@@ -204,17 +204,23 @@ function executeCleanup(editor) {
 }
 
 function tidyHTML(html) {
-    let cleanHtml = globalThis.DOMPurify.sanitize(html, {
+    const sanitize = (markup) => globalThis.DOMPurify.sanitize(markup, {
         ALLOWED_TAGS: ['a', 'b', 'i', 'strong', 'em', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'br', 'div', 'span', 'img', 'blockquote','table'],
         ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'width', 'height'],
         FORBID_ATTR: ['style','class','lang','dir','id','name'],
         USE_PROFILES: { html: true }
     });
 
+    // First pass: strips the attributes, so that a <span style="..."> becomes a bare <span>
+    let cleanHtml = sanitize(html);
+
     // remove <span> w/o attribut
     while (/(\s*)<span>([\s\S]*?)<\/span>(\s*)/.test(cleanHtml)) {
         cleanHtml = cleanHtml.replaceAll(/<span>([\s\S]*?)<\/span>/g, '$1');
     }
+
+    // DOMPurify is the last transformation of the markup before the beautifier
+    cleanHtml = sanitize(cleanHtml);
 
     cleanHtml = html_beautify(cleanHtml, {
         indent_size: 2,
