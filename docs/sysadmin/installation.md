@@ -101,27 +101,13 @@ To activate the modules on an **existing site**:
 
 ```bash
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
-  -u root:PASSWORD \
-  -H 'Content-Type: text/yaml' \
-  --data-binary '
-- enable: "bootstrap5-components"
-  site: "YOUR_SITE_KEY"
-- enable: "bootstrap5-templates-starter"
-  site: "YOUR_SITE_KEY"
-'
+  -u root:YOUR_ROOT_PASSWORD \
+  --form-string 'script=[
+    {"enable":"bootstrap5-components","site":"YOUR_SITE_KEY"},
+    {"enable":"bootstrap5-templates-starter","site":"YOUR_SITE_KEY"}]'
 ```
 
-Or use the Jahia administration UI under **Sites → Your Site → Installed modules**.
-
-To disable a module on a site:
-
-```bash
-curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
-  -u root:PASSWORD \
-  -H 'Content-Type: text/yaml' \
-  --data-binary '- disable: "bootstrap5-components"
-  site: "YOUR_SITE_KEY"'
-```
+The script must be sent as a form field as above: Jahia answers HTTP 415 to a raw YAML body. The provisioning API has no operation to disable a module on a site: do it in the administration interface of the site.
 
 ---
 
@@ -207,4 +193,4 @@ bundle:restart <bootstrap5-components-id>
 
 ## Clustered environments
 
-The provisioning API broadcasts to all cluster nodes automatically via Cellar. Monitor each node's logs to confirm the module is `Active` everywhere.
+Module deployments are run by the processing node, which propagates them to the other nodes. Send the provisioning calls to a node directly, not through the load balancer, then check the module state on each node with the [status call](#checking-module-status).
