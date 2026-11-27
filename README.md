@@ -57,6 +57,6 @@ Four modules make up the full stack:
 - Deploy the single `bootstrap5-package` JAR — it auto-installs everything, or
 - Deploy individually in order: `bootstrap5-core` (JAR) → `bootstrap5-components` (TGZ) → `bootstrap5-templates-starter` (TGZ)
 
-> Requires **Jahia 8.2+** with GraalVM polyglot JS engine.
+> Requires **Jahia 8.2.3.x** and **javascript-modules-engine 1.3.1** (installed by `bootstrap5-package` when Jahia runs an older engine).
 
 Full installation details → [SysAdmin Guide](docs/sysadmin/installation.md)
