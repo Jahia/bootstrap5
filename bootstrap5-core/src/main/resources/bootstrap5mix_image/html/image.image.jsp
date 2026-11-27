@@ -114,7 +114,7 @@
 
     <c:url var="imageUrl" value="${imageNode.url}" context="/"/>
 
-    <img src="${imageUrl}" alt="${fn:escapeXml(alt)}"
+    <img src="${fn:escapeXml(imageUrl)}" alt="${fn:escapeXml(alt)}"
             <c:if test="${not empty cssClass}"> class="${fn:escapeXml(fn:trim(cssClass))}"</c:if>
             <c:if test="${not empty styleStr}"> style="${fn:escapeXml(styleStr)}"</c:if>
             <c:if test="${not empty elemId}">   id="${fn:escapeXml(elemId)}"</c:if>
