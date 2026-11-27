@@ -75,3 +75,39 @@ export const deleteTestPage = (pageName: string) => {
         }
     })
 }
+
+/** Adds a node anywhere in the edit workspace. */
+export const addNode = (parentPathOrId: string, name: string, primaryNodeType: string, properties: object[] = [], mixins: string[] = [], children: object[] = []) => {
+    cy.apollo({
+        mutationFile: 'graphql/jcr/mutation/addNode.graphql',
+        variables: {parentPathOrId, name, primaryNodeType, properties, mixins, children}
+    })
+}
+
+/** A content list named `area` under `parent`, holding one text per CSS class given. */
+export const addAreaWithTexts = (parent: string, area: string, cssClasses: string[]) => {
+    addNode(parent, area, 'jnt:contentList')
+    cssClasses.forEach((cssClass, index) => {
+        addNode(`${parent}/${area}`, `text-${index + 1}`, 'bootstrap5nt:text', [
+            {name: 'text', value: `<p class="${cssClass}">${cssClass}</p>`, language: 'en'}
+        ])
+    })
+}
+
+export const deleteNode = (pathOrId: string) => {
+    cy.apollo({
+        mutationFile: 'graphql/jcr/mutation/deleteNode.graphql',
+        variables: {pathOrId, workspace: 'EDIT'}
+    })
+}
+
+export const publishNode = (pathOrId: string, languages: string[] = ['en']) => {
+    cy.apollo({
+        mutationFile: 'graphql/jcr/mutation/publishNode.graphql',
+        variables: {pathOrId, languages, publishSubNodes: true, includeSubTree: true}
+    })
+}
+
+/** Preview (edit workspace) and edit-mode URLs: both need a logged-in editor. */
+export const previewUrl = (path: string, lang = 'en') => `/cms/render/default/${lang}${path}.html`
+export const editFrameUrl = (path: string, lang = 'en') => `/cms/editframe/default/${lang}${path}.html`
