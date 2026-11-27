@@ -37,7 +37,7 @@ interface TabsProps {
  *   - Prefixes "tab-" when the first character is not a letter
  */
 function toAnchor(name: string): string {
-  const sanitized = name.replace(/[^A-Za-z0-9_]/g, "-");
+  const sanitized = name.replaceAll(/\W/g, "-");
   return /^[a-zA-Z]/.test(sanitized) ? sanitized : `tab-${sanitized}`;
 }
 
@@ -96,7 +96,7 @@ jahiaComponent(
     const subLists = getChildNodes(currentNode, 50).filter(n => n.isNodeType("jnt:contentList"));
 
     // Omit align class when it's the default (justify-content-start)
-    const alignClass = align !== "justify-content-start" ? align : undefined;
+    const alignClass = align === "justify-content-start" ? undefined : align;
 
     const navClass = ["nav", toNavClass(type), alignClass].filter(Boolean).join(" ");
 

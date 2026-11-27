@@ -26,13 +26,23 @@ function toStrings(values: unknown): string[] {
   }
 }
 
+/**
+ * Orders two strings by UTF-16 code unit, as Array.prototype.sort() does without a comparator and
+ * as Java's natural String order (not a locale-aware collation).
+ */
+function byCodeUnit(a: string, b: string): number {
+  if (a < b) return -1;
+  if (a > b) return 1;
+  return 0;
+}
+
 /** Languages invalidated on the node (j:invalidLanguages), empty when the property is not set. */
 export function getInvalidLanguages(node: JCRNodeWrapper): string[] {
   try {
     if (!node.hasProperty("j:invalidLanguages")) return [];
     const values = node.getProperty("j:invalidLanguages").getValues() as unknown as { getString(): string }[];
     const result: string[] = [];
-    for (let i = 0; i < values.length; i++) result.push(String(values[i].getString()));
+    for (const value of values) result.push(String(value.getString()));
     return result;
   } catch {
     return [];
@@ -58,7 +68,7 @@ export function getSiteLanguages(renderContext: RenderContext, mainNode: JCRNode
   const live = Boolean(renderContext.isLiveMode());
   let codes: string[];
   try {
-    codes = toStrings(live ? site.getActiveLiveLanguages() : site.getLanguages()).sort();
+    codes = toStrings(live ? site.getActiveLiveLanguages() : site.getLanguages()).sort(byCodeUnit);
   } catch {
     return [];
   }
@@ -69,8 +79,8 @@ export function getSiteLanguages(renderContext: RenderContext, mainNode: JCRNode
   const locales: Record<string, any> = {};
   try {
     const siteLocales = site.getLanguagesAsLocales();
-    for (let i = 0; i < siteLocales.length; i++) {
-      locales[String(siteLocales[i].toString())] = siteLocales[i];
+    for (const siteLocale of siteLocales) {
+      locales[String(siteLocale.toString())] = siteLocale;
     }
   } catch {
     // labels fall back to the language code
@@ -108,6 +118,6 @@ export function getSiteLanguages(renderContext: RenderContext, mainNode: JCRNode
     } catch {
       label = "";
     }
-    return { code, tag: code.replace(/_/g, "-"), label: label || code.toUpperCase() };
+    return { code, tag: code.replaceAll("_", "-"), label: label || code.toUpperCase() };
   });
 }

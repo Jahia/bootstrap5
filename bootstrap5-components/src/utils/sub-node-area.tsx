@@ -60,7 +60,7 @@ export function resolveSubNodeAreaParent(
  * the page only. The parent of the list is therefore resolved here, and the area is rendered as an
  * absolute area anchored on it, which addresses that exact node.
  */
-export function SubNodeArea({ name, numberOfItems, allowedNodeTypes }: SubNodeAreaProps) {
+export function SubNodeArea({ name, numberOfItems, allowedNodeTypes }: Readonly<SubNodeAreaProps>) {
   const { currentNode, mainNode, renderContext } = useServerContext();
   const site = renderContext.getSite();
   const parent = resolveSubNodeAreaParent(currentNode, mainNode, name, site ? site.getPath() : undefined);
