@@ -172,6 +172,39 @@ describe('bootstrap5nt:pagination (default view)', () => {
     expect(pageItems(container).length).toBe(4);
   });
 
+  test('huge pagesize URL parameter is capped to 100', () => {
+    const ctx = makePaginationCtx(makeList(500), { _params: { 'pagesizelist-1': '1000000' } });
+    renderFn(getPaginationFn(), { displayPager: true }, ctx);
+    expect(ctx.renderContext.getRequest().getAttribute('bootstrap5.pager.pagesize.list-1')).toBe('100');
+  });
+
+  test('pagesize URL parameter equal to the cap is kept', () => {
+    const ctx = makePaginationCtx(makeList(500), { _params: { 'pagesizelist-1': '100' } });
+    renderFn(getPaginationFn(), { displayPager: true }, ctx);
+    expect(ctx.renderContext.getRequest().getAttribute('bootstrap5.pager.pagesize.list-1')).toBe('100');
+  });
+
+  test('configured page size above the cap is honoured, and a request value up to it is accepted', () => {
+    const nodeTypes = ['bootstrap5mix:advancedPagination'];
+    const configured = makePaginationCtx(makeList(500), {}, nodeTypes);
+    renderFn(getPaginationFn(), { displayPager: true, pageSize: 250 }, configured);
+    expect(configured.renderContext.getRequest().getAttribute('bootstrap5.pager.pagesize.list-1')).toBe('250');
+
+    const requested = makePaginationCtx(makeList(500), { _params: { 'pagesizelist-1': '200' } }, nodeTypes);
+    renderFn(getPaginationFn(), { displayPager: true, pageSize: 250 }, requested);
+    expect(requested.renderContext.getRequest().getAttribute('bootstrap5.pager.pagesize.list-1')).toBe('200');
+
+    const tooBig = makePaginationCtx(makeList(500), { _params: { 'pagesizelist-1': '999999' } }, nodeTypes);
+    renderFn(getPaginationFn(), { displayPager: true, pageSize: 250 }, tooBig);
+    expect(tooBig.renderContext.getRequest().getAttribute('bootstrap5.pager.pagesize.list-1')).toBe('250');
+  });
+
+  test('src_itemsPerPage is capped to 100', () => {
+    const ctx = makePaginationCtx(makeList(500), { _params: { src_itemsPerPage: '100000' } });
+    renderFn(getPaginationFn(), { displayPager: true }, ctx);
+    expect(ctx.renderContext.getRequest().getAttribute('bootstrap5.pager.pagesize.list-1')).toBe('100');
+  });
+
   test('nbOfPages limits the page links shown', () => {
     const ctx = makePaginationCtx(makeList(100), { _params: { 'beginlist-1': '50', 'pagesizelist-1': '10' } }, ['bootstrap5mix:advancedPagination']);
     const { container } = renderFn(getPaginationFn(), { displayPager: true, pageSize: 10, nbOfPages: 3 }, ctx);

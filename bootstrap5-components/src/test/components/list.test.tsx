@@ -67,6 +67,18 @@ describe('jmix:list (default view)', () => {
     expect(renderedIds(container)).toEqual(['c1', 'c2']);
   });
 
+  test('huge pagesize URL parameter is capped to 100 items', () => {
+    const ctx = makeListCtx(makeItems(150), { _params: { 'pagesizelist-1': '1000000' } });
+    const { container } = renderFn(getListFn(), {}, ctx);
+    expect(renderedIds(container)).toHaveLength(100);
+  });
+
+  test('pagesize URL parameter equal to the cap is kept', () => {
+    const ctx = makeListCtx(makeItems(150), { _params: { 'pagesizelist-1': '100' } });
+    const { container } = renderFn(getListFn(), {}, ctx);
+    expect(renderedIds(container)).toHaveLength(100);
+  });
+
   test('paging parameters of another list are ignored', () => {
     const ctx = makeListCtx(makeItems(4), { _params: { 'beginother': '2', 'pagesizeother': '1' } });
     const { container } = renderFn(getListFn(), {}, ctx);
