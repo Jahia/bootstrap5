@@ -246,8 +246,9 @@ describe('Bootstrap5 — Navbar', () => {
             cy.visit(pageUrl('navbar-test'))
             cy.get('.navbar .login').first().click()
             cy.get('.modal.show form[name="loginForm"]').should('be.visible')
-            // Bootstrap focuses the dialog once it is fully shown: typing earlier loses keystrokes
-            cy.focused().should('have.class', 'modal')
+            // Once the dialog is fully shown the user name field takes the focus: typing earlier
+            // loses keystrokes
+            cy.focused().should('have.attr', 'name', 'username')
         }
 
         it('signs a visitor in from the navbar', () => {

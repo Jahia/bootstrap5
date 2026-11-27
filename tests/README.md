@@ -74,6 +74,26 @@ BOOTSTRAP5_ARTIFACTS=/path/to/bootstrap5-3.0.1 bash ci.build.sh && bash ci.start
 
 ---
 
+## Migration test (2.x site rendered by 3.x)
+
+`ci.migration.sh` proves that a site built with bootstrap5 2.x still displays once 3.x replaced it:
+
+1. it installs the 2.x modules and seeds a site (`cypress/migration/01-seed-2x.cy.ts`): every component, every
+   grid layout, content shared from the home page, a paged list. The content is stored where 2.x stores it, and
+   the way 2.x renders each page is recorded in `results/migration-baseline.json`;
+2. it installs the 3.x modules over them, on the same repository;
+3. it compares (`cypress/migration/02-verify-3x.cy.ts`): same pieces of content, in the same containers
+   (column, tab, panel, card part…), same number of each structure, same titles.
+
+```bash
+# against a freshly started Jahia; the 2.x jars are on Jahia's public Nexus (org.jahiacommunity.modules)
+BOOTSTRAP5_2X_ARTIFACTS=/path/to/2.4.7-jars bash ci.migration.sh
+```
+
+The migration specs are not part of the regular suite (`cypress/e2e`): they need the two installations in turn.
+
+---
+
 ## Running the tests
 
 Before running, export the environment variables from your `.env` file:
