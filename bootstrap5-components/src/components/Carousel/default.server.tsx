@@ -18,7 +18,6 @@ import {
   useServerContext,
 } from "@jahia/javascript-modules-library";
 import { useTranslation } from "react-i18next";
-import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { BootstrapJS } from "../../utils/bootstrap-resources.js";
 import { getReferencedNode } from "../../utils/node.js";
 import { textColorClass } from "../../utils/colors.js";
@@ -66,8 +65,8 @@ jahiaComponent(
 
     if (currentNode.isNodeType("bootstrap5mix:carouselAdvancedSettings")) {
       const p = currentNode;
-      const iv = parseInt(p.getPropertyAsString("interval") ?? "", 10);
-      if (!isNaN(iv)) interval = iv;
+      const iv = Number.parseInt(p.getPropertyAsString("interval") ?? "", 10);
+      if (!Number.isNaN(iv)) interval = iv;
       ride = p.getPropertyAsString("ride") !== "false";
       keyboard = p.getPropertyAsString("keyboard") !== "false";
       pause = p.getPropertyAsString("pause") === "true";
@@ -116,6 +115,7 @@ jahiaComponent(
       isDark ? "carousel-dark" : undefined,
       extraClass || undefined,
     ].filter(Boolean).join(" ");
+    const pauseWhenUnticked = pauseConfigured ? "false" : undefined;
 
     return (
       <>
@@ -132,7 +132,7 @@ jahiaComponent(
         data-bs-interval={interval !== undefined && interval !== 5000 ? interval : undefined}
         data-bs-keyboard={keyboard ? undefined : "false"}
         // "hover" is Bootstrap's default: unticking the option has to say "false" to have an effect
-        data-bs-pause={pause ? "hover" : (pauseConfigured ? "false" : undefined)}
+        data-bs-pause={pause ? "hover" : pauseWhenUnticked}
         // Dark variant: data-bs-theme (carousel-dark is deprecated since 5.3 and kept for site CSS)
         data-bs-theme={isDark ? "dark" : undefined}
         data-bs-wrap={wrap ? undefined : "false"}
@@ -188,8 +188,8 @@ jahiaComponent(
             if (cc) captionColor = textColorClass(cc);
             const ic = item.getPropertyAsString("carouselItemClass") ?? "";
             if (ic.trim()) itemClass = ic.trim();
-            const ii = parseInt(item.getPropertyAsString("interval") ?? "", 10);
-            if (!isNaN(ii)) itemInterval = ii;
+            const ii = Number.parseInt(item.getPropertyAsString("interval") ?? "", 10);
+            if (!Number.isNaN(ii)) itemInterval = ii;
           }
 
           const itemClasses = ["carousel-item", i === 0 ? "active" : undefined, itemClass || undefined]

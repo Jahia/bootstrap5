@@ -154,7 +154,7 @@ function customClass(props: ButtonBaseProps): string {
  */
 type ButtonPart = "all" | "trigger" | "panel";
 
-const PANEL_TYPES = ["modal", "collapse", "Offcanvas"];
+const PANEL_TYPES = new Set(["modal", "collapse", "Offcanvas"]);
 
 const buttonView = (part: ButtonPart | "auto") =>
   (props: ButtonBaseProps, { renderContext, currentNode }: ServerContext) => {
@@ -174,7 +174,7 @@ const buttonView = (part: ButtonPart | "auto") =>
     }
     const showTrigger = resolvedPart !== "panel";
     const showPanel = resolvedPart !== "trigger";
-    if (!showTrigger && !PANEL_TYPES.includes(props.buttonType ?? "")) return null;
+    if (!showTrigger && !PANEL_TYPES.has(props.buttonType ?? "")) return null;
     const hasTooltip = showTrigger && Object.keys(tooltipAttributes(props)).length > 0;
 
     const renderButton = () => {
@@ -363,6 +363,9 @@ const buttonView = (part: ButtonPart | "auto") =>
   }
   if (document.readyState === 'complete') { init(); } else { window.addEventListener('load', init); }
 })();`;
+        const popoverTitle = props.popoverTitle ? { "data-bs-title": props.popoverTitle } : {};
+        const popoverContent = props.popoverContent ? { "data-bs-content": props.popoverContent } : {};
+        const popoverHtml = props.html ? { "data-bs-html": "true" } : {};
         return (
           <>
             <BootstrapJS />
@@ -373,9 +376,9 @@ const buttonView = (part: ButtonPart | "auto") =>
                   role="button"
                   tabIndex={0}
                   data-bs-toggle="popover"
-                  {...(props.popoverTitle ? { "data-bs-title": props.popoverTitle } : {})}
-                  {...(props.popoverContent ? { "data-bs-content": props.popoverContent } : {})}
-                  {...(props.html ? { "data-bs-html": "true" } : {})}
+                  {...popoverTitle}
+                  {...popoverContent}
+                  {...popoverHtml}
                   data-bs-container="body"
                   data-bs-placement={props.direction ?? "top"}
                   data-bs-trigger="focus"
@@ -389,9 +392,9 @@ const buttonView = (part: ButtonPart | "auto") =>
                   tabIndex={0}
                   className={customClass(props)}
                   data-bs-toggle="popover"
-                  {...(props.popoverTitle ? { "data-bs-title": props.popoverTitle } : {})}
-                  {...(props.popoverContent ? { "data-bs-content": props.popoverContent } : {})}
-                  {...(props.html ? { "data-bs-html": "true" } : {})}
+                  {...popoverTitle}
+                  {...popoverContent}
+                  {...popoverHtml}
                   data-bs-container="body"
                   data-bs-placement={props.direction ?? "top"}
                   data-bs-trigger="focus"

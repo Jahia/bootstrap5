@@ -39,7 +39,7 @@ function resolveNavItem(
   let title = page.getDisplayableName();
 
   if (page.isNodeType("jnt:navMenuText")) {
-    url = "#";
+    // a menu text has no page of its own: the URL stays "#"
   } else if (page.isNodeType("jnt:externalLink")) {
     // safeUrl: an editor-set javascript:/data: URL becomes "#" (as in 2.x)
     url = safeUrl(page.getPropertyAsString("j:url"));
@@ -87,7 +87,7 @@ function isDistantPublicationServer(renderContext: { getSettings(): unknown }): 
 function isRemotelyPublished(page: JCRNodeWrapper): boolean {
   try {
     const site = page.getResolveSite();
-    return site !== null && site !== undefined && site.isNodeType("jmix:remotelyPublished");
+    return site?.isNodeType("jmix:remotelyPublished") ?? false;
   } catch {
     return false;
   }
@@ -98,8 +98,8 @@ function isDisplayedInMenu(page: JCRNodeWrapper, navbarName: string): boolean {
   // As the 2.x view: once the property is set, the page only shows in the menus it lists
   const values = (page.getProperty("j:displayInMenuName") as any).getValues() as { getString: () => string }[];
   if (!values) return false;
-  for (let i = 0; i < values.length; i++) {
-    if (String(values[i].getString() ?? "").trim() === navbarName) return true;
+  for (const value of values) {
+    if (String(value.getString() ?? "").trim() === navbarName) return true;
   }
   return false;
 }
@@ -158,7 +158,7 @@ jahiaComponent(
       addLoginButton = currentNode.getPropertyAsString("addLoginButton") !== "false";
       addLanguageButton = currentNode.getPropertyAsString("addLanguageButton") !== "false";
       addColorModeButton = currentNode.getPropertyAsString("addColorModeButton") === "true";
-      maxlevel = parseInt(currentNode.getPropertyAsString("maxlevel") ?? "2", 10) || 2;
+      maxlevel = Number.parseInt(currentNode.getPropertyAsString("maxlevel") ?? "2", 10) || 2;
     }
     const recursive = maxlevel > 1;
 
@@ -219,7 +219,7 @@ jahiaComponent(
         rootNode = undefined;
       }
     }
-    if (!rootNode) rootNode = homeNode;
+    rootNode ??= homeNode;
 
     // Start of the menu, as the 2.x basenav-multilevel view: the page displayed, its parent, the
     // custom root page (no menu when it is not set or gone), the home page otherwise
@@ -255,7 +255,8 @@ jahiaComponent(
       getChildNodes(parent, 100).filter((n) => n.isNodeType("jmix:navMenuItem"));
 
     const renderSimpleItem = (item: NavItem, level: number, key: string): ReactNode => {
-      const stateClass = item.isActive ? " active" : item.isInPath ? " inpath" : "";
+      const inPathClass = item.isInPath ? " inpath" : "";
+      const stateClass = item.isActive ? " active" : inPathClass;
       const current = item.isActive ? { "aria-current": "page" as const } : {};
       return level === 1 ? (
         <li key={key} className={liClass}>
@@ -279,7 +280,8 @@ jahiaComponent(
           return renderSimpleItem(item, level, pageId);
         }
 
-        const stateClass = item.isActive ? " active" : item.isInPath ? " inpath" : "";
+        const inPathClass = item.isInPath ? " inpath" : "";
+        const stateClass = item.isActive ? " active" : inPathClass;
         // A menu text has no page of its own: no link to it inside its own menu.
         // The link is rendered with the classes of the level of the page, as 2.x did: inside a
         // top-level dropdown it is a .nav-item / .nav-link, which is what 2.x sites are styled for.
@@ -368,6 +370,7 @@ jahiaComponent(
     const currentPageUrl = buildNodeUrl(mainNode);
     // Jahia's login valve sends back a failed login with ?loginError=bad_password / account_locked
     const loginError = String(request.getParameter("loginError") ?? "");
+    const loginErrorAttribute = loginError ? { "aria-describedby": `${loginNodeId}-error` } : {};
     // Workspace links, as 2.x: not on a remote publication server nor on content published from live
     const showWorkspaceLinks = !isDistantPublicationServer(renderContext)
       && mainNode.getPropertyAsString("j:originWS") !== "live"
@@ -506,7 +509,7 @@ jahiaComponent(
                     id={loginNodeId}
                     tabIndex={-1}
                     aria-labelledby={`${loginNodeId}-label`}
-                    {...(loginError ? { "aria-describedby": `${loginNodeId}-error` } : {})}
+                    {...loginErrorAttribute}
                     aria-hidden="true"
                   >
                     {/* What ui:loginArea rendered: Jahia's login servlet, the site, and where to go back */}
@@ -517,74 +520,72 @@ jahiaComponent(
                         <input type="hidden" name="site" value={siteKey} />
                         <input type="hidden" name="redirect" value={currentPageUrl} />
                         <input type="hidden" name="failureRedirect" value={currentPageUrl} />
-                        <>
-                          <div className="modal-header">
-                            <h5 className="modal-title" id={`${loginNodeId}-label`}>
-                              {t("bootstrap5nt_navbar.label.pleaselogin")}
-                            </h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label={t("bootstrap5nt_navbar.label.close")} />
+                        <div className="modal-header">
+                          <h5 className="modal-title" id={`${loginNodeId}-label`}>
+                            {t("bootstrap5nt_navbar.label.pleaselogin")}
+                          </h5>
+                          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label={t("bootstrap5nt_navbar.label.close")} />
+                        </div>
+                        <div className="modal-body">
+                          {loginError && (
+                            <div className="alert alert-danger" role="alert" id={`${loginNodeId}-error`}>
+                              {t(loginError === "account_locked" ? "message.accountLocked" : "message.invalidUsernamePassword")}
+                            </div>
+                          )}
+                          <label htmlFor={`username-${currentNode.getIdentifier()}`} className="visually-hidden">
+                            {t("label.username")}
+                          </label>
+                          <div className="input-group mb-3">
+                            <span className="input-group-text" aria-hidden="true">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-fill" viewBox="0 0 16 16">
+                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                              </svg>
+                            </span>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id={`username-${currentNode.getIdentifier()}`}
+                              name="username"
+                              autoComplete="username"
+                              placeholder={t("label.username")}
+                              required
+                              data-b5-autofocus="true"
+                            />
                           </div>
-                          <div className="modal-body">
-                            {loginError && (
-                              <div className="alert alert-danger" role="alert" id={`${loginNodeId}-error`}>
-                                {t(loginError === "account_locked" ? "message.accountLocked" : "message.invalidUsernamePassword")}
-                              </div>
-                            )}
-                            <label htmlFor={`username-${currentNode.getIdentifier()}`} className="visually-hidden">
-                              {t("label.username")}
+                          <label htmlFor={`password-${currentNode.getIdentifier()}`} className="visually-hidden">
+                            {t("label.password")}
+                          </label>
+                          <div className="input-group mb-3">
+                            <span className="input-group-text" aria-hidden="true">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-key-fill" viewBox="0 0 16 16">
+                                <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2zM2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                              </svg>
+                            </span>
+                            <input
+                              type="password"
+                              className="form-control"
+                              id={`password-${currentNode.getIdentifier()}`}
+                              name="password"
+                              autoComplete="current-password"
+                              placeholder={t("label.password")}
+                              required
+                            />
+                          </div>
+                          <div className="form-check">
+                            <input className="form-check-input" type="checkbox" id={`useCookie-${currentNode.getIdentifier()}`} name="useCookie" />
+                            <label className="form-check-label" htmlFor={`useCookie-${currentNode.getIdentifier()}`}>
+                              {t("loginForm.rememberMe.label")}
                             </label>
-                            <div className="input-group mb-3">
-                              <span className="input-group-text" aria-hidden="true">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-fill" viewBox="0 0 16 16">
-                                  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                                </svg>
-                              </span>
-                              <input
-                                type="text"
-                                className="form-control"
-                                id={`username-${currentNode.getIdentifier()}`}
-                                name="username"
-                                autoComplete="username"
-                                placeholder={t("label.username")}
-                                required
-                                data-b5-autofocus="true"
-                              />
-                            </div>
-                            <label htmlFor={`password-${currentNode.getIdentifier()}`} className="visually-hidden">
-                              {t("label.password")}
-                            </label>
-                            <div className="input-group mb-3">
-                              <span className="input-group-text" aria-hidden="true">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-key-fill" viewBox="0 0 16 16">
-                                  <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2zM2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                                </svg>
-                              </span>
-                              <input
-                                type="password"
-                                className="form-control"
-                                id={`password-${currentNode.getIdentifier()}`}
-                                name="password"
-                                autoComplete="current-password"
-                                placeholder={t("label.password")}
-                                required
-                              />
-                            </div>
-                            <div className="form-check">
-                              <input className="form-check-input" type="checkbox" id={`useCookie-${currentNode.getIdentifier()}`} name="useCookie" />
-                              <label className="form-check-label" htmlFor={`useCookie-${currentNode.getIdentifier()}`}>
-                                {t("loginForm.rememberMe.label")}
-                              </label>
-                            </div>
                           </div>
-                          <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                              {t("bootstrap5nt_navbar.label.close")}
-                            </button>
-                            <button type="submit" name="loginButton" className="btn btn-primary">
-                              {t("bootstrap5nt_navbar.label.login")}
-                            </button>
-                          </div>
-                        </>
+                        </div>
+                        <div className="modal-footer">
+                          <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                            {t("bootstrap5nt_navbar.label.close")}
+                          </button>
+                          <button type="submit" name="loginButton" className="btn btn-primary">
+                            {t("bootstrap5nt_navbar.label.login")}
+                          </button>
+                        </div>
                       </form>
                     </div>
                   </div>
@@ -613,6 +614,7 @@ jahiaComponent(
           {addColorModeButton && (() => {
             const siteMode = getSiteColorMode(siteNode as any);
             const title = t("bootstrap5nt_navbar.colorMode");
+            const siteModeLabel = t(`bootstrap5nt_navbar.colorMode.${siteMode}`);
             const toggleId = `color-mode-${currentNode.getIdentifier()}`;
             return (
               <ul className="navbar-nav color-mode-nav">
@@ -628,7 +630,7 @@ jahiaComponent(
                       <path d="M8 15A7 7 0 1 0 8 1zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16"/>
                     </svg>
                     <span className="visually-hidden" data-b5-color-mode-name="true" data-b5-color-mode-title={title}>
-                      {`${title}: ${t(`bootstrap5nt_navbar.colorMode.${siteMode}`)}`}
+                      {`${title}: ${siteModeLabel}`}
                     </span>
                   </button>
                   <ul className="dropdown-menu dropdown-menu-end" aria-labelledby={toggleId}>

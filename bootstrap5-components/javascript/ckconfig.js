@@ -1,4 +1,4 @@
-var contextParams = (typeof contextJsParameters !== 'undefined') ? contextJsParameters : {};
+var contextParams = (typeof contextJsParameters === 'undefined') ? {} : contextJsParameters;
 
 function getContentPickerUrl(type = '', params = {}) {
     const queryParams = new URLSearchParams(params).toString();
@@ -119,14 +119,14 @@ CKEDITOR.editorConfig = (config) => {
         // editor using this configuration gets it, when the content is loaded (so the editor shows
         // the table as the page will) and when it is saved. The other table classes (striped,
         // bordered...) come from the Styles list and are kept.
-        const fromThisModule = (value) => String(value || '').indexOf('/bootstrap5-components/') !== -1;
+        const fromThisModule = (value) => String(value || '').includes('/bootstrap5-components/');
         const usesThisConfig = fromThisModule(editor.config.customConfig)
-            || [].concat(editor.config.templates_files || []).some(fromThisModule);
+            || [editor.config.templates_files || []].flat().some(fromThisModule);
         if (usesThisConfig && editor.dataProcessor && !editor.bootstrap5TableRules) {
             editor.bootstrap5TableRules = true;
             const addTableClass = (element) => {
                 const classes = (element.attributes['class'] || '').split(/\s+/).filter(Boolean);
-                if (classes.indexOf('table') === -1) {
+                if (!classes.includes('table')) {
                     classes.unshift('table');
                     element.attributes['class'] = classes.join(' ');
                 }
@@ -140,9 +140,7 @@ CKEDITOR.editorConfig = (config) => {
 };
 
 function loadScript(url, callback) {
-    // console.log(`🔄 TRying to get script : ${url}`);
-
-    var script = document.createElement("script");
+    const script = document.createElement("script");
     script.type = "text/javascript";
     script.src = url;
 
@@ -162,7 +160,7 @@ function loadDependencies(callback) {
     loadScript(`${basePath}/modules/bootstrap5-components/javascript/beautify-html.min.js`, function () {
         loadScript(`${basePath}/modules/bootstrap5-components/javascript/purify.min.js`, function () {
             setTimeout(function () {
-                if (typeof window.html_beautify === 'function' && typeof window.DOMPurify === 'function') {
+                if (typeof globalThis.html_beautify === 'function' && typeof globalThis.DOMPurify === 'function') {
                     callback();
                 } else {
                     console.error("❌ Could not get lib");
@@ -183,13 +181,13 @@ CKEDITOR.plugins.add('tidy', {
         });
         editor.addCommand('cleanHTML', {
             exec: function (editor) {
-                const userConfirmed = window.confirm("Do you want to clean up the current HTML content?");
+                const userConfirmed = globalThis.confirm("Do you want to clean up the current HTML content?");
                 if (!userConfirmed) {
                     return;
                 }
                 const runCleanup = () => executeCleanup(editor);
 
-                if (typeof window.html_beautify !== 'function' || typeof window.DOMPurify !== 'function') {
+                if (typeof globalThis.html_beautify !== 'function' || typeof globalThis.DOMPurify !== 'function') {
                     loadDependencies(runCleanup);
                 } else {
                     runCleanup();
@@ -200,13 +198,13 @@ CKEDITOR.plugins.add('tidy', {
 });
 
 function executeCleanup(editor) {
-    var dirtyHtml = editor.getData();
-    var cleanHtml = tidyHTML(dirtyHtml);
+    const dirtyHtml = editor.getData();
+    const cleanHtml = tidyHTML(dirtyHtml);
     editor.setData(cleanHtml);
 }
 
 function tidyHTML(html) {
-    let cleanHtml = window.DOMPurify.sanitize(html, {
+    let cleanHtml = globalThis.DOMPurify.sanitize(html, {
         ALLOWED_TAGS: ['a', 'b', 'i', 'strong', 'em', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'br', 'div', 'span', 'img', 'blockquote','table'],
         ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'width', 'height'],
         FORBID_ATTR: ['style','class','lang','dir','id','name'],
@@ -215,7 +213,7 @@ function tidyHTML(html) {
 
     // remove <span> w/o attribut
     while (/(\s*)<span>([\s\S]*?)<\/span>(\s*)/.test(cleanHtml)) {
-        cleanHtml = cleanHtml.replace(/<span>([\s\S]*?)<\/span>/g, '$1');
+        cleanHtml = cleanHtml.replaceAll(/<span>([\s\S]*?)<\/span>/g, '$1');
     }
 
     cleanHtml = html_beautify(cleanHtml, {

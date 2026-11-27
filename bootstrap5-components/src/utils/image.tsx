@@ -42,7 +42,7 @@ export function borderRadiusClass(shape: string | null | undefined, size: string
   return `${shape}-${level}`;
 }
 
-export function ImageTag({ node, imageNode, callerClass = "", callerStyle, callerId }: ImageTagProps) {
+export function ImageTag({ node, imageNode, callerClass = "", callerStyle, callerId }: Readonly<ImageTagProps>) {
   if (!imageNode) return null;
 
   let cssClass = callerClass;
@@ -60,10 +60,10 @@ export function ImageTag({ node, imageNode, callerClass = "", callerStyle, calle
     // Merge styles
     const imageStyle = node.getPropertyAsString("imageStyle");
     if (imageStyle) {
-      if (!styleStr) {
-        styleStr = imageStyle;
-      } else {
+      if (styleStr) {
         styleStr = `${styleStr}${styleStr.endsWith(";") ? "" : ";"}${imageStyle}`;
+      } else {
+        styleStr = imageStyle;
       }
     }
 

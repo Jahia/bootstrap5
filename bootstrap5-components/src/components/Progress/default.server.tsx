@@ -24,7 +24,7 @@ interface ProgressProps {
 }
 
 /** Contextual colours offered by the choicelist; anything else renders the default bar. */
-const COLORS = ["success", "info", "warning", "danger"];
+const COLORS = new Set(["success", "info", "warning", "danger"]);
 
 jahiaComponent(
   {
@@ -44,7 +44,7 @@ jahiaComponent(
     // default white text do not)
     const barClass = [
       "progress-bar",
-      color && COLORS.includes(color) ? `text-bg-${color}` : undefined,
+      color && COLORS.has(color) ? `text-bg-${color}` : undefined,
       striped ? "progress-bar-striped" : undefined,
     ].filter(Boolean).join(" ");
 
@@ -58,7 +58,7 @@ jahiaComponent(
         aria-valuenow={current}
         aria-valuemin={0}
         aria-valuemax={maximum}
-        {...(maximum !== 100 ? { "aria-valuetext": `${percent}%` } : {})}
+        {...(maximum === 100 ? {} : { "aria-valuetext": `${percent}%` })}
       >
         <div className={barClass} style={{ width: `${percent}%` }}>
           {showValue ? `${percent}%` : null}

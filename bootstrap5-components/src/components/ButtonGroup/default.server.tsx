@@ -24,7 +24,7 @@ interface ButtonGroupProps {
   vertical?: boolean;
 }
 
-const PANEL_TYPES = ["modal", "collapse", "Offcanvas"];
+const PANEL_TYPES = new Set(["modal", "collapse", "Offcanvas"]);
 
 jahiaComponent(
   {
@@ -37,7 +37,7 @@ jahiaComponent(
     const { currentNode, renderContext } = useServerContext();
     const { t } = useTranslation();
     const buttons = getChildNodes(currentNode, -1, 0, (child) => child.isNodeType("bootstrap5nt:button"));
-    const withPanel = buttons.filter((button) => PANEL_TYPES.includes(button.getPropertyAsString("buttonType") ?? ""));
+    const withPanel = buttons.filter((button) => PANEL_TYPES.has(button.getPropertyAsString("buttonType") ?? ""));
 
     const groupClass = [
       vertical ? "btn-group-vertical" : "btn-group",

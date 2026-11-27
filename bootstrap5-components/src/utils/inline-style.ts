@@ -49,7 +49,7 @@ export function parseInlineStyle(css: string | null | undefined): CSSProperties 
       : property
         .toLowerCase()
         .replace(/^-ms-/, "ms-")
-        .replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase());
+        .replaceAll(/-([a-z])/g, (_, letter: string) => letter.toUpperCase());
     style[name] = value;
   }
   return Object.keys(style).length > 0 ? (style as CSSProperties) : undefined;

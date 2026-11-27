@@ -36,6 +36,32 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         <javascript-modules-engine.version>1.3.1</javascript-modules-engine.version>
         <frontend-maven-plugin.version>1.15.4</frontend-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.2</build-helper-maven-plugin.version>
+
+        <!--
+          SonarQube rules that do not apply to Bootstrap markup. Bootstrap's JavaScript and CSS
+          work on <div>, <ul> and <a> elements that carry an ARIA role (modal, carousel, tabs,
+          accordion, progress, button group, popover trigger), as its documentation and the ARIA
+          Authoring Practices describe; these structures are checked by the axe-core tests.
+            S6819: "use a native element instead of the role"
+            S6842: "no interactive role on a non-interactive element" (role="tablist" on the <ul>)
+            S6845: "tabindex on a non-interactive element" (a tab panel is focusable)
+            S7930: "duplicate id" in the privacy settings modal: the two buttons are the two
+                   branches of a c:choose, only one is rendered
+          The ignores are limited to the component views and to the privacy settings modal.
+        -->
+        <sonar.issue.ignore.multicriteria>b5a,b5b,b5c,b5d,b5e,b5f</sonar.issue.ignore.multicriteria>
+        <sonar.issue.ignore.multicriteria.b5a.ruleKey>typescript:S6819</sonar.issue.ignore.multicriteria.b5a.ruleKey>
+        <sonar.issue.ignore.multicriteria.b5a.resourceKey>**/src/components/**/*.tsx</sonar.issue.ignore.multicriteria.b5a.resourceKey>
+        <sonar.issue.ignore.multicriteria.b5b.ruleKey>typescript:S6842</sonar.issue.ignore.multicriteria.b5b.ruleKey>
+        <sonar.issue.ignore.multicriteria.b5b.resourceKey>**/src/components/Tabs/*.tsx</sonar.issue.ignore.multicriteria.b5b.resourceKey>
+        <sonar.issue.ignore.multicriteria.b5c.ruleKey>Web:S6819</sonar.issue.ignore.multicriteria.b5c.ruleKey>
+        <sonar.issue.ignore.multicriteria.b5c.resourceKey>**/wemnt_privacySettingsModal/**/*.jsp</sonar.issue.ignore.multicriteria.b5c.resourceKey>
+        <sonar.issue.ignore.multicriteria.b5d.ruleKey>Web:S6842</sonar.issue.ignore.multicriteria.b5d.ruleKey>
+        <sonar.issue.ignore.multicriteria.b5d.resourceKey>**/wemnt_privacySettingsModal/**/*.jsp</sonar.issue.ignore.multicriteria.b5d.resourceKey>
+        <sonar.issue.ignore.multicriteria.b5e.ruleKey>Web:S6845</sonar.issue.ignore.multicriteria.b5e.ruleKey>
+        <sonar.issue.ignore.multicriteria.b5e.resourceKey>**/wemnt_privacySettingsModal/**/*.jsp</sonar.issue.ignore.multicriteria.b5e.resourceKey>
+        <sonar.issue.ignore.multicriteria.b5f.ruleKey>Web:S7930</sonar.issue.ignore.multicriteria.b5f.ruleKey>
+        <sonar.issue.ignore.multicriteria.b5f.resourceKey>**/wemnt_privacySettingsModal/**/*.jsp</sonar.issue.ignore.multicriteria.b5f.resourceKey>
     </properties>
     <scm>
         <connection>scm:git:git@github.com:Jahia/bootstrap5.git</connection>

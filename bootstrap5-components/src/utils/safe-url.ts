@@ -21,7 +21,7 @@ export function safeUrl(url: string | null | undefined): string {
   if (trimmed === "") {
     return "#";
   }
-  const scheme = URL_SCHEME.exec(trimmed.replace(CONTROL_AND_SPACE, ""));
+  const scheme = URL_SCHEME.exec(trimmed.replaceAll(CONTROL_AND_SPACE, ""));
   if (!scheme) {
     return trimmed;
   }

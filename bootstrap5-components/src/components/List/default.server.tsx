@@ -41,8 +41,8 @@ jahiaComponent(
     items = applyAreaLimit(items, readRenderParameters(currentResource));
 
     // Optional cap on the number of items (kept from 3.0.x)
-    const listLimit = parseInt(currentNode.getPropertyAsString("limit") ?? "", 10);
-    if (!isNaN(listLimit) && listLimit > 0) items = items.slice(0, listLimit);
+    const listLimit = Number.parseInt(currentNode.getPropertyAsString("limit") ?? "", 10);
+    if (!Number.isNaN(listLimit) && listLimit > 0) items = items.slice(0, listLimit);
 
     // View chosen by the editor for the items (jmix:renderableList)
     const subNodesView = currentNode.hasProperty("j:subNodesView")

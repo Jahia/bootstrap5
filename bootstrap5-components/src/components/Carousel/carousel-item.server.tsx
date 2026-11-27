@@ -35,7 +35,7 @@ jahiaComponent(
       siblings.length > 0 &&
       siblings[0].getIdentifier() === currentNode.getIdentifier();
 
-    const imageNode = getReferencedNode(currentNode as JCRNodeWrapper, "image");
+    const imageNode = getReferencedNode(currentNode, "image");
     const imageUrl = imageNode ? buildNodeUrl(imageNode) : "";
 
     // bootstrap5mix:advancedCarouselItem
@@ -50,8 +50,8 @@ jahiaComponent(
       if (cc) captionColor = textColorClass(cc);
       const ic = currentNode.getPropertyAsString("carouselItemClass") ?? "";
       if (ic.trim()) itemClass = ` ${ic.trim()}`;
-      const ii = parseInt(currentNode.getPropertyAsString("interval") ?? "", 10);
-      if (!isNaN(ii)) itemInterval = ii;
+      const ii = Number.parseInt(currentNode.getPropertyAsString("interval") ?? "", 10);
+      if (!Number.isNaN(ii)) itemInterval = ii;
     }
 
     if (isEditMode) {

@@ -35,7 +35,7 @@ function getBoundList(node: JCRNodeWrapper, renderContext: unknown): JCRNodeWrap
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const bound = server.render.getBoundNode(node, renderContext as any) as JCRNodeWrapper | null;
-    return bound && bound.isNodeType("jmix:list") ? bound : undefined;
+    return bound?.isNodeType("jmix:list") ? bound : undefined;
   } catch {
     return undefined;
   }
@@ -139,8 +139,9 @@ jahiaComponent(
     const layoutClass = advancedPagination && layout && layout !== "default" ? ` ${layout}` : "";
     const alignClass = advancedPagination && align && align !== "justify-content-start" ? ` ${align}` : "";
 
+    const windowBegin = currentPage < nbOfPages ? 1 : currentPage - (nbOfPages - 1);
     const paginationBegin = nbOfPages > 1
-      ? (currentPage < nbOfPages ? 1 : currentPage - (nbOfPages - 1))
+      ? windowBegin
       : currentPage;
     const paginationEnd = nbOfPages > 1
       ? Math.min(nbPages, paginationBegin + (nbOfPages - 1))

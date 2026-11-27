@@ -16,7 +16,6 @@ import {
   Render,
   useServerContext,
 } from "@jahia/javascript-modules-library";
-import type { JCRNodeWrapper } from "org.jahia.services.content";
 import { applyAreaLimit, getPageItems, readRenderParameters } from "../../utils/pager.js";
 
 jahiaComponent(
@@ -35,7 +34,7 @@ jahiaComponent(
   () => {
     const { currentNode, currentResource, renderContext } = useServerContext();
     // Every droppable item, or one page of them when a bootstrap5nt:pagination is bound to the list
-    let children = getPageItems(currentNode as JCRNodeWrapper, renderContext.getRequest());
+    let children = getPageItems(currentNode, renderContext.getRequest());
     // Limit set by the area that displays this list (grid listLimit)
     children = applyAreaLimit(children, readRenderParameters(currentResource));
 

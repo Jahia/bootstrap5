@@ -75,7 +75,7 @@ export type ColorMode = (typeof COLOR_MODES)[number];
 /** Reads the default colour mode of a site (bootstrap5mix:siteColorMode); "light" when not set. */
 export function getSiteColorMode(site: { isNodeType(type: string): boolean; getPropertyAsString(name: string): string | null } | null | undefined): ColorMode {
   try {
-    if (site && site.isNodeType("bootstrap5mix:siteColorMode")) {
+    if (site?.isNodeType("bootstrap5mix:siteColorMode")) {
       const mode = site.getPropertyAsString("colorMode");
       if (mode === "dark" || mode === "auto") return mode;
     }

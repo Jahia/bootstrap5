@@ -1,6 +1,6 @@
 CKEDITOR.addTemplates('default', {
     // The name of the subfolder that contains the preview images of the templates.
-    imagesPath: ((typeof contextJsParameters != 'undefined') ? contextJsParameters.contextPath : '') + '/modules/bootstrap5-components/img/',
+    imagesPath: ((typeof contextJsParameters == 'undefined') ? '' : contextJsParameters.contextPath) + '/modules/bootstrap5-components/img/',
     // Template definitions.
     templates: [
         {

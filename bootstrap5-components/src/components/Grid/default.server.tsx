@@ -143,8 +143,8 @@ jahiaComponent(
 
     // ── List limit ─────────────────────────────────────────────────────────
     const hasListLimit = currentNode.isNodeType("bootstrap5mix:listLimit");
-    const parsedListLimit = hasListLimit && listLimit ? parseInt(listLimit, 10) : -1;
-    const numberOfItems = !isNaN(parsedListLimit) && parsedListLimit > 0 ? parsedListLimit : undefined;
+    const parsedListLimit = hasListLimit && listLimit ? Number.parseInt(listLimit, 10) : -1;
+    const numberOfItems = !Number.isNaN(parsedListLimit) && parsedListLimit > 0 ? parsedListLimit : undefined;
 
     // ── Column name prefix for /modules paths or studiomode ────────────────
     const isModulesPath = currentNode.getPath().startsWith("/modules");
@@ -176,7 +176,7 @@ jahiaComponent(
     // With bootstrap5mix:createAbsoluteAreas it used moduleType="absoluteArea" and the chosen level:
     // the content lives under the ancestor page of that level ({ancestorPath}/main…), is shared by
     // every page below it, and can only be edited on that ancestor page.
-    const absoluteLevel = parseInt(level ?? "0", 10) || 0;
+    const absoluteLevel = Number.parseInt(level ?? "0", 10) || 0;
     const anchor = createAbsoluteAreas ? absoluteAreaAnchor(mainNode, absoluteLevel) : undefined;
     const showAbsoluteAreaHelp = createAbsoluteAreas && isStudioMode;
 
@@ -281,11 +281,13 @@ jahiaComponent(
     };
 
     // ── Assemble wrapper layers ────────────────────────────────────────────
+    const rowIdAttribute = rowId ? { id: rowId } : {};
+    const containerIdAttribute = containerId ? { id: containerId } : {};
     const inner = (
       <>
         {createRow ? (
           <div
-            {...(rowId ? { id: rowId } : {})}
+            {...rowIdAttribute}
             className={rowFullClass}
           >
             <GridColumns />
@@ -298,7 +300,7 @@ jahiaComponent(
 
     const withContainer = createContainer ? (
       <div
-        {...(containerId ? { id: containerId } : {})}
+        {...containerIdAttribute}
         className={containerClass}
       >
         {inner}

@@ -25,8 +25,10 @@ export const pagerAttribute = (listId: string) => `bootstrap5.pager.pagesize.${l
 /** Parses a request parameter as a non-negative integer; undefined when absent or invalid. */
 export function toCount(value: unknown): number | undefined {
   if (value === null || value === undefined || value === "") return undefined;
-  const parsed = parseInt(String(value), 10);
-  return isNaN(parsed) || parsed < 0 ? undefined : parsed;
+  // Request parameters and attributes are strings; any other value is converted as String() did
+  const text = typeof value === "string" ? value : (value as { toString(): string }).toString();
+  const parsed = Number.parseInt(text, 10);
+  return Number.isNaN(parsed) || parsed < 0 ? undefined : parsed;
 }
 
 interface SortCriterion {
