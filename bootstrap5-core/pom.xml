@@ -88,6 +88,31 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
           </execution>
         </executions>
       </plugin>
+      <!-- The Bootstrap files are copied by the npm step above. A build that skips it (-Dskip.npm) on a
+           clean checkout would produce a module without Bootstrap: fail instead. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>require-bootstrap-assets</id>
+            <phase>process-resources</phase>
+            <goals><goal>enforce</goal></goals>
+            <configuration>
+              <rules>
+                <requireFilesExist>
+                  <message>The Bootstrap files are missing from src/main/resources: run the build without -Dskip.npm (npm ci copies them).</message>
+                  <files>
+                    <file>${project.basedir}/src/main/resources/css/bootstrap.min.css</file>
+                    <file>${project.basedir}/src/main/resources/css/bootstrap.rtl.min.css</file>
+                    <file>${project.basedir}/src/main/resources/javascript/bootstrap.bundle.min.js</file>
+                  </files>
+                </requireFilesExist>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
