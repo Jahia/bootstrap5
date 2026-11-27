@@ -7,7 +7,7 @@ Version numbers follow `major.minor.patch`: `3.x.x` is the JavaScript/React rewr
 
 ---
 
-## [Unreleased]
+## [3.1.0] — 2026-11-27
 
 _Closes the remaining gaps with 2.4.7: what a 2.x site relied on works the same in 3.x, and the 2.4.5 to 2.4.7 fixes are all present._
 

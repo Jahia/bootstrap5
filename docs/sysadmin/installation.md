@@ -21,18 +21,18 @@ Deploy `bootstrap5-package` only. When it starts, it installs and starts, in thi
 ```bash
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -u root:YOUR_ROOT_PASSWORD \
-  --form-string 'script=[{"installOrUpgradeBundle":"bootstrap5-package-3.0.3.jar","autoStart":true}]' \
-  -F 'file=@bootstrap5-package-3.0.3.jar'
+  --form-string 'script=[{"installOrUpgradeBundle":"bootstrap5-package-3.1.0.jar","autoStart":true}]' \
+  -F 'file=@bootstrap5-package-3.1.0.jar'
 ```
 
 The log shows the steps:
 
 ```
 Bootstrap5 package: installed skins-8.2.0.jar
-Bootstrap5 package: installed bootstrap5-core-3.0.3.jar
+Bootstrap5 package: installed bootstrap5-core-3.1.0.jar
 Bootstrap5 package: javascript-modules-engine 1.2.0 found
-Bootstrap5 package: installed bootstrap5-components-3.0.3.tgz
-Bootstrap5 package: installed bootstrap5-templates-starter-3.0.3.tgz
+Bootstrap5 package: installed bootstrap5-components-3.1.0.tgz
+Bootstrap5 package: installed bootstrap5-templates-starter-3.1.0.tgz
 ```
 
 When no active engine of the required version is found, the package logs the following error and does not install the two JavaScript modules; start or install the engine, then redeploy the package:
@@ -52,12 +52,12 @@ curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
   -u root:YOUR_ROOT_PASSWORD \
   --form-string 'script=[
     {"installOrUpgradeBundle":"mvn:org.jahia.modules/skins/8.2.0","autoStart":true},
-    {"installOrUpgradeBundle":"bootstrap5-core-3.0.3.jar","autoStart":true},
-    {"installOrUpgradeBundle":"bootstrap5-components-3.0.3.tgz","autoStart":true},
-    {"installOrUpgradeBundle":"bootstrap5-templates-starter-3.0.3.tgz","autoStart":true}]' \
-  -F 'file=@bootstrap5-core-3.0.3.jar' \
-  -F 'file=@bootstrap5-components-3.0.3.tgz' \
-  -F 'file=@bootstrap5-templates-starter-3.0.3.tgz'
+    {"installOrUpgradeBundle":"bootstrap5-core-3.1.0.jar","autoStart":true},
+    {"installOrUpgradeBundle":"bootstrap5-components-3.1.0.tgz","autoStart":true},
+    {"installOrUpgradeBundle":"bootstrap5-templates-starter-3.1.0.tgz","autoStart":true}]' \
+  -F 'file=@bootstrap5-core-3.1.0.jar' \
+  -F 'file=@bootstrap5-components-3.1.0.tgz' \
+  -F 'file=@bootstrap5-templates-starter-3.1.0.tgz'
 ```
 
 The `mvn:` form needs a Maven repository that holds the artifact (the Jahia public repository does): add `{"addMavenRepository":"https://devtools.jahia.com/nexus/content/groups/public/@id=Public"}` at the start of the script if Jahia does not know it.
@@ -146,7 +146,7 @@ The module management API returns the version and state of a module:
 ```bash
 curl -s -u root:YOUR_ROOT_PASSWORD \
   'http://YOUR_JAHIA/modules/api/bundles/org.jahiacommunity.modules/bootstrap5-components/*/_localInfo'
-# {"org.jahiacommunity.modules/bootstrap5-components/3.0.3":{"type":"MODULE","osgiState":"ACTIVE","moduleState":"STARTED"}}
+# {"org.jahiacommunity.modules/bootstrap5-components/3.1.0":{"type":"MODULE","osgiState":"ACTIVE","moduleState":"STARTED"}}
 ```
 
 Check `org.jahia.modules/javascript-modules-engine`, `org.jahia.modules/skins` and the four `org.jahiacommunity.modules/bootstrap5-*` modules: each must be `ACTIVE` / `STARTED`.
