@@ -29,6 +29,13 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     globals: true,
     include: ['src/test/**/*.test.{ts,tsx}'],
+    coverage: {
+      provider: 'v8',
+      // lcov is read by SonarQube (sonar.javascript.lcov.reportPaths in pom.xml)
+      reporter: ['text-summary', 'lcov'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/test/**'],
+    },
     server: {
       deps: {
         // Force Vite's ESM transform for react-bootstrap and its CJS deps so that

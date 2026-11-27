@@ -22,6 +22,11 @@
   <name>Bootstrap5 Templates Starter</name>
   <description>JS/React SSR page template views for Bootstrap 5 (Jahia JS module)</description>
 
+  <properties>
+    <!-- SonarQube: the sources of a JavaScript module are not in src/main -->
+    <sonar.sources>pom.xml,src,css</sonar.sources>
+  </properties>
+
   <build>
     <plugins>
 
