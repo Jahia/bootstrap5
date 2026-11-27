@@ -4,7 +4,7 @@ This guide covers installation, deployment, configuration, and troubleshooting o
 
 ## Contents
 
-- [Installation & Deployment](installation.md) — Installing, updating, and managing modules on a Jahia instance
+- [Installation & Deployment](installation.md) — Installing, updating, and managing modules on a Jahia instance, and enabling CKEditor 5 for a site
 - [Troubleshooting](troubleshooting.md) — Common errors and how to resolve them
 
 ## Module stack overview

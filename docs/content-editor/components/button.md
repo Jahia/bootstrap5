@@ -1,32 +1,34 @@
 # Button
 
-A button renders a styled link or interactive trigger. The button type determines what happens when clicked.
+A button renders a styled link or interactive trigger. The button type determines what happens when clicked. To place several buttons together, use a [button group](button-group.md).
 
 ## Button types
 
-Choose the type first — it unlocks the relevant fields.
+Choose the **Action** first: it unlocks the relevant fields. If **Button text** is empty, an internal link shows the title of its target page and the other types show "Read more".
 
-| Type | Behavior |
-|------|----------|
+| Action | Behavior |
+|--------|----------|
 | Internal link | Links to a page or file within the Jahia site |
-| External link | Links to an arbitrary URL |
+| External URL | Links to an arbitrary URL (`https://`, `mailto:` or `tel:`) |
 | Modal | Opens a Bootstrap dialog overlay |
 | Collapse | Shows/hides a collapsible content panel inline |
-| Popover | Shows a floating tooltip-style popup |
+| Popover | Shows a small bubble next to the button |
 | Offcanvas | Slides in a panel from the edge of the screen |
 
-## Common appearance fields
+## Advanced settings
 
 | Field | Description |
 |-------|-------------|
-| Style | Color variant (primary, secondary, success, info, warning, danger, link, dark, light, custom) |
-| Size | `lg`, `sm`, or default |
-| Outline | Use the outline variant (border only, no background fill) |
-| Block | Full-width button (takes the full container width) |
-| State | Active, disabled, or normal |
-| CSS class | Additional CSS classes |
-| Disable text wrapping | Prevent the label from wrapping to a second line |
-| Stretched link | Make the entire parent card/container clickable |
+| Style | Colour of the button: Primary, Secondary, Success, Info, Warning, Danger, Dark, Light, "No background (link style only)" or "Custom (use CSS class field)" |
+| Size | `Default`, `Large` or `Small` |
+| Outline style | Coloured border and text on a transparent background. Ignored with the link style |
+| Full-width button | The button takes the whole width of its container |
+| State | `Default`, `Active` (shown as pressed) or `Disabled` |
+| CSS class(es) on this button | Additional CSS classes. With the Custom style, they are the only classes of the button |
+| Prevent label from wrapping | The text stays on one line |
+| Stretched link (makes the parent container fully clickable) | Clicking anywhere in the block that contains the button, a card for example, follows the link |
+| Tooltip text (extra information, not a repeat of the label) | See [Tooltip](#tooltip) |
+| Tooltip position | `Top`, `Bottom`, `Left` or `Right` |
 
 ![Button styles](../../../images/button-style.png)
 ![Button outline](../../../images/button-outline.png)
@@ -34,19 +36,30 @@ Choose the type first — it unlocks the relevant fields.
 ![Button block](../../../images/button-block.png)
 ![Button states](../../../images/button-state.png)
 
+## Tooltip
+
+A tooltip is a small text shown when the button is pointed at or focused with the keyboard.
+
+![Tooltip above a button](../../../images/tooltip.png)
+
+- Type the text in **Tooltip text** and choose where it appears with **Tooltip position**. Leave the text empty for no tooltip.
+- The tooltip can be closed with the Escape key, and it stays open while it is pointed at.
+- A tooltip is not shown on a Popover button (a button carries one bubble only) nor on a button whose state is Disabled (it cannot be focused).
+- Touch screen users may never see a tooltip. Do not put essential information in it, and do not repeat the button text.
+
 ## Internal link fields
 
 | Field | Description |
 |-------|-------------|
-| Label | The button text |
-| Link | Pick a page or file from the site tree |
+| Button text | The button text |
+| Link target | Pick a page or file from the site tree |
 
-## External link fields
+## External URL fields
 
 | Field | Description |
 |-------|-------------|
-| Label | The button text |
-| URL | The target URL |
+| Button text | The button text |
+| URL | The target address, starting with `https://`. An e-mail (`mailto:`) or a phone number (`tel:`) also work |
 
 ## Modal fields
 
@@ -54,12 +67,12 @@ Choose the type first — it unlocks the relevant fields.
 
 | Field | Description |
 |-------|-------------|
-| Label | The button text that opens the modal |
-| Modal title | The dialog heading |
-| Close button text | Label of the close button inside the dialog |
-| Size | Dialog size: small, default, large, extra-large |
-| Static backdrop | Prevent closing by clicking outside the dialog |
-| Vertically centered | Center the dialog vertically in the viewport |
+| Button text | The button text that opens the modal |
+| Modal title | The dialog heading. Without a title, the window has no header and no close cross |
+| Close button label | Text of the button at the bottom of the window. "Close" if empty |
+| Size | `Default (medium)`, `Small`, `Large` or `Extra large` |
+| Static backdrop (clicking outside does not close) | The window only closes with its own buttons |
+| Vertically centred | Center the dialog vertically in the viewport |
 
 The modal body is a droppable area.
 
@@ -67,8 +80,8 @@ The modal body is a droppable area.
 
 | Field | Description |
 |-------|-------------|
-| Label | The button text |
-| Show | Start in the expanded state |
+| Button text | The button text |
+| Start expanded | The content is visible when the page loads |
 
 The collapse body is a droppable area.
 
@@ -78,11 +91,11 @@ The collapse body is a droppable area.
 
 | Field | Description |
 |-------|-------------|
-| Label | The button text |
+| Button text | The button text |
 | Popover title | The popover heading |
-| Content | The popover body text |
-| Direction | top, bottom, start, end |
-| Allow HTML | Render HTML tags in the content |
+| Popover content | The popover body text |
+| Placement | `Top`, `Bottom`, `Left` or `Right`. The bubble moves to another side when there is not enough room |
+| Allow HTML in content (use with caution) | Render HTML tags in the content. Only tick it for content you wrote yourself |
 
 ## Offcanvas fields
 
@@ -90,10 +103,10 @@ The collapse body is a droppable area.
 
 | Field | Description |
 |-------|-------------|
-| Label | The button text |
+| Button text | The button text |
 | Panel title | The offcanvas panel heading |
-| Slide in from | start (left), end (right), bottom |
-| Show backdrop | Darken the page behind the panel |
-| Allow page scrolling | Let visitors scroll the page while the panel is open |
+| Slide in from | `Start` (left in a left-to-right language), `End` (right in a left-to-right language), `Bottom` or `Top` |
+| Show a backdrop behind the panel | Darken the page behind the panel |
+| Allow page scrolling while panel is open | Let visitors scroll the page while the panel is open |
 
 The offcanvas body is a droppable area.

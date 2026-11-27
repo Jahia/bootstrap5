@@ -8,28 +8,30 @@ A card is a flexible content container with an optional image, header, body, and
 
 | Field | Description |
 |-------|-------------|
-| Title | Card header text |
-| Header level | HTML heading level for the title (h1–h5) or plain `div` |
-| Image | Pick an image from the media library (displays above the body) |
-| Text alignment | left, center, right |
-| Footer text | Static footer text (i18n key — for plain text footers) |
+| Card title | Shown in the header of the card. Leave empty for a card without header |
+| Title heading level | Level of the title in the outline of the page: `H1` to `H5`, or `Default (paragraph)`, a plain paragraph that is not a heading. It does not change the size of the text |
+| Image | Pick an image from the media library. It is displayed above the header |
+| Text alignment | `Start`, `Center` or `End` (the whole card). "Start" is the left in languages read from left to right |
+| Footer text | Short text shown at the bottom of the card. For richer content, tick **Rich footer** in the advanced settings |
 
-## Colors (Advanced settings — Colors tab)
+## Colors (Advanced settings, Colors group)
+
+Check that the text stays readable on the chosen background.
 
 | Field | Description |
 |-------|-------------|
-| Background color | Card background |
-| Text color | Card text |
-| Border color | Card border |
+| Background | Card background. "Default" keeps the standard background of a card |
+| Text | Card text colour. "Body" is the normal text colour of the site, "Muted" a lighter grey |
+| Border | Card border |
 
 ## Advanced settings
 
 | Field | Description |
 |-------|-------------|
-| CSS class | Additional classes on the outer `<div class="card">` |
-| Header CSS class | Additional classes on the header element |
-| Body CSS class | Additional classes on `<div class="card-body">` |
-| Free footer | Replace the static footer text with a droppable area |
+| CSS class(es) on the card wrapper | For integrators. Replaces the `card` class of the outer block: keep `card` in it unless you restyle the card entirely |
+| CSS class(es) on the card header | For integrators. Replaces the `card-header` class |
+| CSS class(es) on the card body | For integrators. Replaces the `card-body` class |
+| Rich footer (drop any content into the footer area) | Replace the footer text with a droppable area |
 
 ## Body
 
@@ -37,5 +39,5 @@ The card body accepts any droppable content component.
 
 ## Notes
 
-- If no image is selected, no `<img>` is rendered.
-- Enabling **Free footer** removes the static footer text and adds a droppable area in its place.
+- If no image is selected, no image is rendered.
+- Enabling **Rich footer** replaces the footer text with a droppable area.
