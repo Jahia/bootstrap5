@@ -176,17 +176,15 @@ Registered Jahia component: bootstrap5-templates-starter_view_jnt:template_boots
 
 ## Karaf console
 
-Access the Karaf console via SSH or the Jahia tools:
+The Karaf console is reachable over SSH (`ssh -p 8101 root@127.0.0.1` on the Jahia host) or from the Jahia tools:
 
 ```bash
-# List installed bundles matching bootstrap5
-osgi:list | grep bootstrap5
+# List the bundles of the stack and their state
+bundle:list | grep -i bootstrap5
 
-# Start a specific bundle by ID
-osgi:start <bundle-id>
-
-# Restart the JS engine
-bundle:restart <bootstrap5-components-id>
+# Start or restart a bundle by its ID (first column of bundle:list)
+bundle:start <bundle-id>
+bundle:restart <bundle-id>
 ```
 
 ---
