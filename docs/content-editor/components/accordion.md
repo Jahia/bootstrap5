@@ -1,6 +1,6 @@
 # Accordion
 
-An accordion displays a list of collapsible panels. Only one panel (or several) can be open at a time.
+An accordion displays a list of collapsible panels. Opening a panel closes the one that was open, so one panel at most is open at a time.
 
 ![Accordion default](../../../images/accordion_default.png)
 ![Accordion flush](../../../images/accordion_flush.png)
