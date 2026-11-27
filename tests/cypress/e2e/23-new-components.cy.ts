@@ -286,6 +286,21 @@ describe('Bootstrap5 — Bootstrap styles in the rich text editors', () => {
         })
     }
 
+    /**
+     * Without a valid Jahia licence, richtext-ckeditor5 falls back to the GPL key of CKEditor 5 while
+     * its configurations still load the AI assistant, a premium plugin: the editor then locks itself
+     * in read-only mode, for any rich text field. The editing tests need a licensed Jahia.
+     */
+    const skipWithoutLicence = (context: Mocha.Context) => {
+        cy.window().then(win => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (!(win as any).contextJsParameters?.valid) {
+                cy.log('Skipped: CKEditor 5 is read-only on a Jahia without a valid licence')
+                context.skip()
+            }
+        })
+    }
+
     before(() => {
         cy.login()
         deleteSite(ck5Site)
@@ -307,10 +322,11 @@ describe('Bootstrap5 — Bootstrap styles in the rich text editors', () => {
         deleteSite(ck5Site)
     })
 
-    it('CKEditor 5: the style list offers the Bootstrap styles (lead, badges, alerts, tables)', () => {
+    it('CKEditor 5: the style list offers the Bootstrap styles (lead, badges, alerts, tables)', function () {
         cy.login()
         openContentEditor(ck5Site, text)
         cy.get('.ck-editor__editable', {timeout: 60000}).should('be.visible')
+        skipWithoutLicence(this)
         cy.get('.ck-style-dropdown .ck-dropdown__button', {timeout: 20000}).click()
         cy.get('.ck-style-panel').should('be.visible').within(() => {
             cy.contains('.ck-style-grid__button', 'Lead').should('exist')
@@ -320,10 +336,12 @@ describe('Bootstrap5 — Bootstrap styles in the rich text editors', () => {
         })
     })
 
-    it('CKEditor 5: a table gets the "table" class Bootstrap needs, and keeps its other classes', () => {
+    it('CKEditor 5: a table gets the "table" class Bootstrap needs, and keeps its other classes', function () {
         cy.login()
         openContentEditor(ck5Site, text)
-        cy.get('.ck-editor__editable', {timeout: 60000}).should('be.visible').then($editable => {
+        cy.get('.ck-editor__editable', {timeout: 60000}).should('be.visible')
+        skipWithoutLicence(this)
+        cy.get('.ck-editor__editable').then($editable => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const editor = ($editable[0] as any).ckeditorInstance
             editor.setData('<table><tbody><tr><td>Plain</td></tr></tbody></table><table class="table-striped"><tbody><tr><td>Striped</td></tr></tbody></table>')
