@@ -38,20 +38,6 @@ missing requirement: com.jahia.services.content; (nodetypes=bootstrap5mix:compon
 
 ---
 
-## CND warning — node type already defined
-
-**Symptom:**
-```
-WARN [JahiaCndReader] Node type 'bootstrap5nt:accordion' already defined with a different systemId
-(existing: 'bootstrap5-components', provided: 'bootstrap5-components'), ignoring.
-```
-
-**Cause:** A legacy `bootstrap5-components` module is still deployed alongside `bootstrap5-components`. Both define the same node types.
-
-**Fix:** Undeploy `bootstrap5-components`. `bootstrap5-components` is the authoritative owner of all `bootstrap5nt:*` and `bootstrap5mix:*` definitions.
-
----
-
 ## JS engine render error — `execute` message not supported
 
 **Symptom:**
