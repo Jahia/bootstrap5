@@ -33,7 +33,7 @@ Four modules make up the full stack:
 | `bootstrap5-core` | `.jar` (OSGi) | Bootstrap CSS/JS assets, Java initializers |
 | `bootstrap5-components` | `.tgz` (JS module) | All component views, CND definitions, Content Editor forms |
 | `bootstrap5-templates-starter` | `.tgz` (JS module, templatesSet) | Page templates; required to create sites |
-| `bootstrap5-package` | `.jar` (OSGi) | Self-contained installer — embeds and auto-installs all three modules above |
+| `bootstrap5-package` | `.jar` (OSGi) | Installer: embeds and installs the three modules above, and `skins` |
 
 ## Components
 
@@ -55,6 +55,6 @@ Site-wide: [Colour mode](docs/content-editor/color-mode.md) · [Right-to-left la
 - Deploy the single `bootstrap5-package` JAR — it auto-installs everything, or
 - Deploy individually in order: `bootstrap5-core` (JAR) → `bootstrap5-components` (TGZ) → `bootstrap5-templates-starter` (TGZ)
 
-> Requires **Jahia 8.2.3.x** and **javascript-modules-engine 1.3.1** (installed by `bootstrap5-package` when Jahia runs an older engine).
+> Requires **Jahia 8.2.3.0** or later. The modules run on the `javascript-modules-engine` shipped with Jahia (1.2.0 or later). Upgrading a 2.x site: see [Upgrading from 2.x](docs/sysadmin/installation.md#upgrading-from-2x).
 
 Full installation details → [SysAdmin Guide](docs/sysadmin/installation.md)

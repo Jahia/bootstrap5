@@ -2,68 +2,94 @@
 
 ## Prerequisites
 
-- Jahia 8.2.3.x
-- javascript-modules-engine 1.3.1 (installed by `bootstrap5-package`; to install by hand: `mvn:org.jahia.modules/javascript-modules-engine/1.3.1`)
-- The `default` module must be running (it is shipped with Jahia)
+- Jahia 8.2.3.0 or later. The modules declare this version and Jahia refuses them on an older one.
+- `javascript-modules-engine` 1.2.0 or later, **active**. Jahia 8.2.3 installs and starts the engine 1.2.0 by default; nothing to install. The stack does not install nor replace the engine: it is a platform module shared by every JavaScript module of the server.
+- The `default` module (shipped with Jahia).
 
 ---
 
 ## First install
 
-### Option A — Single-JAR install (recommended)
+### Option A: the package (recommended)
 
-Deploy just `bootstrap5-package`. When it starts, it automatically installs and starts `skins`, `bootstrap5-core`, `bootstrap5-components`, and `bootstrap5-templates-starter` in the correct order.
+Deploy `bootstrap5-package` only. When it starts, it installs and starts, in this order:
 
-```bash
-curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
-  -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeModule":"bootstrap5-package.jar"}]' \
-  -F 'file=@bootstrap5-package-3.0.0-SNAPSHOT.jar;filename=bootstrap5-package.jar'
-```
-
-Redeploying the same JAR is safe — on stop, the package uninstalls the TGZ bundles it owns; on start, it reinstalls or updates them cleanly.
-
-### Option B — Deploy each module individually
-
-Deploy in this exact order:
-
-```bash
-# 1. skins (dependency of bootstrap5-core)
-curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
-  -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeModule":"skins-8.2.0.jar"}]' \
-  -F 'file=@skins-8.2.0.jar'
-
-# 2. bootstrap5-core
-curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
-  -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeModule":"bootstrap5-core.jar"}]' \
-  -F 'file=@bootstrap5-core-3.0.0-SNAPSHOT.jar;filename=bootstrap5-core.jar'
-
-# 3. bootstrap5-components
-curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
-  -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
-  -F 'file=@bootstrap5-components-3.0.0-SNAPSHOT.tgz;filename=package.tgz'
-
-# 4. bootstrap5-templates-starter
-curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
-  -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
-  -F 'file=@bootstrap5-templates-starter-3.0.0-SNAPSHOT.tgz;filename=package.tgz'
-```
-
-Or combine all four files in a single provisioning call:
+1. `skins` (embedded: Jahia 8.2.3 does not install it by default, and the Alert skin needs it);
+2. `bootstrap5-core`;
+3. once an active `javascript-modules-engine` 1.2.0 or later is found (it waits up to one minute for it): `bootstrap5-components` and `bootstrap5-templates-starter`.
 
 ```bash
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
-  -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeModule":"skins-8.2.0.jar"},{"installOrUpgradeModule":"bootstrap5-core-3.0.0-SNAPSHOT.jar"},{"installOrUpgradeModule":"bootstrap5-components-3.0.0-SNAPSHOT.tgz","ignoreChecks":true},{"installOrUpgradeModule":"bootstrap5-templates-starter-3.0.0-SNAPSHOT.tgz","ignoreChecks":true}]' \
-  -F 'file=@skins-8.2.0.jar' \
-  -F 'file=@bootstrap5-core-3.0.0-SNAPSHOT.jar' \
-  -F 'file=@bootstrap5-components-3.0.0-SNAPSHOT.tgz' \
-  -F 'file=@bootstrap5-templates-starter-3.0.0-SNAPSHOT.tgz'
+  -u root:YOUR_ROOT_PASSWORD \
+  --form-string 'script=[{"installOrUpgradeBundle":"bootstrap5-package-3.0.3.jar","autoStart":true}]' \
+  -F 'file=@bootstrap5-package-3.0.3.jar'
 ```
+
+The log shows the steps:
+
+```
+Bootstrap5 package: installed skins-8.2.0.jar
+Bootstrap5 package: installed bootstrap5-core-3.0.3.jar
+Bootstrap5 package: javascript-modules-engine 1.2.0 found
+Bootstrap5 package: installed bootstrap5-components-3.0.3.tgz
+Bootstrap5 package: installed bootstrap5-templates-starter-3.0.3.tgz
+```
+
+When no active engine of the required version is found, the package logs the following error and does not install the two JavaScript modules; start or install the engine, then redeploy the package:
+
+```
+Bootstrap5 package: javascript-modules-engine 1.2.0 or later is required (found: none). bootstrap5-components and bootstrap5-templates-starter are NOT installed.
+```
+
+Redeploying the package is safe: on stop, it uninstalls the JavaScript modules it installed; on start, it installs or updates them.
+
+### Option B: each module
+
+Install in this order: `skins`, `bootstrap5-core`, `bootstrap5-components`, `bootstrap5-templates-starter`. One provisioning call can do it:
+
+```bash
+curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
+  -u root:YOUR_ROOT_PASSWORD \
+  --form-string 'script=[
+    {"installOrUpgradeBundle":"mvn:org.jahia.modules/skins/8.2.0","autoStart":true},
+    {"installOrUpgradeBundle":"bootstrap5-core-3.0.3.jar","autoStart":true},
+    {"installOrUpgradeBundle":"bootstrap5-components-3.0.3.tgz","autoStart":true},
+    {"installOrUpgradeBundle":"bootstrap5-templates-starter-3.0.3.tgz","autoStart":true}]' \
+  -F 'file=@bootstrap5-core-3.0.3.jar' \
+  -F 'file=@bootstrap5-components-3.0.3.tgz' \
+  -F 'file=@bootstrap5-templates-starter-3.0.3.tgz'
+```
+
+The `mvn:` form needs a Maven repository that holds the artifact (the Jahia public repository does): add `{"addMavenRepository":"https://devtools.jahia.com/nexus/content/groups/public/@id=Public"}` at the start of the script if Jahia does not know it.
+
+---
+
+## Upgrading from 2.x
+
+A site built with the 2.x modules keeps its content when 3.x replaces them: the content definitions are kept, and the 3.x views read the content where 2.x stored it. The path below was tested from the 2.4.7 modules (`bootstrap5-core`, `bootstrap5-components`, `bootstrap5-templates-starter`) on Jahia 8.2.3.2: every piece of content was still displayed, in the same column, tab, panel or card part, the content editor forms kept their behaviour, and the pager, tabs, modals and edit mode worked.
+
+1. **Upgrade Jahia first** to 8.2.3.0 or later if needed, and check that `javascript-modules-engine` is active (see [Checking module status](#checking-module-status)).
+2. **Back up** the repository, and run the upgrade on a copy of the production data first.
+3. **Deploy `bootstrap5-package` 3.x** as in [Option A](#option-a-the-package-recommended), without uninstalling 2.x. The package updates `bootstrap5-components` and `bootstrap5-templates-starter` in place, and installs and starts `bootstrap5-core` 3.x.
+4. **Remove the old core**: `bootstrap5-core` 2.x stays installed, stopped, next to 3.x. Uninstall it:
+
+   ```bash
+   curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
+     -u root:YOUR_ROOT_PASSWORD \
+     --form-string 'script=[{"uninstallBundle":"org.jahiacommunity.modules/bootstrap5-core/2.4.7"}]'
+   ```
+
+5. **Check the sites**: open the main pages in live and in edit mode.
+
+Known differences after the upgrade, on purpose:
+
+- A collapse marked "open on load" is now open on load (2.x put the `show` class on the button, so the panel stayed closed).
+- A popover button is rendered as a link with `role="button"`, which Bootstrap requires for a popover that closes on the next click.
+- Classes removed in Bootstrap 5.3 are replaced by their 5.3 equivalents (for example `text-muted` by `text-body-secondary`).
+
+See the [changelog](../../CHANGELOG.md) for the full list.
+
+The repository holds an automated version of this test (`tests/ci.migration.sh`): it seeds a site with the 2.x modules, installs 3.x and compares both renderings.
 
 ---
 
@@ -123,38 +149,21 @@ Sites that are not enabled keep CKEditor 4.
 
 ## Updating modules
 
-### Updating via bootstrap5-package
-
-Redeploy the new `bootstrap5-package` JAR — the activator handles stopping the old TGZ bundles and installing the new versions.
-
-### Updating individual modules
-
-```bash
-# JS module (TGZ) — ignoreChecks required for SNAPSHOT versions
-curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
-  -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
-  -F 'file=@bootstrap5-components-3.0.0-SNAPSHOT.tgz;filename=package.tgz'
-
-# Java module (JAR)
-curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
-  -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeModule":"module.jar"}]' \
-  -F 'file=@bootstrap5-core-3.0.0-SNAPSHOT.jar;filename=module.jar'
-```
+Deploy the new `bootstrap5-package`, as for a first install: it updates the modules it contains. To update one module only, use the same provisioning call as in [Option B](#option-b-each-module) with that file.
 
 ---
 
 ## Checking module status
 
+The module management API returns the version and state of a module:
+
 ```bash
-AUTH=$(echo -n "root:PASSWORD" | base64)
-curl -s http://YOUR_JAHIA/modules/api/bundles \
-  -H "Authorization: Basic $AUTH" | \
-  python3 -c "import sys,json; [print(b['symbolicName'], b['state']) for b in json.load(sys.stdin) if 'bootstrap5' in b.get('symbolicName','')]"
+curl -s -u root:YOUR_ROOT_PASSWORD \
+  'http://YOUR_JAHIA/modules/api/bundles/org.jahiacommunity.modules/bootstrap5-components/*/_localInfo'
+# {"org.jahiacommunity.modules/bootstrap5-components/3.0.3":{"type":"MODULE","osgiState":"ACTIVE","moduleState":"STARTED"}}
 ```
 
-Expected states: `bootstrap5-core`, `bootstrap5-components`, `bootstrap5-templates-starter` → `Active`
+Check `org.jahia.modules/javascript-modules-engine`, `org.jahia.modules/skins` and the four `org.jahiacommunity.modules/bootstrap5-*` modules: each must be `ACTIVE` / `STARTED`.
 
 ---
 
@@ -164,7 +173,6 @@ Check the Jahia logs for these lines after deploying `bootstrap5-components`:
 
 ```
 [TemplatePackageRegistry] Registered 'bootstrap5-components (javascript module)'
-[javascript-modules-engine] Registered bundle bootstrap5-components
 [StaticDefinitionsRegistry] Successfully loaded static fieldSets for name bootstrap5mix:brand ...
 Registered Jahia component: bootstrap5-components_view_bootstrap5nt:accordion_default
 ...

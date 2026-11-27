@@ -19,8 +19,8 @@ yarn build:maven
 # Deploy to local Jahia
 curl -X POST http://localhost:8080/modules/api/provisioning \
   -u root:1234 \
-  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
-  -F 'file=@dist/package.tgz;filename=package.tgz'
+  --form-string 'script=[{"installOrUpgradeBundle":"package.tgz","autoStart":true,"forceUpdate":true}]' \
+  -F 'file=@dist/package.tgz'
 ```
 
 See [Build system](build.md) for full build options including watch mode and Maven reactor.

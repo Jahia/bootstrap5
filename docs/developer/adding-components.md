@@ -101,8 +101,8 @@ node/node node/node_modules/.bin/npm run build:maven
 
 curl -X POST http://localhost:8080/modules/api/provisioning \
   -u root:1234 \
-  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
-  -F 'file=@dist/package.tgz;filename=package.tgz'
+  --form-string 'script=[{"installOrUpgradeBundle":"package.tgz","autoStart":true,"forceUpdate":true}]' \
+  -F 'file=@dist/package.tgz'
 ```
 
 ## Accessing node properties
