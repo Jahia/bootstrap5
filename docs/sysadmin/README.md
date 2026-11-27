@@ -16,14 +16,12 @@ Three modules must be running to get a fully functional Bootstrap 5 JS site. A f
 | `bootstrap5-core` | `.jar` (OSGi bundle) | Bootstrap CSS/JS assets + Java choicelist initializers |
 | `bootstrap5-components` | `.tgz` (JS module) | All component views + CND definitions + Content Editor forms |
 | `bootstrap5-templates-starter` | `.tgz` (JS module, templatesSet) | Page templates; required to create new sites |
-| `bootstrap5-package` | `.jar` (OSGi bundle) | Embeds and auto-installs all three modules above — single-JAR deployment |
+| `bootstrap5-package` | `.jar` (OSGi bundle) | Embeds and installs the three modules above and `skins`, which Jahia does not install by default |
 
 ## Minimum Jahia version
 
-Jahia **8.2.3.x** (the only supported line) and **javascript-modules-engine 1.3.1**. Jahia 8.2.3 ships an older engine: `bootstrap5-package` installs 1.3.1 for you; when you deploy the modules one by one, install `mvn:org.jahia.modules/javascript-modules-engine/1.3.1` first.
+Jahia **8.2.3.0** or later. The JavaScript modules run on the `javascript-modules-engine` that Jahia 8.2.3 installs and starts by default (1.2.0); the stack does not install it. In Jahia 8.2.3 the JavaScript runtime (GraalJS) is provided by that engine.
 
-> GraalVM has been replaced by OpenJDK in Jahia 8.2.3+ Docker images. No code changes are required — all `?.()` optional-call syntax has been removed from these modules.
+## Node.js
 
-## Supported Node.js
-
-The modules bundle their own Node binary (v20.19.0). No system Node is required at runtime — Node is only needed at build time.
+Node.js is only needed to build the modules (the Maven build downloads Node 22). Jahia does not use Node.js at runtime: the views run in the engine.

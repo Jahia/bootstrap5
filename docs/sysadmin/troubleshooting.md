@@ -4,7 +4,7 @@
 
 **Symptom:**
 ```
-ModuleManagementException: BundleException: Bundle symbolic name and version are not unique: bootstrap5-components:3.0.0.SNAPSHOT
+ModuleManagementException: BundleException: Bundle symbolic name and version are not unique: bootstrap5-components:3.0.3.SNAPSHOT
 ```
 
 **Cause:** The Jahia admin UI upload path does not support replacing a bundle that is already running with the same symbolic name and version. This error only occurs when using **Administration → Modules → Upload module**; it never occurs via the provisioning API.
@@ -12,14 +12,13 @@ ModuleManagementException: BundleException: Bundle symbolic name and version are
 **Fix:** Use the provisioning API instead of the UI to redeploy:
 
 ```bash
-# TGZ module
 curl -X POST http://YOUR_JAHIA/modules/api/provisioning \
-  -u root:PASSWORD \
-  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
-  -F 'file=@bootstrap5-components-3.0.0-SNAPSHOT.tgz;filename=package.tgz'
+  -u root:YOUR_ROOT_PASSWORD \
+  --form-string 'script=[{"installOrUpgradeBundle":"bootstrap5-components-3.0.3.tgz","autoStart":true,"uninstallPreviousVersion":true,"forceUpdate":true}]' \
+  -F 'file=@bootstrap5-components-3.0.3.tgz'
 ```
 
-The `installOrUpgradeModule` action handles the upgrade atomically (stop → uninstall → install → start), which the UI upload does not.
+`forceUpdate` replaces a module of the same version (a SNAPSHOT rebuilt, for example).
 
 If you must use the UI, first stop and uninstall the existing bundle via **Administration → Modules**, then upload the new TGZ.
 
@@ -60,7 +59,7 @@ WARN [JahiaCndReader] Node type 'bootstrap5nt:accordion' already defined with a 
 TypeError: execute on org.jahia.services.render.RenderContext failed due to: Message not supported
 ```
 
-**Cause:** A `?.()` optional-call expression is used on a Java object reference in a TSX view. The JS engine (GraalVM on Jahia ≤ 8.2.2, OpenJDK-based engine on 8.2.3+) sends an `execute` message instead of `invoke`, which Java objects do not support.
+**Cause:** A `?.()` optional-call expression is used on a Java object reference in a TSX view. The JS engine (GraalJS, provided by `javascript-modules-engine` on Jahia 8.2.3) sends an `execute` message instead of `invoke`, which Java objects do not support.
 
 **Fix:** Replace all `obj.method?.()` with explicit null guards:
 
@@ -135,7 +134,7 @@ grep "bootstrap5" catalina.out | grep -E "INFO|ERROR|WARN"
 # CND loading
 grep "JahiaCndReader" catalina.out
 
-# JS engine errors (GraalVM on ≤ 8.2.2, OpenJDK Nashorn on 8.2.3+)
+# JS engine errors (GraalJS, provided by javascript-modules-engine)
 grep "TypeError\|execute on\|javascript-modules" catalina.out
 
 # Content Editor forms

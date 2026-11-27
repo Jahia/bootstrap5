@@ -85,11 +85,11 @@ AUTH=$(echo -n "root:YOUR_PASSWORD" | base64)
 
 curl -X POST http://localhost:8080/modules/api/provisioning \
   -H "Authorization: Basic $AUTH" \
-  -F 'script=[{"installOrUpgradeModule":"package.tgz","ignoreChecks":true}]' \
-  -F 'file=@dist/package.tgz;filename=package.tgz'
+  --form-string 'script=[{"installOrUpgradeBundle":"package.tgz","autoStart":true,"forceUpdate":true}]' \
+  -F 'file=@dist/package.tgz'
 ```
 
-`ignoreChecks: true` allows deploying SNAPSHOT versions.
+`forceUpdate: true` replaces a module of the same version, for example a SNAPSHOT you rebuilt. Without it, Jahia keeps the installed module and the response lists no installed bundle.
 
 ## Node version constraint
 
