@@ -54,9 +54,9 @@ yarn install
 ## Running the whole suite in Docker
 
 `ci.build.sh` stages the modules to test in `assets/` and writes `assets/provisioning.yml`, which installs
-them in dependency order (`bootstrap5-core`, `bootstrap5-components`, `bootstrap5-templates-starter`, with the
-`javascript-modules-engine` before the first JavaScript module). `ci.startup.sh` starts Jahia, provisions it
-and runs the suite.
+them in dependency order (`bootstrap5-core`, `bootstrap5-components`, `bootstrap5-templates-starter`). The JavaScript modules run on the
+`javascript-modules-engine` shipped with Jahia; set `JS_ENGINE_VERSION` to install another version before
+them. `ci.startup.sh` starts Jahia, provisions it and runs the suite.
 
 ```bash
 mvn clean install                         # from the repository root

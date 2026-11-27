@@ -8,12 +8,13 @@
 #   BOOTSTRAP5_ARTIFACTS=/path/to/release-3.0.1 bash ci.build.sh
 #
 # 2.x ships the three modules as jars; 3.x ships bootstrap5-core as a jar and the two others as JavaScript
-# modules (.tgz), which need the javascript-modules-engine installed first.
+# modules (.tgz), which run on the javascript-modules-engine shipped with Jahia. To test another engine
+# version, set JS_ENGINE_VERSION (e.g. JS_ENGINE_VERSION=1.3.1): it is then installed before the first
+# JavaScript module.
 source ./set-env.sh
 set -e
 
 SKINS_VERSION=8.2.0
-JS_ENGINE_VERSION=1.3.1
 # CKEditor 5 for rich text fields: the suite checks rich text editing with CKEditor 4 and with CKEditor 5
 CKEDITOR5_VERSION=1.0.1
 MODULES="bootstrap5-core bootstrap5-components bootstrap5-templates-starter"
@@ -42,7 +43,7 @@ for module in $MODULES; do
         echo "No ${module} jar or tgz in ${from}: build the modules first (mvn clean install), or set BOOTSTRAP5_ARTIFACTS."
         exit 1
     fi
-    if [[ "$artifact" == *.tgz && "$engine_installed" == false ]]; then
+    if [[ "$artifact" == *.tgz && "$engine_installed" == false && -n "${JS_ENGINE_VERSION:-}" ]]; then
         install "mvn:org.jahia.modules/javascript-modules-engine/${JS_ENGINE_VERSION}"
         engine_installed=true
     fi
