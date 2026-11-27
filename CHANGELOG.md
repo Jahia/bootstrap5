@@ -35,6 +35,9 @@ _Closes the remaining gaps with 2.4.7: what a 2.x site relied on works the same 
 - **Version component** — one view only (the Bootstrap version in edit mode); the second one printed the module version on live pages
 - **Resource bundle** — non-ASCII characters of the default bundle are escaped (2.4.7 fix)
 - **Build** — `bootstrap5-core` installs with `npm ci` (2.4.7 fix)
+- **Pagination, page size in the URL** — a page size taken from the URL (`pagesize<id>`, `src_itemsPerPage`) is limited to 100 items per page, or to the page size set on the pager when it is larger; a visitor can no longer make a list display all its items by editing the URL
+- **Language switcher, tag and image view** — the language code, language name and link written by the `b5:switchToLanguageLink` tag, and the image address of the image view, are escaped for HTML
+- **Navbar, login** — the script that reopens the login modal after a failed login no longer contains the identifier of the node; the modal is marked with an attribute instead (same behaviour)
 
 ### Added
 - **Button group** — new component (`bootstrap5nt:buttonGroup`) holding existing buttons, horizontal or vertical, in three sizes; the panels its buttons open (modal, collapse, offcanvas) are rendered after the group
@@ -54,6 +57,7 @@ _Closes the remaining gaps with 2.4.7: what a 2.x site relied on works the same 
 
 ### Changed
 - **Bootstrap** — assets updated from **5.3.8 → 5.3.9**
+- **Rich text editor** — the HTML cleanup button uses DOMPurify 3.5.0 (was 3.0.5), and the sanitizer now runs last, after the removal of empty `<span>` tags
 - **Bootstrap 5.3 documentation review** — every component was compared with the official 5.3 documentation; classes left over from Bootstrap 3 and 4, which have no rule in Bootstrap 5, and deprecated ones were replaced:
   - **Navbar** — default classes are `navbar navbar-expand-lg bg-body-tertiary` and `navbar-toggler` (`navbar-light`, deprecated, and `navbar-toggler-right` had no effect); `bg-body-tertiary` is the same grey as `bg-light` and follows the colour mode. Navbars with their own classes are not changed
   - **Navbar, login** — the modal follows Bootstrap's structure (the form is the modal content), which restores its vertical centring; the user name field takes the focus when the modal opens
