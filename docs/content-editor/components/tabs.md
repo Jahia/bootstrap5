@@ -15,10 +15,10 @@ The Tabs component displays content in labelled panels. Only one panel is visibl
 
 | Field | Description |
 |-------|-------------|
-| Type | `tab` (underline bar), `pill` (rounded pill), `link` (no indicator), `underline` |
-| Fade | Animate the panel transition with a fade |
-| Alignment | `justify-content-start`, `justify-content-center`, `justify-content-end`, `nav-fill`, `nav-justified` |
-| Use list name as anchor | Use the Content List name as the URL hash anchor (enables deep-linking) |
+| Style | `Tabs`, `Pills` (rounded), `Links` (no indicator) or `Underline` |
+| Fade effect when switching panels | Animate the panel transition with a fade |
+| Tab bar alignment | `Start`, `Center`, `End`, `Fill (proportional)` or `Justified (equal width)` |
+| Use list name as URL anchor (#id) | Use the Content List name as the URL hash anchor (enables deep-linking) |
 
 ## Notes
 

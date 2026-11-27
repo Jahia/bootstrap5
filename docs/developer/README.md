@@ -25,17 +25,15 @@ curl -X POST http://localhost:8080/modules/api/provisioning \
 
 See [Build system](build.md) for full build options including watch mode and Maven reactor.
 
-## Repository layout
-
 ## Internal and utility components
 
-In addition to the 12 content-editor-visible components, `bootstrap5-components` includes:
+In addition to the 14 content-editor-visible components, the stack includes:
 
-| Component | Node type | Purpose |
-|-----------|-----------|---------|
-| List | `jmix:list` | Generic list renderer — renders child nodes and an edit-mode drop zone. Used internally by Tabs and other container components. |
-| Version | `bootstrap5nt:version` | Displays the deployed `bootstrap5-components` package version. Useful on a diagnostic page to confirm which version is running. |
-| Privacy Settings Modal | `wemnt:privacySettingsModal` | Bootstrap 5 view for the Jahia WEM GDPR consent modal. Only relevant when the WEM module is deployed. |
+| Component | Node type | Module | Purpose |
+|-----------|-----------|--------|---------|
+| List | `jmix:list` | `bootstrap5-components` | Generic list renderer: renders child nodes, one page of them when a pagination is bound to the list, and an "add content" button in edit mode. |
+| Version | `bootstrap5nt:version` | `bootstrap5-core` | In edit mode, shows the Bootstrap version the page runs. |
+| Privacy Settings Modal | `wemnt:privacySettingsModal` | `bootstrap5-core` | Bootstrap 5 view for the Jahia WEM privacy settings modal. Only relevant when the WEM module is deployed. |
 
 ---
 
@@ -59,7 +57,7 @@ bootstrap5/
 │   ├─ settings/
 │   │   └─ definitions.cnd           Namespaces + shared mixins (image, padding, margin)
 │   ├─ META-INF/
-│   │   └─ jahia-content-editor-forms/  Content Editor form customizations (13 JSON files)
+│   │   └─ jahia-content-editor-forms/  Content Editor form customizations (14 JSON files)
 │   ├─ resources/                    i18n .properties files
 │   ├─ img/                          Thumbnail images for choicelist pickers
 │   ├─ javascript/                   CKEditor config + static JS libs

@@ -9,7 +9,7 @@ Wraps grid content in a semantic HTML5 element.
 
 | Property | Type | Description |
 |----------|------|-------------|
-| sectionElement | string | `section`, `article`, `aside`, `nav`, `header`, `footer`, `div` |
+| sectionElement | string | `section`, `article`, `aside`, `hgroup`, `header`, `footer`, `nav`, `div` (default), `figure`, `figcaption`, `main` |
 | sectionId | string | HTML id |
 | sectionCssClass | string | CSS classes |
 | sectionStyle | string | Inline style |
@@ -53,18 +53,18 @@ Auto-injected when typeOfGrid = customGrid.
 | gridClasses | string | Comma-separated Bootstrap col-* classes, one per column |
 
 ### `bootstrap5mix:createAbsoluteAreas`
-Pulls shared content from an ancestor level.
+Pulls shared content from an ancestor page of the displayed page.
 
 | Property | Type | Description |
 |----------|------|-------------|
-| level | long | Ancestor depth: 0 (current) to 5 |
+| level | choicelist | `0` (home page) to `5`: the ancestor page, counted down from the home page, that holds the content |
 
 ### `bootstrap5mix:listLimit`
 Caps the number of items rendered in area columns.
 
 | Property | Type | Description |
 |----------|------|-------------|
-| nbOfItemsToDisplay | long | -1 (unlimited) or 1–10 |
+| listLimit | choicelist | `-1` (no limit), `1`, `2`, `3`, `4`, `5` or `10` |
 
 ---
 
@@ -98,20 +98,24 @@ Caps the number of items rendered in area columns.
 
 ---
 
-## Button mixins (auto-injected by ButtonTypeInitializer)
+## Button mixins
+
+`internalLink`, `externalLink`, `modal`, `collapse`, `popover` and `Offcanvas` are auto-injected by ButtonTypeInitializer according to the button type.
 
 ### `bootstrap5mix:buttonAdvancedSettings`
 
 | Property | Type | Description |
 |----------|------|-------------|
 | style | choicelist | `primary`, `secondary`, `success`, `info`, `warning`, `danger`, `link`, `dark`, `light`, `custom` |
-| size | choicelist | `lg`, `sm`, or default |
+| size | choicelist | `btn-lg`, `btn-sm`, or `default` |
 | outline | boolean | Outline style |
 | block | boolean | Full-width |
-| state | choicelist | `active`, `disabled`, or normal |
+| state | choicelist | `active`, `disabled`, or `default` |
 | cssClass | string | Additional classes |
 | disableTextWrapping | boolean | Add `text-nowrap` |
 | stretchedLink | boolean | Add `stretched-link` |
+| tooltip | string | Tooltip text |
+| tooltipPlacement | choicelist | `top`, `bottom`, `left`, `right` |
 
 ### `bootstrap5mix:internalLink`
 
@@ -149,7 +153,7 @@ Caps the number of items rendered in area columns.
 |----------|------|-------------|
 | popoverTitle | string | Popover heading |
 | popoverContent | string | Popover body |
-| direction | choicelist | `top`, `bottom`, `start`, `end` |
+| direction | choicelist | `top`, `left`, `right`, `bottom` |
 | html | boolean | Allow HTML in content |
 
 ### `bootstrap5mix:Offcanvas`
@@ -157,7 +161,7 @@ Caps the number of items rendered in area columns.
 | Property | Type | Description |
 |----------|------|-------------|
 | OffcanvasTitle | string | Panel heading |
-| placement | choicelist | `start`, `end`, `bottom` |
+| placement | choicelist | `start`, `end`, `top`, `bottom` |
 | enableBackdrop | boolean | Show backdrop |
 | enableBodyScrolling | boolean | Allow page scrolling while open |
 
@@ -174,10 +178,10 @@ Caps the number of items rendered in area columns.
 | imageID | string | HTML id |
 | responsive | boolean | `img-fluid` |
 | thumbnails | boolean | `img-thumbnail` |
-| align | choicelist | `float-start`, `float-end`, `mx-auto` (centered block) |
+| align | choicelist | `default`, `start` (`float-start`), `end` (`float-end`), `center` (`mx-auto d-block`) |
 | alt | string | Alt text |
-| borderRadius | boolean | Enable rounded corners |
-| borderRadiusSize | choicelist | `1`–`5` |
+| borderRadius | choicelist | `rounded`, `rounded-top`, `rounded-end`, `rounded-bottom`, `rounded-start`, `rounded-circle`, `rounded-pill`, `rounded-0` (default) |
+| borderRadiusSize | choicelist | `default`, `rounded-0` to `rounded-5` |
 
 ### `bootstrap5mix:figureAdvancedSettings`
 
@@ -207,7 +211,8 @@ Applied to `jnt:virtualsite`. Same properties as `bootstrap5mix:brand`, takes pr
 |----------|------|-------------|
 | addLoginButton | boolean | Show login/logout |
 | addLanguageButton | boolean | Show language switcher |
-| maxlevel | long | Menu depth (1–5) |
+| addColorModeButton | boolean | Show the light / dark / auto switcher |
+| maxlevel | choicelist | Menu depth (`1`–`5`) |
 | addContainerWithinTheNavbar | boolean | Wrap in `.container` |
 
 ### `bootstrap5mix:customizeNavbar`

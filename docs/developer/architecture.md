@@ -6,7 +6,7 @@
 HTTP request
   └─ Jahia rendering engine
        ├─ Resolves the page template
-       │    └─ bootstrap5-templates-starter: TemplateView (TSX)
+       │    └─ bootstrap5-templates-starter: TemplateStarterView (TSX)
        │         ├─ Renders <html>, <head>, <body>
        │         ├─ Includes Bootstrap CSS/JS from bootstrap5-core
        │         └─ Renders Areas (header, pagecontent, footer)
@@ -16,20 +16,20 @@ HTTP request
                  └─ Renders the component HTML
 ```
 
-All server-side rendering runs inside the **Jahia JavaScript modules engine** (GraalVM on Jahia ≤ 8.2.2, OpenJDK-based engine on 8.2.3+). TypeScript/JSX is compiled to CommonJS by Vite and executed in a Java-hosted JavaScript context.
+All server-side rendering runs inside the **Jahia JavaScript modules engine** (`javascript-modules-engine`, shipped with Jahia 8.2.3 and later; its JavaScript runtime is GraalJS). The modules do not install or embed it. TypeScript/JSX is compiled by Vite into `dist/server/index.js` and executed in a Java-hosted JavaScript context.
 
 ## Module priority and view resolution
 
 Jahia resolves views by searching modules in dependency order — a module that declares `module-dependencies: X` has higher priority than `X`.
 
 - `bootstrap5-components` declares `module-dependencies: bootstrap5-core`
-- `bootstrap5-templates-starter` declares `module-dependencies: bootstrap5-core`
+- `bootstrap5-templates-starter` declares `module-dependencies: bootstrap5-core, bootstrap5-components`
 
 A custom module declaring `module-dependencies: bootstrap5-components` will override any view from `bootstrap5-components`.
 
 ## JS engine Java interop constraints
 
-> **Critical:** Calling Java methods from the JS engine has specific syntax requirements. These apply to both GraalVM (Jahia ≤ 8.2.2) and the OpenJDK-based engine (Jahia 8.2.3+).
+> **Critical:** Calling Java methods from the JS engine has specific syntax requirements. These apply to the engine shipped with Jahia 8.2.3 and later.
 
 ### The `?.()` optional-call problem
 
@@ -91,16 +91,16 @@ jahiaComponent(
 );
 ```
 
-The entry point `src/index.ts` (compiled to `dist/server/index.js`) imports all component files.
+There is no hand-written entry file: the `@jahia/vite-plugin` collects every `src/**/*.server.{jsx,tsx}` file into `dist/server/index.js`, the `server` entry declared in `package.json`.
 
 ## CND and module ownership
 
 `bootstrap5-components` owns all `bootstrap5nt:*` node types and `bootstrap5mix:*` mixins. Definitions are split across two locations:
 
 - **`settings/definitions.cnd`** — namespaces and cross-component shared mixins (image, padding, margin)
-- **`src/components/<Name>/definition.cnd`** — one file per component (15 files)
+- **`src/components/<Name>/definition.cnd`** — one file per component (14 files; `List` has none)
 
-`bootstrap5-core` owns only `bootstrap5mix:component` (the base marker mixin) and `bootstrap5nt:version`.
+`bootstrap5-core` owns only `bootstrap5mix:component` (the base marker mixin) and `bootstrap5nt:version` (`bootstrap5-core/src/main/resources/META-INF/definitions.cnd`).
 
 ## react-bootstrap
 
@@ -133,11 +133,11 @@ The `@jahia/vite-plugin` compiles TypeScript/TSX to `dist/server/index.js`. It d
 
 In the JSP rendering stack, `<template:area areaAsSubNode="true" />` stores the area's content as a child of the *component node* rather than the *page node*. This makes area content shared across all pages that inherit the component (e.g. a grid placed inside a template-level `AbsoluteArea` footer).
 
-In `@jahia/javascript-modules-library` (as of v1.2.0):
+`@jahia/javascript-modules-library` has no such option (checked on 1.3.1, see `src/utils/sub-node-area.tsx`):
 
-- `<Area name="foo" />` always stores content under the *current page node*, so each page gets its own independent content — `areaAsSubNode` behaviour is not available.
-- `<AbsoluteArea parent={node} name="foo" />` does anchor to a fixed parent node, but it carries additional semantics: it always inherits content from the parent page downward, and the parent node must already exist in the repository.
+- `<Area name="foo" />` always stores content under the *current page node*, so each page gets its own independent content.
+- `<AbsoluteArea parent={node} name="foo" />` anchors to a fixed parent node, but it carries additional semantics: it always inherits content from the parent page downward, and the parent node must already exist in the repository.
 
-**Current workaround:** For grid components placed inside an `AbsoluteArea` (e.g. the template footer), activate `bootstrap5mix:createAbsoluteAreas` on the grid node. The Grid view then renders columns using `<AbsoluteArea parent={currentNode} name={areaPath} />`, which anchors each column area to the grid node itself — equivalent to `areaAsSubNode="true"`. The grid node must live under the home/root page (which is always the case for template-level grids).
+**Current solution:** the `SubNodeArea` helper (`src/utils/sub-node-area.tsx`) resolves the parent of the list as `areaAsSubNode` did in 2.x (the component itself when it already holds the area or belongs to the site content, the page displayed when the component comes from a page template) and renders an `AbsoluteArea` anchored on it. The Grid, and the free footer of the Card, use it. With `bootstrap5mix:createAbsoluteAreas`, the Grid anchors its column areas on the ancestor page of the chosen level instead (`absoluteAreaAnchor` in `src/components/Grid/default.server.tsx`): the content is shared by every page below that ancestor and editable on the ancestor page only.
 
-**Limitation:** This workaround does not cover non-Grid components or `Area` components used outside of template-level `AbsoluteArea` contexts. A proper `areaAsSubNode` prop on `Area` requires an upstream fix in `@jahia/javascript-modules-library`.
+**Limitation:** the helper covers the Grid and the Card footer only. A proper `areaAsSubNode` prop on `Area` requires an upstream fix in `@jahia/javascript-modules-library`.

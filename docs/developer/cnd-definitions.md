@@ -5,7 +5,7 @@ CND definitions in `bootstrap5-components` are split across two locations:
 | File | Content |
 |------|---------|
 | `settings/definitions.cnd` | Namespace declarations + shared cross-component mixins (image, padding, margin) |
-| `src/components/<Name>/definition.cnd` | Node types and mixins specific to one component (12 files) |
+| `src/components/<Name>/definition.cnd` | Node types and mixins specific to one component (14 files) |
 
 `package.json` includes both locations via:
 ```json
@@ -22,14 +22,14 @@ CND definitions in `bootstrap5-components` are split across two locations:
 ## Base mixin
 
 ```cnd
-[bootstrap5mix:component] mixin
+[bootstrap5mix:component] > jmix:droppableContent, jmix:accessControllableContent, jmix:editorialContent mixin
 ```
 
-All Bootstrap 5 node types extend this marker mixin. It allows other modules to query "is this a Bootstrap 5 component?" via `isNodeType("bootstrap5mix:component")`.
+Declared in `bootstrap5-core` (`src/main/resources/META-INF/definitions.cnd`). All Bootstrap 5 node types extend this marker mixin. It allows other modules to query "is this a Bootstrap 5 component?" via `isNodeType("bootstrap5mix:component")`.
 
 ## Choicelist initializers
 
-Three Java classes in `bootstrap5-core` inject mixins automatically when a choicelist property is set:
+Three Java classes in `bootstrap5-core` (OSGi services, `bootstrap5-core/src/main/java/org/jahia/modules/bootstrap5/initializers/`) inject mixins automatically when a choicelist property is set:
 
 ### `gridTypeInitializer5`
 
@@ -78,7 +78,7 @@ Choicelist initializers are Java classes in `bootstrap5-core`. To add one:
 
 1. Create a class extending `AbstractSimpleChoiceInitializer` in `bootstrap5-core/src/main/java/org/jahia/modules/bootstrap5/initializers/`
 2. Annotate it with `@Component` (OSGi DS)
-3. Override `getChoices()` returning a list of `ChoiceSpec(name, optionalMixinToInject)`
+3. Override `getChoices()` returning a list of `ChoiceSpec.of(name)` or `ChoiceSpec.of(name, mixinToInject)`
 4. Reference it by bean name in the CND property declaration
 
 ## CKEditor configuration
@@ -95,11 +95,11 @@ The config file is at `bootstrap5-components/javascript/ckconfig.js`. It defines
 
 ## Thumbnail images
 
-Property values shown as image tiles in the Content Editor (e.g. grid ratio pickers, alignment pickers) reference PNG/SVG files via the `image` selector option:
+Property values shown as image tiles in the Content Editor (e.g. grid ratio pickers, alignment pickers) use the `moduleImage` option of the choicelist, `'png'` or `'svg'`:
 
 ```cnd
-- grid (string, choicelist[resourceBundle])
-    < '12'='img/12.png', '6_6'='img/6_6.png', ...
+- grid (string, choicelist[resourceBundle, moduleImage='png']) = '4_8' autocreated indexed=no
+    < '2_10', '3_9', '4_8', '4_4_4', ...
 ```
 
-The images are served from `bootstrap5-components/img/`.
+The images are in `bootstrap5-components/img/`, one per value (for example `img/4_8.png`; see the folder for the exact names).

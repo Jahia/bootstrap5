@@ -7,12 +7,12 @@
 | Node.js | v22.23.2 (via Maven) | JavaScript runtime |
 | Yarn | 4.x (via corepack) | Package management (day-to-day dev) |
 | npm | bundled with Node | Package management (Maven build) |
-| Vite + `@jahia/vite-plugin` | latest | TSX → CommonJS compilation |
-| TypeScript | ^5.0.0 | Type checking |
+| Vite + `@jahia/vite-plugin` | Vite ^7.3.8, plugin ^1.0.0 | TSX → `dist/server/index.js` compilation |
+| TypeScript | ^6.0.3 | Type checking |
 | react-bootstrap | ^2.10.0 | React component library |
 | Maven | 3.x | Orchestrates JS builds, packages the reactor |
 
-The repository root is a **Yarn 4 workspace** (`package.json` with `"workspaces": ["bootstrap5-components", "bootstrap5-templates-starter"]`). For day-to-day development use Yarn; Maven builds use a locally-installed Node (`frontend-maven-plugin` downloads Node v22.23.2 to `.node/` inside each JS module on first build).
+The repository root is a **Yarn 4 workspace** (`package.json` with `"workspaces": ["bootstrap5-components", "bootstrap5-templates-starter"]`). For day-to-day development use Yarn; Maven builds use a locally-installed Node (`frontend-maven-plugin` downloads Node v22.23.2 to `.node/` inside each JS module on first build (`bootstrap5-core`, which only fetches the Bootstrap files, downloads v22.20.0)).
 
 ## Build commands
 
@@ -55,13 +55,13 @@ The TGZ artifact is what Jahia installs. It contains exactly what is listed in t
 ```
 package/
 ├─ dist/server/index.js          Compiled TSX views
-├─ src/components/*/definition.cnd  Per-component node type definitions (15 files)
+├─ src/components/*/definition.cnd  Per-component node type definitions (14 files)
 ├─ settings/
 │   └─ definitions.cnd           Namespaces + shared mixins
 ├─ META-INF/
-│   └─ jahia-content-editor-forms/  13 Content Editor form JSON files
+│   └─ jahia-content-editor-forms/  14 Content Editor form JSON files
 ├─ resources/                    i18n .properties (6 languages)
-├─ img/                          ~60 thumbnail images
+├─ img/                          62 thumbnail images
 ├─ javascript/                   ckconfig.js + libs
 └─ package.json
 ```
@@ -93,7 +93,7 @@ curl -X POST http://localhost:8080/modules/api/provisioning \
 
 ## Node version constraint
 
-Maven builds download **Node v22.23.2** to `.node/` inside each JS module (via `frontend-maven-plugin`). This happens automatically on `mvn compile` or `mvn install`.
+Maven builds download **Node v22.23.2** to `.node/` inside each JS module (via `frontend-maven-plugin`; `bootstrap5-core` uses v22.20.0). This happens automatically on `mvn compile` or `mvn install`.
 
 For Yarn-based dev, the system Node must be ≥ 18. Yarn 4 is managed via `corepack` — run `corepack enable` once to activate it.
 
